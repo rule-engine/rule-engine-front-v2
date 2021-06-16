@@ -1,30 +1,30 @@
-# rule-engine-front
+# 📌 规则引擎前端 RuleEngine 📌
 
-> A Vue.js project
+[![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
+[![GitHub Stars](https://img.shields.io/github/stars/dingqianwen/rule-engine-front-v2)](https://github.com/dingqianwen/rule-engine-front-v2/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/dingqianwen/rule-engine-front-v2)](https://github.com/dingqianwen/rule-engine-front-v2/fork)
+[![GitHub issues](https://img.shields.io/github/issues/dingqianwen/rule-engine-front-v2.svg)](https://github.com/dingqianwen/rule-engine-front-v2/issues)
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/dingqianwen/rule-engine-front-v2.svg)](https://github.com/dingqianwen/rule-engine-front-v2/issues "Percentage of issues still open")
 
-## Build Setup
+#### 业务逻辑实现不再依赖于代码开发，可零代码实现复杂业务逻辑。
 
-``` bash
-# install dependencies
-npm install
+后端代码地址：... <br>
+项目展示地址：http://ruleengine.cn/
 
-# serve with hot reload at localhost:8080
-npm run dev
+##### 联系方式：
 
-# build for production with minification
-npm run build
+- QQ：761945125
+- Email：761945125@qq.com
 
-# build for production and view the bundle analyzer report
-npm run build --report
+### 技术文档
 
-# run unit tests
-npm run unit
+简单使用：... <br>
+详细文档：http://ruleengine.cn/doc
 
-# run e2e tests
-npm run e2e
+### 技术栈/版本介绍：
 
-# run all tests
-npm test
-```
+- 所涉及的相关的技术有：
+  - Vue
+  - Element-ui
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+### 如果觉得本项目对您有任何一点帮助，请点右上角 "Star" 支持一下， 并向您的基友、同事们宣传一下吧，谢谢！
