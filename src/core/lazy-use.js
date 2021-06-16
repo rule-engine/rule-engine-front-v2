@@ -37,7 +37,8 @@ import {
   RadioGroup,
   Progress,
   Dialog,
-  Checkbox
+  Checkbox,
+  Badge
 } from 'element-ui'
 
 Vue.use(Popover)
@@ -72,6 +73,7 @@ Vue.use(RadioGroup)
 Vue.use(Progress)
 Vue.use(Dialog)
 Vue.use(Checkbox)
+Vue.use(Badge)
 Vue.use(Loading.directive)
 
 Vue.prototype.$notify = Notification
@@ -79,10 +81,14 @@ Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$prompt = MessageBox.prompt
 Vue.prototype.$alert = MessageBox.alert
-
+//邮件菜单
 import Contextmenu from 'vue-contextmenujs'
 
 Vue.use(Contextmenu)
+//拖拽插件
+import VueDragResize from 'vue-drag-resize'
+
+Vue.component('vue-drag-resize', VueDragResize)
 
 process.env.NODE_ENV !== 'production' &&
   console.warn('[rule-engine] NOTICE: element-ui use lazy-load.')

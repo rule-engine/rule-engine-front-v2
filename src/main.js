@@ -8,8 +8,6 @@ import './core/lazy-use'
 
 import '@/permission';
 import store from '@/store';
-import common from '@/common/common';
-import userApi from '@/api/userApi';
 Vue.config.productionTip = false;
 
 const Instance = new Vue({

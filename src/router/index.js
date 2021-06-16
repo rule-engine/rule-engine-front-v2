@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import Index from '@/components/Index'
 
-import Login from '@/components/Login.vue'
 import Page500 from '@/components/500.vue'
 import Page404 from '@/components/404.vue'
+
+import Index from '@/views/Index'
+import Login from '@/views/auth/Login.vue'
+import Drag from '@/views/drag/Drag'
 
 Vue.use(Router)
 
@@ -25,13 +27,12 @@ export default new Router({
         needLogin: true,
       },
     },
-    ,
     {
       path: '/home',
       name: 'home',
-      component: Index,
+      component: Drag,
       children: [], meta: {
-        title: '首页',
+        title: '拖拽布局',
         needLogin: false,
       },
     },

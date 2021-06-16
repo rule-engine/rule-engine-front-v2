@@ -7,7 +7,7 @@ import {
 
 import {
   logout
-} from '@/api/userApi.js';
+} from '@/api/user.js';
 
 let state = {
   // 用户ID

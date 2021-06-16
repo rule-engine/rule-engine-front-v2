@@ -17,6 +17,7 @@
     "element-ui": "^2.14.1",
     "js-audio-recorder": "^1.0.6",
     "js-base64": "^2.5.1",
+    "js-cookie": "^2.2.1",
     "mavon-editor": "^2.9.0",
     "nprogress": "^0.2.0",
     "prismjs": "^1.22.0",
@@ -24,6 +25,7 @@
     "vue": "^2.6.11",
     "vue-contextmenujs": "^1.3.13",
     "vue-cropper": "^0.5.5",
+    "vue-drag-resize": "^1.5.4",
     "vue-prism-editor": "^0.5.1",
     "vue-router": "^3.4.9",
     "vuex": "^3.5.1"

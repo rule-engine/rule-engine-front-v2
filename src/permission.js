@@ -17,7 +17,6 @@ const login_redirect = ['/login', '/register', '/forget'];
 
 router.beforeEach((to, from, next) => {
   document.title = to.meta.title ? `${WEBSITE_NAME} | ${to.meta.title}` : WEBSITE_NAME;
-  console.log("getToken()--",getToken())
   // 如果有token说明该用户已登陆
   if (getToken()) {
     if (login_redirect.indexOf(to.path) >= 0) {

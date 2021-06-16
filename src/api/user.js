@@ -1,21 +1,18 @@
-import * as userApi from '@/api/userApi'
 import {
   post,
   get
 } from '@/utils/request';
 
-
-export default userApi
-
+const BASE = "/user"
 // 获取登录用户信息 import {getUserInfo} from "@/api"
 export const getUserInfo = () => {
-  return get("/user/getUserInfo");
+  return post(BASE + "/getUserInfo");
 }
 
 export const logout = () => {
-  return post("/user/logout");
+  return post(BASE + "/logout");
 }
 
 export const login = (param) => {
-  return post('/user/login', param)
+  return post(BASE + '/login', param)
 }

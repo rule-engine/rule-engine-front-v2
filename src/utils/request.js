@@ -9,9 +9,9 @@ import {
 import ElementUI, {
   Notification
 } from 'element-ui';
-import router from "../router";
+import router from "@/router";
 
-axios.defaults.withCredentials = true;
+
 // 创建 axios 实例
 const request = axios.create({
   // API 请求的默认前缀
@@ -20,7 +20,8 @@ const request = axios.create({
   // 请求超时时间
   timeout: 20000
 });
-
+//允许跨域
+request.defaults.withCredentials = true;
 /**
  * 异常拦截处理器
  *
@@ -54,15 +55,18 @@ request.interceptors.request.use(config => {
 // 响应拦截器
 request.interceptors.response.use(response => {
   let token = response.headers.token;
+
   if (token != null) {
     setToken(token, 60 * 60 * 24 * 7)
   }
   let data = response.data;
   let code = data.code;
   let message = data.message;
+
   if (code === 200) {
     return data;
   } else if (code === 4009 || code === 10010004 || code === 99990402 || code === 10011039) {
+    removeAll()
     router.push({path: '/login'});
     ElementUI.Message({
       type: 'warning',
