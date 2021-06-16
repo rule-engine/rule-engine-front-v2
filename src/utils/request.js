@@ -52,7 +52,7 @@ request.interceptors.request.use(config => {
 
 
 // 响应拦截器
-axios.interceptors.response.use(response => {
+request.interceptors.response.use(response => {
   let token = response.headers.token;
   if (token != null) {
     setToken(token, 60 * 60 * 24 * 7)

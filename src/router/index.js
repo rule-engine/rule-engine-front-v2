@@ -25,6 +25,16 @@ export default new Router({
         needLogin: true,
       },
     },
+    ,
+    {
+      path: '/home',
+      name: 'home',
+      component: Index,
+      children: [], meta: {
+        title: '首页',
+        needLogin: false,
+      },
+    },
     {
       path: '/500',
       name: 'Page500',

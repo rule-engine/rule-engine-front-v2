@@ -8,7 +8,7 @@
         <li>输入错误的地址</li>
         <li>过时的链接</li>
       </ul>
-      <router-link to="/">首页</router-link>
+      <router-link to="/home">首页</router-link>
     </div>
   </div>
 </template>

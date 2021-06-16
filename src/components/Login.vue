@@ -87,7 +87,7 @@ export default {
             this.logining = true;
            login(this.ruleForm).then(res => {
               if (res.data) {
-                this.$router.push({path: '/'});
+                this.$router.push({path: '/home'});
               } else {
                 let message = res.data.message;
                 this.logining = false;
