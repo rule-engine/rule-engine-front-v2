@@ -59,7 +59,6 @@ npm run build --report
 
 ```env
 VUE_APP_API_BASE_URL=http://xxx.yourdomain.com
-VUE_APP_WEB_SOCKET_URL=ws://xxx.yourdomain.com/socket.io
 VUE_APP_WEBSITE_NAME="ruLe-engine"
 ```
 
