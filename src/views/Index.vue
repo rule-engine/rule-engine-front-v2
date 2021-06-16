@@ -5,7 +5,7 @@
         <el-row>
           <el-col :span="2">
             <div class="grid-content bg-purple">
-              <img src="../assets/logo4.png" class="logo" alt=""/>
+              <img src="../assets/logo.png" class="logo" alt=""/>
             </div>
           </el-col>
           <el-col :span="18">

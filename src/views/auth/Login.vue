@@ -3,7 +3,7 @@
     <el-row>
       <el-col :span="2">
         <div style="margin-left: 20px;margin-top: 6px;">
-          <img src="../../assets/logo4.png" class="logo" alt=""/>
+          <img src="../../assets/logo.png" class="logo" alt=""/>
         </div>
       </el-col>
       <el-col :span="20">
