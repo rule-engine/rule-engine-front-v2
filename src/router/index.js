@@ -20,7 +20,10 @@ export default new Router({
       path: '/',
       name: 'Index',
       component: Index,
-      children: []
+      children: [], meta: {
+        title: '首页',
+        needLogin: true,
+      },
     },
     {
       path: '/500',
