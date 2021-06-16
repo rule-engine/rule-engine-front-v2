@@ -1,7 +1,6 @@
-import * as common from '@/common/common'
-import Clipboard from 'clipboard';
+import * as symbol from '@/utils/symbol'
 
-export default common
+export default symbol
 
 export function getSymbolExplanation(name) {
   switch (name) {
@@ -89,101 +88,4 @@ export function getSymbolByValueType(valueType) {
         "symbol": "<="
       }];
   }
-}
-
-export function formatDate(date, fmt) {
-  if (/(y+)/.test(fmt)) {
-    fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
-  }
-  let o = {
-    'M+': date.getMonth() + 1,
-    'd+': date.getDate(),
-    'h+': date.getHours(),
-    'm+': date.getMinutes(),
-    's+': date.getSeconds()
-  }
-  for (let k in o) {
-    if (new RegExp(`(${k})`).test(fmt)) {
-      let str = o[k] + ''
-      fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? str : padLeftZero(str))
-    }
-  }
-  return fmt
-}
-
-function padLeftZero(str) {
-  return ('00' + str).substr(str.length)
-}
-
-export function datePickerOptions() {
-  return {
-    shortcuts: [{
-      text: '今天',
-      onClick(picker) {
-        picker.$emit('pick', new Date());
-      }
-    }, {
-      text: '昨天',
-      onClick(picker) {
-        const date = new Date();
-        date.setTime(date.getTime() - 3600 * 1000 * 24);
-        picker.$emit('pick', date);
-      }
-    }, {
-      text: '一周前',
-      onClick(picker) {
-        const date = new Date();
-        date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-        picker.$emit('pick', date);
-      }
-    }]
-  }
-}
-
-export function clipboard(e, code) {
-  const clipboard = new Clipboard(e.target, {
-    // 点击copy按钮，直接通过text直接返回复印的内容
-    text: () => code
-  });
-  clipboard.on('success', (e) => {
-    clipboard.off('error');
-    clipboard.off('success');
-    clipboard.destroy()
-    ElementUI.Message({
-      message: '复制成功',
-      type: 'success'
-    });
-  });
-  clipboard.on('error', (e) => {
-    console.log(e);
-    clipboard.off('error');
-    clipboard.off('success');
-    clipboard.destroy()
-    ElementUI.Message({
-      message: '该浏览器不支持此方式复制',
-      type: 'success'
-    });
-  });
-  clipboard.onClick(e)
-}
-
-
-/**
- * 深拷贝
- *
- * @param source Array/Object  对象/数组
- */
-export function deepClone(source) {
-  const targetObj = source.constructor === Array ? [] : {}; // 判断复制的目标是数组还是对象
-  for (let keys in source) { // 遍历目标
-    if (source.hasOwnProperty(keys)) {
-      if (source[keys] && typeof source[keys] === 'object') { // 如果值是对象，就递归一下
-        targetObj[keys] = source[keys].constructor === Array ? [] : {};
-        targetObj[keys] = deepClone(source[keys]);
-      } else { // 如果不是，就直接赋值
-        targetObj[keys] = source[keys];
-      }
-    }
-  }
-  return targetObj;
 }
