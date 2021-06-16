@@ -3,16 +3,13 @@
     <el-row>
       <el-col :span="2">
         <div style="margin-left: 20px;margin-top: 6px;">
-          <img src="../assets/logo4.png" class="logo" alt=""/>
+          <img src="../assets/logo.png" class="logo" alt=""/>
         </div>
       </el-col>
       <el-col :span="20">
         &nbsp;
       </el-col>
       <el-col :span="2">
-        <a href="https://gitee.com/qwding/rule-engine"> <img
-          src="https://gitee.com/static/images/logo-black.svg?t=158106664"
-          style="width: 66px;height: 30px; margin-top: 20px;margin-left:16px;cursor: pointer"/></a>
       </el-col>
     </el-row>
     <div class="login-container">
@@ -63,76 +60,79 @@
 </template>
 
 <script>
-    export default {
-        data() {
-            return {
-                logining: false,
-                ruleForm: {
-                    username: 'lq',
-                    password: '123',
-                },
-                rules: {
-                    username: [{required: true, message: '请输入账号', trigger: 'blur'}],
-                    password: [{required: true, message: '请输入密码', trigger: 'blur'}]
-                },
-                checked: false
-            }
-        },
-        methods: {
-            handleSubmit(event) {
-                this.$refs.ruleForm.validate((valid) => {
-                        if (valid) {
-                            this.logining = true;
-                            this.$userApi.login(this.ruleForm).then(res => {
-                                if (res.data) {
-                                    this.$router.push({path: '/home'});
-                                } else {
-                                    let message = res.data.message;
-                                    this.logining = false;
-                                    this.$alert(message, '提示', {
-                                        confirmButtonText: 'ok'
-                                    })
-                                }
-                                this.logining = false;
-                            }).catch(error => {
-                                this.logining = false;
-                            });
-                        }
-                    }
-                )
-            }
-        }
+
+import userApi from '@/api/userApi'
+
+export default {
+  data() {
+    return {
+      logining: false,
+      ruleForm: {
+        username: 'lq',
+        password: '123',
+      },
+      rules: {
+        username: [{required: true, message: '请输入账号', trigger: 'blur'}],
+        password: [{required: true, message: '请输入密码', trigger: 'blur'}]
+      },
+      checked: false
     }
+  },
+  methods: {
+    handleSubmit(event) {
+      this.$refs.ruleForm.validate((valid) => {
+          if (valid) {
+            this.logining = true;
+            userApi.login(this.ruleForm).then(res => {
+              if (res.data) {
+                this.$router.push({path: '/home'});
+              } else {
+                let message = res.data.message;
+                this.logining = false;
+                this.$alert(message, '提示', {
+                  confirmButtonText: 'ok'
+                })
+              }
+              this.logining = false;
+            }).catch(error => {
+              this.logining = false;
+            });
+          }
+        }
+      )
+    }
+  }
+}
 </script>
 
 <style scoped>
 
-  .login-container {
-    margin-top: 6%;
-    width: 100%;
-    /* 登录框上下对齐 */
-    display: flex;
-    align-items: center;
-  }
+.login-container {
+  margin-top: 6%;
+  width: 100%;
+  /* 登录框上下对齐 */
+  display: flex;
+  align-items: center;
+}
 
-  .login-page {
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-    margin: 0 auto;
-    width: 350px;
-    padding: 20px 35px 10px 35px;
-    background: #fff;
-    border: 1px solid #eaeaea;
-    box-shadow: 0 0 25px #cac6c6;
-  }
+.login-page {
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  margin: 0 auto;
+  width: 350px;
+  padding: 20px 35px 10px 35px;
+  background: #fff;
+  border: 1px solid #eaeaea;
+  box-shadow: 0 0 25px #cac6c6;
+}
 
-  label.el-checkbox.rememberme {
-    margin: 0 0 15px;
-    text-align: left;
-  }
+label.el-checkbox.rememberme {
+  margin: 0 0 15px;
+  text-align: left;
+}
 
-  .logo {
-    width: 180px;
-    height: 59px;
-  }
+.logo {
+  width: 180px;
+  height: 59px;
+}
 </style>

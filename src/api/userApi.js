@@ -1,4 +1,4 @@
-import request from 'axios'
+import request from '@/utils/request'
 import * as userApi from '@/api/userApi'
 
 export default userApi
