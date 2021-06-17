@@ -40,7 +40,7 @@ npm config set registry https://registry.npm.taobao.org
 ###### 下载安装
 ```bash
 ## 克隆项目源码包
-git clone git@github.com:gzydong/LumenIM.git
+git clone https://github.com/dingqianwen/rule-engine-front-v2
 
 ## 安装项目依赖扩展组件
 npm install
