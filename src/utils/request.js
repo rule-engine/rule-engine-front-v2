@@ -1,49 +1,79 @@
-import axios from 'axios'
-import router from "../router";
-import {Notification, MessageBox, Message} from 'element-ui'
-import {getToken, setToken} from '@/utils/auth'
+import axios from 'axios';
+import config from '@/config/config'
+import {
+  getToken,
+  setToken,
+  removeAll
+} from '@/utils/auth';
 
-const requestBaseURL = "http://49.234.81.14";
+import ElementUI, {
+  Notification
+} from 'element-ui';
+import router from "@/router";
 
-// 创建axios实例
-const service = axios.create({
-  // axios中请求配置有baseURL选项，表示请求URL公共部分
-  baseURL: requestBaseURL,
-  // 超时
-  timeout: 10000
-})
 
-//设置cookie跨域
-service.defaults.withCredentials = true;
+// 创建 axios 实例
+const request = axios.create({
+  // API 请求的默认前缀
+  baseURL: config.api_url,
 
-// 请求之前
-service.interceptors.request.use(config => {
+  // 请求超时时间
+  timeout: 20000
+});
+//允许跨域
+request.defaults.withCredentials = true;
+/**
+ * 异常拦截处理器
+ *
+ * @param {*} error
+ */
+const errorHandler = (error) => {
+  // 判断是否是响应错误信息
+  if (error.response) {
+    if (error.response.status === 401) {
+      removeAll()
+      location.reload();
+    } else {
+      Notification({
+        message: '网络异常,请稍后再试...',
+        position: 'top-right'
+      });
+    }
+  }
+
+  return Promise.reject(error);
+}
+
+// 请求拦截器
+request.interceptors.request.use(config => {
   // 请求时携带此token
   config.headers['token'] = getToken();
   return config;
-}, error => {
-  // 请求错误
-  return Promise.reject(error);
-});
-//服务器响应
-service.interceptors.response.use(response => {
+}, errorHandler);
+
+
+// 响应拦截器
+request.interceptors.response.use(response => {
   let token = response.headers.token;
+
   if (token != null) {
-    setToken(token)
+    setToken(token, 60 * 60 * 24 * 7)
   }
   let data = response.data;
   let code = data.code;
   let message = data.message;
+
   if (code === 200) {
     return data;
   } else if (code === 4009 || code === 10010004 || code === 99990402 || code === 10011039) {
+    removeAll()
     router.push({path: '/login'});
-    Message({
+    ElementUI.Message({
       type: 'warning',
       message: message
     });
   } else {
-    Message({
+    ElementUI.Message({
       type: 'error',
       message: message
     });
@@ -58,5 +88,53 @@ service.interceptors.response.use(response => {
   // 响应出现错误
   return Promise.reject(error);
 });
+/**
+ * GET 请求
+ *
+ * @param {String} url
+ * @param {Object} data
+ * @param {Object} options
+ * @returns {Promise<any>}
+ */
+export const get = (url, data = {}, options = {}) => {
+  return request({
+    url,
+    params: data,
+    method: 'get',
+    ...options
+  });
+}
 
-export default service
+/**
+ * POST 请求
+ *
+ * @param {String} url
+ * @param {Object} data
+ * @param {Object} options
+ * @returns {Promise<any>}
+ */
+export const post = (url, data = {}, options = {}) => {
+  return request({
+    url,
+    method: 'post',
+    data: data,
+    ...options
+  });
+}
+
+/**
+ * 上传文件 POST 请求
+ *
+ * @param {String} url
+ * @param {Object} data
+ * @param {Object} options
+ * @returns {Promise<any>}
+ */
+export const upload = (url, data = {}, options = {}) => {
+  return request({
+    url,
+    method: 'post',
+    data: data,
+    ...options
+  });
+}
