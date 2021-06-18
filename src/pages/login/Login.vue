@@ -37,14 +37,14 @@
           </a-tab-pane>
           <a-tab-pane tab="手机号登录" key="2">
             <a-form-item>
-              <a-input size="large" placeholder="mobile number">
+              <a-input size="large" placeholder="请输入手机号登录">
                 <a-icon slot="prefix" type="mobile"/>
               </a-input>
             </a-form-item>
             <a-form-item>
               <a-row :gutter="8" style="margin: 0 -4px">
                 <a-col :span="16">
-                  <a-input size="large" placeholder="captcha">
+                  <a-input size="large" placeholder="输入验证码">
                     <a-icon slot="prefix" type="mail"/>
                   </a-input>
                 </a-col>
