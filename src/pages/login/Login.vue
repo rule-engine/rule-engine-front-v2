@@ -15,7 +15,6 @@
                      style="margin-bottom: 24px;"/>
             <a-form-item>
               <a-input
-                  defaultValue="admin"
                   autocomplete="autocomplete"
                   size="large"
                   placeholder="请输入用户名"
@@ -26,7 +25,6 @@
             </a-form-item>
             <a-form-item>
               <a-input
-                  defaultValue="888888"
                   size="large"
                   placeholder="请输入密码"
                   autocomplete="autocomplete"
