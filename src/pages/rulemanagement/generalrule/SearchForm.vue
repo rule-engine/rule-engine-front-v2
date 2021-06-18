@@ -10,6 +10,7 @@
           </tag-select>
         </a-form-item>
       </form-row>
+
       <form-row label="owner" style="padding-bottom: 11px">
         <a-form-item>
           <a-select
@@ -27,7 +28,7 @@
       <form-row label="其他选项">
         <a-row>
           <a-col :span="8">
-            <a-form-item label="活跃用户" :labelCol="{span: 6}" :wrapperCol="{span: 12}">
+            <a-form-item label="规则状态" :labelCol="{span: 6}" :wrapperCol="{span: 12}">
               <a-select placeholder="不限">
                 <a-select-option value="1">周星星</a-select-option>
               </a-select>
@@ -35,9 +36,9 @@
           </a-col>
           <a-col :span="8">
             <a-form-item
-              label="好评度"
-              :labelCol="{span: 6}"
-              :wrapperCol="{span: 12}"
+                label="好评度"
+                :labelCol="{span: 6}"
+                :wrapperCol="{span: 12}"
             >
               <a-select placeholder="不限">
                 <a-select-option value="1">优秀</a-select-option>
@@ -46,6 +47,20 @@
           </a-col>
         </a-row>
       </form-row>
+
+      <a-space class="operator">
+        <a-button @click="addNew" type="primary">新建</a-button>
+        <a-button >批量操作</a-button>
+        <a-dropdown>
+          <a-menu @click="handleMenuClick" slot="overlay">
+            <a-menu-item key="delete">删除</a-menu-item>
+            <a-menu-item key="audit">审批</a-menu-item>
+          </a-menu>
+          <a-button>
+            更多操作 <a-icon type="down" />
+          </a-button>
+        </a-dropdown>
+      </a-space>
     </a-form>
   </a-card>
 </template>
