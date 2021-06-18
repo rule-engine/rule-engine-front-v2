@@ -2,7 +2,7 @@ import axios from 'axios'
 import Cookie from 'js-cookie'
 
 // 跨域认证信息 header 名
-const xsrfHeaderName = 'Authorization'
+const xsrfHeaderName = 'token'
 
 axios.defaults.timeout = 5000
 axios.defaults.withCredentials= true
@@ -49,7 +49,7 @@ async function request(url, method, params, config) {
 function setAuthorization(auth, authType = AUTH_TYPE.BEARER) {
   switch (authType) {
     case AUTH_TYPE.BEARER:
-      Cookie.set(xsrfHeaderName, 'Bearer ' + auth.token, {expires: auth.expireAt})
+      Cookie.set(xsrfHeaderName,  auth.token, {expires: auth.expireAt})
       break
     case AUTH_TYPE.BASIC:
     case AUTH_TYPE.AUTH1:

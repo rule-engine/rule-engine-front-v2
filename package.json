@@ -25,6 +25,7 @@
     "date-fns": "^2.14.0",
     "enquire.js": "^2.1.6",
     "highlight.js": "^10.2.1",
+    "js-base64": "^3.6.1",
     "js-cookie": "^2.2.1",
     "mockjs": "^1.1.0",
     "nprogress": "^0.2.0",
