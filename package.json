@@ -1,7 +1,8 @@
 {
-  "name": "vue-antd-admin",
-  "version": "0.7.4",
-  "homepage": "https://iczer.github.io/vue-antd-admin",
+  "name": "rule-engine-front",
+  "version": "1.0.0",
+  "description": "A Vue.js project",
+  "author": "dqw <761945125@qq.com>",
   "private": true,
   "scripts": {
     "dev": "vue-cli-service serve",
