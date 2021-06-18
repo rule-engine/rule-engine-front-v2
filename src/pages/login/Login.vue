@@ -18,7 +18,7 @@
                   autocomplete="autocomplete"
                   size="large"
                   placeholder="请输入用户名"
-                  v-decorator="['name', {rules: [{ required: true, message: '请输入账户名', whitespace: true}]}]"
+                  v-decorator="['name', {rules: [{ required: true, message: '请输入账户名', whitespace: true}]},{initialValue: ['admin']}]"
               >
                 <a-icon slot="prefix" type="user"/>
               </a-input>
@@ -29,7 +29,7 @@
                   placeholder="请输入密码"
                   autocomplete="autocomplete"
                   type="password"
-                  v-decorator="['password', {rules: [{ required: true, message: '请输入密码', whitespace: true}]}]"
+                  v-decorator="['password', {rules: [{ required: true, message: '请输入密码', whitespace: true}]},{initialValue: ['888888']}]"
               >
                 <a-icon slot="prefix" type="lock"/>
               </a-input>
