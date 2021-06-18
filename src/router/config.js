@@ -67,7 +67,7 @@ const options = {
                                     closable: false
                                 }
                             },
-                            component: () => import('@/pages/rulemanagement/generalrule'),
+                            component: () => import('@/pages/rulemanagement/generalrule')
                         }/*,
                         {
                             path: 'ruleSet',
