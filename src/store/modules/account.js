@@ -71,9 +71,7 @@ export default {
     },
     mutations: {
         setUser: (state, user) => {
-            console.log('--submituser', user)
-            console.log('--submituser2', state)
-            // state.user = user  //todo 参数异常 待修复
+            state.user = user
             localStorage.setItem(process.env.VUE_APP_USER_KEY, JSON.stringify(user))
         },
         setPermissions(state, permissions) {

@@ -40,12 +40,9 @@ export default {
       logout(this.$router)
     },
     afterGetUserInfo(res) {
-      console.log('userInfo---', res)
       if (res.data.code === 200) {
         const {data} = res.data
-        console.log('111', data)
-        // this.$store.commit('setUser',data)
-        this.setUser({username: 'aaa'})
+        this.$store.commit('account/setUser',data)
       }
     }
   }
