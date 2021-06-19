@@ -37,6 +37,7 @@
         </a-card>
         <a-card>
             <standard-table
+                    rowKey="id"
                     style="clear: both"
                     :columns="columns"
                     :dataSource="dataSource"
@@ -115,7 +116,7 @@
         data() {
             return {
                 columns: columns,
-                selectedRows: false,
+                selectedRows: [],
                 dataSource: [
                     {
                         id: '1',
