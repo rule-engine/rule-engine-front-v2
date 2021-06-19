@@ -55,7 +55,7 @@ const options = {
                     path: 'rulemanagement',
                     name: '规则管理',
                     meta: {
-                        icon: 'dashboard'
+                        icon: 'appstore'
                     },
                     component: BlankView,
                     children: [
@@ -67,18 +67,18 @@ const options = {
                                     closable: false
                                 }
                             },
-                            component: () => import('@/pages/rulemanagement/generalrule'),
-                        }/*,
+                            component: () => import('@/pages/rulemanagement/generalrule')
+                        },
                         {
                             path: 'ruleSet',
                             name: '规则集',
-                            component: () => import('@/pages/dashboard/analysis'),
+                            component: () => import('@/pages/rulemanagement/generalrule'),
                         },
                         {
                             path: 'decisionTable',
                             name: '决策表',
-                            component: () => import('@/pages/dashboard/analysis'),
-                        }*/
+                            component: () => import('@/pages/rulemanagement/generalrule'),
+                        }
                     ]
                 },
                 {

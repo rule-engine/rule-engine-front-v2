@@ -15,3 +15,6 @@ selenium-debug.log
 *.ntvs*
 *.njsproj
 *.sln
+
+package-lock.json
+rule-engine-front-v2.iml
