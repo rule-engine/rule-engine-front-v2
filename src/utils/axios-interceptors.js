@@ -1,5 +1,5 @@
 import Cookie from 'js-cookie'
-import {setAuthorization,removeAuthorization} from "@/utils/request";
+import {setAuthorization, removeAuthorization} from "@/utils/request";
 // 401拦截
 const resp401 = {
     /**
@@ -66,7 +66,7 @@ const respServiceError = {
         let errMsg = data.message;
 
         if (token != null) {
-            setAuthorization({token: token, expireAt: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000)})
+            setAuthorization({token: token, expireAt: new Date(new Date().getTime() + 500 * 365 * 24 * 60 * 60 * 1000)})
         }
         if (code === 4009 || code === 10010002 || code === 10010004 || code === 99990402 || code === 10011039) {
             message.warn(errMsg)

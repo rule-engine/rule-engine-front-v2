@@ -41,7 +41,7 @@ export default {
   methods: {
     changeWorkSpace(space) {
       this.$store.commit('workspace/setWorkSpace', this.workSpaceList.find(e => e.wsId === space.key))
-      location.reload()
+      this.$router.go(0)
 
     }
   }
