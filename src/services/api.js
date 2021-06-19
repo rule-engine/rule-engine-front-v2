@@ -5,6 +5,8 @@ const BASE_URL = process.env.NODE_ENV === 'production' ? process.env.VUE_APP_API
 module.exports = {
     user: {
         LOGIN: `${BASE_URL}/user/login`,
+        GET_USER_INFO: `${BASE_URL}/user/getUserInfo`,
+        LOGOUT: `${BASE_URL}/user/logout`,
     },
     ROUTES: `${BASE_URL}/routes`,
     GOODS: `${BASE_URL}/goods`,

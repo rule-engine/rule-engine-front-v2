@@ -17,7 +17,7 @@ const goodsList = Mock.mock({
   }]
 })
 
-Mock.mock(RegExp(`${process.env.VUE_APP_API_BASE_URL}/goods` + '.*'),'get', ({url}) => {
+Mock.mock(RegExp(`/api/goods` + '.*'),'get', ({url}) => {
   const params = parseUrlParams(decodeURI(url))
   let {page, pageSize} = params
   page = eval(page) - 1 || 0

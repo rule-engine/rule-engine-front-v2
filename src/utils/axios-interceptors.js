@@ -66,11 +66,13 @@ const respServiceError = {
         let errMsg = data.message;
 
         if (token != null) {
-            setAuthorization({token: token, expireAt: new Date(new Date().getTime() + 7 * 24 * 60 * 60)})
+            setAuthorization({token: token, expireAt: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000)})
         }
         if (code === 4009 || code === 10010004 || code === 99990402 || code === 10011039) {
             message.warn(errMsg)
-        } else {
+        } else if (code !== 200
+         && code //mock不拦截 @todo 开发完毕要去掉
+        ) {
             message.error(errMsg)
         }
         return response

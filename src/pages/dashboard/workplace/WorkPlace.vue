@@ -1,8 +1,8 @@
 <template>
   <page-layout :avatar="currUser.avatar">
     <div slot="headerContent">
-      <div class="title">{{welcome.timeFix[lang]}}，{{currUser.name}}，{{welcome.message[lang]}}</div>
-      <div>{{currUser.position[lang]}}</div>
+      <div class="title">{{ welcome.timeFix[lang] }}，{{ currUser.username }}，{{ welcome.message[lang] }}</div>
+      <div>{{ currUser.position[lang] }}</div>
     </div>
     <template slot="extra">
       <head-info class="split-right" :title="$t('project')" content="56"/>
@@ -12,14 +12,15 @@
     <template>
       <a-row style="margin: 0 -12px">
         <a-col style="padding: 0 12px" :xl="16" :lg="24" :md="24" :sm="24" :xs="24">
-          <a-card class="project-list" :loading="loading" style="margin-bottom: 24px;" :bordered="false" :title="$t('progress')" :body-style="{padding: 0}">
-            <a slot="extra">{{$t('all')}}</a>
+          <a-card class="project-list" :loading="loading" style="margin-bottom: 24px;" :bordered="false"
+                  :title="$t('progress')" :body-style="{padding: 0}">
+            <a slot="extra">{{ $t('all') }}</a>
             <div>
               <a-card-grid :key="i" v-for="(item, i) in projects">
                 <a-card :bordered="false" :body-style="{padding: 0}">
                   <a-card-meta :description="item.desc">
                     <div slot="title" class="card-title">
-                      <a-avatar size="small" :src="item.logo" />
+                      <a-avatar size="small" :src="item.logo"/>
                       <span>Alipay</span>
                     </div>
                   </a-card-meta>
@@ -35,8 +36,8 @@
             <a-list>
               <a-list-item :key="index" v-for="(item, index) in activities">
                 <a-list-item-meta>
-                  <a-avatar slot="avatar" :src="item.user.avatar" />
-                  <div slot="title" v-html="item.template" />
+                  <a-avatar slot="avatar" :src="item.user.avatar"/>
+                  <div slot="title" v-html="item.template"/>
                   <div slot="description">9小时前</div>
                 </a-list-item-meta>
               </a-list-item>
@@ -52,12 +53,13 @@
               <a>操作四</a>
               <a>操作五</a>
               <a>操作六</a>
-              <a-button size="small" type="primary" ghost icon="plus">{{$t('add')}}</a-button>
+              <a-button size="small" type="primary" ghost icon="plus">{{ $t('add') }}</a-button>
             </div>
           </a-card>
-          <a-card :loading="loading" :title="`XX ${$t('degree')}`" style="margin-bottom: 24px" :bordered="false" :body-style="{padding: 0}">
+          <a-card :loading="loading" :title="`XX ${$t('degree')}`" style="margin-bottom: 24px" :bordered="false"
+                  :body-style="{padding: 0}">
             <div style="min-height: 400px;">
-              <radar />
+              <radar/>
             </div>
           </a-card>
           <a-card :loading="loading" :title="$t('team')" :bordered="false">
@@ -65,8 +67,8 @@
               <a-row>
                 <a-col :span="12" v-for="(item, index) in teams" :key="index">
                   <a>
-                    <a-avatar size="small" :src="item.avatar" />
-                    <span class="member">{{item.name}}</span>
+                    <a-avatar size="small" :src="item.avatar"/>
+                    <span class="member">{{ item.name }}</span>
                   </a>
                 </a-col>
               </a-row>
@@ -89,7 +91,7 @@ export default {
   name: 'WorkPlace',
   components: {Radar, HeadInfo, PageLayout},
   i18n: require('./i18n'),
-  data () {
+  data() {
     return {
       projects: [],
       loading: true,
@@ -106,13 +108,17 @@ export default {
     ...mapState('setting', ['lang'])
   },
   created() {
-    request('/user/welcome', METHOD.GET).then(res => this.welcome = res.data)
+    request('/user/welcome', METHOD.GET).then(res => {
+      this.welcome = res.data
+      console.log(this.welcome)
+    })
+
     request('/work/activity', METHOD.GET).then(res => this.activities = res.data)
     request('/work/team', METHOD.GET).then(res => this.teams = res.data)
     request('/project', METHOD.GET).then(res => {
-        this.projects = res.data
-        this.loading = false
-      })
+      this.projects = res.data
+      this.loading = false
+    })
   }
 }
 </script>

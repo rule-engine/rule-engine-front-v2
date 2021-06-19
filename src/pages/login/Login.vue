@@ -58,7 +58,7 @@
 
 <script>
 import CommonLayout from '@/layouts/CommonLayout'
-import {login, getRoutesConfig} from '@/services/user'
+import {login,getRoutesConfig} from '@/services/user'
 import {loadRoutes} from '@/utils/routerUtil'
 import {mapMutations} from 'vuex'
 
@@ -93,17 +93,19 @@ export default {
     afterLogin(res) {
       this.logging = false
       const loginRes = res.data
+      this.form.setFieldsValue({password: ''});
+      console.log(loginRes)
       if (loginRes.code === 200) {
+        this.$message.success('登陆成功',3)
         // 获取路由配置
         getRoutesConfig().then(result => {
           const routesConfig = result.data.data
           loadRoutes(routesConfig)
           this.$router.push('/dashboard/workplace')
-          this.$message.success(loginRes.message, 3)
         })
       } else {
         this.error = loginRes.message
-        this.form.setFieldsValue({password: ''});
+
       }
     }
   }

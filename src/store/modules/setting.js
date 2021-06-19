@@ -18,6 +18,7 @@ export default {
     pageMinHeight: 0,
     menuData: [],
     activatedFirst: undefined,
+    lang:'CN',
     customTitles,
     ...config,
     ...localSetting
