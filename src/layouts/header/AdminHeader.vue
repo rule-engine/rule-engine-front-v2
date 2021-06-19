@@ -15,7 +15,7 @@
         <header-work-space class="header-item"/>
         <header-search class="header-item" @active="val => searchActive = val"/>
 
-        <a-tooltip class="header-item" :title="fullscreenTitle" placement="bottom">
+        <a-tooltip class="header-item" :title="!fullscreen?'全屏':'退出全屏'" placement="bottom">
           <a href="javascript:void(0)" @click="fullScreen">
             <a-icon :type="!fullscreen?'fullscreen':'fullscreen-exit'"/>
           </a>
@@ -57,8 +57,6 @@ export default {
   data() {
     return {
       fullscreen: false,
-      fullscreenTitle: "进入全屏模式",
-
       langList: [
         {key: 'CN', name: '简体中文', alias: '简体'},
         {key: 'HK', name: '繁體中文', alias: '繁體'},
@@ -86,24 +84,24 @@ export default {
       return `calc(${headWidth} - ${extraWidth})`
     }
   },
+  mounted() {
+    document.addEventListener("fullscreenchange", this.fullScreenEsc)
+  },
+  destroyed() {
+    document.removeEventListener("fullscreenchange", this.fullScreenEsc)
+  },
   methods: {
-    fullScreen() {
+    quit(e) {
+      let key = e.keyCode;
+      console.log('退出全屏',key)
+      if (key === 27) {
+        console.log('退出全屏')
+      }
+    },
+    fullScreen () {
       let element = document.documentElement;
-      if (this.fullscreen) {
-        this.$message.success("退出全屏模式");
-        this.fullscreenTitle = "进入全屏模式";
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.webkitCancelFullScreen) {
-          document.webkitCancelFullScreen();
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
-        }
-      } else {
-        this.$message.success("进入全屏模式");
-        this.fullscreenTitle = "退出全屏模式";
+      // this.$refs.iframe.requestFullscreen()
+      if (!this.fullscreen) {
         if (element.requestFullscreen) {
           element.requestFullscreen();
         } else if (element.webkitRequestFullScreen) {
@@ -114,8 +112,25 @@ export default {
           // IE11
           element.msRequestFullscreen();
         }
+      } else {
+        document.exitFullscreen()
       }
-      this.fullscreen = !this.fullscreen;
+      this.fullscreen = !this.fullscreen
+    },
+    fullScreenEsc () {
+      if (!this.checkFull()) {
+        this.fullscreen = false
+      }
+
+    },
+    checkFull () {
+      var isFull =
+          document.fullscreenElement ||
+          document.mozFullScreenElement ||
+          document.webkitFullscreenElement;
+      //to fix : false || undefined == undefined
+      if (isFull === undefined) isFull = false;
+      return isFull;
     },
     toggleCollapse() {
       this.$emit('toggleCollapse')
