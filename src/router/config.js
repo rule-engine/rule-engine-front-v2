@@ -82,6 +82,36 @@ const options = {
                     ]
                 },
                 {
+                    path: 'settings',
+                    name: '系统设置',
+                    meta: {
+                        icon: 'appstore'
+                    },
+                    component: BlankView,
+                    children: [
+                        {
+                            path: 'user',
+                            name: '用户列表',
+                            meta: {
+                                page: {
+                                    closable: false
+                                }
+                            },
+                            component: () => import('@/pages/settings/user')
+                        },
+                        {
+                            path: 'workspace',
+                            name: '工作空间',
+                            meta: {
+                                page: {
+                                    closable: false
+                                }
+                            },
+                            component: () => import('@/pages/settings/user')
+                        },
+                    ]
+                },
+                {
                     path: 'form',
                     name: '表单页',
                     meta: {
