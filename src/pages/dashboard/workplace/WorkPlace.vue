@@ -2,7 +2,8 @@
   <page-layout :avatar="currUser.avatar">
     <div slot="headerContent">
       <div class="title">{{ welcome.timeFix[lang] }}，{{ currUser.username }}，{{ welcome.message[lang] }}</div>
-      <div>{{ currUser.position[lang] }}</div>
+<!--      <div>{{ currUser.position[lang] }}</div>-->
+      <div>北京市朝阳区</div>
     </div>
     <template slot="extra">
       <head-info class="split-right" :title="$t('project')" content="56"/>

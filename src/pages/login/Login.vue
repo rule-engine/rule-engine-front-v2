@@ -94,7 +94,6 @@ export default {
       this.logging = false
       const loginRes = res.data
       this.form.setFieldsValue({password: ''});
-      console.log(loginRes)
       if (loginRes.code === 200) {
         this.$message.success('登陆成功',3)
         // 获取路由配置
