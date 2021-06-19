@@ -12,12 +12,19 @@
       </div>
       <div :class="['admin-header-right', headerTheme]">
           <header-search class="header-item" @active="val => searchActive = val" />
-          <a-tooltip class="header-item" title="帮助文档" placement="bottom" >
+
+        <a-tooltip class="header-item" :title="fullscreenTitle" placement="bottom" >
+          <a href="javascript:void(0)" @click="fullScreen" >
+            <a-icon :type="!fullscreen?'fullscreen':'fullscreen-exit'" />
+          </a>
+
+        </a-tooltip>
+        <a-tooltip class="header-item" title="帮助文档" placement="bottom" >
             <a href="https://iczer.gitee.io/vue-antd-admin-docs/" target="_blank">
               <a-icon type="question-circle-o" />
             </a>
           </a-tooltip>
-          <header-notice class="header-item"/>
+           <header-notice class="header-item"/>
           <header-avatar class="header-item"/>
           <a-dropdown class="lang header-item">
             <div>
@@ -45,6 +52,9 @@ export default {
   props: ['collapsed', 'menuData'],
   data() {
     return {
+      fullscreen: false,
+      fullscreenTitle:"进入全屏模式",
+
       langList: [
         {key: 'CN', name: '简体中文', alias: '简体'},
         {key: 'HK', name: '繁體中文', alias: '繁體'},
@@ -73,6 +83,36 @@ export default {
     }
   },
   methods: {
+    fullScreen(){
+      let element = document.documentElement;
+      if (this.fullscreen) {
+        this.$message.success("退出全屏模式");
+        this.fullscreenTitle = "进入全屏模式";
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitCancelFullScreen) {
+          document.webkitCancelFullScreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+      } else {
+        this.$message.success("进入全屏模式");
+        this.fullscreenTitle = "退出全屏模式";
+        if(element.requestFullscreen) {
+          element.requestFullscreen();
+        } else if (element.webkitRequestFullScreen) {
+          element.webkitRequestFullScreen();
+        } else if (element.mozRequestFullScreen) {
+          element.mozRequestFullScreen();
+        } else if (element.msRequestFullscreen) {
+          // IE11
+          element.msRequestFullscreen();
+        }
+      }
+      this.fullscreen = !this.fullscreen;
+    },
     toggleCollapse () {
       this.$emit('toggleCollapse')
     },
