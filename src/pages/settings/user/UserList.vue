@@ -46,6 +46,9 @@
                     @change="onChange"
                     @selectedRowChange="onSelectChange"
             >
+                <div slot="user" slot-scope="{text, record}">
+                    <a-avatar size="small" icon="user" :src="record.avatar" /> {{record.username}}
+                </div>
                 <div slot="action">
                     <a style="margin-right: 8px">
                         <a-icon type="edit"/>
@@ -76,13 +79,10 @@
             dataIndex: 'id'
         },
         {
-            title: '头像',
-            dataIndex: 'avatar', // ⚪小图
-        },
-        {
-            title: '用户名称',
+            title: '用户',
             width: '180px',
-            dataIndex: 'username',
+            // dataIndex: 'user',avatar
+            scopedSlots: { customRender: 'user' }
             // scopedSlots: { customRender: 'username' }
         },
         {
@@ -121,9 +121,17 @@
                     {
                         id: '1',
                         username: 'admin',
-                        avatar: '123',
+                        avatar: 'http://oss-boot-test.oss-cn-beijing.aliyuncs.com/ruleengine/26.jpg?Expires=33153093613&OSSAccessKeyId=LTAIyEa5SulNXbQa&Signature=Ot%2BLvt7eKKy5jUN4ufZfEmLtrqM%3D',
                         email: 'admin@qq.com',
                         sex: '男',
+                        createTime: '2020-15-21 20:20:1',
+                    },
+                    {
+                        id: '2',
+                        username: 'asdf',
+                        avatar: 'sadf',
+                        email: 'asdf@qq.com',
+                        sex: 'nv',
                         createTime: '2020-15-21 20:20:1',
                     }
                 ],
