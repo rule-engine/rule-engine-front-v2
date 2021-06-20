@@ -32,6 +32,7 @@
         </a-dropdown>
       </a-space>
     </a-card>
+
     <a-card>
       <standard-table
           rowKey="id"
@@ -48,13 +49,21 @@
             <div class="admin-avatar" :style="'margin-left:'+((index*20+10)-20)+'px;z-index:'+index" :key="user.id"
                  v-for="(user,index) in record.userList">
               <a-avatar v-if="index<4" size="small" icon="user" :src="user.avatar"/>
-              <a-avatar size="small"  style="margin-left:-4px;  " v-else-if="index===4">...</a-avatar>
+              <a-avatar size="small"  style="margin-left:-2px;  " v-else-if="index===4">...</a-avatar>
             </div>
         </div>
         <div slot="action">
           <a style="margin-right: 8px">
             <a-icon type="edit"/>
             编辑
+          </a>
+          <a style="margin-right: 8px" @click="showModal">
+            <a-icon type="edit"/>
+            成员
+          </a>
+          <a style="margin-right: 8px">
+            <a-icon type="edit"/>
+            密钥
           </a>
           <a style="margin-right: 8px">
             <a-icon type="delete"/>
@@ -66,12 +75,115 @@
         </template>
       </standard-table>
     </a-card>
+
+    <a-modal
+            title="工作空间成员"
+            :visible="visible"
+            :confirm-loading="confirmLoading"
+            :width="700"
+            @ok="handleOk"
+            @cancel="handleCancel"
+    >
+      <a-form :form="form" layout="inline">
+        <a-form-item label="用户名称/编码">
+          <a-input
+                  v-decorator="['nameCode', {rules: [{  whitespace: true}]}]"/>
+        </a-form-item>
+        <a-form-item>
+          <a-button type="primary" @click="submitForm('ruleForm')">
+            搜索
+          </a-button>
+        </a-form-item>
+      </a-form>
+<!--      <a-form :form="form" :label-col="{ span: 2 }" :wrapper-col="{ span: 22 }">-->
+<!--        <a-form-item label="名称">-->
+<!--          <a-input-->
+<!--                  v-decorator="['name', {rules: [{  whitespace: true}]}]"/>-->
+<!--        </a-form-item>-->
+<!--        <a-form-item label="编码">-->
+<!--          <a-input/>-->
+<!--        </a-form-item>-->
+<!--        <a-form-item label="说明">-->
+<!--          <a-textarea  :rows="4" />-->
+<!--        </a-form-item>-->
+<!--      </a-form>-->
+      <br>
+      <a-space class="operator">
+        <a-button @click="showModal1" type="primary">新增成员</a-button>
+      </a-space>
+      <br>     <br>
+      <a-tabs default-active-key="1" @change="callback">
+        <a-tab-pane key="1" tab="管理员">
+
+            <a-table></a-table>
+
+        </a-tab-pane>
+        <a-tab-pane key="2" tab="用户" force-render>
+            <a-table></a-table>
+        </a-tab-pane>
+      </a-tabs>
+
+
+    </a-modal>
+
+    <a-modal
+            title="新增成员"
+            :visible="visible1"
+            :confirm-loading="confirmLoading1"
+            :width="700"
+            @ok="handleOk1"
+            @cancel="handleCancel1"
+    >
+      <a-transfer
+              :data-source="mockData"
+              :titles="['当前', '可选']"
+              :target-keys="targetKeys"
+              :disabled="disabled"
+              :show-search="true"
+              :filter-option="(inputValue, item) => item.title.indexOf(inputValue) !== -1"
+              :show-select-all="false"
+              @change="onChange1"
+      >
+        <template
+                slot="children"
+                slot-scope="{
+          props: { direction, filteredItems, selectedKeys, disabled: listDisabled },
+          on: { itemSelectAll, itemSelect },
+        }"
+        >
+          <a-table
+                  :row-selection="
+            getRowSelection({ disabled: listDisabled, selectedKeys, itemSelectAll, itemSelect })
+          "
+                  :columns="direction === 'left' ? leftColumns : rightColumns"
+                  :data-source="filteredItems"
+                  size="small"
+                  :style="{ pointerEvents: listDisabled ? 'none' : null }"
+                  :custom-row="
+            ({ key, disabled: itemDisabled }) => ({
+              on: {
+                click: () => {
+                  if (itemDisabled || listDisabled) return;
+                  itemSelect(key, !selectedKeys.includes(key));
+                },
+              },
+            })
+          "
+          >
+            <div slot="user" slot-scope="{user,avatar}">
+              <a-avatar size="small" icon="user" :src="avatar" /> {{user}}
+            </div>
+          </a-table>
+        </template>
+      </a-transfer>
+    </a-modal>
   </page-layout>
 </template>
 
 <script>
 import PageLayout from '@/layouts/PageLayout'
 import StandardTable from '@/components/table/StandardTable'
+import difference from 'lodash/difference';
 
 
 const columns = [
@@ -105,14 +217,52 @@ const columns = [
   },
   {
     title: '操作',
-    width: '180px',
+    width: '220px',
     scopedSlots: {customRender: 'action'}
   }
+];
+
+const mockData = [];
+for (let i = 0; i < 7; i++) {
+  mockData.push({
+    key: i.toString(),
+    user: `admin${i + 1}`,
+    email: `admin${i + 1}`,
+    avatar:'123123',
+    disabled: false,
+  });
+}
+
+const originTargetKeys = mockData.filter(item => +item.key % 3 > 1).map(item => item.key);
+
+const leftTableColumns = [
+  {
+   // dataIndex: 'user',
+    title: '用户',
+    scopedSlots: { customRender: 'user' }
+  },
+  {
+    dataIndex: 'email',
+    title: '邮箱',
+  },
+];
+const rightTableColumns = [
+  {
+    //dataIndex: 'user',
+    title: '用户',
+    scopedSlots: { customRender: 'user' }
+  },
+  {
+    dataIndex: 'email',
+    title: '邮箱',
+  },
 ];
 
 export default {
   name: "UserList",
   components: {PageLayout, StandardTable},
+
+
   data() {
     return {
       columns: columns,
@@ -173,7 +323,18 @@ export default {
 
       ],
       form: this.$form.createForm(this),
-      loading: true
+      loading: true,
+      ModalText: 'Content of the modal',
+      visible: false,
+      visible1: false,
+      confirmLoading: false,
+      confirmLoading1: false,
+      mockData,
+      targetKeys: originTargetKeys,
+      disabled: false,
+      showSearch: false,
+      leftColumns: leftTableColumns,
+      rightColumns: rightTableColumns,
     }
 
   }, created() {
@@ -220,6 +381,68 @@ export default {
       this.dataSource = this.dataSource.filter(item => item.key !== key)
       //this.selectedRows = this.selectedRows.filter(item => item.key !== key)
     },
+    showModal() {
+      this.visible = true;
+    },
+    showModal1() {
+      this.visible1 = true;
+    },
+    handleOk(/*e*/) {
+      this.ModalText = 'The modal will be closed after two seconds';
+      this.confirmLoading = true;
+      setTimeout(() => {
+        this.visible = false;
+        this.confirmLoading = false;
+      }, 2000);
+    },
+    handleOk1(/*e*/) {
+      this.ModalText = 'The modal will be closed after two seconds';
+      this.confirmLoading1 = true;
+      setTimeout(() => {
+        this.visible1 = false;
+        this.confirmLoading1 = false;
+      }, 2000);
+    },
+    handleCancel(/*e*/) {
+      console.log('Clicked cancel button');
+      this.visible = false;
+    },
+    handleCancel1(/*e*/) {
+      console.log('Clicked cancel button');
+      this.visible1 = false;
+    },
+    callback(key) {
+      console.log(key);
+    },
+    onChange1(nextTargetKeys) {
+      this.targetKeys = nextTargetKeys;
+    },
+
+    triggerDisable(disabled) {
+      this.disabled = disabled;
+    },
+
+    triggerShowSearch(showSearch) {
+      this.showSearch = showSearch;
+    },
+    getRowSelection({ disabled, selectedKeys, itemSelectAll, itemSelect }) {
+      return {
+        getCheckboxProps: item => ({props: {disabled: disabled || item.disabled}}),
+        onSelectAll(selected, selectedRows) {
+          const treeSelectedKeys = selectedRows
+                  .filter(item => !item.disabled)
+                  .map(({key}) => key);
+          const diffKeys = selected
+                  ? difference(treeSelectedKeys, selectedKeys)
+                  : difference(selectedKeys, treeSelectedKeys);
+          itemSelectAll(diffKeys, selected);
+        },
+        onSelect({key}, selected) {
+          itemSelect(key, selected);
+        },
+        selectedRowKeys: selectedKeys,
+      };
+    }
   }
 }
 </script>
