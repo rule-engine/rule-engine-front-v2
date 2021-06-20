@@ -39,7 +39,7 @@ const options = {
                             name: '工作台',
                             meta: {
                                 page: {
-                                    closable: false
+                                    closable: true
                                 }
                             },
                             component: () => import('@/pages/dashboard/workplace'),
@@ -47,6 +47,11 @@ const options = {
                         {
                             path: 'analysis',
                             name: '监控',
+                            meta: {
+                                page: {
+                                    closable: true
+                                }
+                            },
                             component: () => import('@/pages/dashboard/analysis'),
                         }
                     ]
@@ -72,11 +77,21 @@ const options = {
                         {
                             path: 'ruleSet',
                             name: '规则集',
+                            meta: {
+                                page: {
+                                    closable: true
+                                }
+                            },
                             component: () => import('@/pages/rulemanagement/generalrule'),
                         },
                         {
                             path: 'decisionTable',
                             name: '决策表',
+                            meta: {
+                                page: {
+                                    closable: true
+                                }
+                            },
                             component: () => import('@/pages/rulemanagement/generalrule'),
                         }
                     ]
