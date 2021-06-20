@@ -74,6 +74,7 @@
                         <a-icon type="ellipsis"/>
                         <a-menu slot="overlay">
                             <a-menu-item style="font-size: 12px">规则信息</a-menu-item>
+                            <a-menu-item style="font-size: 12px">权限</a-menu-item>
                             <a-menu-item style="font-size: 12px">删除</a-menu-item>
                         </a-menu>
                     </a-dropdown>

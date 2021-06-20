@@ -45,14 +45,11 @@
           @selectedRowChange="onSelectChange"
       >
         <div slot="userList" slot-scope="{text, record}">
-          <div style="position:relative">
-            <div class="admin-avatar" :style="'padding-left:'+((index+1)*24-5)+'px;z-index:'+index" :key="user.id"
+            <div class="admin-avatar" :style="'margin-left:'+((index*20+10)-20)+'px;z-index:'+index" :key="user.id"
                  v-for="(user,index) in record.userList">
               <a-avatar v-if="index<4" size="small" icon="user" :src="user.avatar"/>
+              <a-avatar size="small"  style="margin-left:-4px;  " v-else-if="index===4">...</a-avatar>
             </div>
-          </div>
-          <div style="float: right" v-if="record.userList.length>4">...</div>
-
         </div>
         <div slot="action">
           <a style="margin-right: 8px">
@@ -147,6 +144,10 @@ export default {
             id: 5,
             name: 'user5',
             avatar: 'http://oss-boot-test.oss-cn-beijing.aliyuncs.com/ruleengine/26.jpg?Expires=33153093613&OSSAccessKeyId=LTAIyEa5SulNXbQa&Signature=Ot%2BLvt7eKKy5jUN4ufZfEmLtrqM%3D'
+          }, {
+            id: 6,
+            name: 'user5',
+            avatar: 'http://oss-boot-test.oss-cn-beijing.aliyuncs.com/ruleengine/26.jpg?Expires=33153093613&OSSAccessKeyId=LTAIyEa5SulNXbQa&Signature=Ot%2BLvt7eKKy5jUN4ufZfEmLtrqM%3D'
           }]
         },
         {
@@ -231,6 +232,7 @@ export default {
 .admin-avatar {
   position: absolute;
   float: left;
+  margin-top: -10px;
 }
 
 </style>
