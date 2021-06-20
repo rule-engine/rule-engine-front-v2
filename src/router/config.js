@@ -122,7 +122,7 @@ const options = {
                                     closable: true
                                 }
                             },
-                            component: () => import('@/pages/settings/user')
+                            component: () => import('@/pages/settings/workspace')
                         },
                     ]
                 },
