@@ -64,7 +64,7 @@ const options = {
                             name: '普通规则',
                             meta: {
                                 page: {
-                                    closable: false
+                                    closable: true
                                 }
                             },
                             component: () => import('@/pages/rulemanagement/generalrule')
@@ -94,7 +94,7 @@ const options = {
                             name: '用户列表',
                             meta: {
                                 page: {
-                                    closable: false
+                                    closable: true
                                 }
                             },
                             component: () => import('@/pages/settings/user')
@@ -104,7 +104,7 @@ const options = {
                             name: '工作空间',
                             meta: {
                                 page: {
-                                    closable: false
+                                    closable: true
                                 }
                             },
                             component: () => import('@/pages/settings/user')
@@ -117,7 +117,7 @@ const options = {
                     meta: {
                         icon: 'form',
                         page: {
-                            cacheAble: false
+                            cacheAble: true
                         }
                     },
                     component: PageView,

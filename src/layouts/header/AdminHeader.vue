@@ -91,16 +91,9 @@ export default {
     document.removeEventListener("fullscreenchange", this.fullScreenEsc)
   },
   methods: {
-    quit(e) {
-      let key = e.keyCode;
-      console.log('退出全屏',key)
-      if (key === 27) {
-        console.log('退出全屏')
-      }
-    },
-    fullScreen () {
+    fullScreen() {
       let element = document.documentElement;
-      // this.$refs.iframe.requestFullscreen()
+      console.log('this.fullscreen',this.fullscreen)
       if (!this.fullscreen) {
         if (element.requestFullscreen) {
           element.requestFullscreen();
@@ -113,17 +106,25 @@ export default {
           element.msRequestFullscreen();
         }
       } else {
-        document.exitFullscreen()
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitCancelFullScreen) {
+          document.webkitCancelFullScreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
       }
       this.fullscreen = !this.fullscreen
     },
-    fullScreenEsc () {
+    fullScreenEsc() {
       if (!this.checkFull()) {
         this.fullscreen = false
       }
 
     },
-    checkFull () {
+    checkFull() {
       var isFull =
           document.fullscreenElement ||
           document.mozFullScreenElement ||
