@@ -144,7 +144,7 @@
     >
       <a-transfer
               :data-source="mockData"
-              :titles="['当前', '可选']"
+              :titles="['当前已选中', '可选']"
               :target-keys="targetKeys"
               :disabled="disabled"
               :show-search="true"
