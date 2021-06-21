@@ -29,3 +29,5 @@ function initRouter(isAsync) {
   return new Router(options)
 }
 export {loginIgnore, initRouter}
+export default class router {
+}

@@ -5,12 +5,12 @@
         <img alt="logo" class="logo" src="@/assets/img/logo.png"/>
         <span class="title">{{ systemName }}</span>
       </div>
-      <div class="desc">Ant Design 是西湖区最具影响力的 Web 设计规范</div>
+      <div class="desc">规则引擎前端，业务逻辑实现不再依赖于代码开发，可零代码实现复杂业务逻辑。</div>
     </div>
     <div class="login">
       <a-form @submit="onSubmit" :form="form">
         <a-tabs size="large" :tabBarStyle="{textAlign: 'center'}" style="padding: 0 2px;">
-          <a-tab-pane tab="账户密码登录" key="1">
+          <a-tab-pane tab="系统登陆" key="1">
             <a-alert type="error" :closable="true" v-show="error" :message="error" showIcon
                      style="margin-bottom: 24px;"/>
             <a-form-item>
@@ -18,7 +18,7 @@
                   autocomplete="autocomplete"
                   size="large"
                   placeholder="请输入用户名"
-                  v-decorator="['name', {rules: [{ required: true, message: '请输入账户名', whitespace: true}]},{initialValue: ['admin']}]"
+                  v-decorator="['username', {initialValue:'lq',rules: [{ required: true, message: '请输入账户名', whitespace: true}]}]"
               >
                 <a-icon slot="prefix" type="user"/>
               </a-input>
@@ -29,29 +29,10 @@
                   placeholder="请输入密码"
                   autocomplete="autocomplete"
                   type="password"
-                  v-decorator="['password', {rules: [{ required: true, message: '请输入密码', whitespace: true}]},{initialValue: ['888888']}]"
+                  v-decorator="['password', {initialValue:'123',rules: [{ required: true, message: '请输入密码', whitespace: true}]}]"
               >
                 <a-icon slot="prefix" type="lock"/>
               </a-input>
-            </a-form-item>
-          </a-tab-pane>
-          <a-tab-pane tab="手机号登录" key="2">
-            <a-form-item>
-              <a-input size="large" placeholder="请输入手机号登录">
-                <a-icon slot="prefix" type="mobile"/>
-              </a-input>
-            </a-form-item>
-            <a-form-item>
-              <a-row :gutter="8" style="margin: 0 -4px">
-                <a-col :span="16">
-                  <a-input size="large" placeholder="输入验证码">
-                    <a-icon slot="prefix" type="mail"/>
-                  </a-input>
-                </a-col>
-                <a-col :span="8" style="padding-left: 4px">
-                  <a-button style="width: 100%" class="captcha-button" size="large">获取验证码</a-button>
-                </a-col>
-              </a-row>
             </a-form-item>
           </a-tab-pane>
         </a-tabs>
@@ -69,7 +50,6 @@
           <a-icon class="icon" type="alipay-circle"/>
           <a-icon class="icon" type="taobao-circle"/>
           <a-icon class="icon" type="weibo-circle"/>
-          <router-link style="float: right" to="/dashboard/workplace">注册账户</router-link>
         </div>
       </a-form>
     </div>
@@ -78,8 +58,7 @@
 
 <script>
 import CommonLayout from '@/layouts/CommonLayout'
-import {login, getRoutesConfig} from '@/services/user'
-import {setAuthorization} from '@/utils/request'
+import {login,getRoutesConfig} from '@/services/user'
 import {loadRoutes} from '@/utils/routerUtil'
 import {mapMutations} from 'vuex'
 
@@ -93,9 +72,6 @@ export default {
       form: this.$form.createForm(this)
     }
   },
-  created() {
-
-  },
   computed: {
     systemName() {
       return this.$store.state.setting.systemName
@@ -108,30 +84,27 @@ export default {
       this.form.validateFields((err) => {
         if (!err) {
           this.logging = true
-          const name = this.form.getFieldValue('name')
+          const username = this.form.getFieldValue('username')
           const password = this.form.getFieldValue('password')
-          login(name, password).then(this.afterLogin)
+          login(username, password).then(this.afterLogin)
         }
       })
     },
     afterLogin(res) {
       this.logging = false
       const loginRes = res.data
-      if (loginRes.code >= 0) {
-        const {user, permissions, roles} = loginRes.data
-        this.setUser(user)
-        this.setPermissions(permissions)
-        this.setRoles(roles)
-        setAuthorization({token: loginRes.data.token, expireAt: new Date(loginRes.data.expireAt)})
+      this.form.setFieldsValue({password: ''});
+      if (loginRes.code === 200) {
+        this.$message.success('登陆成功',3)
         // 获取路由配置
         getRoutesConfig().then(result => {
           const routesConfig = result.data.data
           loadRoutes(routesConfig)
           this.$router.push('/dashboard/workplace')
-          this.$message.success(loginRes.message, 3)
         })
       } else {
         this.error = loginRes.message
+
       }
     }
   }

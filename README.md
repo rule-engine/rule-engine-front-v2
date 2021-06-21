@@ -59,7 +59,6 @@ npm run build --report
 
 ```env
 VUE_APP_API_BASE_URL=http://xxx.yourdomain.com
-VUE_APP_WEBSITE_NAME="ruLe-engine"
 ```
 
 ###### 关于 Nginx 的一些配置

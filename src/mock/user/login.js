@@ -26,7 +26,7 @@ Mock.mock(`${process.env.VUE_APP_API_BASE_URL}/login`, 'post', ({body}) => {
   }
 
   if (success) {
-    result.code = 0
+    result.code = 200
     result.message = Mock.mock('@TIMEFIX').CN + '，欢迎回来'
     result.data.user = user
     result.data.token = 'Authorization:' + Math.random()

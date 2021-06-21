@@ -39,7 +39,7 @@ const options = {
                             name: '工作台',
                             meta: {
                                 page: {
-                                    closable: false
+                                    closable: true
                                 }
                             },
                             component: () => import('@/pages/dashboard/workplace'),
@@ -47,6 +47,11 @@ const options = {
                         {
                             path: 'analysis',
                             name: '监控',
+                            meta: {
+                                page: {
+                                    closable: true
+                                }
+                            },
                             component: () => import('@/pages/dashboard/analysis'),
                         }
                     ]
@@ -55,7 +60,7 @@ const options = {
                     path: 'rulemanagement',
                     name: '规则管理',
                     meta: {
-                        icon: 'dashboard'
+                        icon: 'appstore'
                     },
                     component: BlankView,
                     children: [
@@ -64,21 +69,61 @@ const options = {
                             name: '普通规则',
                             meta: {
                                 page: {
-                                    closable: false
+                                    closable: true
                                 }
                             },
-                            component: () => import('@/pages/rulemanagement/generalrule'),
-                        }/*,
+                            component: () => import('@/pages/rulemanagement/generalrule')
+                        },
                         {
                             path: 'ruleSet',
                             name: '规则集',
-                            component: () => import('@/pages/dashboard/analysis'),
+                            meta: {
+                                page: {
+                                    closable: true
+                                }
+                            },
+                            component: () => import('@/pages/rulemanagement/generalrule'),
                         },
                         {
                             path: 'decisionTable',
                             name: '决策表',
-                            component: () => import('@/pages/dashboard/analysis'),
-                        }*/
+                            meta: {
+                                page: {
+                                    closable: true
+                                }
+                            },
+                            component: () => import('@/pages/rulemanagement/generalrule'),
+                        }
+                    ]
+                },
+                {
+                    path: 'settings',
+                    name: '系统设置',
+                    meta: {
+                        icon: 'appstore'
+                    },
+                    component: BlankView,
+                    children: [
+                        {
+                            path: 'user',
+                            name: '用户列表',
+                            meta: {
+                                page: {
+                                    closable: true
+                                }
+                            },
+                            component: () => import('@/pages/settings/user')
+                        },
+                        {
+                            path: 'workspace',
+                            name: '工作空间',
+                            meta: {
+                                page: {
+                                    closable: true
+                                }
+                            },
+                            component: () => import('@/pages/settings/workspace')
+                        },
                     ]
                 },
                 {
@@ -87,7 +132,7 @@ const options = {
                     meta: {
                         icon: 'form',
                         page: {
-                            cacheAble: false
+                            cacheAble: true
                         }
                     },
                     component: PageView,
