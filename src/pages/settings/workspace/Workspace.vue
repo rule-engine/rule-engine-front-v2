@@ -49,7 +49,15 @@
             <div class="admin-avatar" :style="'margin-left:'+((index*20+10)-20)+'px;z-index:'+index" :key="user.id"
                  v-for="(user,index) in record.userList">
               <a-avatar v-if="index<4" size="small" icon="user" :src="user.avatar"/>
-              <a-avatar size="small"  style="margin-left:-2px;  " v-else-if="index===4">...</a-avatar>
+              <a-avatar size="small" :src="user.avatar"  style="margin-left:-2px;
+                        background-repeat: no-repeat;
+                        background-position: center;
+                        background-size: cover;
+                        -webkit-filter: blur(2px);
+                        -moz-filter: blur(3px);
+                        -o-filter: blur(3px);
+                        -ms-filter: blur(2px);
+                        filter: blur(2px);" v-else-if="index===4"/>
             </div>
         </div>
         <div slot="action">
@@ -136,7 +144,7 @@
     >
       <a-transfer
               :data-source="mockData"
-              :titles="['当前', '可选']"
+              :titles="['当前已选中', '可选']"
               :target-keys="targetKeys"
               :disabled="disabled"
               :show-search="true"
