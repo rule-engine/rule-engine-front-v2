@@ -11,12 +11,11 @@
                 </a-form-item>
 
                 <a-form-item label="规则状态">
-                    <a-select default-value="0" placeholder="不限" style="width: 120px">
+                    <a-select  placeholder="全部" style="width: 120px">
                         <a-select-option value="0">全部</a-select-option>
-                        <a-select-option value="1">草稿</a-select-option>
-                        <a-select-option value="2">编辑中</a-select-option>
-                        <a-select-option value="3">待发布</a-select-option>
-                        <a-select-option value="4">已发布</a-select-option>
+                        <a-select-option value="1">编辑中</a-select-option>
+                        <a-select-option value="2">待发布</a-select-option>
+                        <a-select-option value="3">已发布</a-select-option>
                     </a-select>
                 </a-form-item>
 
@@ -52,6 +51,7 @@
                 style="margin: 0 -8px"
         >
             <a-list-item :key="n" v-for="n in 12" style="padding: 0 8px">
+
                 <a-card>
                     <a-card-meta title="规则名称（规则Code）">
                         <!--规则创建人头像，鼠标悬浮，弹出用户信息-->
@@ -67,28 +67,39 @@
                         <a-icon type="edit"/>
                     </a-tooltip>
                     <!--分享可分享别的工作空间人员，并分配权限-->
-                    <a-tooltip class="tool" title="分享" slot="actions">
-                        <a-icon type="share-alt"/>
+                    <a-tooltip class="tool" title="权限" slot="actions">
+                        <a-icon type="team" />
                     </a-tooltip>
                     <a-dropdown class="tool" slot="actions">
                         <a-icon type="ellipsis"/>
                         <a-menu slot="overlay">
                             <a-menu-item style="font-size: 12px">规则信息</a-menu-item>
-                            <a-menu-item style="font-size: 12px">权限</a-menu-item>
+                            <a-menu-item style="font-size: 12px">历史版本</a-menu-item>
                             <a-menu-item style="font-size: 12px">删除</a-menu-item>
                         </a-menu>
                     </a-dropdown>
+
                     <div class="content">
-                        <div>
-                            <p>活跃用户</p>
-                            <p>18万</p>
-                        </div>
-                        <div>
-                            <p>新增用户</p>
-                            <p>1,338</p>
-                        </div>
+<!--                        <div>-->
+<!--                            <p>活跃用户</p>-->
+<!--                            <p>18万</p>-->
+<!--                        </div>-->
+<!--                        <div>-->
+<!--                            <p>新增用户</p>-->
+<!--                            <p>1,338</p>-->
+<!--                        </div>-->
                     </div>
+<!--                  <br>-->
+<!--                  <div>-->
+<!--                    <a-tag color="blue">-->
+<!--                      线上(1.0)-->
+<!--                    </a-tag>-->
+<!--                    <a-tag color="orange">-->
+<!--                      待发布(2.0)-->
+<!--                    </a-tag>-->
+<!--                  </div>-->
                 </a-card>
+
             </a-list-item>
         </a-list>
 
@@ -173,4 +184,10 @@
             }
         }
     }
+
 </style>
+<!--<style lang="less">-->
+<!--.ant-card-body{-->
+<!--  padding-bottom: 10px;-->
+<!--}-->
+<!--</style>-->
