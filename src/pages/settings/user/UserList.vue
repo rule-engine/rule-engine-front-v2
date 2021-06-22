@@ -164,7 +164,7 @@ export default {
   components: {PageLayout, StandardTable},
   data() {
     return {
-      showAddUserModel: true,
+      showAddUserModel: false,
       confirmLoading: false,
       columns: columns,
       selectedRows: [],

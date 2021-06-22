@@ -526,7 +526,6 @@ export default {
       this.$message.info('你点击了状态栏表头')
     },
     onChange(pagination, filters, sorter, {currentDataSource}) {
-      this.$message.info('表格状态改变了')
       if (pagination) {
 
         this.query.page.pageIndex = pagination.current
