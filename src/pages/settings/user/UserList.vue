@@ -164,7 +164,7 @@ export default {
   components: {PageLayout, StandardTable},
   data() {
     return {
-      showAddUserModel: false,
+      showAddUserModel: true,
       confirmLoading: false,
       columns: columns,
       selectedRows: [],
@@ -199,7 +199,7 @@ export default {
       rules: {
         name: {min: 1, max: 16, trigger: ['change', 'blur'], required: true, message: "名字长度为1-16位",},
         email: {type: 'email', trigger: ['change', 'blur'], message: "请输入正确的邮箱", required: true},
-        phone: {type: "number", trigger: ['change', 'blur'], message: "请输入正确的手机号"},
+        phone: {min: 6, trigger: ['change', 'blur'], required: false, message: "请输入正确的手机号"},
         password: {min: 3, trigger: ['change', 'blur'], required: true, message: "密码长度为3-16位"},
       }
     }
