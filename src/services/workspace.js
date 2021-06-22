@@ -8,6 +8,23 @@ export async function list(query) {
     return request(workspace.LIST, METHOD.POST, query)
 }
 
+/**
+ * 切换工作空间
+ */
+export async function change(query) {
+    return request(workspace.CHANGE, METHOD.POST, query)
+}
+
+/**
+ * 获取当前工作空间
+ */
+export async function currentWorkspace(query) {
+    return request(workspace.CURRENT_WORKSPACE, METHOD.POST, query)
+}
+
+
 export default {
     list,
+    change,
+    currentWorkspace
 }

@@ -77,14 +77,19 @@
             <a-icon type="edit"/>
             成员
           </a>
-          <a style="margin-right: 8px">
-            <a-icon type="edit"/>
-            密钥
-          </a>
-          <a style="margin-right: 8px">
-            <a-icon type="delete"/>
-            删除
-          </a>
+          <a-dropdown>
+            <a class="ant-dropdown-link" @click="e => e.preventDefault()">
+              更多 <a-icon type="down" />
+            </a>
+            <a-menu slot="overlay">
+              <a-menu-item>
+                <a-icon type="edit"/>密钥
+              </a-menu-item>
+              <a-menu-item>
+                <a-icon type="delete" />删除
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
         </div>
         <template slot="statusTitle">
           <a-icon @click.native="onStatusTitleClick" type="info-circle"/>
