@@ -17,12 +17,12 @@
       </a-form>
       <a-divider dashed/>
       <a-space class="operator">
-        <a-button @click="addNew" type="primary">新建</a-button>
+        <a-button @click="showAdd" type="primary">新建</a-button>
         <a-button>批量操作</a-button>
         <a-dropdown>
           <a-menu @click="handleMenuClick" slot="overlay">
             <a-menu-item key="audit">发布</a-menu-item>
-            <a-menu-item key="audit">暂停使用</a-menu-item>
+            <a-menu-item key="notInService">暂停使用</a-menu-item>
             <a-menu-item key="delete">删除</a-menu-item>
           </a-menu>
           <a-button>
@@ -61,7 +61,7 @@
           </div>
         </div>
         <div slot="action">
-          <a style="margin-right: 8px">
+          <a style="margin-right: 8px" @click="showEdit">
             <a-icon type="edit"/>
             编辑
           </a>
@@ -83,6 +83,52 @@
         </template>
       </standard-table>
     </a-card>
+
+    <a-modal
+            title="新建工作空间"
+            :visible="add.visible"
+            :confirm-loading="add.confirmLoading"
+            :width="700"
+            @ok="addHandleOk"
+            @cancel="addHandleCancel">
+      <template>
+        <a-form-model :model="add.form" :label-col="add.labelCol" :wrapper-col="add.wrapperCol">
+          <a-form-model-item label="空间名称">
+            <a-input v-model="add.form.name" />
+          </a-form-model-item>
+          <a-form-model-item label="空间编码">
+            <a-input v-model="add.form.code"/>
+          </a-form-model-item>
+          <a-form-model-item label="空间描述">
+            <a-input v-model="add.form.description" type="textarea" />
+          </a-form-model-item>
+          <!--          @click="onSubmit"-->
+        </a-form-model>
+      </template>
+    </a-modal>
+
+    <a-modal
+            title="编辑工作空间"
+            :visible="edit.visible"
+            :confirm-loading="edit.confirmLoading"
+            :width="700"
+            @ok="editHandleOk"
+            @cancel="editHandleCancel">
+      <template>
+        <a-form-model :model="edit.form" :label-col="edit.labelCol" :wrapper-col="edit.wrapperCol">
+          <a-form-model-item label="空间名称">
+            <a-input v-model="edit.form.name" />
+          </a-form-model-item>
+          <a-form-model-item label="空间编码">
+            <a-input readonly="readonly" v-model="edit.form.code"/>
+          </a-form-model-item>
+          <a-form-model-item label="空间描述">
+            <a-input v-model="edit.form.description" type="textarea" />
+          </a-form-model-item>
+<!--          @click="onSubmit"-->
+        </a-form-model>
+      </template>
+    </a-modal>
 
     <a-modal
         title="工作空间成员"
@@ -172,8 +218,6 @@
           </standard-table>
         </a-tab-pane>
       </a-tabs>
-
-
     </a-modal>
 
     <a-modal
@@ -182,8 +226,7 @@
         :confirm-loading="confirmLoading1"
         :width="700"
         @ok="handleOk1"
-        @cancel="handleCancel1"
-    >
+        @cancel="handleCancel1">
       <a-transfer
           :data-source="mockData"
           :titles="['当前已选中', '可选']"
@@ -192,8 +235,7 @@
           :show-search="true"
           :filter-option="(inputValue, item) => item.title.indexOf(inputValue) !== -1"
           :show-select-all="false"
-          @change="onChange1"
-      >
+          @change="onChange1">
         <template
             slot="children"
             slot-scope="{
@@ -308,16 +350,36 @@ const rightTableColumns = [
     title: '邮箱',
   },
 ];
-
 export default {
-  name: "UserList",
+  name: "Workspace",
   components: {PageLayout, StandardTable},
 
 
   data() {
     return {
       edit:{
-
+        visible:false,
+        confirmLoading:false,
+        //表单数据
+        labelCol: { span: 4 },
+        wrapperCol: { span: 14 },
+        form: {
+          name:"默认空间名称",
+          code:"default",
+          description:"这玩意是描述"
+        },
+      },
+      add:{
+        visible:false,
+        confirmLoading:false,
+        //表单数据
+        labelCol: { span: 4 },
+        wrapperCol: { span: 14 },
+        form: {
+          name:"",
+          code:"",
+          description:""
+        },
       },
       member: {
         columns: [{
@@ -450,8 +512,22 @@ export default {
     onShowSizeChange(current, pageSize) {
       console.log(current, pageSize);
     },
-    addNew() {
-
+    showAdd() {
+      this.add.visible = true;
+    },
+    addHandleCancel(/*e*/) {
+      console.log('Clicked cancel button');
+      this.add.visible = false;
+    },
+    addHandleOk(){
+      this.ModalText = 'The modal will be closed after two seconds';
+      this.add.confirmLoading = true;
+      setTimeout(() => {
+        this.add.visible = false;
+        this.add.confirmLoading = false;
+        //  表单提交
+        // console.log('addSubmit!', this.add.form);
+      }, 2000);
     },
     handleMenuClick() {
 
@@ -471,6 +547,9 @@ export default {
     deleteRecord(key) {
       this.dataSource = this.dataSource.filter(item => item.key !== key)
       //this.selectedRows = this.selectedRows.filter(item => item.key !== key)
+    },
+    showEdit() {
+      this.edit.visible = true;
     },
     showModal() {
       this.visible = true;
@@ -493,6 +572,20 @@ export default {
         this.visible1 = false;
         this.confirmLoading1 = false;
       }, 2000);
+    },
+    editHandleOk(){
+      this.ModalText = 'The modal will be closed after two seconds';
+      this.edit.confirmLoading = true;
+      setTimeout(() => {
+        this.edit.visible = false;
+        this.edit.confirmLoading = false;
+      //  表单提交
+        console.log('submit!', this.edit.form);
+      }, 2000);
+    },
+    editHandleCancel(/*e*/) {
+      console.log('Clicked cancel button');
+      this.edit.visible = false;
     },
     handleCancel(/*e*/) {
       console.log('Clicked cancel button');
