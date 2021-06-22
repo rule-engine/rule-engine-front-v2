@@ -29,16 +29,13 @@ export async function getRoutesConfig() {
 /**
  * 退出登录
  */
-export  function logout(router) {
-    request(user.LOGOUT, METHOD.POST).then(res => {
-        if (res.status === 200) {
-            localStorage.removeItem(process.env.VUE_APP_ROUTES_KEY)
-            localStorage.removeItem(process.env.VUE_APP_PERMISSIONS_KEY)
-            localStorage.removeItem(process.env.VUE_APP_ROLES_KEY)
-            removeAuthorization()
-            router.push('/login')
-        }
-
+export function logout(router) {
+    request(user.LOGOUT, METHOD.POST).finally(() => {
+        localStorage.removeItem(process.env.VUE_APP_ROUTES_KEY)
+        localStorage.removeItem(process.env.VUE_APP_PERMISSIONS_KEY)
+        localStorage.removeItem(process.env.VUE_APP_ROLES_KEY)
+        removeAuthorization()
+        router.push('/login')
     })
 }
 
