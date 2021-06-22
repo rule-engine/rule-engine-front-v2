@@ -46,10 +46,10 @@
           @selectedRowChange="onSelectChange"
       >
         <div slot="userList" slot-scope="{text, record}">
-            <div class="admin-avatar" :style="'margin-left:'+((index*20+10)-20)+'px;z-index:'+index" :key="user.id"
-                 v-for="(user,index) in record.userList">
-              <a-avatar v-if="index<4" size="small" icon="user" :src="user.avatar"/>
-              <a-avatar size="small" :src="user.avatar"  style="margin-left:-2px;
+          <div class="admin-avatar" :style="'margin-left:'+((index*20+10)-20)+'px;z-index:'+index" :key="user.id"
+               v-for="(user,index) in record.userList">
+            <a-avatar v-if="index<4" size="small" icon="user" :src="user.avatar"/>
+            <a-avatar size="small" :src="user.avatar" style="margin-left:-2px;
                         background-repeat: no-repeat;
                         background-position: center;
                         background-size: cover;
@@ -58,7 +58,7 @@
                         -o-filter: blur(3px);
                         -ms-filter: blur(2px);
                         filter: blur(2px);" v-else-if="index===4"/>
-            </div>
+          </div>
         </div>
         <div slot="action">
           <a style="margin-right: 8px">
@@ -85,17 +85,17 @@
     </a-card>
 
     <a-modal
-            title="工作空间成员"
-            :visible="visible"
-            :confirm-loading="confirmLoading"
-            :width="700"
-            @ok="handleOk"
-            @cancel="handleCancel"
+        title="工作空间成员"
+        :visible="visible"
+        :confirm-loading="confirmLoading"
+        :width="700"
+        @ok="handleOk"
+        @cancel="handleCancel"
     >
       <a-form :form="form" layout="inline">
         <a-form-item label="用户名称/编码">
           <a-input
-                  v-decorator="['nameCode', {rules: [{  whitespace: true}]}]"/>
+              v-decorator="['nameCode', {rules: [{  whitespace: true}]}]"/>
         </a-form-item>
         <a-form-item>
           <a-button type="primary" @click="submitForm('ruleForm')">
@@ -103,31 +103,73 @@
           </a-button>
         </a-form-item>
       </a-form>
-<!--      <a-form :form="form" :label-col="{ span: 2 }" :wrapper-col="{ span: 22 }">-->
-<!--        <a-form-item label="名称">-->
-<!--          <a-input-->
-<!--                  v-decorator="['name', {rules: [{  whitespace: true}]}]"/>-->
-<!--        </a-form-item>-->
-<!--        <a-form-item label="编码">-->
-<!--          <a-input/>-->
-<!--        </a-form-item>-->
-<!--        <a-form-item label="说明">-->
-<!--          <a-textarea  :rows="4" />-->
-<!--        </a-form-item>-->
-<!--      </a-form>-->
+      <!--      <a-form :form="form" :label-col="{ span: 2 }" :wrapper-col="{ span: 22 }">-->
+      <!--        <a-form-item label="名称">-->
+      <!--          <a-input-->
+      <!--                  v-decorator="['name', {rules: [{  whitespace: true}]}]"/>-->
+      <!--        </a-form-item>-->
+      <!--        <a-form-item label="编码">-->
+      <!--          <a-input/>-->
+      <!--        </a-form-item>-->
+      <!--        <a-form-item label="说明">-->
+      <!--          <a-textarea  :rows="4" />-->
+      <!--        </a-form-item>-->
+      <!--      </a-form>-->
       <br>
       <a-space class="operator">
         <a-button @click="showModal1" type="primary">新增成员</a-button>
       </a-space>
-      <br>     <br>
+      <br> <br>
       <a-tabs default-active-key="1" @change="callback">
         <a-tab-pane key="1" tab="管理员">
 
-            <a-table></a-table>
+          <standard-table
+              rowKey="id"
+              style="clear: both"
+              :columns="member.columns"
+              :dataSource="member.dataSource"
+              :selectedRows.sync="member.selectedRows"
+          >
+            <div slot="user" slot-scope="{text, record}">
+              <a-avatar size="small" icon="user" :src="record.avatar"/>
+              {{ record.username }}
+            </div>
+            <div slot="action">
+              <a style="margin-right: 8px">
+                <a-icon type="edit"/>
+                解除管理
+              </a>
+              <a style="margin-right: 8px">
+                <a-icon type="delete"/>
+                删除
+              </a>
+            </div>
+          </standard-table>
 
         </a-tab-pane>
         <a-tab-pane key="2" tab="用户" force-render>
-            <a-table></a-table>
+          <standard-table
+              rowKey="id"
+              style="clear: both"
+              :columns="member.columns"
+              :dataSource="member.dataSource"
+              :selectedRows.sync="member.selectedRows"
+          >
+            <div slot="user" slot-scope="{text, record}">
+              <a-avatar size="small" icon="user" :src="record.avatar"/>
+              {{ record.username }}
+            </div>
+            <div slot="action">
+              <a style="margin-right: 8px">
+                <a-icon type="edit"/>
+                设为管理
+              </a>
+              <a style="margin-right: 8px">
+                <a-icon type="delete"/>
+                删除
+              </a>
+            </div>
+          </standard-table>
         </a-tab-pane>
       </a-tabs>
 
@@ -135,39 +177,39 @@
     </a-modal>
 
     <a-modal
-            title="新增成员"
-            :visible="visible1"
-            :confirm-loading="confirmLoading1"
-            :width="700"
-            @ok="handleOk1"
-            @cancel="handleCancel1"
+        title="新增成员"
+        :visible="visible1"
+        :confirm-loading="confirmLoading1"
+        :width="700"
+        @ok="handleOk1"
+        @cancel="handleCancel1"
     >
       <a-transfer
-              :data-source="mockData"
-              :titles="['当前已选中', '可选']"
-              :target-keys="targetKeys"
-              :disabled="disabled"
-              :show-search="true"
-              :filter-option="(inputValue, item) => item.title.indexOf(inputValue) !== -1"
-              :show-select-all="false"
-              @change="onChange1"
+          :data-source="mockData"
+          :titles="['当前已选中', '可选']"
+          :target-keys="targetKeys"
+          :disabled="disabled"
+          :show-search="true"
+          :filter-option="(inputValue, item) => item.title.indexOf(inputValue) !== -1"
+          :show-select-all="false"
+          @change="onChange1"
       >
         <template
-                slot="children"
-                slot-scope="{
+            slot="children"
+            slot-scope="{
           props: { direction, filteredItems, selectedKeys, disabled: listDisabled },
           on: { itemSelectAll, itemSelect },
         }"
         >
           <a-table
-                  :row-selection="
+              :row-selection="
             getRowSelection({ disabled: listDisabled, selectedKeys, itemSelectAll, itemSelect })
           "
-                  :columns="direction === 'left' ? leftColumns : rightColumns"
-                  :data-source="filteredItems"
-                  size="small"
-                  :style="{ pointerEvents: listDisabled ? 'none' : null }"
-                  :custom-row="
+              :columns="direction === 'left' ? leftColumns : rightColumns"
+              :data-source="filteredItems"
+              size="small"
+              :style="{ pointerEvents: listDisabled ? 'none' : null }"
+              :custom-row="
             ({ key, disabled: itemDisabled }) => ({
               on: {
                 click: () => {
@@ -179,7 +221,8 @@
           "
           >
             <div slot="user" slot-scope="{user,avatar}">
-              <a-avatar size="small" icon="user" :src="avatar" /> {{user}}
+              <a-avatar size="small" icon="user" :src="avatar"/>
+              {{ user }}
             </div>
           </a-table>
         </template>
@@ -236,7 +279,7 @@ for (let i = 0; i < 7; i++) {
     key: i.toString(),
     user: `admin${i + 1}`,
     email: `admin${i + 1}`,
-    avatar:'123123',
+    avatar: '123123',
     disabled: false,
   });
 }
@@ -245,9 +288,9 @@ const originTargetKeys = mockData.filter(item => +item.key % 3 > 1).map(item => 
 
 const leftTableColumns = [
   {
-   // dataIndex: 'user',
+    // dataIndex: 'user',
     title: '用户',
-    scopedSlots: { customRender: 'user' }
+    scopedSlots: {customRender: 'user'}
   },
   {
     dataIndex: 'email',
@@ -258,7 +301,7 @@ const rightTableColumns = [
   {
     //dataIndex: 'user',
     title: '用户',
-    scopedSlots: { customRender: 'user' }
+    scopedSlots: {customRender: 'user'}
   },
   {
     dataIndex: 'email',
@@ -273,6 +316,46 @@ export default {
 
   data() {
     return {
+      edit:{
+
+      },
+      member: {
+        columns: [{
+          title: '编号',
+          width: '100px',
+          dataIndex: 'id'
+        },
+          {
+            title: '用户',
+            width: '180px',
+            scopedSlots: {customRender: 'user'}
+          },
+          {
+            title: '邮箱',
+            width: '180px',
+            dataIndex: 'email',
+          },
+          {
+            title: '操作',
+            width: '180px',
+            scopedSlots: {customRender: 'action'}
+          }],
+        selectedRows: [],
+        dataSource: [
+          {
+            id: '1',
+            username: 'admin',
+            avatar: 'http://oss-boot-test.oss-cn-beijing.aliyuncs.com/ruleengine/26.jpg?Expires=33153093613&OSSAccessKeyId=LTAIyEa5SulNXbQa&Signature=Ot%2BLvt7eKKy5jUN4ufZfEmLtrqM%3D',
+            email: 'admin@qq.com',
+          },
+          {
+            id: '2',
+            username: 'asdf',
+            avatar: 'sadf',
+            email: 'asdf@qq.com',
+          }
+        ]
+      },
       columns: columns,
       selectedRows: [],
       dataSource: [
@@ -433,16 +516,16 @@ export default {
     triggerShowSearch(showSearch) {
       this.showSearch = showSearch;
     },
-    getRowSelection({ disabled, selectedKeys, itemSelectAll, itemSelect }) {
+    getRowSelection({disabled, selectedKeys, itemSelectAll, itemSelect}) {
       return {
         getCheckboxProps: item => ({props: {disabled: disabled || item.disabled}}),
         onSelectAll(selected, selectedRows) {
           const treeSelectedKeys = selectedRows
-                  .filter(item => !item.disabled)
-                  .map(({key}) => key);
+              .filter(item => !item.disabled)
+              .map(({key}) => key);
           const diffKeys = selected
-                  ? difference(treeSelectedKeys, selectedKeys)
-                  : difference(selectedKeys, treeSelectedKeys);
+              ? difference(treeSelectedKeys, selectedKeys)
+              : difference(selectedKeys, treeSelectedKeys);
           itemSelectAll(diffKeys, selected);
         },
         onSelect({key}, selected) {
