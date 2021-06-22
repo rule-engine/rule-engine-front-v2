@@ -120,7 +120,7 @@
             <a-input v-model="edit.form.name" />
           </a-form-model-item>
           <a-form-model-item label="空间编码">
-            <a-input readonly="readonly" v-model="edit.form.code"/>
+            <a-input readonly=true v-model="edit.form.code"/>
           </a-form-model-item>
           <a-form-model-item label="空间描述">
             <a-input v-model="edit.form.description" type="textarea" />
