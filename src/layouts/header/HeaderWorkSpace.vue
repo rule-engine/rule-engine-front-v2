@@ -60,8 +60,6 @@ export default {
       this.loading = true
       let target = this.workSpaceList.find(e => e.id === space.key)
       this.$store.dispatch({type: 'workspace/SET_CURRENT_WORK_SPACE', target: target, context: this})
-
-
     }
   }
 }

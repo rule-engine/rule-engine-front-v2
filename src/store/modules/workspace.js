@@ -34,7 +34,8 @@ export default {
         },
         removeWorkSpace: (state) => {
             state.currentWorkSpace = {
-                name: undefined
+                name: undefined,
+                code:undefined
             }
             localStorage.setItem(storageCurrentWorkSpace, undefined)
         }
