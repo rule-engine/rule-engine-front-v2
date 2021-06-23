@@ -166,14 +166,14 @@
       </a-form>
       <br>
       <a-space class="operator">
-        <a-button @click="showModal1" type="primary">新增成员</a-button>
+        <a-button @click="showAddMember" type="primary">新增成员</a-button>
       </a-space>
       <br> <br>
       <a-tabs default-active-key="1" @change="callback">
         <a-tab-pane key="1" tab="管理员">
 
           <standard-table
-              rowKey="id"
+              rowKey="userId"
               style="clear: both"
               :columns="member.columns"
               :dataSource="member.dataSource"
@@ -201,7 +201,7 @@
         </a-tab-pane>
         <a-tab-pane key="2" tab="用户" force-render>
           <standard-table
-              rowKey="id"
+              rowKey="userId"
               style="clear: both"
               :columns="member.columns"
               :dataSource="member.dataSource"
@@ -228,16 +228,16 @@
 
     <a-modal
         title="新增成员"
-        :visible="visible1"
-        :confirm-loading="confirmLoading1"
+        :visible="addMember.visible"
+        :confirm-loading="addMember.confirmLoading"
         :width="700"
-        @ok="handleOk1"
-        @cancel="handleCancel1">
+        @ok="addMemberHandleOk"
+        @cancel="addMemberHandleCancel">
       <a-transfer
-          :data-source="mockData"
+          :data-source="addMember.dataSource"
           :titles="['当前已选中', '可选']"
-          :target-keys="targetKeys"
-          :disabled="disabled"
+          :target-keys="addMember.targetKeys"
+          :disabled="addMember.disabled"
           :show-search="true"
           :filter-option="(inputValue, item) => item.title.indexOf(inputValue) !== -1"
           :show-select-all="false"
@@ -253,7 +253,7 @@
               :row-selection="
             getRowSelection({ disabled: listDisabled, selectedKeys, itemSelectAll, itemSelect })
           "
-              :columns="direction === 'left' ? leftColumns : rightColumns"
+              :columns="direction === 'left' ? addMember.leftColumns : addMember.rightColumns"
               :data-source="filteredItems"
               size="small"
               :style="{ pointerEvents: listDisabled ? 'none' : null }"
@@ -324,22 +324,9 @@ const columns = [
   }
 ];
 
-const mockData = [];
-for (let i = 0; i < 7; i++) {
-  mockData.push({
-    key: i.toString(),
-    user: `admin${i + 1}`,
-    email: `admin${i + 1}`,
-    avatar: '123123',
-    disabled: false,
-  });
-}
-
-const originTargetKeys = mockData.filter(item => +item.key % 3 > 1).map(item => item.key);
 
 const leftTableColumns = [
   {
-    // dataIndex: 'user',
     title: '用户',
     scopedSlots: {customRender: 'user'}
   },
@@ -350,7 +337,6 @@ const leftTableColumns = [
 ];
 const rightTableColumns = [
   {
-    //dataIndex: 'user',
     title: '用户',
     scopedSlots: {customRender: 'user'}
   },
@@ -437,20 +423,7 @@ export default {
             scopedSlots: {customRender: 'action'}
           }],
         selectedRows: [],
-        dataSource: [
-          {
-            id: '1',
-            username: 'admin',
-            avatar: 'http://oss-boot-test.oss-cn-beijing.aliyuncs.com/ruleengine/26.jpg?Expires=33153093613&OSSAccessKeyId=LTAIyEa5SulNXbQa&Signature=Ot%2BLvt7eKKy5jUN4ufZfEmLtrqM%3D',
-            email: 'admin@qq.com',
-          },
-          {
-            id: '2',
-            username: 'asdf',
-            avatar: 'sadf',
-            email: 'asdf@qq.com',
-          }
-        ]
+        dataSource: []
       },
       columns: columns,
       selectedRows: [],
@@ -476,15 +449,34 @@ export default {
       loading: true,
       ModalText: 'Content of the modal',
       visible: false,
-      visible1: false,
+      addMember: {
+        visible: false,
+        confirmLoading: false,
+        dataSource: [
+          {
+            key: "1",
+            title:"",
+            user: "1",
+            email: "1",
+            avatar: "1",
+            disabled: false,
+          },
+          {
+            key: "2",
+            title:"",
+            user: "2",
+            email: "2",
+            avatar: "2",
+            disabled: false,
+          },
+        ],
+        targetKeys: ["2"],
+        disabled: false,
+        showSearch: false,
+        leftColumns: leftTableColumns,
+        rightColumns: rightTableColumns,
+      },
       confirmLoading: false,
-      confirmLoading1: false,
-      mockData,
-      targetKeys: originTargetKeys,
-      disabled: false,
-      showSearch: false,
-      leftColumns: leftTableColumns,
-      rightColumns: rightTableColumns,
     }
 
   }, watch: {
@@ -595,8 +587,8 @@ export default {
         }
       })
     },
-    showModal1() {
-      this.visible1 = true;
+    showAddMember() {
+      this.addMember.visible = true;
     },
     memberHandleOk(/*e*/) {
       this.member.confirmLoading = true;
@@ -605,12 +597,11 @@ export default {
         this.member.confirmLoading = false;
       }, 2000);
     },
-    handleOk1(/*e*/) {
-      this.ModalText = 'The modal will be closed after two seconds';
-      this.confirmLoading1 = true;
+    addMemberHandleOk(/*e*/) {
+      this.addMember.confirmLoading = true;
       setTimeout(() => {
-        this.visible1 = false;
-        this.confirmLoading1 = false;
+        this.addMember.visible = false;
+        this.addMember.confirmLoading = false;
       }, 2000);
     },
     editHandleOk() {
@@ -631,9 +622,9 @@ export default {
       console.log('Clicked cancel button');
       this.member.visible = false;
     },
-    handleCancel1(/*e*/) {
+    addMemberHandleCancel(/*e*/) {
       console.log('Clicked cancel button');
-      this.visible1 = false;
+      this.addMember.visible = false;
     },
     callback(key) {
       console.log(key);
