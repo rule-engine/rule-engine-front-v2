@@ -54,12 +54,12 @@
           {{ record.username }}
         </div>
         <div slot="action" slot-scope="{record}">
-          <a style="margin-right: 8px">
+          <a style="margin-right: 8px" @click="editMethod(record)">
             <a-icon type="edit"/>
             编辑
           </a>
           <a style="margin-right: 8px" @click="deleteUser(record)">
-            <a-icon type="delete" />
+            <a-icon type="delete"/>
             删除
           </a>
         </div>
@@ -75,12 +75,13 @@
         :visible="showAddUserModel"
         :confirm-loading="confirmLoading"
         :width="700"
-        @ok="handleSubmit('addUser')"
-        @cancel="handleCancel('addUser')"
+        @ok="handleSubmit('userAddForm')"
+        @cancel="handleCancel('userAddForm')"
         okText="确认添加"
     >
       <div class="add">
-        <a-form-model ref="addUser" :model="userAddForm" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
+        <a-form-model ref="userAddForm" :model="userAddForm" :rules="rules" :label-col="{span: 4}"
+                      :wrapper-col="{span: 14}">
           <a-form-model-item label="姓名" has-feedback prop="name">
             <a-input v-model="userAddForm.username" placeholder="请输入姓名">
               <a-icon slot="prefix" type="user"></a-icon>
@@ -116,6 +117,48 @@
       </div>
 
     </a-modal>
+
+    <a-modal
+        title="编辑用户"
+        :visible="edit.visible"
+        :confirm-loading="edit.confirmLoading"
+        :width="700"
+        @ok="editHandleSubmit('editUser')"
+        @cancel="editHandleCancel('editUser')"
+        okText="保存"
+    >
+      <a-form-model ref="editUser" :rules="rules" :model="userEditForm" :label-col="{span: 4}"
+                    :wrapper-col="{span: 14}">
+        <a-form-model-item label="姓名" has-feedback prop="name">
+          <a-input disabled="disabled" v-model="userEditForm.username" placeholder="请输入姓名">
+            <a-icon slot="prefix" type="user"></a-icon>
+          </a-input>
+        </a-form-model-item>
+        <a-form-model-item label="邮箱" has-feedback prop="email">
+          <a-input v-model="userEditForm.email" type="email" placeholder="请输入邮箱">
+            <a-icon slot="prefix" type="mail"></a-icon>
+          </a-input>
+        </a-form-model-item>
+        <a-form-model-item label="性别">
+          <a-radio-group v-model="userEditForm.sex" placeholder="请选择性别">
+            <a-radio value="男">
+              男
+            </a-radio>
+            <a-radio value="女">
+              女
+            </a-radio>
+          </a-radio-group>
+        </a-form-model-item>
+        <a-form-model-item label="手机号" has-feedback prop="phone">
+          <a-input v-model="userEditForm.phone" placeholder="请输入手机号">
+            <a-icon slot="prefix" type="phone"></a-icon>
+          </a-input>
+        </a-form-model-item>
+
+      </a-form-model>
+
+    </a-modal>
+
   </page-layout>
 </template>
 
@@ -123,7 +166,7 @@
 import PageLayout from '@/layouts/PageLayout'
 import StandardTable from '@/components/table/StandardTable'
 
-import {userList, addUser,deleteUser} from '@/services/user'
+import {userList, addUser, deleteUser} from '@/services/user'
 
 const columns = [
   {
@@ -164,14 +207,22 @@ export default {
   components: {PageLayout, StandardTable},
   data() {
     return {
+      edit: {
+        visible: false,
+        confirmLoading: false,
+      },
+      userEditForm: {
+        username: '',
+        email: '',
+        phone: '',
+        sex: '男'
+      },
       showAddUserModel: false,
       confirmLoading: false,
       columns: columns,
       selectedRows: [],
       dataSource: [],
       form: this.$form.createForm(this),
-      labelCol: {span: 4},
-      wrapperCol: {span: 14},
       userAddForm: {
         name: '',
         password: '',
@@ -229,6 +280,20 @@ export default {
         }
       });
     },
+    editHandleSubmit(formName) {
+      this.edit.confirmLoading = true
+      const _this = this;
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+
+          _this.edit.confirmLoading = false
+        } else {
+          console.log('error submit!!');
+          _this.edit.confirmLoading = false
+          return false;
+        }
+      });
+    },
     loadUserList() {
       this.loading = true
       const _this = this;
@@ -243,15 +308,24 @@ export default {
         this.loading = false
       })
     },
-    deleteUser(record){
+    editMethod(record) {
+      // 查询数据
+      this.userEditForm.id = record.id;
+      this.userEditForm.username = record.username;
+      this.userEditForm.sex = record.sex;
+      this.userEditForm.email = record.email;
+      this.userEditForm.phone = record.phone;
+      this.edit.visible = true;
+    },
+    deleteUser(record) {
       this.confirmLoading = true
       const _this = this;
-      console.log("deleteUser",record);
+      console.log("deleteUser", record);
       deleteUser({
-        id : record.id,
-      }).then(res =>{
+        id: record.id,
+      }).then(res => {
         console.log(res)
-        if (res.data.code===200){
+        if (res.data.code === 200) {
           _this.$message.success("删除成功！")
           _this.confirmLoading = false
           this.loadUserList();
@@ -264,6 +338,10 @@ export default {
     },
     handleCancel(formName) {
       this.showAddUserModel = false
+      this.$refs[formName].resetFields();
+    },
+    editHandleCancel(formName) {
+      this.edit.visible = false
       this.$refs[formName].resetFields();
     },
     onShowSizeChange(current, pageSize) {
