@@ -105,20 +105,20 @@
         :visible="add.visible"
         :confirm-loading="add.confirmLoading"
         :width="700"
-        @ok="addHandleOk"
-        @cancel="addHandleCancel">
+        @ok="addHandleOk('addWorkspace')"
+        @cancel="addHandleCancel('addWorkspace')">
       <template>
-        <a-form-model :model="add.form" :label-col="add.labelCol" :wrapper-col="add.wrapperCol">
-          <a-form-model-item label="空间名称">
-            <a-input v-model="add.form.name"/>
+        <a-form-model ref="addWorkspace" :model="add.form" :rules="rules" :label-col="add.labelCol"
+                      :wrapper-col="add.wrapperCol">
+          <a-form-model-item label="空间名称" has-feedback prop="name">
+            <a-input v-model="add.form.name" placeholder="请输入空间名称"/>
           </a-form-model-item>
-          <a-form-model-item label="空间编码">
-            <a-input v-model="add.form.code"/>
+          <a-form-model-item label="空间编码" has-feedback prop="code">
+            <a-input v-model="add.form.code" placeholder="请输入空间编码"/>
           </a-form-model-item>
-          <a-form-model-item label="空间描述">
-            <a-input v-model="add.form.description" type="textarea"/>
+          <a-form-model-item label="空间描述" has-feedback prop="description">
+            <a-input v-model="add.form.description" type="textarea" placeholder="请输入描述"/>
           </a-form-model-item>
-          <!--          @click="onSubmit"-->
         </a-form-model>
       </template>
     </a-modal>
@@ -136,7 +136,7 @@
             <a-input v-model="edit.form.name"/>
           </a-form-model-item>
           <a-form-model-item label="空间编码">
-            <a-input read-only=true v-model="edit.form.code"/>
+            <a-input read-only="true" v-model="edit.form.code"/>
           </a-form-model-item>
           <a-form-model-item label="空间描述">
             <a-input v-model="edit.form.description" type="textarea"/>
@@ -390,6 +390,11 @@ export default {
           description: ""
         },
       },
+      rules: {
+        name: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入空间名称",},
+        code: {min: 1, trigger: ['change', 'blur'], message: "请输入空间编码", required: true},
+        description: {trigger: ['change', 'blur'], required: false, message: ""},
+      },
       member: {
         visible: false,
         confirmLoading: false,
@@ -521,19 +526,24 @@ export default {
     showAdd() {
       this.add.visible = true;
     },
-    addHandleCancel(/*e*/) {
-      console.log('Clicked cancel button');
+    addHandleCancel(formName) {
+      this.$refs[formName].resetFields();
       this.add.visible = false;
     },
-    addHandleOk() {
-      this.ModalText = 'The modal will be closed after two seconds';
+    addHandleOk(formName) {
+      var _this = this
+      this.add.visible = true;
       this.add.confirmLoading = true;
-      setTimeout(() => {
-        this.add.visible = false;
-        this.add.confirmLoading = false;
-        //  表单提交
-        // console.log('addSubmit!', this.add.form);
-      }, 2000);
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          setTimeout(() => {
+            _this.$message.success("添加成功！")
+            _this.add.visible = false;
+            _this.$refs[formName].resetFields();
+          }, 1500)
+        }
+        _this.add.confirmLoading = false;
+      })
     },
     handleMenuClick() {
 
