@@ -82,7 +82,7 @@
       <div class="add">
         <a-form-model ref="addUser" :model="userAddForm" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
           <a-form-model-item label="姓名" has-feedback prop="name">
-            <a-input v-model="userAddForm.name" placeholder="请输入姓名">
+            <a-input v-model="userAddForm.username" placeholder="请输入姓名">
               <a-icon slot="prefix" type="user"></a-icon>
             </a-input>
           </a-form-model-item>
@@ -97,11 +97,11 @@
             </a-input>
           </a-form-model-item>
           <a-form-model-item label="性别">
-            <a-radio-group v-model="userAddForm.gender" placeholder="请选择性别">
-              <a-radio value="1">
+            <a-radio-group v-model="userAddForm.sex" placeholder="请选择性别">
+              <a-radio value="男">
                 男
               </a-radio>
-              <a-radio value="2">
+              <a-radio value="女">
                 女
               </a-radio>
             </a-radio-group>
@@ -123,7 +123,7 @@
 import PageLayout from '@/layouts/PageLayout'
 import StandardTable from '@/components/table/StandardTable'
 
-import {userList} from '@/services/user'
+import {userList, addUser} from '@/services/user'
 
 const columns = [
   {
@@ -177,10 +177,10 @@ export default {
         password: '',
         email: '',
         phone: '',
-        gender: '男'
+        sex: '男'
       },
       rules: {
-        name: {min: 1, max: 16, trigger: ['change', 'blur'], required: true, message: "名字长度为1-16位",},
+        username: {min: 1, max: 16, trigger: ['change', 'blur'], required: true, message: "名字长度为1-16位",},
         email: {type: 'email', trigger: ['change', 'blur'], message: "请输入正确的邮箱", required: true},
         phone: {min: 6, trigger: ['change', 'blur'], required: false, message: "请输入正确的手机号"},
         password: {min: 3, trigger: ['change', 'blur'], required: true, message: "密码长度为3-16位"},
@@ -212,15 +212,16 @@ export default {
   methods: {
     handleSubmit(formName) {
       this.confirmLoading = true
-      var _this = this
+      const _this = this;
       this.$refs[formName].validate(valid => {
         if (valid) {
-          setTimeout(() => {
+          addUser(this.userAddForm).then(res => {
+            console.log(res)
             _this.$message.success("添加成功！")
             _this.confirmLoading = false
             _this.showAddUserModel = false
             _this.resetForm(formName)
-          }, 1500)
+          })
         } else {
           console.log('error submit!!');
           _this.confirmLoading = false

@@ -525,27 +525,43 @@ export default {
       const _this = this;
       this.add.visible = true;
       this.add.confirmLoading = true;
-      add(this.add.form).then(res => {
-        console.log(res)
-        this.$message.success("添加成功！");
-        _this.add.visible = false;
-        _this.add.confirmLoading = false;
-        _this.$refs[formName].resetFields();
-        this.loadWorkspaceList();
-      })
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          add(this.add.form).then(res => {
+            console.log(res)
+            this.$message.success("添加成功！");
+            _this.add.visible = false;
+            _this.add.confirmLoading = false;
+            _this.$refs[formName].resetFields();
+            this.loadWorkspaceList();
+          })
+        } else {
+          console.log('error submit!!');
+          _this.add.confirmLoading = false;
+          return false;
+        }
+      });
     },
     editHandleOk(formName) {
       this.edit.visible = true;
       this.edit.confirmLoading = true;
       // update
-      edit(this.edit.form).then(res => {
-        console.log(res)
-        this.$message.success("修改成功！");
-        this.edit.visible = false;
-        this.edit.confirmLoading = false;
-        this.$refs[formName].resetFields();
-        this.loadWorkspaceList();
-      })
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          edit(this.edit.form).then(res => {
+            console.log(res)
+            this.$message.success("修改成功！");
+            this.edit.visible = false;
+            this.edit.confirmLoading = false;
+            this.$refs[formName].resetFields();
+            this.loadWorkspaceList();
+          })
+        } else {
+          console.log('error submit!!');
+          this.edit.confirmLoading = false;
+          return false;
+        }
+      });
     },
     deleteMember(record) {
       deleteMember({

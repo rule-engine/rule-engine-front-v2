@@ -5,7 +5,6 @@ import {request, METHOD, removeAuthorization} from '@/utils/request'
  * 登录服务
  * @param username 账户名
  * @param password 账户密码
- * @returns {Promise<AxiosResponse<T>>}
  */
 export async function login(username, password) {
     return request(user.LOGIN, METHOD.POST, {
@@ -16,7 +15,6 @@ export async function login(username, password) {
 
 /**
  * 获取用户信息
- * @returns {Promise<AxiosResponse<T>>}
  */
 export async function getUserInfo() {
     return request(user.GET_USER_INFO, METHOD.POST)
@@ -25,6 +23,11 @@ export async function getUserInfo() {
 export async function userList(param) {
     return request(user.LIST, METHOD.POST, param)
 }
+
+export async function addUser(param) {
+    return request(user.ADD_USER, METHOD.POST, param)
+}
+
 
 export async function getRoutesConfig() {
     return request(ROUTES, METHOD.GET)

@@ -8,6 +8,7 @@ module.exports = {
         GET_USER_INFO: `${BASE_URL}/user/getUserInfo`,
         LOGOUT: `${BASE_URL}/user/logout`,
         LIST: `${BASE_URL}/user/list`,
+        ADD_USER: `${BASE_URL}/user/add`,
     },
     workspace:{
         LIST:`${BASE_URL}/workspace/list`,
