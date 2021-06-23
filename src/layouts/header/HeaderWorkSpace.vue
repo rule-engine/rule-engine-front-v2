@@ -5,10 +5,25 @@
         <a-icon :type="loading?'loading':'laptop'"/>
         {{ currentWorkSpace.name }}
       </div>
-      <a-menu @click="changeWorkSpace" slot="overlay">
-        <a-menu-item v-for=" workSpace in workSpaceList" :key="workSpace.id">{{ workSpace.name }}
+      <a-menu slot="overlay">
+        <a-menu-item
+            @keydown.enter.stop="onClickSearch($event)" @select.stop="onClickSearch($event)" :key="'search'"
+            :title="'搜索'">
+          <a-input-search :loading="searchLoading" v-model="query.query.name" :allowClear="true"
+                          @click.native="onClickSearch($event)"
+                          @change.self="changeSearch($event)"
+                          placeholder="请输入空间名称"
+                          style="width: 180px"
+                          @search="submitSearch"
+          />
         </a-menu-item>
+        <a-menu-item @click="changeWorkSpace" v-for=" workSpace in workSpaceList" :key="workSpace.id">{{
+            workSpace.name
+          }}
+        </a-menu-item>
+        <a-empty v-if="workSpaceList.length===0" description="没有找到工作空间" :imageStyle="{height:'30px',width:'50px'}"/>
       </a-menu>
+
     </a-dropdown>
   </div>
 </template>
@@ -22,40 +37,51 @@ export default {
   data() {
     return {
       loading: true,
-      workSpaceList: []
+      searchLoading: false,
+      workSpaceList: [],
+      query: {
+        orders: [
+          {
+            columnName: 'createTime',
+            desc: true
+          }
+        ],
+        page: {
+          pageIndex: 1,
+          pageSize: 10,
+          total: 0
+        },
+        query: {
+          code: '',
+          name: ''
+        }
+      }
     }
   }, computed: {
     ...mapGetters('workspace', ['currentWorkSpace']),
   },
   created() {
     this.workSpaceList.push(this.currentWorkSpace)
-    const query = {
-      orders: [
-        {
-          columnName: 'createTime',
-          desc: true
-        }
-      ],
-      page: {
-        pageIndex: 1,
-        pageSize: 1024,
-      },
-      query: {
-        code: '',
-        name: ''
-      }
-    }
-    var _this = this
-    list(query).then(res => {
-      let resp = res.data.data
-      if (resp) {
-        _this.workSpaceList = resp.rows
-      }
-    }).finally(() => {
-      this.loading = false
-    })
+    this.loadList()
+
   },
   methods: {
+    loadList() {
+      var _this = this
+      list(this.query).then(res => {
+        let resp = res.data.data
+        if (resp) {
+          _this.workSpaceList = resp.rows
+          _this.query.page.total = resp.page.total
+        } else {
+          _this.workSpaceList = []
+          _this.query.page.total = 0
+        }
+      }).finally(() => {
+        _this.loading = false
+        _this.searchLoading = false
+      })
+    },
     changeWorkSpace(space) {
       this.loading = true
       var _this = this
@@ -70,6 +96,23 @@ export default {
         _this.$router.go(0)
       })
 
+    },
+    onClickSearch(e) {
+      if (e.domEvent) {
+        e.domEvent.stopPropagation()
+      } else {
+        e.stopPropagation();
+      }
+
+    }, changPage(pageNumber) {
+      console.log('Page: ', pageNumber);
+    },
+    submitSearch() {
+      this.searchLoading = true
+      this.loadList()
+    }
+    , changeSearch() {
+      if (!this.query.query.name) this.submitSearch()
     }
   }
 }

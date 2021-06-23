@@ -13,6 +13,9 @@ module.exports = {
         CURRENT_WORKSPACE:`${BASE_URL}/workspace/currentWorkspace`,
         CHANGE:`${BASE_URL}/workspace/change`
     },
+    workspaceMember:{
+        LIST:`${BASE_URL}/workspaceMember/list`,
+    },
     ROUTES: `${BASE_URL}/routes`,
     GOODS: `${BASE_URL}/goods`,
     GOODS_COLUMNS: `${BASE_URL}/columns`,

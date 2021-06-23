@@ -68,13 +68,13 @@
                         filter: blur(2px);" v-else-if="index===4"/>
           </div>
         </div>
-        <div slot="action">
+        <div slot="action" slot-scope="{record}">
           <a style="margin-right: 8px" @click="showEdit">
             <a-icon type="edit"/>
             编辑
           </a>
-          <a style="margin-right: 8px" @click="showModal">
-            <a-icon type="edit"/>
+          <a style="margin-right: 8px" @click="showMember(record)">
+            <a-icon type="team"/>
             成员
           </a>
           <a-dropdown>
@@ -148,35 +148,22 @@
 
     <a-modal
         title="工作空间成员"
-        :visible="visible"
-        :confirm-loading="confirmLoading"
+        :visible="member.visible"
+        :confirm-loading="member.confirmLoading"
         :width="700"
-        @ok="handleOk"
-        @cancel="handleCancel"
+        @ok="memberHandleOk"
+        @cancel="memberHandleCancel"
     >
       <a-form :form="form" layout="inline">
         <a-form-item label="用户名称/编码">
-          <a-input
-              v-decorator="['nameCode', {rules: [{  whitespace: true}]}]"/>
+          <a-input v-model="member.query.query.userName"/>
         </a-form-item>
         <a-form-item>
-          <a-button type="primary" @click="submitForm('ruleForm')">
+          <a-button type="primary" @click="queryMember()">
             搜索
           </a-button>
         </a-form-item>
       </a-form>
-      <!--      <a-form :form="form" :label-col="{ span: 2 }" :wrapper-col="{ span: 22 }">-->
-      <!--        <a-form-item label="名称">-->
-      <!--          <a-input-->
-      <!--                  v-decorator="['name', {rules: [{  whitespace: true}]}]"/>-->
-      <!--        </a-form-item>-->
-      <!--        <a-form-item label="编码">-->
-      <!--          <a-input/>-->
-      <!--        </a-form-item>-->
-      <!--        <a-form-item label="说明">-->
-      <!--          <a-textarea  :rows="4" />-->
-      <!--        </a-form-item>-->
-      <!--      </a-form>-->
       <br>
       <a-space class="operator">
         <a-button @click="showModal1" type="primary">新增成员</a-button>
@@ -191,6 +178,9 @@
               :columns="member.columns"
               :dataSource="member.dataSource"
               :selectedRows.sync="member.selectedRows"
+              :pagination="{showSizeChanger: true, showQuickJumper: true,
+              pageSize: this.member.query.page.pageSize,
+              total: this.member.query.page.total}"
           >
             <div slot="user" slot-scope="{text, record}">
               <a-avatar size="small" icon="user" :src="record.avatar"/>
@@ -296,6 +286,7 @@ import difference from 'lodash/difference';
 
 //api
 import {list} from '@/services/workspace'
+import {memberList} from '@/services/workspaceMember'
 
 
 const columns = [
@@ -405,6 +396,26 @@ export default {
         description: {trigger: ['change', 'blur'], required: false, message: ""},
       },
       member: {
+        visible: false,
+        confirmLoading: false,
+        query: {
+          orders: [
+            {
+              columnName: 'createTime',
+              desc: true
+            }
+          ],
+          page: {
+            pageIndex: 1,
+            pageSize: 10,
+            total: 0
+          },
+          query: {
+            workspaceId: '',
+            userName: '',
+            type: 1 //默认查询管理tob
+          }
+        },
         columns: [{
           title: '编号',
           width: '100px',
@@ -453,7 +464,7 @@ export default {
         ],
         page: {
           pageIndex: 1,
-          pageSize: 1,
+          pageSize: 10,
           total: 0
         },
         query: {
@@ -487,13 +498,11 @@ export default {
   }
   , created() {
     this.loadWorkspaceList()
-  },
-   methods: {
+  }, methods: {
     resetForm() {
       this.query.query.name = this.query.query.code = ''
       this.loadWorkspaceList()
-    },
-    loadWorkspaceList() {
+    }, loadWorkspaceList() {
       this.loading = true
       var _this = this
       list(this.query).then(res => {
@@ -592,18 +601,32 @@ export default {
     showEdit() {
       this.edit.visible = true;
     },
-    showModal() {
-      this.visible = true;
+    showMember(record) {
+      this.member.visible = true;
+      this.member.query.query.workspaceId = record.id;
+      this.queryMember();
+    },
+    queryMember() {
+      // 查询后端数据
+      const _this = this.member;
+      memberList(this.member.query).then(res => {
+        const resp = res.data;
+        if (resp.data) {
+          _this.dataSource = resp.data.rows
+          _this.query.page = resp.data.page
+        } else {
+          _this.dataSource = []
+        }
+      })
     },
     showModal1() {
       this.visible1 = true;
     },
-    handleOk(/*e*/) {
-      this.ModalText = 'The modal will be closed after two seconds';
-      this.confirmLoading = true;
+    memberHandleOk(/*e*/) {
+      this.member.confirmLoading = true;
       setTimeout(() => {
-        this.visible = false;
-        this.confirmLoading = false;
+        this.member.visible = false;
+        this.member.confirmLoading = false;
       }, 2000);
     },
     handleOk1(/*e*/) {
@@ -614,9 +637,23 @@ export default {
         this.confirmLoading1 = false;
       }, 2000);
     },
-    handleCancel(/*e*/) {
+    // editHandleOk() {
+    //   this.ModalText = 'The modal will be closed after two seconds';
+    //   this.edit.confirmLoading = true;
+    //   setTimeout(() => {
+    //     this.edit.visible = false;
+    //     this.edit.confirmLoading = false;
+    //     //  表单提交
+    //     console.log('submit!', this.edit.form);
+    //   }, 2000);
+    // },
+    // editHandleCancel(/*e*/) {
+    //   console.log('Clicked cancel button');
+    //   this.edit.visible = false;
+    // },
+    memberHandleCancel(/*e*/) {
       console.log('Clicked cancel button');
-      this.visible = false;
+      this.member.visible = false;
     },
     handleCancel1(/*e*/) {
       console.log('Clicked cancel button');
@@ -624,6 +661,9 @@ export default {
     },
     callback(key) {
       console.log(key);
+      this.member.query.query.type = key;
+      // 切换tob
+      this.queryMember();
     },
     onChange1(nextTargetKeys) {
       this.targetKeys = nextTargetKeys;
