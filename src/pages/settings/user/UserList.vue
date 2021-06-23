@@ -265,37 +265,33 @@ export default {
     },
     onShowSizeChange(current, pageSize) {
       console.log(current, pageSize);
-    }
-    ,
+    },
     addNew() {
       this.showAddUserModel = true
-    }
-    ,
+    },
     handleMenuClick() {
 
-    }
-    ,
+    },
     onClear() {
       this.$message.info('您清空了勾选的所有行')
-    }
-    ,
+    },
     onStatusTitleClick() {
       this.$message.info('你点击了状态栏表头')
-    }
-    ,
-    onChange() {
-
-    }
-    ,
+    },
+    onChange(pagination) {
+      if (pagination) {
+        this.query.page.pageIndex = pagination.current
+        this.query.page.pageSize = pagination.pageSize
+      }
+      this.loadUserList();
+    },
     onSelectChange() {
       this.$message.info('选中行改变了')
-    }
-    ,
+    },
     deleteRecord(key) {
       this.dataSource = this.dataSource.filter(item => item.key !== key)
       //this.selectedRows = this.selectedRows.filter(item => item.key !== key)
-    }
-    ,
+    },
   }
 }
 </script>
