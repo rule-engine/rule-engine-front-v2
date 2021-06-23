@@ -33,7 +33,6 @@ export default {
     ...mapMutations('account', ['setUser', 'setPermissions', 'setRoles']),
   },
   created() {
-    this.$store.dispatch('workspace/GET_CURRENT_WORK_SPACE')
     getUserInfo().then(this.afterGetUserInfo)
   },
   methods: {
