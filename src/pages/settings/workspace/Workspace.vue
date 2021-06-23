@@ -190,7 +190,7 @@
             </div>
             <div slot="action" slot-scope="{ record}">
               <a style="margin-right: 8px" @click="permissionTransfer(record,2)">
-                <a-icon type="edit"/>
+                <a-icon type="disconnect" />
                 解除管理
               </a>
               <a style="margin-right: 8px" @click="deleteMember(record)">
@@ -216,7 +216,7 @@
             </div>
             <div slot="action" slot-scope="{ record}">
               <a style="margin-right: 8px" @click="permissionTransfer(record,1)">
-                <a-icon type="edit"/>
+                <a-icon type="shrink" />
                 设为管理
               </a>
               <a style="margin-right: 8px" @click="deleteMember(record)">

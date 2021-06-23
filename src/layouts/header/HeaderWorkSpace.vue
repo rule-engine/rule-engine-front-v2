@@ -2,7 +2,7 @@
   <div class="header-work-space">
     <a-dropdown class="lang header-item">
       <div class="hover">
-        <a-icon :type="loading?'loading':'laptop'"/>
+        <a-icon :type="loading?'loading':'desktop'"/>
         {{ currentWorkspace.name }}
       </div>
       <a-menu slot="overlay">
