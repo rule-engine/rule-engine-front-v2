@@ -190,7 +190,7 @@
             </div>
             <div slot="action" slot-scope="{ record}">
               <a style="margin-right: 8px" @click="permissionTransfer(record,2)">
-                <a-icon type="edit"/>
+                <a-icon type="disconnect" />
                 解除管理
               </a>
               <a style="margin-right: 8px" @click="deleteMember(record)">
@@ -216,7 +216,7 @@
             </div>
             <div slot="action" slot-scope="{ record}">
               <a style="margin-right: 8px" @click="permissionTransfer(record,1)">
-                <a-icon type="edit"/>
+                <a-icon type="shrink" />
                 设为管理
               </a>
               <a style="margin-right: 8px" @click="deleteMember(record)">
@@ -274,7 +274,7 @@
               @change="addMemberTableChange"
               :pagination="direction === 'left' ?{showSizeChanger: true, showQuickJumper: true,
           pageSize: addMember.query.page.pageSize,
-          total: addMember.query.page.total}:{showSizeChanger: true, showQuickJumper: true,pageSize: 8,total: addMember.targetKeys.length}"
+          total: addMember.query.page.total}:{showSizeChanger: false, showQuickJumper: false,pageSize: 8,total: addMember.targetKeys.length}"
           >
             <div slot="user" slot-scope="{user,avatar}">
               <a-avatar size="small" icon="user" :src="avatar"/>

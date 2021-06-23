@@ -2,7 +2,7 @@
   <div class="header-work-space">
     <a-dropdown class="lang header-item">
       <div class="hover">
-        <a-icon :type="loading?'loading':'laptop'"/>
+        <a-icon :type="loading?'loading':'desktop'"/>
         {{ currentWorkspace.name }}
       </div>
       <a-menu slot="overlay">
@@ -41,7 +41,7 @@ export default {
       query: {
         orders: [
           {
-            columnName: 'createTime',
+            columnName: 'create_time',
             desc: true
           }
         ],
