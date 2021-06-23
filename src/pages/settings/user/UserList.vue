@@ -53,13 +53,13 @@
           <a-avatar size="small" icon="user" :src="record.avatar"/>
           {{ record.username }}
         </div>
-        <div slot="action">
+        <div slot="action" slot-scope="{record}">
           <a style="margin-right: 8px">
             <a-icon type="edit"/>
             编辑
           </a>
-          <a style="margin-right: 8px">
-            <a-icon type="delete" @click="deleteUser(1)"/>
+          <a style="margin-right: 8px" @click="deleteUser(record)">
+            <a-icon type="delete" />
             删除
           </a>
         </div>
@@ -229,18 +229,6 @@ export default {
         }
       });
     },
-    deleteUser(record){
-      console.log("dddddd",record);
-      deleteUser({
-
-
-      }).then(res =>{
-        console.log(res)
-
-
-      })
-
-    },
     loadUserList() {
       this.loading = true
       const _this = this;
@@ -253,6 +241,21 @@ export default {
           _this.dataSource = []
         }
         this.loading = false
+      })
+    },
+    deleteUser(record){
+      this.confirmLoading = true
+      const _this = this;
+      console.log("deleteUser",record);
+      deleteUser({
+        id : record.id,
+      }).then(res =>{
+        console.log(res)
+        if (res.data.code===200){
+          _this.$message.success("删除成功！")
+          _this.confirmLoading = false
+          this.loadUserList();
+        }
       })
     },
     resetForm() {
