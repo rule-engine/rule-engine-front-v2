@@ -6,7 +6,9 @@
         {{ currentWorkSpace.name }}
       </div>
       <a-menu slot="overlay">
-        <a-menu-item @click.stop="onClickSearch($event)">
+        <a-menu-item
+            @keydown.enter.stop="onClickSearch($event)" @select.stop="onClickSearch($event)" :key="'search'"
+            :title="'搜索'">
           <a-input-search :loading="searchLoading" v-model="query.query.name" :allowClear="true"
                           @click.native="onClickSearch($event)"
                           @change.self="changeSearch($event)"
@@ -96,7 +98,6 @@ export default {
 
     },
     onClickSearch(e) {
-      // this.loading = true
       if (e.domEvent) {
         e.domEvent.stopPropagation()
       } else {
@@ -111,13 +112,7 @@ export default {
       this.loadList()
     }
     , changeSearch() {
-      // console.log('Page: ', e);
-      // if (e.type === 'change') {
-      //   e.stopPropagation();
-      // }
       if (!this.query.query.name) this.submitSearch()
-      // ()=>{if (!this.query.query.name) this.submitSearch()}
-
     }
   }
 }
