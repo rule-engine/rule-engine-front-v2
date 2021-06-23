@@ -11,8 +11,8 @@ export async function list(query) {
 /**
  * 切换工作空间
  */
-export async function change(query) {
-    return request(workspace.CHANGE, METHOD.POST, query)
+export async function change(param) {
+    return request(workspace.CHANGE, METHOD.POST, param)
 }
 
 /**

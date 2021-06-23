@@ -29,13 +29,14 @@ export async function getRoutesConfig() {
 /**
  * 退出登录
  */
-export function logout(router) {
+export function logout(context) {
     request(user.LOGOUT, METHOD.POST).finally(() => {
         localStorage.removeItem(process.env.VUE_APP_ROUTES_KEY)
         localStorage.removeItem(process.env.VUE_APP_PERMISSIONS_KEY)
         localStorage.removeItem(process.env.VUE_APP_ROLES_KEY)
         removeAuthorization()
-        router.push('/login')
+        context.$store.commit('workspace/removeWorkSpace')
+        context.$router.push('/login')
     })
 }
 
