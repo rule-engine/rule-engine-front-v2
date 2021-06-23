@@ -128,15 +128,15 @@
         :visible="edit.visible"
         :confirm-loading="edit.confirmLoading"
         :width="700"
-        @ok="editHandleOk"
-        @cancel="editHandleCancel">
+        @ok="editHandleOk('editWorkspace')"
+        @cancel="editHandleCancel('editWorkspace')">
       <template>
-        <a-form-model :model="edit.form" :label-col="edit.labelCol" :wrapper-col="edit.wrapperCol">
-          <a-form-model-item label="空间名称">
+        <a-form-model ref="editWorkspace" :model="edit.form" :rules="rules" :label-col="edit.labelCol" :wrapper-col="edit.wrapperCol">
+          <a-form-model-item label="空间名称" has-feedback prop="name">
             <a-input v-model="edit.form.name"/>
           </a-form-model-item>
           <a-form-model-item label="空间编码">
-            <a-input read-only="true" v-model="edit.form.code"/>
+            <a-input disabled="disabled" v-model="edit.form.code"/>
           </a-form-model-item>
           <a-form-model-item label="空间描述">
             <a-input v-model="edit.form.description" type="textarea"/>
@@ -176,6 +176,7 @@
               rowKey="userId"
               style="clear: both"
               :columns="member.columns"
+              :loading="member.loading"
               :dataSource="member.dataSource"
               :selectedRows.sync="member.selectedRows"
               :pagination="{showSizeChanger: true, showQuickJumper: true,
@@ -203,6 +204,7 @@
           <standard-table
               rowKey="userId"
               style="clear: both"
+              :loading="member.loading"
               :columns="member.columns"
               :dataSource="member.dataSource"
               :selectedRows.sync="member.selectedRows"
@@ -362,12 +364,13 @@ export default {
         description: {trigger: ['change', 'blur'], required: false, message: ""},
       },
       member: {
+        loading: true,
         visible: false,
         confirmLoading: false,
         query: {
           orders: [
             {
-              columnName: 'createTime',
+              columnName: 'create_time',
               desc: true
             }
           ],
@@ -411,7 +414,7 @@ export default {
       query: {
         orders: [
           {
-            columnName: 'createTime',
+            columnName: 'create_time',
             desc: true
           }
         ],
@@ -586,9 +589,9 @@ export default {
       this.loadWorkspaceList()
     }, loadWorkspaceList() {
       this.loading = true
-      var _this = this
+      const _this = this;
       list(this.query).then(res => {
-        var resp = res.data
+        const resp = res.data;
         if (resp.data) {
           _this.dataSource = resp.data.rows
           _this.query.page = resp.data.page
@@ -630,6 +633,30 @@ export default {
         _this.add.confirmLoading = false;
       })
     },
+    editHandleOk(formName) {
+      this.edit.visible = true;
+      this.edit.confirmLoading = true;
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          setTimeout(() => {
+            this.$message.success("修改成功！");
+            this.edit.visible = false;
+            this.edit.confirmLoading = false;
+            this.$refs[formName].resetFields();
+          }, 1500)
+        }
+      })
+      // setTimeout(() => {
+      //   this.edit.visible = false;
+      //   this.edit.confirmLoading = false;
+      //   //  表单提交
+      //   console.log('submit!', this.edit.form);
+      // }, 2000);
+    },
+     editHandleCancel(formName) {
+       this.$refs[formName].resetFields();
+       this.edit.visible = false;
+     },
     handleMenuClick() {
 
     },
@@ -669,6 +696,7 @@ export default {
     },
     queryMember() {
       // 查询后端数据
+      this.member.loading = true
       const _this = this.member;
       memberList(this.member.query).then(res => {
         const resp = res.data;
@@ -678,6 +706,7 @@ export default {
         } else {
           _this.dataSource = []
         }
+        this.member.loading = false
       })
     },
     showAddMember() {
@@ -696,20 +725,6 @@ export default {
         this.addMember.visible = false;
         this.addMember.confirmLoading = false;
       }, 2000);
-    },
-    editHandleOk() {
-      this.ModalText = 'The modal will be closed after two seconds';
-      this.edit.confirmLoading = true;
-      setTimeout(() => {
-        this.edit.visible = false;
-        this.edit.confirmLoading = false;
-        //  表单提交
-        console.log('submit!', this.edit.form);
-      }, 2000);
-    },
-    editHandleCancel(/*e*/) {
-      console.log('Clicked cancel button');
-      this.edit.visible = false;
     },
     memberHandleCancel(/*e*/) {
       console.log('Clicked cancel button');

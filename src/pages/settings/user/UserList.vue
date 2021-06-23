@@ -3,18 +3,18 @@
     <a-card :bordered="false" class="search-form">
       <a-form ref="searchForm" :form="form" layout="inline">
         <a-form-item label="用户名称">
-          <a-input/>
+          <a-input v-model="query.query.username"/>
         </a-form-item>
 
         <a-form-item label="邮箱">
-          <a-input/>
+          <a-input v-model="query.query.email"/>
         </a-form-item>
 
         <a-form-item>
-          <a-button type="primary" @click="submitForm('ruleForm')">
+          <a-button type="primary" @click="loadUserList()">
             搜索
           </a-button>
-          <a-button style="margin-left: 10px" @click="resetForm('searchForm')">
+          <a-button style="margin-left: 10px" @click="resetForm()">
             重置
           </a-button>
         </a-form-item>
@@ -45,6 +45,9 @@
           @clear="onClear"
           @change="onChange"
           @selectedRowChange="onSelectChange"
+          :pagination="{showSizeChanger: true, showQuickJumper: true,
+          pageSize: this.query.page.pageSize,
+          total: this.query.page.total}"
       >
         <div slot="user" slot-scope="{text, record}">
           <a-avatar size="small" icon="user" :src="record.avatar"/>
@@ -120,6 +123,7 @@
 import PageLayout from '@/layouts/PageLayout'
 import StandardTable from '@/components/table/StandardTable'
 
+import {userList} from '@/services/user'
 
 const columns = [
   {
@@ -130,16 +134,12 @@ const columns = [
   {
     title: '用户',
     width: '180px',
-    // dataIndex: 'user',avatar
     scopedSlots: {customRender: 'user'}
-    // scopedSlots: { customRender: 'username' }
   },
   {
     title: '邮箱',
     dataIndex: 'email',
     width: '180px',
-    // needTotal: true,
-    // customRender: (text) => text + ' 次'
   },
   {
     title: '性别',
@@ -168,24 +168,7 @@ export default {
       confirmLoading: false,
       columns: columns,
       selectedRows: [],
-      dataSource: [
-        {
-          id: '1',
-          username: 'admin',
-          avatar: 'http://oss-boot-test.oss-cn-beijing.aliyuncs.com/ruleengine/26.jpg?Expires=33153093613&OSSAccessKeyId=LTAIyEa5SulNXbQa&Signature=Ot%2BLvt7eKKy5jUN4ufZfEmLtrqM%3D',
-          email: 'admin@qq.com',
-          sex: '男',
-          createTime: '2020-15-21 20:20:1',
-        },
-        {
-          id: '2',
-          username: 'asdf',
-          avatar: 'sadf',
-          email: 'asdf@qq.com',
-          sex: 'nv',
-          createTime: '2020-15-21 20:20:1',
-        }
-      ],
+      dataSource: [],
       form: this.$form.createForm(this),
       labelCol: {span: 4},
       wrapperCol: {span: 14},
@@ -194,17 +177,38 @@ export default {
         password: '',
         email: '',
         phone: '',
-        gender: '1'
+        gender: '男'
       },
       rules: {
         name: {min: 1, max: 16, trigger: ['change', 'blur'], required: true, message: "名字长度为1-16位",},
         email: {type: 'email', trigger: ['change', 'blur'], message: "请输入正确的邮箱", required: true},
         phone: {min: 6, trigger: ['change', 'blur'], required: false, message: "请输入正确的手机号"},
         password: {min: 3, trigger: ['change', 'blur'], required: true, message: "密码长度为3-16位"},
+      },
+      query: {
+        orders: [
+          {
+            columnName: 'create_time',
+            desc: true
+          }
+        ],
+        page: {
+          pageIndex: 1,
+          pageSize: 10,
+          total: 0
+        },
+        query: {
+          username: '',
+          sex: '',
+          email: ''
+        }
       }
     }
   }
   ,
+  created() {
+    this.loadUserList()
+  },
   methods: {
     handleSubmit(formName) {
       this.confirmLoading = true
@@ -223,17 +227,29 @@ export default {
           return false;
         }
       });
-    }
-    ,
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
+    },
+    loadUserList() {
+      this.loading = true
+      const _this = this;
+      userList(this.query).then(res => {
+        const resp = res.data;
+        if (resp.data) {
+          _this.dataSource = resp.data.rows
+          _this.query.page = resp.data.page
+        } else {
+          _this.dataSource = []
+        }
+        this.loading = false
+      })
+    },
+    resetForm() {
+      this.query.query.username = this.query.query.email = ''
+      this.loadUserList();
     },
     handleCancel(formName) {
       this.showAddUserModel = false
       this.$refs[formName].resetFields();
-    }
-    ,
-
+    },
     onShowSizeChange(current, pageSize) {
       console.log(current, pageSize);
     }
@@ -255,7 +271,7 @@ export default {
     }
     ,
     onChange() {
-      this.$message.info('表格状态改变了')
+
     }
     ,
     onSelectChange() {

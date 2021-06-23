@@ -7,6 +7,7 @@ module.exports = {
         LOGIN: `${BASE_URL}/user/login`,
         GET_USER_INFO: `${BASE_URL}/user/getUserInfo`,
         LOGOUT: `${BASE_URL}/user/logout`,
+        LIST: `${BASE_URL}/user/list`,
     },
     workspace:{
         LIST:`${BASE_URL}/workspace/list`,
