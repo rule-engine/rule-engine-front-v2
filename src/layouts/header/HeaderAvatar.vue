@@ -30,19 +30,20 @@ export default {
   name: 'HeaderAvatar',
   computed: {
     ...mapGetters('account', ['user']),
-    ...mapMutations('account', ['setUser', 'setPermissions', 'setRoles'])
+    ...mapMutations('account', ['setUser', 'setPermissions', 'setRoles']),
   },
   created() {
+    this.$store.dispatch('workspace/GET_CURRENT_WORK_SPACE')
     getUserInfo().then(this.afterGetUserInfo)
   },
   methods: {
     logout() {
-      logout(this.$router)
+      logout(this)
     },
     afterGetUserInfo(res) {
       if (res.data.code === 200) {
         const {data} = res.data
-        this.$store.commit('account/setUser',data)
+        this.$store.commit('account/setUser', data)
       }
     }
   }

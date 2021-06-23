@@ -2,11 +2,11 @@
   <div class="header-work-space">
     <a-dropdown class="lang header-item">
       <div class="hover">
-        <a-icon type="laptop"/>
+        <a-icon :type="loading?'loading':'laptop'"/>
         {{ currentWorkSpace.name }}
       </div>
       <a-menu @click="changeWorkSpace" slot="overlay">
-        <a-menu-item v-for=" workSpace in workSpaceList" :key="workSpace.wsId">{{ workSpace.name }}
+        <a-menu-item v-for=" workSpace in workSpaceList" :key="workSpace.id">{{ workSpace.name }}
         </a-menu-item>
       </a-menu>
     </a-dropdown>
@@ -15,33 +15,60 @@
 
 <script>
 import {mapGetters} from "vuex";
+import {change, list} from '@/services/workspace'
 
 export default {
   name: 'HeaderWorkSpace',
   data() {
     return {
-      workSpaceList: [
-        {
-          wsId: 0,
-          name: '默认工作空间'
-        }, {
-          wsId: 1,
-          name: '工作空间一'
-        }, {
-          wsId: 2,
-          name: '工作空间二'
-        }, {
-          wsId: 3,
-          name: '工作空间三'
-        }]
+      loading: true,
+      workSpaceList: []
     }
   }, computed: {
     ...mapGetters('workspace', ['currentWorkSpace']),
   },
+  created() {
+    this.workSpaceList.push(this.currentWorkSpace)
+    const query = {
+      orders: [
+        {
+          columnName: 'createTime',
+          desc: true
+        }
+      ],
+      page: {
+        pageIndex: 1,
+        pageSize: 1024,
+      },
+      query: {
+        code: '',
+        name: ''
+      }
+    }
+    var _this = this
+    list(query).then(res => {
+      let resp = res.data.data
+      if (resp) {
+        _this.workSpaceList = resp.rows
+      }
+    }).finally(() => {
+      this.loading = false
+    })
+  },
   methods: {
     changeWorkSpace(space) {
-      this.$store.commit('workspace/setWorkSpace', this.workSpaceList.find(e => e.wsId === space.key))
-      this.$router.go(0)
+      this.loading = true
+      var _this = this
+      let target = this.workSpaceList.find(e => e.id === space.key)
+
+      change({id: target.id}).then(res => {
+        if (res.data.code === 200) {
+          _this.$store.commit("workspace/setWorkSpace", target)
+        }
+      }).finally(() => {
+        _this.loading = false
+        _this.$router.go(0)
+      })
 
     }
   }

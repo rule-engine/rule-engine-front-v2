@@ -1,20 +1,24 @@
 <template>
   <page-layout>
     <a-card :bordered="false" class="search-form">
-      <a-form :form="form" layout="inline">
-        <a-form-item label="工作空间/编码">
+      <a-form-model layout="inline">
+        <a-form-model-item label="名称">
           <a-input
-              v-decorator="['nameCode', {rules: [{  whitespace: true}]}]"/>
-        </a-form-item>
-        <a-form-item>
+              v-model="query.query.name"/>
+        </a-form-model-item>
+        <a-form-model-item label="编码">
+          <a-input
+              v-model="query.query.code"/>
+        </a-form-model-item>
+        <a-form-model-item>
           <a-button type="primary" @click="submitForm('ruleForm')">
             搜索
           </a-button>
           <a-button style="margin-left: 10px" @click="resetForm('ruleForm')">
             重置
           </a-button>
-        </a-form-item>
-      </a-form>
+        </a-form-model-item>
+      </a-form-model>
       <a-divider dashed/>
       <a-space class="operator">
         <a-button @click="showAdd" type="primary">新建</a-button>
@@ -44,10 +48,14 @@
           @change="onChange"
           :loading="loading"
           @selectedRowChange="onSelectChange"
+          :pagination="{showSizeChanger: true, showQuickJumper: true,
+          // current: 2,
+          pageSize: this.query.page.pageSize,
+          total: this.query.page.total}"
       >
-        <div slot="userList" slot-scope="{text, record}">
+        <div slot="workspaceAdminList" slot-scope="{text, record}">
           <div class="admin-avatar" :style="'margin-left:'+((index*20+10)-20)+'px;z-index:'+index" :key="user.id"
-               v-for="(user,index) in record.userList">
+               v-for="(user,index) in record.workspaceAdminList">
             <a-avatar v-if="index<4" size="small" icon="user" :src="user.avatar"/>
             <a-avatar size="small" :src="user.avatar" style="margin-left:-2px;
                         background-repeat: no-repeat;
@@ -69,14 +77,19 @@
             <a-icon type="edit"/>
             成员
           </a>
-          <a style="margin-right: 8px">
-            <a-icon type="edit"/>
-            密钥
-          </a>
-          <a style="margin-right: 8px">
-            <a-icon type="delete"/>
-            删除
-          </a>
+          <a-dropdown>
+            <a class="ant-dropdown-link" @click="e => e.preventDefault()">
+              更多 <a-icon type="down" />
+            </a>
+            <a-menu slot="overlay">
+              <a-menu-item>
+                <a-icon type="edit"/>密钥
+              </a-menu-item>
+              <a-menu-item>
+                <a-icon type="delete" />删除
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
         </div>
         <template slot="statusTitle">
           <a-icon @click.native="onStatusTitleClick" type="info-circle"/>
@@ -85,22 +98,22 @@
     </a-card>
 
     <a-modal
-            title="新建工作空间"
-            :visible="add.visible"
-            :confirm-loading="add.confirmLoading"
-            :width="700"
-            @ok="addHandleOk"
-            @cancel="addHandleCancel">
+        title="新建工作空间"
+        :visible="add.visible"
+        :confirm-loading="add.confirmLoading"
+        :width="700"
+        @ok="addHandleOk"
+        @cancel="addHandleCancel">
       <template>
         <a-form-model :model="add.form" :label-col="add.labelCol" :wrapper-col="add.wrapperCol">
           <a-form-model-item label="空间名称">
-            <a-input v-model="add.form.name" />
+            <a-input v-model="add.form.name"/>
           </a-form-model-item>
           <a-form-model-item label="空间编码">
             <a-input v-model="add.form.code"/>
           </a-form-model-item>
           <a-form-model-item label="空间描述">
-            <a-input v-model="add.form.description" type="textarea" />
+            <a-input v-model="add.form.description" type="textarea"/>
           </a-form-model-item>
           <!--          @click="onSubmit"-->
         </a-form-model>
@@ -108,24 +121,24 @@
     </a-modal>
 
     <a-modal
-            title="编辑工作空间"
-            :visible="edit.visible"
-            :confirm-loading="edit.confirmLoading"
-            :width="700"
-            @ok="editHandleOk"
-            @cancel="editHandleCancel">
+        title="编辑工作空间"
+        :visible="edit.visible"
+        :confirm-loading="edit.confirmLoading"
+        :width="700"
+        @ok="editHandleOk"
+        @cancel="editHandleCancel">
       <template>
         <a-form-model :model="edit.form" :label-col="edit.labelCol" :wrapper-col="edit.wrapperCol">
           <a-form-model-item label="空间名称">
-            <a-input v-model="edit.form.name" />
+            <a-input v-model="edit.form.name"/>
           </a-form-model-item>
           <a-form-model-item label="空间编码">
-            <a-input readonly=true v-model="edit.form.code"/>
+            <a-input read-only=true v-model="edit.form.code"/>
           </a-form-model-item>
           <a-form-model-item label="空间描述">
-            <a-input v-model="edit.form.description" type="textarea" />
+            <a-input v-model="edit.form.description" type="textarea"/>
           </a-form-model-item>
-<!--          @click="onSubmit"-->
+          <!--          @click="onSubmit"-->
         </a-form-model>
       </template>
     </a-modal>
@@ -278,6 +291,9 @@ import PageLayout from '@/layouts/PageLayout'
 import StandardTable from '@/components/table/StandardTable'
 import difference from 'lodash/difference';
 
+//api
+import {list} from '@/services/workspace'
+
 
 const columns = [
   {
@@ -300,8 +316,7 @@ const columns = [
   {
     title: '管理员',
     width: '180px',
-    // dataIndex: 'user',avatar
-    scopedSlots: {customRender: 'userList'}
+    scopedSlots: {customRender: 'workspaceAdminList'}
   },
   {
     title: '创建时间',
@@ -357,28 +372,28 @@ export default {
 
   data() {
     return {
-      edit:{
-        visible:false,
-        confirmLoading:false,
+      edit: {
+        visible: false,
+        confirmLoading: false,
         //表单数据
-        labelCol: { span: 4 },
-        wrapperCol: { span: 14 },
+        labelCol: {span: 4},
+        wrapperCol: {span: 14},
         form: {
-          name:"默认空间名称",
-          code:"default",
-          description:"这玩意是描述"
+          name: "默认空间名称",
+          code: "default",
+          description: "这玩意是描述"
         },
       },
-      add:{
-        visible:false,
-        confirmLoading:false,
+      add: {
+        visible: false,
+        confirmLoading: false,
         //表单数据
-        labelCol: { span: 4 },
-        wrapperCol: { span: 14 },
+        labelCol: {span: 4},
+        wrapperCol: {span: 14},
         form: {
-          name:"",
-          code:"",
-          description:""
+          name: "",
+          code: "",
+          description: ""
         },
       },
       member: {
@@ -420,61 +435,24 @@ export default {
       },
       columns: columns,
       selectedRows: [],
-      dataSource: [
-        {
-          id: '1',
-          avatar: 'http://oss-boot-test.oss-cn-beijing.aliyuncs.com/ruleengine/26.jpg?Expires=33153093613&OSSAccessKeyId=LTAIyEa5SulNXbQa&Signature=Ot%2BLvt7eKKy5jUN4ufZfEmLtrqM%3D',
-          name: '默认工作空间',
-          code: 'default',
-          createTime: '2020-15-21 20:20:1',
-          userList: [{
-            id: 1,
-            name: 'user1',
-            avatar: 'http://oss-boot-test.oss-cn-beijing.aliyuncs.com/ruleengine/26.jpg?Expires=33153093613&OSSAccessKeyId=LTAIyEa5SulNXbQa&Signature=Ot%2BLvt7eKKy5jUN4ufZfEmLtrqM%3D'
-          }, {
-            id: 2,
-            name: 'user2',
-            avatar: 'http://oss-boot-test.oss-cn-beijing.aliyuncs.com/ruleengine/26.jpg?Expires=33153093613&OSSAccessKeyId=LTAIyEa5SulNXbQa&Signature=Ot%2BLvt7eKKy5jUN4ufZfEmLtrqM%3D'
-          }, {
-            id: 3,
-            name: 'user3',
-            avatar: 'http://oss-boot-test.oss-cn-beijing.aliyuncs.com/ruleengine/26.jpg?Expires=33153093613&OSSAccessKeyId=LTAIyEa5SulNXbQa&Signature=Ot%2BLvt7eKKy5jUN4ufZfEmLtrqM%3D'
-          }, {
-            id: 4,
-            name: 'user4',
-            avatar: 'http://oss-boot-test.oss-cn-beijing.aliyuncs.com/ruleengine/26.jpg?Expires=33153093613&OSSAccessKeyId=LTAIyEa5SulNXbQa&Signature=Ot%2BLvt7eKKy5jUN4ufZfEmLtrqM%3D'
-          }, {
-            id: 5,
-            name: 'user5',
-            avatar: 'http://oss-boot-test.oss-cn-beijing.aliyuncs.com/ruleengine/26.jpg?Expires=33153093613&OSSAccessKeyId=LTAIyEa5SulNXbQa&Signature=Ot%2BLvt7eKKy5jUN4ufZfEmLtrqM%3D'
-          }, {
-            id: 6,
-            name: 'user5',
-            avatar: 'http://oss-boot-test.oss-cn-beijing.aliyuncs.com/ruleengine/26.jpg?Expires=33153093613&OSSAccessKeyId=LTAIyEa5SulNXbQa&Signature=Ot%2BLvt7eKKy5jUN4ufZfEmLtrqM%3D'
-          }]
+      dataSource: [],
+      query: {
+        orders: [
+          {
+            columnName: 'createTime',
+            desc: true
+          }
+        ],
+        page: {
+          pageIndex: 1,
+          pageSize: 1,
+          total: 0
         },
-        {
-          id: '2',
-          avatar: 'http://oss-boot-test.oss-cn-beijing.aliyuncs.com/ruleengine/26.jpg?Expires=33153093613&OSSAccessKeyId=LTAIyEa5SulNXbQa&Signature=Ot%2BLvt7eKKy5jUN4ufZfEmLtrqM%3D',
-          name: '工作空间一',
-          code: 'workspace1',
-          createTime: '2020-15-21 20:20:1',
-          userList: [{
-            id: 1,
-            name: 'user1',
-            avatar: 'http://oss-boot-test.oss-cn-beijing.aliyuncs.com/ruleengine/26.jpg?Expires=33153093613&OSSAccessKeyId=LTAIyEa5SulNXbQa&Signature=Ot%2BLvt7eKKy5jUN4ufZfEmLtrqM%3D'
-          }, {
-            id: 2,
-            name: 'user2',
-            avatar: 'http://oss-boot-test.oss-cn-beijing.aliyuncs.com/ruleengine/26.jpg?Expires=33153093613&OSSAccessKeyId=LTAIyEa5SulNXbQa&Signature=Ot%2BLvt7eKKy5jUN4ufZfEmLtrqM%3D'
-          }, {
-            id: 3,
-            name: 'user3',
-            avatar: 'http://oss-boot-test.oss-cn-beijing.aliyuncs.com/ruleengine/26.jpg?Expires=33153093613&OSSAccessKeyId=LTAIyEa5SulNXbQa&Signature=Ot%2BLvt7eKKy5jUN4ufZfEmLtrqM%3D'
-          }]
+        query: {
+          code: '',
+          name: ''
         }
-
-      ],
+      },
       form: this.$form.createForm(this),
       loading: true,
       ModalText: 'Content of the modal',
@@ -490,21 +468,35 @@ export default {
       rightColumns: rightTableColumns,
     }
 
-  }, created() {
+  }, watch: {
+    query: {
+      handler: function () {
+        // console.log(val)
+        // this.loadWorkspaceList()
+      },
+      deep: true
+    },
+  }
+  , created() {
     this.loadWorkspaceList()
   }, methods: {
     resetForm() {
-      this.form.setFieldsValue({nameCode: ''});
+      this.query.query.name = this.query.query.code = ''
       this.loadWorkspaceList()
-
     }, loadWorkspaceList() {
       this.loading = true
-      const nameCode = this.form.getFieldValue('nameCode')
-      var query = {
-        nameCode: nameCode ? nameCode : ''
-      }
-      console.log(query)
-      this.loading = false
+      var _this = this
+      list(this.query).then(res => {
+        var resp = res.data
+        if (resp.data) {
+          _this.dataSource = resp.data.rows
+          _this.query.page = resp.data.page
+        } else {
+          _this.dataSource = []
+        }
+        this.loading = false
+      })
+
     }
     , submitForm() {
       this.loadWorkspaceList()
@@ -519,7 +511,7 @@ export default {
       console.log('Clicked cancel button');
       this.add.visible = false;
     },
-    addHandleOk(){
+    addHandleOk() {
       this.ModalText = 'The modal will be closed after two seconds';
       this.add.confirmLoading = true;
       setTimeout(() => {
@@ -538,8 +530,18 @@ export default {
     onStatusTitleClick() {
       this.$message.info('你点击了状态栏表头')
     },
-    onChange() {
-      this.$message.info('表格状态改变了')
+    onChange(pagination, filters, sorter, {currentDataSource}) {
+      if (pagination) {
+
+        this.query.page.pageIndex = pagination.current
+        this.query.page.pageSize = pagination.pageSize
+      }
+      if (sorter) {
+        this.query.orders[0].desc = (!sorter.order|| sorter.order === 'ascend')
+      }
+
+      console.log(pagination, filters, sorter, currentDataSource)
+      this.loadWorkspaceList()
     },
     onSelectChange() {
       this.$message.info('选中行改变了')
@@ -573,13 +575,13 @@ export default {
         this.confirmLoading1 = false;
       }, 2000);
     },
-    editHandleOk(){
+    editHandleOk() {
       this.ModalText = 'The modal will be closed after two seconds';
       this.edit.confirmLoading = true;
       setTimeout(() => {
         this.edit.visible = false;
         this.edit.confirmLoading = false;
-      //  表单提交
+        //  表单提交
         console.log('submit!', this.edit.form);
       }, 2000);
     },
