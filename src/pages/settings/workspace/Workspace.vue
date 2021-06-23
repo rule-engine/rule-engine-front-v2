@@ -664,8 +664,9 @@ export default {
       })
     },
     memberHandleOk(/*e*/) {
-      this.member.confirmLoading = true;
       this.loadWorkspaceList();
+      this.member.confirmLoading = false;
+      this.member.visible = false;
     },
     addMemberHandleOk(/*e*/) {
       this.addMember.confirmLoading = true;
