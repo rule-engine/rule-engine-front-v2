@@ -131,7 +131,8 @@
         @ok="editHandleOk('editWorkspace')"
         @cancel="editHandleCancel('editWorkspace')">
       <template>
-        <a-form-model ref="editWorkspace" :model="edit.form" :rules="rules" :label-col="edit.labelCol" :wrapper-col="edit.wrapperCol">
+        <a-form-model ref="editWorkspace" :model="edit.form" :rules="rules" :label-col="edit.labelCol"
+                      :wrapper-col="edit.wrapperCol">
           <a-form-model-item label="空间名称" has-feedback prop="name">
             <a-input v-model="edit.form.name"/>
           </a-form-model-item>
@@ -288,7 +289,8 @@ import difference from 'lodash/difference';
 
 //api
 import {list} from '@/services/workspace'
-import {memberList} from '@/services/workspaceMember'
+import {memberList, bindMember} from '@/services/workspaceMember'
+import {userList} from '@/services/user'
 
 
 const columns = [
@@ -385,11 +387,7 @@ export default {
             type: 1 //默认查询管理tob
           }
         },
-        columns: [{
-          title: '编号',
-          width: '100px',
-          dataIndex: 'id'
-        },
+        columns: [
           {
             title: '用户',
             width: '180px',
@@ -433,123 +431,29 @@ export default {
       ModalText: 'Content of the modal',
       visible: false,
       addMember: {
+        query: {
+          orders: [
+            {
+              columnName: 'create_time',
+              desc: true
+            }
+          ],
+          page: {
+            pageIndex: 1,
+            pageSize: 10,
+            total: 0
+          },
+          query: {
+            username: '',
+            sex: '',
+            email: ''
+          }
+        },
+        loading: true,
         visible: false,
         confirmLoading: false,
-        dataSource: [
-          {
-            key: "1",
-            title: "",
-            user: "1",
-            email: "1",
-            avatar: "1",
-            disabled: false,
-          },
-          {
-            key: "2",
-            title: "",
-            user: "2",
-            email: "2",
-            avatar: "2",
-            disabled: false,
-          },
-          {
-            key: "3",
-            title: "",
-            user: "3",
-            email: "2",
-            avatar: "2",
-            disabled: false,
-          },
-          {
-            key: "4",
-            title: "",
-            user: "4",
-            email: "2",
-            avatar: "2",
-            disabled: false,
-          },
-          {
-            key: "5",
-            title: "",
-            user: "5",
-            email: "2",
-            avatar: "2",
-            disabled: false,
-          },
-          {
-            key: "6",
-            title: "",
-            user: "6",
-            email: "2",
-            avatar: "2",
-            disabled: false,
-          },
-          {
-            key: "7",
-            title: "",
-            user: "7",
-            email: "2",
-            avatar: "2",
-            disabled: false,
-          },
-          {
-            key: "8",
-            title: "",
-            user: "8",
-            email: "2",
-            avatar: "2",
-            disabled: false,
-          },
-          {
-            key: "9",
-            title: "",
-            user: "9",
-            email: "2",
-            avatar: "2",
-            disabled: false,
-          },
-          {
-            key: "10",
-            title: "",
-            user: "10",
-            email: "2",
-            avatar: "2",
-            disabled: false,
-          },
-          {
-            key: "11",
-            title: "",
-            user: "11",
-            email: "2",
-            avatar: "2",
-            disabled: false,
-          },
-          {
-            key: "12",
-            title: "",
-            user: "12",
-            email: "2",
-            avatar: "2",
-            disabled: false,
-          },
-          {
-            key: "13",
-            title: "",
-            user: "13",
-            email: "2",
-            avatar: "2",
-            disabled: false,
-          },
-          {
-            key: "14",
-            title: "",
-            user: "14",
-            email: "2",
-            avatar: "2",
-            disabled: false,
-          },
-        ],
-        targetKeys: ["2"],
+        dataSource: [],
+        targetKeys: [],
         disabled: false,
         showSearch: false,
         leftColumns: [{
@@ -604,6 +508,10 @@ export default {
     },
     handleSearch(dir, value) {
       console.log('search:', dir, value);
+      if (dir === 'left') {
+        this.addMember.query.query.username = value;
+        this.addMemberLoadUserList();
+      }
     }
     , submitForm() {
       this.loadWorkspaceList()
@@ -646,17 +554,11 @@ export default {
           }, 1500)
         }
       })
-      // setTimeout(() => {
-      //   this.edit.visible = false;
-      //   this.edit.confirmLoading = false;
-      //   //  表单提交
-      //   console.log('submit!', this.edit.form);
-      // }, 2000);
     },
-     editHandleCancel(formName) {
-       this.$refs[formName].resetFields();
-       this.edit.visible = false;
-     },
+    editHandleCancel(formName) {
+      this.$refs[formName].resetFields();
+      this.edit.visible = false;
+    },
     handleMenuClick() {
 
     },
@@ -710,7 +612,32 @@ export default {
       })
     },
     showAddMember() {
+      // 查询用户列表
+      this.addMemberLoadUserList();
       this.addMember.visible = true;
+    },
+    addMemberLoadUserList() {
+      this.addMember.loading = true
+      const _this = this.addMember;
+      userList(_this.query).then(res => {
+        const resp = res.data;
+        if (resp.data) {
+          _this.dataSource = Array.from(resp.data.rows).map(m => (
+              {
+                key: m.id,
+                title: m.username, // 搜索用
+                user: m.username,
+                email: m.email,
+                avatar: m.avatar,
+                disabled: false,
+              }
+          ));
+          _this.query.page = resp.data.page
+        } else {
+          _this.dataSource = []
+        }
+        this.addMember.loading = false
+      })
     },
     memberHandleOk(/*e*/) {
       this.member.confirmLoading = true;
@@ -721,10 +648,18 @@ export default {
     },
     addMemberHandleOk(/*e*/) {
       this.addMember.confirmLoading = true;
-      setTimeout(() => {
+      // 调用接口
+      // this.addMember.targetKeys; 为已选择的用户id
+      bindMember({
+        workspaceId: this.member.query.query.workspaceId,
+        userList: this.addMember.targetKeys
+      }).then(res => {
+        console.log(res)
         this.addMember.visible = false;
         this.addMember.confirmLoading = false;
-      }, 2000);
+        // 添加成员后，重新加载 后期优化
+        this.queryMember();
+      })
     },
     memberHandleCancel(/*e*/) {
       console.log('Clicked cancel button');
@@ -735,7 +670,6 @@ export default {
       this.addMember.visible = false;
     },
     callback(key) {
-      console.log(key);
       this.member.query.query.type = key;
       // 切换tob
       this.queryMember();

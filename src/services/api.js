@@ -16,6 +16,7 @@ module.exports = {
     },
     workspaceMember:{
         LIST:`${BASE_URL}/workspaceMember/list`,
+        BIND_MEMBER:`${BASE_URL}/workspaceMember/bindMember`,
     },
     ROUTES: `${BASE_URL}/routes`,
     GOODS: `${BASE_URL}/goods`,
