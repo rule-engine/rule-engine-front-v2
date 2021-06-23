@@ -22,6 +22,10 @@ export async function getUserInfo() {
     return request(user.GET_USER_INFO, METHOD.POST)
 }
 
+export async function userList(param) {
+    return request(user.LIST, METHOD.POST, param)
+}
+
 export async function getRoutesConfig() {
     return request(ROUTES, METHOD.GET)
 }
@@ -43,5 +47,6 @@ export function logout(context) {
 export default {
     login,
     logout,
-    getRoutesConfig
+    getRoutesConfig,
+    userList
 }

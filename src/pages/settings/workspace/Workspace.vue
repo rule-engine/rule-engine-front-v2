@@ -176,6 +176,7 @@
               rowKey="userId"
               style="clear: both"
               :columns="member.columns"
+              :loading="member.loading"
               :dataSource="member.dataSource"
               :selectedRows.sync="member.selectedRows"
               :pagination="{showSizeChanger: true, showQuickJumper: true,
@@ -203,6 +204,7 @@
           <standard-table
               rowKey="userId"
               style="clear: both"
+              :loading="member.loading"
               :columns="member.columns"
               :dataSource="member.dataSource"
               :selectedRows.sync="member.selectedRows"
@@ -362,12 +364,13 @@ export default {
         description: {trigger: ['change', 'blur'], required: false, message: ""},
       },
       member: {
+        loading: true,
         visible: false,
         confirmLoading: false,
         query: {
           orders: [
             {
-              columnName: 'createTime',
+              columnName: 'create_time',
               desc: true
             }
           ],
@@ -411,7 +414,7 @@ export default {
       query: {
         orders: [
           {
-            columnName: 'createTime',
+            columnName: 'create_time',
             desc: true
           }
         ],
@@ -586,9 +589,9 @@ export default {
       this.loadWorkspaceList()
     }, loadWorkspaceList() {
       this.loading = true
-      var _this = this
+      const _this = this;
       list(this.query).then(res => {
-        var resp = res.data
+        const resp = res.data;
         if (resp.data) {
           _this.dataSource = resp.data.rows
           _this.query.page = resp.data.page
@@ -669,6 +672,7 @@ export default {
     },
     queryMember() {
       // 查询后端数据
+      this.member.loading = true
       const _this = this.member;
       memberList(this.member.query).then(res => {
         const resp = res.data;
@@ -678,6 +682,7 @@ export default {
         } else {
           _this.dataSource = []
         }
+        this.member.loading = false
       })
     },
     showAddMember() {
