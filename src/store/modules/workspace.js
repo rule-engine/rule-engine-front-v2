@@ -1,3 +1,5 @@
+import Cookie from "js-cookie";
+
 const storageCurrentWorkSpace = 'storage_currentWorkSpace'
 import {currentWorkspace} from '@/services/workspace'
 
@@ -10,7 +12,7 @@ export default {
         currentWorkSpace: state => {
             if (!state.currentWorkSpace) {
                 try {
-                    const currentWorkSpace = localStorage.getItem(storageCurrentWorkSpace)
+                    const currentWorkSpace = Cookie.get(storageCurrentWorkSpace)
                     if (!currentWorkSpace) {
                         state.currentWorkSpace = {
                             id: -1,
@@ -18,6 +20,7 @@ export default {
                             code: undefined
                         }
                     } else {
+
                         state.currentWorkSpace = JSON.parse(currentWorkSpace)
                     }
                 } catch (e) {
@@ -30,14 +33,14 @@ export default {
     mutations: {
         setWorkSpace: (state, currentWorkSpace) => {
             state.currentWorkSpace = currentWorkSpace
-            localStorage.setItem(storageCurrentWorkSpace, JSON.stringify(currentWorkSpace))
+            Cookie.set(storageCurrentWorkSpace, JSON.stringify(currentWorkSpace), {expires: new Date(new Date().getTime() +   5 * 60 * 1000)})
         },
         removeWorkSpace: (state) => {
             state.currentWorkSpace = {
                 name: undefined,
                 code: undefined
             }
-            localStorage.setItem(storageCurrentWorkSpace, undefined)
+            Cookie.set(storageCurrentWorkSpace, '', {expires: 0})
         }
     },
     actions: {
