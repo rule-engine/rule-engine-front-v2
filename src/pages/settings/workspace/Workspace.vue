@@ -188,12 +188,12 @@
               <a-avatar size="small" icon="user" :src="record.avatar"/>
               {{ record.username }}
             </div>
-            <div slot="action">
+            <div slot="action" slot-scope="{ record}">
               <a style="margin-right: 8px">
                 <a-icon type="edit"/>
                 解除管理
               </a>
-              <a style="margin-right: 8px">
+              <a style="margin-right: 8px" @click="deleteMember(record)">
                 <a-icon type="delete"/>
                 删除
               </a>
@@ -214,12 +214,12 @@
               <a-avatar size="small" icon="user" :src="record.avatar"/>
               {{ record.username }}
             </div>
-            <div slot="action">
+            <div slot="action" slot-scope="{ record}">
               <a style="margin-right: 8px">
                 <a-icon type="edit"/>
                 设为管理
               </a>
-              <a style="margin-right: 8px">
+              <a style="margin-right: 8px" @click="deleteMember(record)">
                 <a-icon type="delete"/>
                 删除
               </a>
@@ -289,8 +289,8 @@ import difference from 'lodash/difference';
 
 //api
 import {list} from '@/services/workspace'
-import {memberList, bindMember} from '@/services/workspaceMember'
-import {userList} from '@/services/user'
+import {memberList, bindMember, optionalPersonnel, deleteMember} from '@/services/workspaceMember'
+//import {userList} from '@/services/user'
 
 
 const columns = [
@@ -303,8 +303,6 @@ const columns = [
     title: '名称',
     dataIndex: 'name',
     width: '180px',
-    // needTotal: true,
-    // customRender: (text) => text + ' 次'
   },
   {
     title: '编码',
@@ -445,8 +443,7 @@ export default {
           },
           query: {
             username: '',
-            sex: '',
-            email: ''
+            workspaceId: null,
           }
         },
         loading: true,
@@ -555,6 +552,16 @@ export default {
         }
       })
     },
+    deleteMember(record) {
+      deleteMember({
+        userId: record.userId,
+        workspaceId: this.member.query.query.workspaceId
+      }).then(res => {
+        console.log(res)
+        // 重新加载列表
+        this.queryMember();
+      })
+    },
     editHandleCancel(formName) {
       this.$refs[formName].resetFields();
       this.edit.visible = false;
@@ -593,7 +600,8 @@ export default {
     },
     showMember(record) {
       this.member.visible = true;
-      this.member.query.query.workspaceId = record.id;
+      // this.addMember.query.query.workspaceId 筛选查询用户列表需要
+      this.addMember.query.query.workspaceId = this.member.query.query.workspaceId = record.id;
       this.queryMember();
     },
     queryMember() {
@@ -619,12 +627,12 @@ export default {
     addMemberLoadUserList() {
       this.addMember.loading = true
       const _this = this.addMember;
-      userList(_this.query).then(res => {
+      optionalPersonnel(_this.query).then(res => {
         const resp = res.data;
         if (resp.data) {
           _this.dataSource = Array.from(resp.data.rows).map(m => (
               {
-                key: m.id,
+                key: m.userId,
                 title: m.username, // 搜索用
                 user: m.username,
                 email: m.email,
@@ -641,10 +649,7 @@ export default {
     },
     memberHandleOk(/*e*/) {
       this.member.confirmLoading = true;
-      setTimeout(() => {
-        this.member.visible = false;
-        this.member.confirmLoading = false;
-      }, 2000);
+      this.loadWorkspaceList();
     },
     addMemberHandleOk(/*e*/) {
       this.addMember.confirmLoading = true;
@@ -662,8 +667,8 @@ export default {
       })
     },
     memberHandleCancel(/*e*/) {
-      console.log('Clicked cancel button');
       this.member.visible = false;
+      this.loadWorkspaceList();
     },
     addMemberHandleCancel(/*e*/) {
       console.log('Clicked cancel button');

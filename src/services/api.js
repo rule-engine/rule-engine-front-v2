@@ -17,6 +17,8 @@ module.exports = {
     workspaceMember:{
         LIST:`${BASE_URL}/workspaceMember/list`,
         BIND_MEMBER:`${BASE_URL}/workspaceMember/bindMember`,
+        OPTIONAL_PERSONNEL:`${BASE_URL}/workspaceMember/optionalPersonnel`,
+        DELETE_MEMBER:`${BASE_URL}/workspaceMember/deleteMember`,
     },
     ROUTES: `${BASE_URL}/routes`,
     GOODS: `${BASE_URL}/goods`,
