@@ -235,13 +235,14 @@
         @cancel="addMemberHandleCancel">
       <a-transfer
           :data-source="addMember.dataSource"
-          :titles="['当前已选中', '可选']"
+          :titles="['可选', '当前已选中']"
           :target-keys="addMember.targetKeys"
           :disabled="addMember.disabled"
           :show-search="true"
+          @search="handleSearch"
           :filter-option="(inputValue, item) => item.title.indexOf(inputValue) !== -1"
           :show-select-all="false"
-          @change="onChange1">
+          @change="addMemberOnChange">
         <template
             slot="children"
             slot-scope="{
@@ -266,8 +267,7 @@
                 },
               },
             })
-          "
-          >
+          ">
             <div slot="user" slot-scope="{user,avatar}">
               <a-avatar size="small" icon="user" :src="avatar"/>
               {{ user }}
@@ -325,26 +325,6 @@ const columns = [
 ];
 
 
-const leftTableColumns = [
-  {
-    title: '用户',
-    scopedSlots: {customRender: 'user'}
-  },
-  {
-    dataIndex: 'email',
-    title: '邮箱',
-  },
-];
-const rightTableColumns = [
-  {
-    title: '用户',
-    scopedSlots: {customRender: 'user'}
-  },
-  {
-    dataIndex: 'email',
-    title: '邮箱',
-  },
-];
 export default {
   name: "Workspace",
   components: {PageLayout, StandardTable},
@@ -455,7 +435,7 @@ export default {
         dataSource: [
           {
             key: "1",
-            title:"",
+            title: "",
             user: "1",
             email: "1",
             avatar: "1",
@@ -463,8 +443,104 @@ export default {
           },
           {
             key: "2",
-            title:"",
+            title: "",
             user: "2",
+            email: "2",
+            avatar: "2",
+            disabled: false,
+          },
+          {
+            key: "3",
+            title: "",
+            user: "3",
+            email: "2",
+            avatar: "2",
+            disabled: false,
+          },
+          {
+            key: "4",
+            title: "",
+            user: "4",
+            email: "2",
+            avatar: "2",
+            disabled: false,
+          },
+          {
+            key: "5",
+            title: "",
+            user: "5",
+            email: "2",
+            avatar: "2",
+            disabled: false,
+          },
+          {
+            key: "6",
+            title: "",
+            user: "6",
+            email: "2",
+            avatar: "2",
+            disabled: false,
+          },
+          {
+            key: "7",
+            title: "",
+            user: "7",
+            email: "2",
+            avatar: "2",
+            disabled: false,
+          },
+          {
+            key: "8",
+            title: "",
+            user: "8",
+            email: "2",
+            avatar: "2",
+            disabled: false,
+          },
+          {
+            key: "9",
+            title: "",
+            user: "9",
+            email: "2",
+            avatar: "2",
+            disabled: false,
+          },
+          {
+            key: "10",
+            title: "",
+            user: "10",
+            email: "2",
+            avatar: "2",
+            disabled: false,
+          },
+          {
+            key: "11",
+            title: "",
+            user: "11",
+            email: "2",
+            avatar: "2",
+            disabled: false,
+          },
+          {
+            key: "12",
+            title: "",
+            user: "12",
+            email: "2",
+            avatar: "2",
+            disabled: false,
+          },
+          {
+            key: "13",
+            title: "",
+            user: "13",
+            email: "2",
+            avatar: "2",
+            disabled: false,
+          },
+          {
+            key: "14",
+            title: "",
+            user: "14",
             email: "2",
             avatar: "2",
             disabled: false,
@@ -473,8 +549,22 @@ export default {
         targetKeys: ["2"],
         disabled: false,
         showSearch: false,
-        leftColumns: leftTableColumns,
-        rightColumns: rightTableColumns,
+        leftColumns: [{
+          title: '用户',
+          scopedSlots: {customRender: 'user'}
+        },
+          {
+            dataIndex: 'email',
+            title: '邮箱',
+          },],
+        rightColumns: [{
+          title: '用户',
+          scopedSlots: {customRender: 'user'}
+        },
+          {
+            dataIndex: 'email',
+            title: '邮箱',
+          },],
       },
       confirmLoading: false,
     }
@@ -508,6 +598,9 @@ export default {
         this.loading = false
       })
 
+    },
+    handleSearch(dir, value) {
+      console.log('search:', dir, value);
     }
     , submitForm() {
       this.loadWorkspaceList()
@@ -632,8 +725,8 @@ export default {
       // 切换tob
       this.queryMember();
     },
-    onChange1(nextTargetKeys) {
-      this.targetKeys = nextTargetKeys;
+    addMemberOnChange(nextTargetKeys) {
+      this.addMember.targetKeys = nextTargetKeys;
     },
 
     triggerDisable(disabled) {
