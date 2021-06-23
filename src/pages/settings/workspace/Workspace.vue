@@ -637,20 +637,6 @@ export default {
         this.confirmLoading1 = false;
       }, 2000);
     },
-    // editHandleOk() {
-    //   this.ModalText = 'The modal will be closed after two seconds';
-    //   this.edit.confirmLoading = true;
-    //   setTimeout(() => {
-    //     this.edit.visible = false;
-    //     this.edit.confirmLoading = false;
-    //     //  表单提交
-    //     console.log('submit!', this.edit.form);
-    //   }, 2000);
-    // },
-    // editHandleCancel(/*e*/) {
-    //   console.log('Clicked cancel button');
-    //   this.edit.visible = false;
-    // },
     memberHandleCancel(/*e*/) {
       console.log('Clicked cancel button');
       this.member.visible = false;
