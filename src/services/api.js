@@ -12,7 +12,9 @@ module.exports = {
     workspace:{
         LIST:`${BASE_URL}/workspace/list`,
         CURRENT_WORKSPACE:`${BASE_URL}/workspace/currentWorkspace`,
-        CHANGE:`${BASE_URL}/workspace/change`
+        CHANGE:`${BASE_URL}/workspace/change`,
+        ADD:`${BASE_URL}/workspace/add`,
+        EDIT:`${BASE_URL}/workspace/edit`,
     },
     workspaceMember:{
         LIST:`${BASE_URL}/workspaceMember/list`,

@@ -69,7 +69,7 @@
           </div>
         </div>
         <div slot="action" slot-scope="{record}">
-          <a style="margin-right: 8px" @click="showEdit">
+          <a style="margin-right: 8px" @click="showEdit(record)">
             <a-icon type="edit"/>
             编辑
           </a>
@@ -108,8 +108,8 @@
         @ok="addHandleOk('addWorkspace')"
         @cancel="addHandleCancel('addWorkspace')">
       <template>
-        <a-form-model ref="addWorkspace" :model="add.form" :rules="rules" :label-col="add.labelCol"
-                      :wrapper-col="add.wrapperCol">
+        <a-form-model ref="addWorkspace" :model="add.form" :rules="rules" :label-col="{span: 4}"
+                      :wrapper-col="{span: 14}">
           <a-form-model-item label="空间名称" has-feedback prop="name">
             <a-input v-model="add.form.name" placeholder="请输入空间名称"/>
           </a-form-model-item>
@@ -288,7 +288,7 @@ import StandardTable from '@/components/table/StandardTable'
 import difference from 'lodash/difference';
 
 //api
-import {list} from '@/services/workspace'
+import {list, add, edit} from '@/services/workspace'
 import {memberList, bindMember, optionalPersonnel, deleteMember} from '@/services/workspaceMember'
 //import {userList} from '@/services/user'
 
@@ -341,17 +341,16 @@ export default {
         labelCol: {span: 4},
         wrapperCol: {span: 14},
         form: {
-          name: "默认空间名称",
-          code: "default",
-          description: "这玩意是描述"
+          id: null,
+          name: "",
+          code: "",
+          description: ""
         },
       },
       add: {
         visible: false,
         confirmLoading: false,
         //表单数据
-        labelCol: {span: 4},
-        wrapperCol: {span: 14},
         form: {
           name: "",
           code: "",
@@ -426,7 +425,6 @@ export default {
       },
       form: this.$form.createForm(this),
       loading: true,
-      ModalText: 'Content of the modal',
       visible: false,
       addMember: {
         query: {
@@ -524,32 +522,29 @@ export default {
       this.add.visible = false;
     },
     addHandleOk(formName) {
-      var _this = this
+      const _this = this;
       this.add.visible = true;
       this.add.confirmLoading = true;
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          setTimeout(() => {
-            _this.$message.success("添加成功！")
-            _this.add.visible = false;
-            _this.$refs[formName].resetFields();
-          }, 1500)
-        }
+      add(this.add.form).then(res => {
+        console.log(res)
+        this.$message.success("添加成功！");
+        _this.add.visible = false;
         _this.add.confirmLoading = false;
+        _this.$refs[formName].resetFields();
+        this.loadWorkspaceList();
       })
     },
     editHandleOk(formName) {
       this.edit.visible = true;
       this.edit.confirmLoading = true;
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          setTimeout(() => {
-            this.$message.success("修改成功！");
-            this.edit.visible = false;
-            this.edit.confirmLoading = false;
-            this.$refs[formName].resetFields();
-          }, 1500)
-        }
+      // update
+      edit(this.edit.form).then(res => {
+        console.log(res)
+        this.$message.success("修改成功！");
+        this.edit.visible = false;
+        this.edit.confirmLoading = false;
+        this.$refs[formName].resetFields();
+        this.loadWorkspaceList();
       })
     },
     deleteMember(record) {
@@ -563,8 +558,8 @@ export default {
       })
     },
     editHandleCancel(formName) {
-      this.$refs[formName].resetFields();
       this.edit.visible = false;
+      this.$refs[formName].resetFields();
     },
     handleMenuClick() {
 
@@ -595,8 +590,13 @@ export default {
       this.dataSource = this.dataSource.filter(item => item.key !== key)
       //this.selectedRows = this.selectedRows.filter(item => item.key !== key)
     },
-    showEdit() {
+    showEdit(record) {
       this.edit.visible = true;
+      // 回显数据
+      this.edit.form.id = record.id;
+      this.edit.form.code = record.code;
+      this.edit.form.name = record.name;
+      this.edit.form.description = record.description;
     },
     showMember(record) {
       this.member.visible = true;

@@ -22,6 +22,15 @@ export async function currentWorkspace(query) {
     return request(workspace.CURRENT_WORKSPACE, METHOD.POST, query)
 }
 
+export async function add(query) {
+    return request(workspace.ADD, METHOD.POST, query)
+}
+
+export async function edit(query) {
+    return request(workspace.EDIT, METHOD.POST, query)
+}
+
+
 
 export default {
     list,

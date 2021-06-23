@@ -20,6 +20,7 @@ export async function deleteMember(query) {
     return request(workspaceMember.DELETE_MEMBER, METHOD.POST, query)
 }
 
+
 export default {
     memberList
 }
