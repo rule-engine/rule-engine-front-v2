@@ -39,7 +39,6 @@ export function logout(context) {
         localStorage.removeItem(process.env.VUE_APP_PERMISSIONS_KEY)
         localStorage.removeItem(process.env.VUE_APP_ROLES_KEY)
         removeAuthorization()
-        context.$store.commit('workspace/removeWorkSpace')
         context.$router.push('/login')
     })
 }

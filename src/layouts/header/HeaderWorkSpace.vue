@@ -3,7 +3,7 @@
     <a-dropdown class="lang header-item">
       <div class="hover">
         <a-icon :type="loading?'loading':'laptop'"/>
-        {{ currentWorkSpace.name }}
+        {{ currentWorkspace.name }}
       </div>
       <a-menu slot="overlay">
         <a-menu-item
@@ -29,8 +29,7 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
-import {change, list} from '@/services/workspace'
+import {change, currentWorkspace, list} from '@/services/workspace'
 
 export default {
   name: 'HeaderWorkSpace',
@@ -56,14 +55,20 @@ export default {
           name: ''
         }
       }
+      , currentWorkspace: {
+        id: -1,
+        name: '加载中...',
+        code: undefined
+      }
     }
-  }, computed: {
-    ...mapGetters('workspace', ['currentWorkSpace']),
-  },
+  }, computed: {},
   created() {
-    this.workSpaceList.push(this.currentWorkSpace)
+    let _this = this
+    currentWorkspace().then(res => {
+      _this.currentWorkspace = res.data.data
+      _this.loading = false
+    })
     this.loadList()
-
   },
   methods: {
     loadList() {
@@ -89,7 +94,7 @@ export default {
 
       change({id: target.id}).then(res => {
         if (res.data.code === 200) {
-          _this.$store.commit("workspace/setWorkSpace", target)
+          _this.$router.go(0)
         }
       }).finally(() => {
         _this.loading = false
