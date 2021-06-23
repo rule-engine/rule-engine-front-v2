@@ -59,7 +59,7 @@
             编辑
           </a>
           <a style="margin-right: 8px">
-            <a-icon type="delete"/>
+            <a-icon type="delete" @click="deleteUser(1)"/>
             删除
           </a>
         </div>
@@ -123,7 +123,7 @@
 import PageLayout from '@/layouts/PageLayout'
 import StandardTable from '@/components/table/StandardTable'
 
-import {userList, addUser} from '@/services/user'
+import {userList, addUser,deleteUser} from '@/services/user'
 
 const columns = [
   {
@@ -228,6 +228,18 @@ export default {
           return false;
         }
       });
+    },
+    deleteUser(record){
+      console.log("dddddd",record);
+      deleteUser({
+
+
+      }).then(res =>{
+        console.log(res)
+
+
+      })
+
     },
     loadUserList() {
       this.loading = true
