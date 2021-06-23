@@ -128,15 +128,15 @@
         :visible="edit.visible"
         :confirm-loading="edit.confirmLoading"
         :width="700"
-        @ok="editHandleOk"
-        @cancel="editHandleCancel">
+        @ok="editHandleOk('editWorkspace')"
+        @cancel="editHandleCancel('editWorkspace')">
       <template>
-        <a-form-model :model="edit.form" :label-col="edit.labelCol" :wrapper-col="edit.wrapperCol">
-          <a-form-model-item label="空间名称">
+        <a-form-model ref="editWorkspace" :model="edit.form" :rules="rules" :label-col="edit.labelCol" :wrapper-col="edit.wrapperCol">
+          <a-form-model-item label="空间名称" has-feedback prop="name">
             <a-input v-model="edit.form.name"/>
           </a-form-model-item>
           <a-form-model-item label="空间编码">
-            <a-input read-only="true" v-model="edit.form.code"/>
+            <a-input disabled="disabled" v-model="edit.form.code"/>
           </a-form-model-item>
           <a-form-model-item label="空间描述">
             <a-input v-model="edit.form.description" type="textarea"/>
@@ -487,11 +487,13 @@ export default {
   }
   , created() {
     this.loadWorkspaceList()
-  }, methods: {
+  },
+   methods: {
     resetForm() {
       this.query.query.name = this.query.query.code = ''
       this.loadWorkspaceList()
-    }, loadWorkspaceList() {
+    },
+    loadWorkspaceList() {
       this.loading = true
       var _this = this
       list(this.query).then(res => {
@@ -534,6 +536,30 @@ export default {
         _this.add.confirmLoading = false;
       })
     },
+    editHandleOk(formName) {
+      this.edit.visible = true;
+      this.edit.confirmLoading = true;
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          setTimeout(() => {
+            this.$message.success("修改成功！");
+            this.edit.visible = false;
+            this.edit.confirmLoading = false;
+            this.$refs[formName].resetFields();
+          }, 1500)
+        }
+      })
+      // setTimeout(() => {
+      //   this.edit.visible = false;
+      //   this.edit.confirmLoading = false;
+      //   //  表单提交
+      //   console.log('submit!', this.edit.form);
+      // }, 2000);
+    },
+     editHandleCancel(formName) {
+       this.$refs[formName].resetFields();
+       this.edit.visible = false;
+     },
     handleMenuClick() {
 
     },
@@ -587,20 +613,6 @@ export default {
         this.visible1 = false;
         this.confirmLoading1 = false;
       }, 2000);
-    },
-    editHandleOk() {
-      this.ModalText = 'The modal will be closed after two seconds';
-      this.edit.confirmLoading = true;
-      setTimeout(() => {
-        this.edit.visible = false;
-        this.edit.confirmLoading = false;
-        //  表单提交
-        console.log('submit!', this.edit.form);
-      }, 2000);
-    },
-    editHandleCancel(/*e*/) {
-      console.log('Clicked cancel button');
-      this.edit.visible = false;
     },
     handleCancel(/*e*/) {
       console.log('Clicked cancel button');
