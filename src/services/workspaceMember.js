@@ -21,6 +21,10 @@ export async function deleteMember(query) {
 }
 
 
+export async function permissionTransferApi(query) {
+    return request(workspaceMember.PERMISSION_TRANSFER, METHOD.POST, query)
+}
+
 export default {
     memberList
 }

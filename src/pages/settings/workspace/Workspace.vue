@@ -189,7 +189,7 @@
               {{ record.username }}
             </div>
             <div slot="action" slot-scope="{ record}">
-              <a style="margin-right: 8px">
+              <a style="margin-right: 8px" @click="permissionTransfer(record,2)">
                 <a-icon type="edit"/>
                 解除管理
               </a>
@@ -215,7 +215,7 @@
               {{ record.username }}
             </div>
             <div slot="action" slot-scope="{ record}">
-              <a style="margin-right: 8px">
+              <a style="margin-right: 8px" @click="permissionTransfer(record,1)">
                 <a-icon type="edit"/>
                 设为管理
               </a>
@@ -289,7 +289,13 @@ import difference from 'lodash/difference';
 
 //api
 import {list, add, edit} from '@/services/workspace'
-import {memberList, bindMember, optionalPersonnel, deleteMember} from '@/services/workspaceMember'
+import {
+  memberList,
+  bindMember,
+  optionalPersonnel,
+  deleteMember,
+  permissionTransferApi
+} from '@/services/workspaceMember'
 //import {userList} from '@/services/user'
 
 
@@ -483,6 +489,17 @@ export default {
   , created() {
     this.loadWorkspaceList()
   }, methods: {
+    permissionTransfer(record, type) {
+      permissionTransferApi({
+        workspaceId: this.member.query.query.workspaceId,
+        userId: record.userId,
+        type: type,
+      }).then(res => {
+        console.log(res);
+        // 重新加载
+        this.queryMember();
+      })
+    },
     resetForm() {
       this.query.query.name = this.query.query.code = ''
       this.loadWorkspaceList()
