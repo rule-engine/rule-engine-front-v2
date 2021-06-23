@@ -41,7 +41,7 @@ export default {
       query: {
         orders: [
           {
-            columnName: 'createTime',
+            columnName: 'create_time',
             desc: true
           }
         ],

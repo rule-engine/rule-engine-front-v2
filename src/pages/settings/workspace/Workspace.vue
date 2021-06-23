@@ -680,7 +680,7 @@ export default {
         if (resp.data) {
           _this.dataSource = Array.from(resp.data.rows).map(m => (
               {
-                key: m.userId,
+                key: m.userId+'',
                 title: m.username, // 搜索用
                 user: m.username,
                 email: m.email,
@@ -730,6 +730,7 @@ export default {
       this.queryMember();
     },
     addMemberOnChange(nextTargetKeys) {
+      console.log(',,',nextTargetKeys)
       this.addMember.targetKeys = nextTargetKeys;
     },
 
