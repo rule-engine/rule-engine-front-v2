@@ -270,7 +270,12 @@
                 },
               },
             })
-          ">
+          "
+              @change="addMemberTableChange"
+              :pagination="direction === 'left' ?{showSizeChanger: true, showQuickJumper: true,
+          pageSize: addMember.query.page.pageSize,
+          total: addMember.query.page.total}:{showSizeChanger: true, showQuickJumper: true,pageSize: 8,total: addMember.targetKeys.length}"
+          >
             <div slot="user" slot-scope="{user,avatar}">
               <a-avatar size="small" icon="user" :src="avatar"/>
               {{ user }}
@@ -442,7 +447,7 @@ export default {
           ],
           page: {
             pageIndex: 1,
-            pageSize: 10,
+            pageSize: 8,
             total: 0
           },
           query: {
@@ -616,6 +621,14 @@ export default {
       console.log(pagination, filters, sorter, currentDataSource)
       this.loadWorkspaceList()
     },
+    addMemberTableChange(pagination, filters, sorter, {currentDataSource}) {
+      if (pagination) {
+        this.addMember.query.page.pageIndex = pagination.current
+        this.addMember.query.page.pageSize = pagination.pageSize
+      }
+      console.log(pagination, filters, sorter, currentDataSource)
+      this.addMemberLoadUserList();
+    },
     onSelectChange() {
       this.$message.info('选中行改变了')
     },
@@ -653,6 +666,8 @@ export default {
       })
     },
     showAddMember() {
+      this.addMember.targetKeys = [];
+      this.addMember.dataSource = [];
       // 查询用户列表
       this.addMemberLoadUserList();
       this.addMember.visible = true;
@@ -686,6 +701,7 @@ export default {
       this.member.visible = false;
     },
     addMemberHandleOk(/*e*/) {
+
       this.addMember.confirmLoading = true;
       // 调用接口
       // this.addMember.targetKeys; 为已选择的用户id
