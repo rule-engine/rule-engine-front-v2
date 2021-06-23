@@ -274,7 +274,7 @@
               @change="addMemberTableChange"
               :pagination="direction === 'left' ?{showSizeChanger: true, showQuickJumper: true,
           pageSize: addMember.query.page.pageSize,
-          total: addMember.query.page.total}:{showSizeChanger: true, showQuickJumper: true,pageSize: 8,total: addMember.targetKeys.length}"
+          total: addMember.query.page.total}:{showSizeChanger: false, showQuickJumper: false,pageSize: 8,total: addMember.targetKeys.length}"
           >
             <div slot="user" slot-scope="{user,avatar}">
               <a-avatar size="small" icon="user" :src="avatar"/>
