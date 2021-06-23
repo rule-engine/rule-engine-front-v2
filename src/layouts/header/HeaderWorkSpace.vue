@@ -15,7 +15,7 @@
 
 <script>
 import {mapGetters} from "vuex";
-import {list} from '@/services/workspace'
+import {change, list} from '@/services/workspace'
 
 export default {
   name: 'HeaderWorkSpace',
@@ -51,15 +51,25 @@ export default {
       if (resp) {
         _this.workSpaceList = resp.rows
       }
-    }).finally(()=>{
+    }).finally(() => {
       this.loading = false
     })
   },
   methods: {
     changeWorkSpace(space) {
       this.loading = true
+      var _this = this
       let target = this.workSpaceList.find(e => e.id === space.key)
-      this.$store.dispatch({type: 'workspace/SET_CURRENT_WORK_SPACE', target: target, context: this})
+
+      change({id: target.id}).then(res => {
+        if (res.data.code === 200) {
+          _this.$store.commit("workspace/setWorkSpace", target)
+        }
+      }).finally(() => {
+        _this.loading = false
+        _this.$router.go(0)
+      })
+
     }
   }
 }

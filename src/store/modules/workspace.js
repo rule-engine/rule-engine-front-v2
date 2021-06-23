@@ -1,5 +1,5 @@
 const storageCurrentWorkSpace = 'storage_currentWorkSpace'
-import {currentWorkspace, change} from '@/services/workspace'
+import {currentWorkspace} from '@/services/workspace'
 
 export default {
     namespaced: true,
@@ -35,25 +35,13 @@ export default {
         removeWorkSpace: (state) => {
             state.currentWorkSpace = {
                 name: undefined,
-                code:undefined
+                code: undefined
             }
             localStorage.setItem(storageCurrentWorkSpace, undefined)
         }
     },
     actions: {
-        //设置工作空间
-        SET_CURRENT_WORK_SPACE({commit}, target) {
-            let param = target.target;
-            let context = target.context
-            change({id: param.id}).then(res => {
-                if (res.data.code === 200) {
-                    commit("setWorkSpace", param)
-                    context.loading = false
-                    context.$router.go(0)
-                }
-            })
-        },
-
+        //获取工作空间
         GET_CURRENT_WORK_SPACE({commit, getters}) {
             if (!getters.currentWorkSpace.code) {
                 currentWorkspace().then(res => {
