@@ -83,8 +83,8 @@
               <a-icon type="down"/>
             </a>
             <a-menu slot="overlay">
-              <a-menu-item>
-                <a-icon type="edit"/>
+              <a-menu-item @click="keySettingMethod(record)">
+                <a-icon type="file-protect"/>
                 密钥
               </a-menu-item>
               <a-menu-item @click="deleteWorkspace(record)">
@@ -131,8 +131,8 @@
         @ok="editHandleOk('editWorkspace')"
         @cancel="editHandleCancel('editWorkspace')">
       <template>
-        <a-form-model ref="editWorkspace" :model="edit.form" :rules="rules" :label-col="edit.labelCol"
-                      :wrapper-col="edit.wrapperCol">
+        <a-form-model ref="editWorkspace" :model="edit.form" :rules="rules" :label-col="{span: 4}"
+                      :wrapper-col="{span: 14}">
           <a-form-model-item label="空间名称" has-feedback prop="name">
             <a-input v-model="edit.form.name"/>
           </a-form-model-item>
@@ -284,6 +284,32 @@
         </template>
       </a-transfer>
     </a-modal>
+
+
+    <a-modal
+        title="密钥设置"
+        :visible="keySetting.visible"
+        :confirm-loading="keySetting.confirmLoading"
+        :width="700"
+        @ok="keySettingHandleOk()"
+        @cancel="keySettingHandleCancel()">
+      <template>
+        <a-form-model ref="editWorkspace" :model="keySetting" :label-col="{span: 4}"
+                      :wrapper-col="{span: 14}">
+          <a-form-model-item label="账号" has-feedback prop="name">
+            <a-input v-model="keySetting.form.accessKeyId">
+              <a-icon slot="prefix" type="safety"></a-icon>
+            </a-input>
+          </a-form-model-item>
+          <a-form-model-item label="密码">
+            <a-input v-model="keySetting.form.accessKeySecret" type="password">
+              <a-icon slot="prefix" type="lock"/>
+            </a-input>
+          </a-form-model-item>
+        </a-form-model>
+      </template>
+    </a-modal>
+
   </page-layout>
 </template>
 
@@ -293,7 +319,7 @@ import StandardTable from '@/components/table/StandardTable'
 import difference from 'lodash/difference';
 
 //api
-import {list, add, edit, deleteWorkspace} from '@/services/workspace'
+import {list, add, edit, deleteWorkspace, accessKey} from '@/services/workspace'
 import {
   memberList,
   bindMember,
@@ -345,12 +371,18 @@ export default {
 
   data() {
     return {
+      keySetting: {
+        visible: false,
+        confirmLoading: false,
+        form: {
+          accessKeyId: null,
+          accessKeySecret: null,
+        }
+      },
       edit: {
         visible: false,
         confirmLoading: false,
         //表单数据
-        labelCol: {span: 4},
-        wrapperCol: {span: 14},
         form: {
           id: null,
           name: "",
@@ -490,22 +522,36 @@ export default {
       },
       deep: true
     },
-  }
-  , created() {
+  },
+  created() {
     this.loadWorkspaceList()
-  }, methods: {
+  },
+  methods: {
+    keySettingHandleOk() {
+      this.keySetting.visible = false;
+      this.keySetting.confirmLoading = false;
+    },
+    keySettingHandleCancel() {
+      this.keySetting.visible = false;
+    },
+    keySettingMethod(record) {
+      // 回显数据 只有管理员以及空间管理员可以调用
+      accessKey({param: record.code}).then(res => {
+        this.keySetting.form.accessKeyId = res.data.data.accessKeyId;
+        this.keySetting.form.accessKeySecret = res.data.data.accessKeySecret;
+        this.keySetting.visible = true;
+      })
+    },
     permissionTransfer(record, type) {
       permissionTransferApi({
         workspaceId: this.member.query.query.workspaceId,
         userId: record.userId,
         type: type,
       }).then(res => {
-        if (res.data) {
+        if (res.data.data) {
           // 重新加载
           this.$message.success("更新成功！");
           this.queryMember();
-        } else {
-          this.$message.error("更新失败！");
         }
       })
     },
@@ -563,13 +609,11 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           add(this.add.form).then(res => {
-            if (res.data) {
+            if (res.data.data) {
               this.$message.success("添加成功！");
               _this.add.visible = false;
               _this.$refs[formName].resetFields();
               this.loadWorkspaceList();
-            } else {
-              this.$message.error("添加失败！");
             }
             _this.add.confirmLoading = false;
           })
@@ -587,13 +631,11 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           edit(this.edit.form).then(res => {
-            if (res.data) {
+            if (res.data.data) {
               this.$message.success("修改成功！");
               this.edit.visible = false;
               this.$refs[formName].resetFields();
               this.loadWorkspaceList();
-            } else {
-              this.$message.error("修改失败！");
             }
             this.edit.confirmLoading = false;
           })

@@ -34,9 +34,15 @@ export async function deleteWorkspace(query) {
     return request(workspace.DELETE_WORKSPACE, METHOD.POST, query)
 }
 
+export async function accessKey(query) {
+    return request(workspace.ACCESS_KEY, METHOD.POST, query)
+}
+
 
 export default {
     list,
     change,
-    currentWorkspace
+    currentWorkspace,
+    deleteWorkspace,
+    accessKey
 }
