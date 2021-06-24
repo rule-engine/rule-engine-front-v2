@@ -9,7 +9,8 @@ module.exports = {
         LOGOUT: `${BASE_URL}/user/logout`,
         LIST: `${BASE_URL}/user/list`,
         ADD_USER: `${BASE_URL}/user/add`,
-        DELETE_USER: `${BASE_URL}/user/delete`
+        DELETE_USER: `${BASE_URL}/user/delete`,
+        UPDATE_USER_INFO: `${BASE_URL}/user/updateUserInfo`,
     },
     workspace:{
         LIST:`${BASE_URL}/workspace/list`,
@@ -17,6 +18,7 @@ module.exports = {
         CHANGE:`${BASE_URL}/workspace/change`,
         ADD:`${BASE_URL}/workspace/add`,
         EDIT:`${BASE_URL}/workspace/edit`,
+        DELETE_WORKSPACE:`${BASE_URL}/workspace/delete`,
     },
     workspaceMember:{
         LIST:`${BASE_URL}/workspaceMember/list`,

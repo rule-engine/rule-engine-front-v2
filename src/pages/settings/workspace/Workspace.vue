@@ -87,7 +87,7 @@
                 <a-icon type="edit"/>
                 密钥
               </a-menu-item>
-              <a-menu-item>
+              <a-menu-item @click="deleteWorkspace(record)">
                 <a-icon type="delete"/>
                 删除
               </a-menu-item>
@@ -190,7 +190,7 @@
             </div>
             <div slot="action" slot-scope="{ record}">
               <a style="margin-right: 8px" @click="permissionTransfer(record,2)">
-                <a-icon type="disconnect" />
+                <a-icon type="disconnect"/>
                 解除管理
               </a>
               <a style="margin-right: 8px" @click="deleteMember(record)">
@@ -216,7 +216,7 @@
             </div>
             <div slot="action" slot-scope="{ record}">
               <a style="margin-right: 8px" @click="permissionTransfer(record,1)">
-                <a-icon type="shrink" />
+                <a-icon type="shrink"/>
                 设为管理
               </a>
               <a style="margin-right: 8px" @click="deleteMember(record)">
@@ -293,7 +293,7 @@ import StandardTable from '@/components/table/StandardTable'
 import difference from 'lodash/difference';
 
 //api
-import {list, add, edit} from '@/services/workspace'
+import {list, add, edit, deleteWorkspace} from '@/services/workspace'
 import {
   memberList,
   bindMember,
@@ -500,9 +500,13 @@ export default {
         userId: record.userId,
         type: type,
       }).then(res => {
-        console.log(res);
-        // 重新加载
-        this.queryMember();
+        if (res.data) {
+          // 重新加载
+          this.$message.success("更新成功！");
+          this.queryMember();
+        } else {
+          this.$message.error("更新失败！");
+        }
       })
     },
     resetForm() {
@@ -529,8 +533,7 @@ export default {
         this.addMember.query.query.username = value;
         this.addMemberLoadUserList();
       }
-    }
-    , submitForm() {
+    }, submitForm() {
       this.loadWorkspaceList()
     },
     onShowSizeChange(current, pageSize) {
@@ -538,6 +541,16 @@ export default {
     },
     showAdd() {
       this.add.visible = true;
+    },
+    deleteWorkspace(record) {
+      deleteWorkspace({id: record.id}).then(res => {
+        if (res.data) {
+          this.$message.success("删除成功！");
+        } else {
+          this.$message.error("删除失败！");
+        }
+        this.loadWorkspaceList();
+      })
     },
     addHandleCancel(formName) {
       this.$refs[formName].resetFields();
@@ -550,12 +563,15 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           add(this.add.form).then(res => {
-            console.log(res)
-            this.$message.success("添加成功！");
-            _this.add.visible = false;
+            if (res.data) {
+              this.$message.success("添加成功！");
+              _this.add.visible = false;
+              _this.$refs[formName].resetFields();
+              this.loadWorkspaceList();
+            } else {
+              this.$message.error("添加失败！");
+            }
             _this.add.confirmLoading = false;
-            _this.$refs[formName].resetFields();
-            this.loadWorkspaceList();
           })
         } else {
           console.log('error submit!!');
@@ -571,12 +587,15 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           edit(this.edit.form).then(res => {
-            console.log(res)
-            this.$message.success("修改成功！");
-            this.edit.visible = false;
+            if (res.data) {
+              this.$message.success("修改成功！");
+              this.edit.visible = false;
+              this.$refs[formName].resetFields();
+              this.loadWorkspaceList();
+            } else {
+              this.$message.error("修改失败！");
+            }
             this.edit.confirmLoading = false;
-            this.$refs[formName].resetFields();
-            this.loadWorkspaceList();
           })
         } else {
           console.log('error submit!!');
@@ -590,9 +609,13 @@ export default {
         userId: record.userId,
         workspaceId: this.member.query.query.workspaceId
       }).then(res => {
-        console.log(res)
-        // 重新加载列表
-        this.queryMember();
+        if (res.data) {
+          // 重新加载列表
+          this.$message.success("删除成功！");
+          this.queryMember();
+        } else {
+          this.$message.error("删除失败！");
+        }
       })
     },
     editHandleCancel(formName) {
@@ -610,14 +633,12 @@ export default {
     },
     onChange(pagination, filters, sorter, {currentDataSource}) {
       if (pagination) {
-
         this.query.page.pageIndex = pagination.current
         this.query.page.pageSize = pagination.pageSize
       }
       if (sorter) {
         this.query.orders[0].desc = (!sorter.order || sorter.order === 'ascend')
       }
-
       console.log(pagination, filters, sorter, currentDataSource)
       this.loadWorkspaceList()
     },
@@ -680,7 +701,7 @@ export default {
         if (resp.data) {
           _this.dataSource = Array.from(resp.data.rows).map(m => (
               {
-                key: m.userId+'',
+                key: m.userId + '',
                 title: m.username, // 搜索用
                 user: m.username,
                 email: m.email,
@@ -709,11 +730,15 @@ export default {
         workspaceId: this.member.query.query.workspaceId,
         userList: this.addMember.targetKeys
       }).then(res => {
-        console.log(res)
-        this.addMember.visible = false;
+        if (res.data) {
+          this.$message.success("添加成功！");
+          this.addMember.visible = false;
+          // 添加成员后，重新加载 后期优化
+          this.queryMember();
+        } else {
+          this.$message.error("添加失败！");
+        }
         this.addMember.confirmLoading = false;
-        // 添加成员后，重新加载 后期优化
-        this.queryMember();
       })
     },
     memberHandleCancel(/*e*/) {
@@ -730,14 +755,11 @@ export default {
       this.queryMember();
     },
     addMemberOnChange(nextTargetKeys) {
-      console.log(',,',nextTargetKeys)
       this.addMember.targetKeys = nextTargetKeys;
     },
-
     triggerDisable(disabled) {
       this.disabled = disabled;
     },
-
     triggerShowSearch(showSearch) {
       this.showSearch = showSearch;
     },

@@ -166,7 +166,7 @@
 import PageLayout from '@/layouts/PageLayout'
 import StandardTable from '@/components/table/StandardTable'
 
-import {userList, addUser, deleteUser} from '@/services/user'
+import {userList, addUser, deleteUser, updateUserInfo} from '@/services/user'
 
 const columns = [
   {
@@ -212,6 +212,7 @@ export default {
         confirmLoading: false,
       },
       userEditForm: {
+        id: null,
         username: '',
         email: '',
         phone: '',
@@ -267,11 +268,14 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           addUser(this.userAddForm).then(res => {
-            console.log(res)
-            _this.$message.success("添加成功！")
+            if (res.data) {
+              _this.$message.success("添加成功！")
+              _this.resetForm(formName)
+              _this.showAddUserModel = false
+            } else {
+              _this.$message.error("添加失败！")
+            }
             _this.confirmLoading = false
-            _this.showAddUserModel = false
-            _this.resetForm(formName)
           })
         } else {
           console.log('error submit!!');
@@ -285,8 +289,16 @@ export default {
       const _this = this;
       this.$refs[formName].validate(valid => {
         if (valid) {
-
-          _this.edit.confirmLoading = false
+          updateUserInfo(this.userEditForm).then(res => {
+            if (res.data) {
+              _this.$message.success("更新成功！")
+              _this.resetForm(formName)
+              _this.edit.visible = false;
+            } else {
+              _this.$message.success("更新失败！")
+            }
+            _this.edit.confirmLoading = false
+          })
         } else {
           console.log('error submit!!');
           _this.edit.confirmLoading = false

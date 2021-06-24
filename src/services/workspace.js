@@ -30,6 +30,9 @@ export async function edit(query) {
     return request(workspace.EDIT, METHOD.POST, query)
 }
 
+export async function deleteWorkspace(query) {
+    return request(workspace.DELETE_WORKSPACE, METHOD.POST, query)
+}
 
 
 export default {

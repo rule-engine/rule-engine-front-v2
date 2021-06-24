@@ -32,6 +32,10 @@ export async function deleteUser(param) {
     return request(user.DELETE_USER, METHOD.POST, param)
 }
 
+export async function updateUserInfo(param) {
+    return request(user.UPDATE_USER_INFO, METHOD.POST, param)
+}
+
 export async function getRoutesConfig() {
     return request(ROUTES, METHOD.GET)
 }
