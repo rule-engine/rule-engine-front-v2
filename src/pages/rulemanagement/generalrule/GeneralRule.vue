@@ -12,7 +12,7 @@
 
                 <a-form-item label="规则状态">
                     <a-select placeholder="全部" style="width: 120px" v-model="query.query.status">
-                        <a-select-option>全部</a-select-option>
+                        <a-select-option value="-1">全部</a-select-option>
                         <a-select-option value="0">开发</a-select-option>
                         <a-select-option value="1">测试</a-select-option>
                         <a-select-option value="2">线上</a-select-option>
@@ -106,7 +106,7 @@
                                 <a-icon type="team"/>
                                 权限
                             </a-menu-item>
-                            <a-menu-item>
+                            <a-menu-item @click="deleteRow(record)">
                                 <a-icon type="delete"/>
                                 删除
                             </a-menu-item>
@@ -167,9 +167,9 @@
                 @cancel="authorityVersionHandleCancel"
         >
 
-            <a-form :form="form" layout="inline">
+            <a-form layout="inline">
                 <a-form-item label="用户名称/编码">
-                    <a-input/>
+                    <a-input v-model="authority.query.query.username"/>
                 </a-form-item>
                 <a-form-item>
                     <a-button type="primary" @click="queryMember()">
@@ -180,7 +180,7 @@
             <br>
 
             <standard-table
-                    rowKey="id"
+                    rowKey="userId"
                     style="clear: both"
                     :columns="authority.columns"
                     :loading="authority.loading"
@@ -191,11 +191,11 @@
                     <a-avatar size="small" icon="user" :src="record.avatar"/>
                     {{ record.username }}
                 </div>
-                <div slot="edit">
-                    <a-switch default-checked/>
+                <div slot="edit" slot-scope="{record}">
+                    <a-switch :checked="record.writeAuthority===0" @change="onChangeAuthority(record,1)"/>
                 </div>
-                <div slot="publish">
-                    <a-switch/>
+                <div slot="publish" slot-scope="{record}">
+                    <a-switch :checked="record.publishAuthority===0" @change="onChangeAuthority(record,2)"/>
                 </div>
             </standard-table>
         </a-modal>
@@ -206,8 +206,8 @@
 <script>
     import PageLayout from '@/layouts/PageLayout'
     import StandardTable from '@/components/table/StandardTable'
-    import {list} from '@/services/generalRule'
-
+    import {list, deleteGeneralRule} from '@/services/generalRule'
+    import {dataPermissionList} from '@/services/dataPermission'
 
     const columns = [
         {
@@ -279,21 +279,26 @@
                     confirmLoading: false,
                     loading: false,
                     selectedRows: [],
-                    dataSource: [
-                        {
-                            id: 1,
-                            username: "admin",
-                            email: "123123@qq.com",
-                            avatar: "",
-                            createTime: "2020-02-23 9:09:0",
-                        }
-                    ],
-                    columns: [
-                        {
-                            title: '编号',
-                            width: '100px',
-                            dataIndex: 'id'
+                    query: {
+                        orders: [
+                            {
+                                columnName: 'create_time',
+                                desc: true
+                            }
+                        ],
+                        page: {
+                            pageIndex: 1,
+                            pageSize: 10,
+                            total: 0
                         },
+                        query: {
+                            username: null,
+                            dataType: 0, // 0为普通规则
+                            dataId: null,
+                        }
+                    },
+                    dataSource: [],
+                    columns: [
                         {
                             title: '用户',
                             width: '180px',
@@ -374,11 +379,21 @@
             this.loadDataList();
         },
         methods: {
+            deleteRow(record) {
+                deleteGeneralRule({id: record.id}).then(res => {
+                    if (res.data) {
+                        this.$message.success("删除成功！");
+                        // 重新加载列表
+                        this.loadDataList();
+                    } else {
+                        this.$message.error("删除失败！");
+                    }
+                })
+            },
             loadDataList() {
                 this.loading = true;
                 const _this = this;
                 list(this.query).then(res => {
-                    console.log(res);
                     const resp = res.data;
                     if (resp.data) {
                         _this.dataSource = resp.data.rows;
@@ -442,8 +457,10 @@
                 this.historyVersion.visible = false
             },
             showAuthority(record) {
-                this.authority.visible = true
-                console.log(record)
+                this.authority.visible = true;
+                this.authority.loading = true;
+                this.authority.query.query.dataId = record.id;
+                this.queryMember();
             },
             authorityVersionHandleOk() {
                 this.authority.visible = false
@@ -453,7 +470,24 @@
                 this.authority.visible = false
             },
             queryMember() {
-
+                dataPermissionList(this.authority.query).then(res => {
+                    const resp = res.data;
+                    if (resp.data) {
+                        this.authority.dataSource = resp.data.rows;
+                        this.authority.query.page = resp.data.page
+                    } else {
+                        this.authority.dataSource = []
+                    }
+                    this.authority.loading = false;
+                })
+            },
+            onChangeAuthority(record, type) {
+                if (type === 1) {
+                    record.writeAuthority = record.writeAuthority === 1 ? 0 : 1;
+                } else if (type === 2) {
+                    record.publishAuthority = record.publishAuthority === 1 ? 0 : 1;
+                }
+                this.$message.info('待完成！！！')
             }
         }
     }

@@ -31,6 +31,10 @@ module.exports = {
     },
     generalRule: {
         LIST: `${BASE_URL}/ruleEngine/generalRule/list`,
+        DELETE: `${BASE_URL}/ruleEngine/generalRule/delete`,
+    },
+    dataPermission: {
+        LIST: `${BASE_URL}/ruleEngine/dataPermission/list`,
     },
     ROUTES: `${BASE_URL}/routes`,
     GOODS: `${BASE_URL}/goods`,
