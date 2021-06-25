@@ -82,7 +82,7 @@
       <div class="add">
         <a-form-model ref="userAddForm" :model="userAddForm" :rules="rules" :label-col="{span: 4}"
                       :wrapper-col="{span: 14}">
-          <a-form-model-item label="姓名" has-feedback prop="name">
+          <a-form-model-item label="姓名" has-feedback prop="username">
             <a-input v-model="userAddForm.username" placeholder="请输入姓名">
               <a-icon slot="prefix" type="user"></a-icon>
             </a-input>
@@ -129,7 +129,7 @@
     >
       <a-form-model ref="editUser" :rules="rules" :model="userEditForm" :label-col="{span: 4}"
                     :wrapper-col="{span: 14}">
-        <a-form-model-item label="姓名" has-feedback prop="name">
+        <a-form-model-item label="姓名" has-feedback prop="username">
           <a-input disabled="disabled" v-model="userEditForm.username" placeholder="请输入姓名">
             <a-icon slot="prefix" type="user"></a-icon>
           </a-input>
@@ -225,7 +225,7 @@ export default {
       dataSource: [],
       form: this.$form.createForm(this),
       userAddForm: {
-        name: '',
+        username: '',
         password: '',
         email: '',
         phone: '',
@@ -268,12 +268,11 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           addUser(this.userAddForm).then(res => {
-            if (res.data) {
+            if (res.data.data) {
               _this.$message.success("添加成功！")
-              _this.resetForm(formName)
+              this.$refs[formName].resetFields();
+              this.loadUserList();
               _this.showAddUserModel = false
-            } else {
-              _this.$message.error("添加失败！")
             }
             _this.confirmLoading = false
           })
@@ -290,12 +289,11 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           updateUserInfo(this.userEditForm).then(res => {
-            if (res.data) {
+            if (res.data.data) {
               _this.$message.success("更新成功！")
-              _this.resetForm(formName)
+              this.$refs[formName].resetFields();
+              this.loadUserList();
               _this.edit.visible = false;
-            } else {
-              _this.$message.success("更新失败！")
             }
             _this.edit.confirmLoading = false
           })

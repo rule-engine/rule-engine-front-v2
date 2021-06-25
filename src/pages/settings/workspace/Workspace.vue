@@ -245,6 +245,9 @@
           @search="handleSearch"
           :filter-option="(inputValue, item) => item.title.indexOf(inputValue) !== -1"
           :show-select-all="false"
+          :list-style="{
+            width: '252px',
+          }"
           @change="addMemberOnChange">
         <template
             slot="children"
@@ -257,7 +260,7 @@
               :row-selection="
             getRowSelection({ disabled: listDisabled, selectedKeys, itemSelectAll, itemSelect })
           "
-              :columns="direction === 'left' ? addMember.leftColumns : addMember.rightColumns"
+              :columns="addMember.columns"
               :data-source="filteredItems"
               size="small"
               :style="{ pointerEvents: listDisabled ? 'none' : null }"
@@ -271,10 +274,6 @@
               },
             })
           "
-              @change="addMemberTableChange"
-              :pagination="direction === 'left' ?{showSizeChanger: true, showQuickJumper: true,
-          pageSize: addMember.query.page.pageSize,
-          total: addMember.query.page.total}:{showSizeChanger: false, showQuickJumper: false,pageSize: 8,total: addMember.targetKeys.length}"
           >
             <div slot="user" slot-scope="{user,avatar}">
               <a-avatar size="small" icon="user" :src="avatar"/>
@@ -327,7 +326,6 @@ import {
   deleteMember,
   permissionTransferApi
 } from '@/services/workspaceMember'
-//import {userList} from '@/services/user'
 
 
 const columns = [
@@ -438,11 +436,7 @@ export default {
             width: '180px',
             dataIndex: 'email',
           },
-          {
-            title: '操作',
-            width: '180px',
-            scopedSlots: {customRender: 'action'}
-          }],
+        ],
         selectedRows: [],
         dataSource: []
       },
@@ -479,7 +473,7 @@ export default {
           ],
           page: {
             pageIndex: 1,
-            pageSize: 8,
+            pageSize: 1000,
             total: 0
           },
           query: {
@@ -494,15 +488,7 @@ export default {
         targetKeys: [],
         disabled: false,
         showSearch: false,
-        leftColumns: [{
-          title: '用户',
-          scopedSlots: {customRender: 'user'}
-        },
-          {
-            dataIndex: 'email',
-            title: '邮箱',
-          },],
-        rightColumns: [{
+        columns: [{
           title: '用户',
           scopedSlots: {customRender: 'user'}
         },
@@ -558,7 +544,8 @@ export default {
     resetForm() {
       this.query.query.name = this.query.query.code = ''
       this.loadWorkspaceList()
-    }, loadWorkspaceList() {
+    },
+    loadWorkspaceList() {
       this.loading = true
       const _this = this;
       list(this.query).then(res => {
@@ -684,14 +671,6 @@ export default {
       console.log(pagination, filters, sorter, currentDataSource)
       this.loadWorkspaceList()
     },
-    addMemberTableChange(pagination, filters, sorter, {currentDataSource}) {
-      if (pagination) {
-        this.addMember.query.page.pageIndex = pagination.current
-        this.addMember.query.page.pageSize = pagination.pageSize
-      }
-      console.log(pagination, filters, sorter, currentDataSource)
-      this.addMemberLoadUserList();
-    },
     onSelectChange() {
       this.$message.info('选中行改变了')
     },
@@ -738,6 +717,10 @@ export default {
     addMemberLoadUserList() {
       this.addMember.loading = true
       const _this = this.addMember;
+      if (_this.query.query.username === '') {
+        _this.dataSource = []
+        return;
+      }
       optionalPersonnel(_this.query).then(res => {
         const resp = res.data;
         if (resp.data) {
