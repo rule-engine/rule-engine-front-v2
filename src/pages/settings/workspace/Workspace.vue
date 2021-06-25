@@ -236,6 +236,12 @@
         :width="700"
         @ok="addMemberHandleOk"
         @cancel="addMemberHandleCancel">
+      <a-alert
+          message="温馨提示"
+          description="请左侧搜索指定成员，点击确认时将绑定当前已选中成员到此工作工作空间"
+          type="info"
+      />
+      <br>
       <a-transfer
           :data-source="addMember.dataSource"
           :titles="['可选', '当前已选中']"
@@ -318,7 +324,7 @@ import StandardTable from '@/components/table/StandardTable'
 import difference from 'lodash/difference';
 
 //api
-import {list, add, edit, deleteWorkspace, accessKey} from '@/services/workspace'
+import {list, add, edit, deleteWorkspace, accessKey, updateAccessKey} from '@/services/workspace'
 import {
   memberList,
   bindMember,
@@ -373,6 +379,7 @@ export default {
         visible: false,
         confirmLoading: false,
         form: {
+          id: null,
           accessKeyId: null,
           accessKeySecret: null,
         }
@@ -514,8 +521,13 @@ export default {
   },
   methods: {
     keySettingHandleOk() {
-      this.keySetting.visible = false;
-      this.keySetting.confirmLoading = false;
+      updateAccessKey(this.keySetting.form).then(res => {
+        if (res.data.data) {
+          this.$message.success("更新成功！");
+          this.keySetting.visible = false;
+        }
+        this.keySetting.confirmLoading = false;
+      })
     },
     keySettingHandleCancel() {
       this.keySetting.visible = false;
@@ -523,9 +535,12 @@ export default {
     keySettingMethod(record) {
       // 回显数据 只有管理员以及空间管理员可以调用
       accessKey({param: record.code}).then(res => {
-        this.keySetting.form.accessKeyId = res.data.data.accessKeyId;
-        this.keySetting.form.accessKeySecret = res.data.data.accessKeySecret;
-        this.keySetting.visible = true;
+        if (res.data.data) {
+          this.keySetting.form.id = res.data.data.id;
+          this.keySetting.form.accessKeyId = res.data.data.accessKeyId;
+          this.keySetting.form.accessKeySecret = res.data.data.accessKeySecret;
+          this.keySetting.visible = true;
+        }
       })
     },
     permissionTransfer(record, type) {
@@ -561,12 +576,13 @@ export default {
 
     },
     handleSearch(dir, value) {
-      console.log('search:', dir, value);
       if (dir === 'left') {
         this.addMember.query.query.username = value;
+        // 有时间做个延迟事件，优化下
         this.addMemberLoadUserList();
       }
-    }, submitForm() {
+    },
+    submitForm() {
       this.loadWorkspaceList()
     },
     onShowSizeChange(current, pageSize) {

@@ -38,11 +38,16 @@ export async function accessKey(query) {
     return request(workspace.ACCESS_KEY, METHOD.POST, query)
 }
 
+export async function updateAccessKey(query) {
+    return request(workspace.UPDATE_ACCESS_KEY, METHOD.POST, query)
+}
+
 
 export default {
     list,
     change,
     currentWorkspace,
     deleteWorkspace,
-    accessKey
+    accessKey,
+    updateAccessKey
 }
