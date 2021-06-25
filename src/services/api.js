@@ -29,6 +29,9 @@ module.exports = {
         DELETE_MEMBER: `${BASE_URL}/workspaceMember/deleteMember`,
         PERMISSION_TRANSFER: `${BASE_URL}/workspaceMember/permissionTransfer`,
     },
+    generalRule: {
+        LIST: `${BASE_URL}/ruleEngine/generalRule/list`,
+    },
     ROUTES: `${BASE_URL}/routes`,
     GOODS: `${BASE_URL}/goods`,
     GOODS_COLUMNS: `${BASE_URL}/columns`,
