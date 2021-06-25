@@ -55,6 +55,9 @@
                     @clear="onClear"
                     @change="onChange"
                     @selectedRowChange="onSelectChange"
+                    :pagination="{showSizeChanger: true, showQuickJumper: true,
+                      pageSize: this.query.page.pageSize,
+                      total: this.query.page.total}"
             >
                 <div slot="user" slot-scope="{text, record}">
                     <a-avatar size="small" icon="user" :src="record.userAvatar"/>
@@ -390,7 +393,12 @@
                 this.loadDataList();
             },
             resetForm() {
-
+                this.query.query = {
+                    name: null,
+                    code: null,
+                    status: null,
+                };
+                this.loadDataList();
             },
             onShowSizeChange(current, pageSize) {
                 console.log(current, pageSize);
@@ -407,8 +415,13 @@
             onStatusTitleClick() {
                 this.$message.info('你点击了状态栏表头')
             },
-            onChange() {
-                this.$message.info('表格状态改变了')
+            onChange(pagination, filters, sorter, {currentDataSource}) {
+                if (pagination) {
+                    this.query.page.pageIndex = pagination.current;
+                    this.query.page.pageSize = pagination.pageSize
+                }
+                console.log(pagination, filters, sorter, currentDataSource);
+                this.loadDataList();
             },
             onSelectChange() {
                 this.$message.info('选中行改变了')

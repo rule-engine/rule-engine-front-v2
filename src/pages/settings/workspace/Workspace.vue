@@ -49,7 +49,6 @@
           :loading="loading"
           @selectedRowChange="onSelectChange"
           :pagination="{showSizeChanger: true, showQuickJumper: true,
-          // current: 2,
           pageSize: this.query.page.pageSize,
           total: this.query.page.total}"
       >
