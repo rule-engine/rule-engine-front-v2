@@ -443,6 +443,11 @@ export default {
             width: '180px',
             dataIndex: 'email',
           },
+          {
+            title: '操作',
+            width: '180px',
+            scopedSlots: {customRender: 'action'}
+          }
         ],
         selectedRows: [],
         dataSource: []
@@ -495,14 +500,18 @@ export default {
         targetKeys: [],
         disabled: false,
         showSearch: false,
-        columns: [{
-          title: '用户',
-          scopedSlots: {customRender: 'user'}
-        },
+        columns: [
+          {
+            title: '用户',
+            width: '140px',
+            scopedSlots: {customRender: 'user'}
+          },
           {
             dataIndex: 'email',
+            width: '140px',
             title: '邮箱',
-          },],
+          }
+        ],
       },
       confirmLoading: false,
     }
