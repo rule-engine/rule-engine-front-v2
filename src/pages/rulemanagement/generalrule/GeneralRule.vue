@@ -64,7 +64,7 @@
                     {{ record.createUserName }}
                 </div>
 
-                <div slot="versionStatus" slot-scope="{record}">
+                <div slot="versionStatus" class="data-status" slot-scope="{record}">
                     <a-tag v-if="record.publishVersion!==null" style="cursor: pointer;padding: 0 6px" color="blue">
                         线上({{record.publishVersion}})
                     </a-tag>
@@ -547,4 +547,19 @@
         }
     }
 
+</style>
+<style lang="less">
+    .data-status {
+        .ant-tag-pink {
+            background: white;
+        }
+
+        .ant-tag-blue {
+            background: white;
+        }
+
+        .ant-tag-orange {
+            background: white;
+        }
+    }
 </style>
