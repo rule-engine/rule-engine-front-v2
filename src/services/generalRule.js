@@ -5,6 +5,9 @@ export async function list(query) {
     return request(generalRule.LIST, METHOD.POST, query)
 }
 
+export async function deleteGeneralRule(query) {
+    return request(generalRule.DELETE, METHOD.POST, query)
+}
 
 
 export default {
