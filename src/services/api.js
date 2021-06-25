@@ -22,6 +22,7 @@ module.exports = {
         DELETE_WORKSPACE: `${BASE_URL}/workspace/delete`,
         ACCESS_KEY: `${BASE_URL}/workspace/accessKey`,
         UPDATE_ACCESS_KEY: `${BASE_URL}/workspace/updateAccessKey`,
+        SELECT_WORKSPACE_BY_ID: `${BASE_URL}/workspace/selectWorkSpaceById`,
     },
     workspaceMember: {
         LIST: `${BASE_URL}/workspaceMember/list`,
