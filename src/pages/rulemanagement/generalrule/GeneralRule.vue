@@ -72,7 +72,7 @@
                            style="cursor: pointer;padding: 0 6px">
                         开发<!--开发中没有版本-->
                     </a-tag>
-                    <a-tag v-else-if="record.status===1" color="cyan"
+                    <a-tag v-else-if="record.status===1" color="orange"
                            style="cursor: pointer;padding: 0 6px">
                         测试({{record.currentVersion}})
                     </a-tag>
@@ -146,14 +146,22 @@
                         <a-icon type="eye"/>
                         查看
                     </a>
-                    <a style="margin-right: 8px">
-                        <a-icon type="redo"/>
-                        回退
-                    </a>
-                    <a style="margin-right: 8px">
-                        <a-icon type="delete"/>
-                        删除
-                    </a>
+                    <a-dropdown>
+                        <a class="ant-dropdown-link" @click="e => e.preventDefault()">
+                            更多
+                            <a-icon type="down"/>
+                        </a>
+                        <a-menu slot="overlay">
+                            <a-menu-item>
+                                <a-icon type="redo"/>
+                                回退
+                            </a-menu-item>
+                            <a-menu-item @click="showHistoryVersion(record)">
+                                <a-icon type="delete"/>
+                                删除
+                            </a-menu-item>
+                        </a-menu>
+                    </a-dropdown>
                 </div>
             </standard-table>
         </a-modal>
@@ -227,7 +235,7 @@
         },
         {
             title: '规则版本状态',
-            width: '280px',
+            width: '240px',
             scopedSlots: {customRender: 'versionStatus'}
         },
         {
