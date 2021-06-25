@@ -166,7 +166,7 @@
 import PageLayout from '@/layouts/PageLayout'
 import StandardTable from '@/components/table/StandardTable'
 
-import {userList, addUser, deleteUser, updateUserInfo} from '@/services/user'
+import {userList, addUser, deleteUser, updateUserInfo,selectUserById} from '@/services/user'
 
 const columns = [
   {
@@ -319,13 +319,18 @@ export default {
       })
     },
     editMethod(record) {
-      // 查询数据
-      this.userEditForm.id = record.id;
-      this.userEditForm.username = record.username;
-      this.userEditForm.sex = record.sex;
-      this.userEditForm.email = record.email;
-      this.userEditForm.phone = record.phone;
-      this.edit.visible = true;
+        selectUserById(record).then(res => {
+            const resp = res.data;
+            if (resp.code===200){
+                // 查询数据
+                this.userEditForm.id = resp.data.id;
+                this.userEditForm.username = resp.data.username;
+                this.userEditForm.sex = resp.data.sex;
+                this.userEditForm.email = resp.data.email;
+                this.userEditForm.phone = resp.data.phone;
+                this.edit.visible = true;
+            }
+        })
     },
     deleteUser(record) {
       this.confirmLoading = true

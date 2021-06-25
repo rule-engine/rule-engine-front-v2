@@ -11,6 +11,7 @@ module.exports = {
         ADD_USER: `${BASE_URL}/user/add`,
         DELETE_USER: `${BASE_URL}/user/delete`,
         UPDATE_USER_INFO: `${BASE_URL}/user/updateUserInfo`,
+        SELECT_USER_BY_ID: `${BASE_URL}/user/selectUserById`,
     },
     workspace: {
         LIST: `${BASE_URL}/workspace/list`,
