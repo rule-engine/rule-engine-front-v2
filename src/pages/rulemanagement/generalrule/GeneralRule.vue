@@ -504,8 +504,11 @@ export default {
         dataId: _this.authority.query.query.dataId,
         dataType: _this.authority.query.query.dataType,
       }).then(resp => {
-        console.log("r", resp)
-        this.$message.success('操作成功！！！')
+        if (resp.data.state === "SUCCESS") {
+          this.$message.success('操作成功！！！')
+        }else {
+          this.$message.warning(resp.data.message)
+        }
       }).finally(() => {
         this.authority.loading = false;
       })
