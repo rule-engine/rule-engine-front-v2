@@ -319,12 +319,12 @@ export default {
           },
           {
             title: '编辑权限',
-            width: '180px',
+            width: '80px',
             scopedSlots: {customRender: 'edit'}
           },
           {
             title: '发布权限',
-            width: '180px',
+            width: '80px',
             scopedSlots: {customRender: 'publish'}
           },
         ]
