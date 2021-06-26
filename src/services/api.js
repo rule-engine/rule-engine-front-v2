@@ -37,6 +37,7 @@ module.exports = {
     },
     dataPermission: {
         LIST: `${BASE_URL}/ruleEngine/dataPermission/list`,
+        UPDATE: `${BASE_URL}/ruleEngine/dataPermission/saveOrUpdateDataPermission`,
     },
     ROUTES: `${BASE_URL}/routes`,
     GOODS: `${BASE_URL}/goods`,
