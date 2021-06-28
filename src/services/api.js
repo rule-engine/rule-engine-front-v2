@@ -11,6 +11,7 @@ module.exports = {
         ADD_USER: `${BASE_URL}/user/add`,
         DELETE_USER: `${BASE_URL}/user/delete`,
         UPDATE_USER_INFO: `${BASE_URL}/user/updateUserInfo`,
+        SELECT_USER_BY_ID: `${BASE_URL}/user/selectUserById`,
     },
     workspace: {
         LIST: `${BASE_URL}/workspace/list`,
@@ -21,6 +22,7 @@ module.exports = {
         DELETE_WORKSPACE: `${BASE_URL}/workspace/delete`,
         ACCESS_KEY: `${BASE_URL}/workspace/accessKey`,
         UPDATE_ACCESS_KEY: `${BASE_URL}/workspace/updateAccessKey`,
+        SELECT_WORKSPACE_BY_ID: `${BASE_URL}/workspace/selectWorkSpaceById`,
     },
     workspaceMember: {
         LIST: `${BASE_URL}/workspaceMember/list`,
@@ -28,6 +30,14 @@ module.exports = {
         OPTIONAL_PERSONNEL: `${BASE_URL}/workspaceMember/optionalPersonnel`,
         DELETE_MEMBER: `${BASE_URL}/workspaceMember/deleteMember`,
         PERMISSION_TRANSFER: `${BASE_URL}/workspaceMember/permissionTransfer`,
+    },
+    generalRule: {
+        LIST: `${BASE_URL}/ruleEngine/generalRule/list`,
+        DELETE: `${BASE_URL}/ruleEngine/generalRule/delete`,
+    },
+    dataPermission: {
+        LIST: `${BASE_URL}/ruleEngine/dataPermission/list`,
+        UPDATE: `${BASE_URL}/ruleEngine/dataPermission/saveOrUpdateDataPermission`,
     },
     ROUTES: `${BASE_URL}/routes`,
     GOODS: `${BASE_URL}/goods`,

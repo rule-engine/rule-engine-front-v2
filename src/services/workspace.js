@@ -22,6 +22,13 @@ export async function currentWorkspace(query) {
     return request(workspace.CURRENT_WORKSPACE, METHOD.POST, query)
 }
 
+/**
+ * @Description: 根据id获取工作空间信息
+  **/
+export async function selectWorkSpaceById(query) {
+    return request(workspace.SELECT_WORKSPACE_BY_ID, METHOD.POST, query)
+}
+
 export async function add(query) {
     return request(workspace.ADD, METHOD.POST, query)
 }

@@ -49,7 +49,6 @@
           :loading="loading"
           @selectedRowChange="onSelectChange"
           :pagination="{showSizeChanger: true, showQuickJumper: true,
-          // current: 2,
           pageSize: this.query.page.pageSize,
           total: this.query.page.total}"
       >
@@ -324,7 +323,15 @@ import StandardTable from '@/components/table/StandardTable'
 import difference from 'lodash/difference';
 
 //api
-import {list, add, edit, deleteWorkspace, accessKey, updateAccessKey} from '@/services/workspace'
+import {
+  list,
+  add,
+  edit,
+  deleteWorkspace,
+  accessKey,
+  updateAccessKey,
+  selectWorkSpaceById
+} from '@/services/workspace'
 import {
   memberList,
   bindMember,
@@ -704,12 +711,17 @@ export default {
       //this.selectedRows = this.selectedRows.filter(item => item.key !== key)
     },
     showEdit(record) {
-      this.edit.visible = true;
-      // 回显数据
-      this.edit.form.id = record.id;
-      this.edit.form.code = record.code;
-      this.edit.form.name = record.name;
-      this.edit.form.description = record.description;
+      selectWorkSpaceById(record).then(res => {
+        const resp = res.data;
+        if (resp.code===200){
+          this.edit.visible = true;
+          // 回显数据
+          this.edit.form.id = resp.data.id;
+          this.edit.form.code = resp.data.code;
+          this.edit.form.name = resp.data.name;
+          this.edit.form.description = resp.data.description;
+        }
+      })
     },
     showMember(record) {
       this.member.visible = true;

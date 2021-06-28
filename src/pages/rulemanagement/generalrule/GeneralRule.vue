@@ -1,29 +1,29 @@
 <template>
   <page-layout>
     <a-card :bordered="false" class="search-form">
-      <a-form :form="form" layout="inline">
+      <a-form layout="inline">
         <a-form-item :label="$t('ruleName')">
-          <a-input/>
+          <a-input v-model="query.query.name"/>
         </a-form-item>
 
         <a-form-item label="规则编码">
-          <a-input/>
+          <a-input v-model="query.query.code"/>
         </a-form-item>
 
         <a-form-item label="规则状态">
-          <a-select placeholder="全部" style="width: 120px">
-            <a-select-option value="0">全部</a-select-option>
-            <a-select-option value="1">编辑中</a-select-option>
-            <a-select-option value="2">待发布</a-select-option>
-            <a-select-option value="3">已发布</a-select-option>
+          <a-select placeholder="全部" style="width: 120px" v-model="query.query.status">
+            <a-select-option value="-1">全部</a-select-option>
+            <a-select-option value="0">开发</a-select-option>
+            <a-select-option value="1">测试</a-select-option>
+            <a-select-option value="2">线上</a-select-option>
           </a-select>
         </a-form-item>
 
         <a-form-item>
-          <a-button type="primary" @click="submitForm('ruleForm')">
+          <a-button type="primary" @click="submitForm()">
             搜索
           </a-button>
-          <a-button style="margin-left: 10px" @click="resetForm('ruleForm')">
+          <a-button style="margin-left: 10px" @click="resetForm()">
             重置
           </a-button>
         </a-form-item>
@@ -55,15 +55,27 @@
           @clear="onClear"
           @change="onChange"
           @selectedRowChange="onSelectChange"
+          :pagination="{showSizeChanger: true, showQuickJumper: true,
+                      pageSize: this.query.page.pageSize,
+                      total: this.query.page.total}"
       >
         <div slot="user" slot-scope="{text, record}">
           <a-avatar size="small" icon="user" :src="record.userAvatar"/>
-          {{ record.createUsername }}
+          {{ record.createUserName }}
         </div>
 
-        <div slot="versionStatus">
-          <a-tag color="blue" style="padding: 0 4px">线上(V1.0)</a-tag>
-          <a-tag color="cyan" style="padding: 0 4px">预生产(V2.0)</a-tag>
+        <div slot="versionStatus" class="data-status" slot-scope="{record}">
+          <a-tag v-if="record.publishVersion!==null" style="cursor: pointer;padding: 0 6px" color="blue">
+            线上({{ record.publishVersion }})
+          </a-tag>
+          <a-tag v-if="record.status===0" color="pink"
+                 style="cursor: pointer;padding: 0 6px">
+            开发<!--开发中没有版本-->
+          </a-tag>
+          <a-tag v-else-if="record.status===1" color="orange"
+                 style="cursor: pointer;padding: 0 6px">
+            测试({{ record.currentVersion }})
+          </a-tag>
         </div>
 
         <div slot="action" slot-scope="{ record}">
@@ -94,7 +106,7 @@
                 <a-icon type="team"/>
                 权限
               </a-menu-item>
-              <a-menu-item>
+              <a-menu-item @click="deleteRow(record)">
                 <a-icon type="delete"/>
                 删除
               </a-menu-item>
@@ -134,14 +146,22 @@
             <a-icon type="eye"/>
             查看
           </a>
-          <a style="margin-right: 8px">
-            <a-icon type="redo"/>
-            回退
-          </a>
-          <a style="margin-right: 8px">
-            <a-icon type="delete"/>
-            删除
-          </a>
+          <a-dropdown>
+            <a class="ant-dropdown-link" @click="e => e.preventDefault()">
+              更多
+              <a-icon type="down"/>
+            </a>
+            <a-menu slot="overlay">
+              <a-menu-item>
+                <a-icon type="redo"/>
+                回退
+              </a-menu-item>
+              <a-menu-item @click="showHistoryVersion(record)">
+                <a-icon type="delete"/>
+                删除
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
         </div>
       </standard-table>
     </a-modal>
@@ -155,9 +175,9 @@
         @cancel="authorityVersionHandleCancel"
     >
 
-      <a-form :form="form" layout="inline">
+      <a-form layout="inline">
         <a-form-item label="用户名称/编码">
-          <a-input/>
+          <a-input v-model="authority.query.query.username"/>
         </a-form-item>
         <a-form-item>
           <a-button type="primary" @click="queryMember()">
@@ -168,7 +188,7 @@
       <br>
 
       <standard-table
-          rowKey="id"
+          rowKey="userId"
           style="clear: both"
           :columns="authority.columns"
           :loading="authority.loading"
@@ -179,11 +199,11 @@
           <a-avatar size="small" icon="user" :src="record.avatar"/>
           {{ record.username }}
         </div>
-        <div slot="edit">
-          <a-switch default-checked/>
+        <div slot="edit" slot-scope="{record}">
+          <a-switch :checked="record.writeAuthority===0" @change="onChangeAuthority(record,1)"/>
         </div>
-        <div slot="publish">
-          <a-switch/>
+        <div slot="publish" slot-scope="{record}">
+          <a-switch :checked="record.publishAuthority===0" @change="onChangeAuthority(record,2)"/>
         </div>
       </standard-table>
     </a-modal>
@@ -194,6 +214,8 @@
 <script>
 import PageLayout from '@/layouts/PageLayout'
 import StandardTable from '@/components/table/StandardTable'
+import {list, deleteGeneralRule} from '@/services/generalRule'
+import {dataPermissionList, update} from '@/services/dataPermission'
 
 const columns = [
   {
@@ -213,7 +235,7 @@ const columns = [
   },
   {
     title: '规则版本状态',
-    width: '280px',
+    width: '240px',
     scopedSlots: {customRender: 'versionStatus'}
   },
   {
@@ -240,7 +262,24 @@ export default {
   i18n: require('./i18n'),
   data() {
     return {
-      form: this.$form.createForm(this),
+      query: {
+        orders: [
+          {
+            columnName: 'create_time',
+            desc: true
+          }
+        ],
+        page: {
+          pageIndex: 1,
+          pageSize: 10,
+          total: 0
+        },
+        query: {
+          name: null,
+          code: null,
+          status: null,
+        }
+      },
       columns: columns,
       selectedRows: [],
       authority: {
@@ -248,21 +287,26 @@ export default {
         confirmLoading: false,
         loading: false,
         selectedRows: [],
-        dataSource: [
-          {
-            id: 1,
-            username: "admin",
-            email: "123123@qq.com",
-            avatar: "",
-            createTime: "2020-02-23 9:09:0",
-          }
-        ],
-        columns: [
-          {
-            title: '编号',
-            width: '100px',
-            dataIndex: 'id'
+        query: {
+          orders: [
+            {
+              columnName: 'create_time',
+              desc: true
+            }
+          ],
+          page: {
+            pageIndex: 1,
+            pageSize: 10,
+            total: 0
           },
+          query: {
+            username: null,
+            dataType: 0, // 0为普通规则
+            dataId: null,
+          }
+        },
+        dataSource: [],
+        columns: [
           {
             title: '用户',
             width: '180px',
@@ -275,12 +319,12 @@ export default {
           },
           {
             title: '编辑权限',
-            width: '180px',
+            width: '80px',
             scopedSlots: {customRender: 'edit'}
           },
           {
             title: '发布权限',
-            width: '180px',
+            width: '80px',
             scopedSlots: {customRender: 'publish'}
           },
         ]
@@ -336,26 +380,49 @@ export default {
           }
         ]
       },
-      dataSource: [
-        {
-          id: '1',
-          name: '规则1',
-          code: 'rule1',
-          userAvatar: 'http://oss-boot-test.oss-cn-beijing.aliyuncs.com/ruleengine/26.jpg?Expires=33153093613&OSSAccessKeyId=LTAIyEa5SulNXbQa&Signature=Ot%2BLvt7eKKy5jUN4ufZfEmLtrqM%3D',
-          createUsername: 'admin',
-          createTime: '2020-15-21 20:20:1',
-        },
-        {
-          id: '2',
-          name: '规则2',
-          code: 'rule2',
-          userAvatar: 'sadf',
-          createUsername: 'me',
-          createTime: '2020-15-21 20:20:1',
-        }
-      ],
+      dataSource: [],
     }
-  }, methods: {
+  },
+  created() {
+    this.loadDataList();
+  },
+  methods: {
+    deleteRow(record) {
+      deleteGeneralRule({id: record.id}).then(res => {
+        if (res.data) {
+          this.$message.success("删除成功！");
+          // 重新加载列表
+          this.loadDataList();
+        } else {
+          this.$message.error("删除失败！");
+        }
+      })
+    },
+    loadDataList() {
+      this.loading = true;
+      const _this = this;
+      list(this.query).then(res => {
+        const resp = res.data;
+        if (resp.data) {
+          _this.dataSource = resp.data.rows;
+          _this.query.page = resp.data.page
+        } else {
+          _this.dataSource = []
+        }
+        this.loading = false
+      });
+    },
+    submitForm() {
+      this.loadDataList();
+    },
+    resetForm() {
+      this.query.query = {
+        name: null,
+        code: null,
+        status: null,
+      };
+      this.loadDataList();
+    },
     onShowSizeChange(current, pageSize) {
       console.log(current, pageSize);
     },
@@ -371,8 +438,13 @@ export default {
     onStatusTitleClick() {
       this.$message.info('你点击了状态栏表头')
     },
-    onChange() {
-      this.$message.info('表格状态改变了')
+    onChange(pagination, filters, sorter, {currentDataSource}) {
+      if (pagination) {
+        this.query.page.pageIndex = pagination.current;
+        this.query.page.pageSize = pagination.pageSize
+      }
+      console.log(pagination, filters, sorter, currentDataSource);
+      this.loadDataList();
     },
     onSelectChange() {
       this.$message.info('选中行改变了')
@@ -393,8 +465,10 @@ export default {
       this.historyVersion.visible = false
     },
     showAuthority(record) {
-      this.authority.visible = true
-      console.log(record)
+      this.authority.visible = true;
+      this.authority.loading = true;
+      this.authority.query.query.dataId = record.id;
+      this.queryMember();
     },
     authorityVersionHandleOk() {
       this.authority.visible = false
@@ -404,6 +478,40 @@ export default {
       this.authority.visible = false
     },
     queryMember() {
+      dataPermissionList(this.authority.query).then(res => {
+        const resp = res.data;
+        if (resp.data) {
+          this.authority.dataSource = resp.data.rows;
+          this.authority.query.page = resp.data.page
+        } else {
+          this.authority.dataSource = []
+        }
+        this.authority.loading = false;
+      })
+    },
+    onChangeAuthority(record, type) {
+      if (type === 1) {
+        record.writeAuthority = record.writeAuthority === 1 ? 0 : 1;
+      } else if (type === 2) {
+        record.publishAuthority = record.publishAuthority === 1 ? 0 : 1;
+      }
+      var _this = this
+      this.authority.loading = true;
+      update({
+        userId: record.userId,
+        publishAuthority: record.publishAuthority,
+        writeAuthority: record.writeAuthority,
+        dataId: _this.authority.query.query.dataId,
+        dataType: _this.authority.query.query.dataType,
+      }).then(resp => {
+        if (resp.data.state === "SUCCESS") {
+          this.$message.success('操作成功！！！')
+        }else {
+          this.$message.warning(resp.data.message)
+        }
+      }).finally(() => {
+        this.authority.loading = false;
+      })
 
     }
   }
@@ -456,4 +564,19 @@ export default {
   }
 }
 
+</style>
+<style lang="less">
+.data-status {
+  .ant-tag-pink {
+    background: white;
+  }
+
+  .ant-tag-blue {
+    background: white;
+  }
+
+  .ant-tag-orange {
+    background: white;
+  }
+}
 </style>
