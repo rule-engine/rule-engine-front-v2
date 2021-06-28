@@ -65,7 +65,7 @@ const options = {
                     component: BlankView,
                     children: [
                         {
-                            path: 'generalrule',
+                            path: '/generalrule',
                             name: '普通规则',
                             meta: {
                                 page: {
@@ -73,37 +73,35 @@ const options = {
                                 }
                             },
                             component: () => import('@/pages/rulemanagement/generalrule/list'),
-                            children: [
-                                {
-                                    path: '/generalRuleDefinition',
-                                    name: '规则定义',
-                                    meta: {
-                                        invisible: true
-                                    },
-                                    component: () => import('@/pages/rulemanagement/generalrule/definition'),
-                                },
-                            ]
                         },
                         {
-                            path: 'ruleSet',
-                            name: '规则集',
+                            path: '/generalRuleDefinition',
+                            name: '规则定义',
                             meta: {
-                                page: {
-                                    closable: true
-                                }
+                                invisible: true
                             },
-                            component: () => import('@/pages/rulemanagement/generalrule/list'),
+                            component: () => import('@/pages/rulemanagement/generalrule/definition'),
                         },
-                        {
-                            path: 'decisionTable',
-                            name: '决策表',
-                            meta: {
-                                page: {
-                                    closable: true
-                                }
-                            },
-                            component: () => import('@/pages/rulemanagement/generalrule/list'),
-                        }
+                        // {
+                        //     path: 'ruleSet',
+                        //     name: '规则集',
+                        //     meta: {
+                        //         page: {
+                        //             closable: true
+                        //         }
+                        //     },
+                        //     component: () => import('@/pages/rulemanagement/generalrule/list'),
+                        // },
+                        // {
+                        //     path: 'decisionTable',
+                        //     name: '决策表',
+                        //     meta: {
+                        //         page: {
+                        //             closable: true
+                        //         }
+                        //     },
+                        //     component: () => import('@/pages/rulemanagement/generalrule/list'),
+                        // }
                     ]
                 },
                 {
