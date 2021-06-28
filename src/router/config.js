@@ -21,11 +21,6 @@ const options = {
             component: () => import('@/pages/exception/403'),
         },
         {
-            path: '/generalRuleDefinition',
-            name: 'generalRuleDefinition',
-            component: () => import('@/pages/rulemanagement/generalrule/definition'),
-        },
-        {
             path: '/',
             name: '首页',
             component: TabsView,
@@ -78,6 +73,11 @@ const options = {
                                 }
                             },
                             component: () => import('@/pages/rulemanagement/generalrule/list'),
+                        },
+                        {
+                            path: '/generalRuleDefinition',
+                            name: '规则定义',
+                            component: () => import('@/pages/rulemanagement/generalrule/definition'),
                         },
                         {
                             path: 'ruleSet',

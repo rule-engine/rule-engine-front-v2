@@ -30,6 +30,20 @@ const routerMap = {
         name: '监控',
         component: () => import('@/pages/dashboard/analysis')
     },
+    ruleManagement: {
+        name: '规则管理',
+        component: view.blank
+    },
+    generalRuleList: {
+        path: '/generalRuleList',
+        name: 'generalRuleList',
+        component: () => import('@/pages/rulemanagement/generalrule/list'),
+    },
+    generalRuleDefinition: {
+        path: '/generalRuleDefinition',
+        name: 'generalRuleDefinition',
+        component: () => import('@/pages/rulemanagement/generalrule/definition'),
+    },
     form: {
         name: '表单页',
         icon: 'form',
