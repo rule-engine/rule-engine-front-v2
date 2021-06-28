@@ -35,6 +35,7 @@ export async function deleteUser(param) {
 export async function updateUserInfo(param) {
     return request(user.UPDATE_USER_INFO, METHOD.POST, param)
 }
+
 export async function selectUserById(param) {
     return request(user.SELECT_USER_BY_ID, METHOD.POST, param)
 }
@@ -47,13 +48,11 @@ export async function getRoutesConfig() {
  * 退出登录
  */
 export function logout(context) {
-    request(user.LOGOUT, METHOD.POST).finally(() => {
-        localStorage.removeItem(process.env.VUE_APP_ROUTES_KEY)
-        localStorage.removeItem(process.env.VUE_APP_PERMISSIONS_KEY)
-        localStorage.removeItem(process.env.VUE_APP_ROLES_KEY)
-        removeAuthorization()
-        context.$router.push('/login')
-    })
+    localStorage.removeItem(process.env.VUE_APP_ROUTES_KEY)
+    localStorage.removeItem(process.env.VUE_APP_PERMISSIONS_KEY)
+    localStorage.removeItem(process.env.VUE_APP_ROLES_KEY)
+    removeAuthorization();
+    context.$router.push('/login')
 }
 
 export default {
