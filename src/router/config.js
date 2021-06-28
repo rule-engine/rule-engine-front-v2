@@ -73,11 +73,16 @@ const options = {
                                 }
                             },
                             component: () => import('@/pages/rulemanagement/generalrule/list'),
-                        },
-                        {
-                            path: '/generalRuleDefinition',
-                            name: '规则定义',
-                            component: () => import('@/pages/rulemanagement/generalrule/definition'),
+                            children: [
+                                {
+                                    path: '/generalRuleDefinition',
+                                    name: '规则定义',
+                                    meta: {
+                                        invisible: true
+                                    },
+                                    component: () => import('@/pages/rulemanagement/generalrule/definition'),
+                                },
+                            ]
                         },
                         {
                             path: 'ruleSet',
