@@ -22,10 +22,8 @@ import PageLayout from "@/layouts/PageLayout";
 export default {
   name: "Definition",
   components: [PageLayout],
-  data:{
-    return {
-
-    }
+  data() {
+    return {}
   }
 }
 </script>
