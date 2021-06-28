@@ -21,6 +21,11 @@ const options = {
             component: () => import('@/pages/exception/403'),
         },
         {
+            path: '/generalRuleDefinition',
+            name: 'generalRuleDefinition',
+            component: () => import('@/pages/rulemanagement/generalrule/definition'),
+        },
+        {
             path: '/',
             name: '首页',
             component: TabsView,
@@ -72,7 +77,7 @@ const options = {
                                     closable: true
                                 }
                             },
-                            component: () => import('@/pages/rulemanagement/generalrule')
+                            component: () => import('@/pages/rulemanagement/generalrule/list'),
                         },
                         {
                             path: 'ruleSet',
@@ -82,7 +87,7 @@ const options = {
                                     closable: true
                                 }
                             },
-                            component: () => import('@/pages/rulemanagement/generalrule'),
+                            component: () => import('@/pages/rulemanagement/generalrule/list'),
                         },
                         {
                             path: 'decisionTable',
@@ -92,7 +97,7 @@ const options = {
                                     closable: true
                                 }
                             },
-                            component: () => import('@/pages/rulemanagement/generalrule'),
+                            component: () => import('@/pages/rulemanagement/generalrule/list'),
                         }
                     ]
                 },

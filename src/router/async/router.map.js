@@ -26,10 +26,6 @@ const routerMap = {
         name: '工作台',
         component: () => import('@/pages/dashboard/workplace')
     },
-    generalrule: {
-        name: '普通规则',
-        component: () => import('@/pages/rulemanagement/generalrule')
-    },
     analysis: {
         name: '监控',
         component: () => import('@/pages/dashboard/analysis')

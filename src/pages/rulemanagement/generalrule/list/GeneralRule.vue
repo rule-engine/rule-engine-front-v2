@@ -427,7 +427,7 @@ export default {
       console.log(current, pageSize);
     },
     addNew() {
-
+      this.$router.push('/generalRuleDefinition')
     },
     handleMenuClick() {
 
@@ -506,7 +506,7 @@ export default {
       }).then(resp => {
         if (resp.data.state === "SUCCESS") {
           this.$message.success('操作成功！！！')
-        }else {
+        } else {
           this.$message.warning(resp.data.message)
         }
       }).finally(() => {
