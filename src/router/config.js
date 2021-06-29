@@ -57,6 +57,26 @@ const options = {
                     ]
                 },
                 {
+                    path: 'systemcomponents',
+                    name: '系统组件',
+                    meta: {
+                        icon: 'gold'
+                    },
+                    component: BlankView,
+                    children: [
+                        {
+                            path: '/function',
+                            name: '函数',
+                            meta: {
+                                page: {
+                                    closable: true
+                                }
+                            },
+                            component: () => import('@/pages/systemcomponents/function'),
+                        },
+                    ]
+                },
+                {
                     path: 'rulemanagement',
                     name: '规则管理',
                     meta: {

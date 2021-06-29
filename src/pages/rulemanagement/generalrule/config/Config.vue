@@ -28,13 +28,14 @@
     <a-drawer
         placement="left"
         :closable="false"
+        width="500px"
         :visible="drawer.visible"
         @close="onClose"
     >
 
       <a-tabs default-active-key="1">
         <a-tab-pane key="1" tab="参数">
-          我是参数列表
+          <input-parameter/>
         </a-tab-pane>
         <a-tab-pane key="2" tab="变量">
           我是变量列表
@@ -50,10 +51,11 @@
 <script>
 import FooterToolBar from '@/components/tool/FooterToolBar'
 import PageLayout from "@/layouts/PageLayout";
+import InputParameter from "./InputParameter";
 
 export default {
   name: "Config",
-  components: {PageLayout, FooterToolBar},
+  components: {PageLayout, FooterToolBar, InputParameter},
   data() {
     return {
       footer: {
