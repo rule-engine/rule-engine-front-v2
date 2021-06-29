@@ -82,16 +82,24 @@ const options = {
                             },
                             component: () => import('@/pages/rulemanagement/generalrule/definition'),
                         },
-                        // {
-                        //     path: 'ruleSet',
-                        //     name: '规则集',
-                        //     meta: {
-                        //         page: {
-                        //             closable: true
-                        //         }
-                        //     },
-                        //     component: () => import('@/pages/rulemanagement/generalrule/list'),
-                        // },
+                        {
+                            path: '/generalRuleConfig',
+                            name: '规则配置',
+                            meta: {
+                                invisible: true
+                            },
+                            component: () => import('@/pages/rulemanagement/generalrule/config'),
+                        },
+                        {
+                            path: 'ruleSet',
+                            name: '规则集',
+                            meta: {
+                                page: {
+                                    closable: true
+                                }
+                            },
+                            component: () => import('@/pages/rulemanagement/ruleset/list'),
+                        },
                         // {
                         //     path: 'decisionTable',
                         //     name: '决策表',
