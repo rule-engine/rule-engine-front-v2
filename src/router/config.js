@@ -58,7 +58,7 @@ const options = {
                 },
                 {
                     path: 'systemcomponents',
-                    name: '系统组件',
+                    name: '组件',
                     meta: {
                         icon: 'gold'
                     },
@@ -136,7 +136,7 @@ const options = {
                     path: 'settings',
                     name: '系统设置',
                     meta: {
-                        icon: 'appstore'
+                        icon: 'setting'
                     },
                     component: BlankView,
                     children: [
