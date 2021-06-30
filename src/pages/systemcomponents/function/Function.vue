@@ -52,16 +52,16 @@
             <a-form-model ref="selectFunction" :model="form" :label-col="{span: 4}" :wrapper-col="{span: 14}">
                 <a-form-model-item label="名称" has-feedback prop="name">
                     <!--                    <input type="textbox" value="Some value" readonly="readonly"/>-->
-                    <a-input disabled="disabled" v-model="form.data.name"/>
+                    <a-input disabled="disabled" :value="form.data.name"/>
                 </a-form-model-item>
                 <a-form-model-item label="执行器" has-feedback prop="executor">
-                    <a-input disabled="disabled" v-model="form.data.executor"/>
+                    <a-input disabled="disabled" :value="form.data.executor"/>
                 </a-form-model-item>
                 <a-form-model-item label="参数" has-feedback prop="paramsJson">
-                    <a-input type="textarea" disabled="disabled" v-model="form.data.paramsJson" autosize/>
+                    <a-input type="textarea" disabled="disabled" :value="form.data.paramsJson" autosize/>
                 </a-form-model-item>
                 <a-form-model-item label="返回类型" has-feedback prop="returnValueType">
-                    <a-select disabled="disabled" v-model="form.data.returnValueType" placeholder="返回类型">
+                    <a-select disabled="disabled" :value="form.data.returnValueType" placeholder="返回类型">
                         <a-select-option value="BOOLEAN">布尔</a-select-option>
                         <a-select-option value="COLLECTION">集合</a-select-option>
                         <a-select-option value="STRING">字符串</a-select-option>
@@ -70,7 +70,7 @@
                     </a-select>
                 </a-form-model-item>
                 <a-form-model-item label="说明" has-feedback prop="description">
-                    <a-input type="textarea" disabled="disabled" v-model="form.data.description"/>
+                    <a-input type="textarea" disabled="disabled" :value="form.data.description"/>
                 </a-form-model-item>
             </a-form-model>
 
