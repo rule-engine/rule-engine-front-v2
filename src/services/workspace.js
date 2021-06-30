@@ -56,5 +56,6 @@ export default {
     currentWorkspace,
     deleteWorkspace,
     accessKey,
-    updateAccessKey
+    updateAccessKey,
+    selectWorkSpaceById
 }
