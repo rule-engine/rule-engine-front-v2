@@ -134,7 +134,7 @@ const columns = [
   },
   {
     title: '操作',
-    width: '140px',
+    width: '220px',
     scopedSlots: {customRender: 'action'}
   }
 ];
