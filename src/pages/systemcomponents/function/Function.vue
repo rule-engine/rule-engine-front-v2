@@ -73,7 +73,7 @@
           <a-input readOnly :value="form.data.executor"/>
         </a-form-model-item>
         <a-form-model-item label="参数" prop="paramsJson">
-          <a-input type="textarea" style="height: 160px" readOnly :value="form.data.paramsJson" autosize/>
+          <a-textarea :rows="5" readOnly :value="form.data.paramsJson"/>
         </a-form-model-item>
         <a-form-model-item label="返回类型" prop="returnValueType">
           <a-select readOnly :value="form.data.returnValueType" placeholder="返回类型">
@@ -85,7 +85,7 @@
           </a-select>
         </a-form-model-item>
         <a-form-model-item label="说明" prop="description">
-          <a-input type="textarea" readOnly :value="form.data.description" style="height: 80px"/>
+          <a-textarea readOnly :value="form.data.description" :rows="3"/>
         </a-form-model-item>
       </a-form-model>
 

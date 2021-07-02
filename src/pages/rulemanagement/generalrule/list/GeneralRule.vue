@@ -12,7 +12,7 @@
 
         <a-form-item label="规则状态">
           <a-select placeholder="全部" style="width: 120px" v-model="query.query.status">
-            <a-select-option value="-1">全部</a-select-option>
+            <a-select-option value="">全部</a-select-option>
             <a-select-option value="0">开发</a-select-option>
             <a-select-option value="1">测试</a-select-option>
             <a-select-option value="2">线上</a-select-option>
@@ -277,7 +277,7 @@ export default {
         query: {
           name: null,
           code: null,
-          status: null,
+          status: '',
         }
       },
       columns: columns,
