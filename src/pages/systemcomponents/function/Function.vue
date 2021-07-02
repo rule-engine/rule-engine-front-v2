@@ -1,21 +1,36 @@
 <template>
-    <page-layout>
-        <a-card :bordered="false" class="search-form" label-width="40px">
-            <a-form ref="searchForm" layout="inline">
-                <a-form-item label="名称">
-                    <a-input v-model="query.query.name"/>
-                </a-form-item>
-                <a-form-item>
-                    <a-button type="primary" @click="loadFunctionList()">
-                        搜索
-                    </a-button>
-                    <a-button style="margin-left: 10px" type="reset" @click="reset()">
-                        重置
-                    </a-button>
-                </a-form-item>
-            </a-form>
-            <a-button style="margin-top: 10px" type="primary" @click="addFunctionForm">新建函数</a-button>
-        </a-card>
+  <page-layout>
+    <a-card :bordered="false" class="search-form">
+      <a-form ref="searchForm" :form="form" layout="inline">
+        <a-form-item label="名称">
+          <a-input v-model="query.query.name"/>
+        </a-form-item>
+        <a-form-item>
+          <a-button type="primary" @click="loadFunctionList()">
+            搜索
+          </a-button>
+          <a-button style="margin-left: 10px"  type="reset" @click="reset()">
+            重置
+          </a-button>
+        </a-form-item>
+      </a-form>
+
+      <a-divider dashed/>
+      <a-space class="operator">
+        <a-button @click="addFunctionForm" type="primary">新建</a-button>
+        <a-button>批量操作</a-button>
+        <a-dropdown>
+          <a-menu slot="overlay">
+            <a-menu-item key="delete">删除</a-menu-item>
+            <a-menu-item key="audit">审批</a-menu-item>
+          </a-menu>
+          <a-button>
+            更多操作
+            <a-icon type="down"/>
+          </a-button>
+        </a-dropdown>
+      </a-space>
+    </a-card>
 
         <a-card>
             <standard-table
@@ -219,6 +234,8 @@
 </script>
 
 <style scoped>
-
+.search-form {
+  margin-bottom: 24px;
+}
 
 </style>
