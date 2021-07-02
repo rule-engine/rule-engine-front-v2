@@ -219,39 +219,28 @@ import {dataPermissionList, update} from '@/services/dataPermission'
 
 const columns = [
   {
-    title: '编号',
-    width: '100px',
-    dataIndex: 'id'
-  },
-  {
     title: '名称',
-    width: '180px',
     dataIndex: 'name'
   },
   {
     title: '编码',
     dataIndex: 'code',
-    width: '180px',
   },
   {
     title: '规则版本状态',
-    width: '240px',
     scopedSlots: {customRender: 'versionStatus'}
   },
   {
     title: '创建人',
-    width: '140px',
     scopedSlots: {customRender: 'user'}
   },
   {
     title: '创建时间',
     dataIndex: 'createTime',
-    width: '180px',
     sorter: true
   },
   {
     title: '操作',
-    width: '180px',
     scopedSlots: {customRender: 'action'}
   }
 ];
@@ -309,22 +298,18 @@ export default {
         columns: [
           {
             title: '用户',
-            width: '180px',
             scopedSlots: {customRender: 'user'}
           },
           {
             title: '邮箱',
             dataIndex: 'email',
-            width: '180px',
           },
           {
             title: '编辑权限',
-            width: '80px',
             scopedSlots: {customRender: 'edit'}
           },
           {
             title: '发布权限',
-            width: '80px',
             scopedSlots: {customRender: 'publish'}
           },
         ]
@@ -348,34 +333,24 @@ export default {
         columns: [
           {
             title: '名称',
-            width: '180px',
             dataIndex: 'name'
           },
           {
             title: '编码',
             dataIndex: 'code',
-            width: '180px',
           },
           {
             title: '规则版本',
-            width: '180px',
             dataIndex: 'version',
             sorter: true
           },
-          // {
-          //   title: '创建人',
-          //   width: '140px',
-          //   scopedSlots: {customRender: 'user'}
-          // },
           {
             title: '创建时间',
             dataIndex: 'createTime',
-            width: '180px',
             sorter: true
           },
           {
             title: '操作',
-            width: '220px',
             scopedSlots: {customRender: 'action'}
           }
         ]
