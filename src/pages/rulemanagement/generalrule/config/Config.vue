@@ -2,6 +2,30 @@
   <div>
     <page-layout>
       <a-card title="规则配置" :bordered="false">
+        <div class="openLeft">
+          <a-icon type="appstore" style="font-size: 20px" @click="showDrawer"/>
+          <br>
+          <br>
+          <a-icon type="setting" style="font-size: 20px"/>
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
         <br>
         <br>
         <br>
@@ -20,15 +44,10 @@
       <a-button type="primary" @click="nextStep()" :loading="footer.loading">下一步</a-button>
     </footer-tool-bar>
 
-
-    <a-button type="primary" @click="showDrawer">
-      Open
-    </a-button>
-
     <a-drawer
         placement="left"
         :closable="false"
-        width="500px"
+        width="460px"
         :visible="drawer.visible"
         @close="onClose"
     >
@@ -90,6 +109,12 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+.openLeft {
+  width: 30px;
+  height: 80px;
+  position: fixed;
+  margin-left: -20px;
+  z-index: 19;
+}
 </style>

@@ -31,6 +31,7 @@
       </a-card>
     </page-layout>
 
+    <!--    谁来修复footer-tool-bar闪现问题-->
     <footer-tool-bar>
       <a-button type="primary" @click="nextStep()" :loading="footer.loading">下一步</a-button>
     </footer-tool-bar>
