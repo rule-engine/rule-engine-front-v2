@@ -95,6 +95,68 @@
       </div>
     </a-modal>
 
+
+    <a-modal
+        title="模拟运行"
+        :visible="runTest.dialogFormVisible"
+        :confirm-loading="runTest.confirmLoading"
+        :width="700"
+        @ok="run"
+        @cancel="runTestHandleCancel"
+        ok-text="运行" cancel-text="取消"
+    >
+      <a-form-model ref="selectFunction" :model="runTest.form" :label-col="{span: 4}" :wrapper-col="{span: 14}">
+        <a-form-model-item label="名称" prop="name">
+          <!--                    <input type="textbox" value="Some value" readonly="readonly"/>-->
+          <a-input readOnly :value="runTest.form.name"/>
+        </a-form-model-item>
+        <a-form-model-item label="返回类型" prop="returnValueType">
+          <a-select readOnly :value="runTest.form.returnValueType" placeholder="返回类型">
+            <a-select-option value="BOOLEAN">布尔</a-select-option>
+            <a-select-option value="COLLECTION">集合</a-select-option>
+            <a-select-option value="STRING">字符串</a-select-option>
+            <a-select-option value="NUMBER">数值</a-select-option>
+            <a-select-option value="DATE">日期</a-select-option>
+          </a-select>
+        </a-form-model-item>
+
+        <a-form-model-item label="函数参数" v-if="runTest.form.paramValues.length!==0">
+          <br>
+          <a-form-model-item v-for="(pv) in runTest.form.paramValues" style="margin-top: 18px;" :key="pv.code">
+            <a-row>
+              <a-col :span="5">
+                {{ pv.name !== null ? pv.name : pv.code }}
+              </a-col>
+              <a-col :span="5">
+                <a-select readOnly :value="pv.valueType">
+                  <a-select-option value="BOOLEAN">布尔</a-select-option>
+                  <a-select-option value="COLLECTION">集合</a-select-option>
+                  <a-select-option value="STRING">字符串</a-select-option>
+                  <a-select-option value="NUMBER">数值</a-select-option>
+                  <a-select-option value="DATE">日期</a-select-option>
+                </a-select>
+              </a-col>
+              <a-col :span="1">
+              </a-col>
+              <a-col :span="13">
+                <a-select v-if="pv.valueType==='BOOLEAN'" v-model="pv.value" placeholder="请选择数据 ">
+                  <a-select-option value="true">true</a-select-option>
+                  <a-select-option value="false">false</a-select-option>
+                </a-select>
+                <a-input-number v-else-if="pv.valueType==='NUMBER'" v-model="pv.value" style="width: 100%"/>
+                <a-date-picker v-else-if="pv.valueType==='DATE'" show-time style="width: 100%"/>
+                <a-input v-else v-model="pv.value"></a-input>
+              </a-col>
+            </a-row>
+          </a-form-model-item>
+        </a-form-model-item>
+
+        <a-form-model-item label="输出">
+          <a-textarea readOnly :rows="2"/>
+        </a-form-model-item>
+
+      </a-form-model>
+    </a-modal>
   </page-layout>
 </template>
 
@@ -146,6 +208,40 @@ export default {
           paramsJson: ''
         }
       },
+      runTest: {
+        dialogFormVisible: false,
+        confirmLoading: false,
+        form: {
+          name: 'test',
+          returnValueType: 'NUMBER',
+          paramValues: [
+            {
+              valueType: 'NUMBER',
+              value: '',
+              code: 'age',
+              name: '年龄',
+            },
+            {
+              valueType: 'BOOLEAN',
+              value: '',
+              code: '？？',
+              name: '单身？',
+            },
+            {
+              valueType: 'STRING',
+              value: '',
+              code: '1123',
+              name: '什么玩意？',
+            },
+            {
+              valueType: 'DATE',
+              value: '',
+              code: 'sadf',
+              name: '我是时间',
+            }
+          ]
+        }
+      },
       tableData: columns,
       selectedRows: [],
       dataSource: [],
@@ -182,6 +278,9 @@ export default {
         }
       })
     },
+    run() {
+      this.runTest.confirmLoading = true
+    },
     //  翻页
     onChange(pagination) {
       if (pagination) {
@@ -193,16 +292,22 @@ export default {
     //  查看
     view(row) {
       this.form.confirmLoading = true
-      if (row.id != null) {
-        selectFunctionById(row).then(res => {
-          const resp = res.data;
-          if (resp.code === 200) {
-            this.form.data = resp.data;
-            this.form.data.paramsJson = JSON.stringify(resp.data.params, null, 4);
-            this.form.dialogFormVisible = true
-          }
-        })
-      }
+      selectFunctionById(row).then(res => {
+        const resp = res.data;
+        if (resp.code === 200) {
+          this.form.data = resp.data;
+          this.form.data.paramsJson = JSON.stringify(resp.data.params, null, 4);
+          this.form.dialogFormVisible = true
+        }
+      })
+    },
+    test(row) {
+      console.log(row)
+      this.runTest.dialogFormVisible = true
+    },
+    runTestHandleCancel() {
+      this.runTest.dialogFormVisible = false
+      this.runTest.confirmLoading = false
     },
     selectFunctionCancel() {
       this.form.dialogFormVisible = false

@@ -2,27 +2,45 @@
   <div>
     <page-layout>
       <a-card title="规则配置" :bordered="false">
-        <div class="openLeft">
-          <a-icon type="appstore" style="font-size: 20px" @click="showDrawer"/>
-          <br>
-          <br>
-          <a-icon type="setting" style="font-size: 20px"/>
-        </div>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
+        <!--        <div class="openLeft">-->
+        <!--          <a-icon type="appstore" style="font-size: 20px" @click="showDrawer"/>-->
+        <!--          <br>-->
+        <!--          <br>-->
+        <!--          <a-icon type="setting" style="font-size: 20px"/>-->
+        <!--        </div>-->
+
+        <!--        <a-collapse v-model="activeKey"  expand-icon-position="left">-->
+        <!--          <a-collapse-panel key="1" header="规则1">-->
+        <!--            <p>规则1的配置信息</p>-->
+        <!--            <a-icon slot="extra" type="setting" @click="handleClick"/>-->
+        <!--          </a-collapse-panel>-->
+        <!--          <a-collapse-panel key="2" header="规则2">-->
+        <!--            <p>规则2</p>-->
+        <!--            <a-icon slot="extra" type="setting" @click="handleClick"/>-->
+        <!--          </a-collapse-panel>-->
+        <!--          <a-collapse-panel key="3" header="规则3">-->
+        <!--            <p>规则3</p>-->
+        <!--            <a-icon slot="extra" type="setting" @click="handleClick"/>-->
+        <!--          </a-collapse-panel>-->
+        <!--        </a-collapse>-->
+
+        <a-card title="条件组1" :bordered="false">
+          1
+<!--          <a-alert message="条件1" type="info" closable-->
+<!--                   @close="onClose"/>-->
+<!--          <br>-->
+<!--          <a-alert message="条件2" type="info" closable-->
+<!--                   @close="onClose"/>-->
+<!--          <br>-->
+<!--          <a-alert message="条件3" type="info" closable-->
+<!--                   @close="onClose"/>-->
+<!--          <br>-->
+        </a-card>
+
+        <a-card title="条件组2" :bordered="false">
+          1
+        </a-card>
+
         <br>
         <br>
         <br>
@@ -80,6 +98,7 @@ export default {
       footer: {
         loading: false,
       },
+      activeKey: ['1'],
       generalRule: {
         id: null,
         name: null,
@@ -105,6 +124,9 @@ export default {
     onClose() {
       this.drawer.visible = false;
     },
+    handleClick() {
+
+    }
   }
 }
 </script>
