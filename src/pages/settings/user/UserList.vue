@@ -170,23 +170,15 @@ import {userList, addUser, deleteUser, updateUserInfo,selectUserById} from '@/se
 
 const columns = [
   {
-    title: '编号',
-    width: '120px',
-    dataIndex: 'id'
-  },
-  {
     title: '用户',
-    width: '180px',
     scopedSlots: {customRender: 'user'}
   },
   {
     title: '邮箱',
     dataIndex: 'email',
-    width: '180px',
   },
   {
     title: '性别',
-    width: '120px',
     dataIndex: 'sex',
     sorter: true,
   },
@@ -197,7 +189,6 @@ const columns = [
   },
   {
     title: '操作',
-    width: '180px',
     scopedSlots: {customRender: 'action'}
   }
 ];

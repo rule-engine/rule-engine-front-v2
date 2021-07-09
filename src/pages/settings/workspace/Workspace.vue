@@ -343,23 +343,15 @@ import {
 
 const columns = [
   {
-    title: '编号',
-    width: '120px',
-    dataIndex: 'id'
-  },
-  {
     title: '名称',
     dataIndex: 'name',
-    width: '180px',
   },
   {
     title: '编码',
-    width: '120px',
     dataIndex: 'code',
   },
   {
     title: '管理员',
-    width: '180px',
     scopedSlots: {customRender: 'workspaceAdminList'}
   },
   {
@@ -369,7 +361,6 @@ const columns = [
   },
   {
     title: '操作',
-    width: '220px',
     scopedSlots: {customRender: 'action'}
   }
 ];
@@ -442,17 +433,14 @@ export default {
         columns: [
           {
             title: '用户',
-            width: '180px',
             scopedSlots: {customRender: 'user'}
           },
           {
             title: '邮箱',
-            width: '180px',
             dataIndex: 'email',
           },
           {
             title: '操作',
-            width: '180px',
             scopedSlots: {customRender: 'action'}
           }
         ],
@@ -510,12 +498,10 @@ export default {
         columns: [
           {
             title: '用户',
-            width: '140px',
             scopedSlots: {customRender: 'user'}
           },
           {
             dataIndex: 'email',
-            width: '140px',
             title: '邮箱',
           }
         ],

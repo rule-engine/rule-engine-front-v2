@@ -107,34 +107,24 @@ import {functionList, selectFunctionById} from '@/services/function'
 
 const columns = [
   {
-    title: '编号',
-    width: '120px',
-    dataIndex: 'id'
-  },
-  {
     title: '名称',
-    width: '200px',
     dataIndex: 'name'
   },
   {
     title: '执行器',
     dataIndex: 'executor',
-    width: '240px',
   },
   {
     title: '返回值类型',
-    width: '200px',
     dataIndex: 'returnValueType',
   },
   {
     title: '创建时间',
     dataIndex: 'createTime',
-    width: '180px',
     sorter: true
   },
   {
     title: '操作',
-    width: '220px',
     scopedSlots: {customRender: 'action'}
   }
 ];
@@ -183,7 +173,6 @@ export default {
       this.loading = true;
       const _this = this;
       functionList(this.query).then(res => {
-        console.log(res.data)
         const resp = res.data;
         if (resp.code === 200) {
           _this.dataSource = resp.data.rows
