@@ -82,6 +82,7 @@
             <a-select-option value="STRING">字符串</a-select-option>
             <a-select-option value="NUMBER">数值</a-select-option>
             <a-select-option value="DATE">日期</a-select-option>
+            <a-select-option value="UNKNOWN">未知</a-select-option>
           </a-select>
         </a-form-model-item>
         <a-form-model-item label="说明" prop="description">
@@ -117,6 +118,7 @@
             <a-select-option value="STRING">字符串</a-select-option>
             <a-select-option value="NUMBER">数值</a-select-option>
             <a-select-option value="DATE">日期</a-select-option>
+            <a-select-option value="UNKNOWN">未知</a-select-option>
           </a-select>
         </a-form-model-item>
 
@@ -134,6 +136,7 @@
                   <a-select-option value="STRING">字符串</a-select-option>
                   <a-select-option value="NUMBER">数值</a-select-option>
                   <a-select-option value="DATE">日期</a-select-option>
+                  <a-select-option value="UNKNOWN">未知</a-select-option>
                 </a-select>
               </a-col>
               <a-col :span="1">
