@@ -1,7 +1,7 @@
 //跨域代理前缀
 const API_PROXY_PREFIX = '/api'
-const BASE_URL = process.env.NODE_ENV === 'production' ? process.env.VUE_APP_API_BASE_URL : API_PROXY_PREFIX
-// const BASE_URL = process.env.VUE_APP_API_BASE_URL
+const BASE_URL = process.env.NODE_ENV === 'production' ? process.env.WEB_BASE_URL : API_PROXY_PREFIX
+// const BASE_URL = process.env.WEB_BASE_URL
 module.exports = {
     user: {
         LOGIN: `${BASE_URL}/user/login`,
@@ -42,6 +42,7 @@ module.exports = {
     myfunction: {
         LIST: `${BASE_URL}/ruleEngine/function/list`,
         SELECT_FUNCTION_BY_ID: `${BASE_URL}/ruleEngine/function/get`,
+        RUN: `http://localhost:8081/ruleEngine/function/run`,
     },
     ROUTES: `${BASE_URL}/routes`,
     GOODS: `${BASE_URL}/goods`,

@@ -125,7 +125,7 @@
           <a-form-model-item v-for="(pv) in runTest.form.paramValues" style="margin-top: 18px;" :key="pv.code">
             <a-row>
               <a-col :span="5">
-                {{ pv.name !== null ? pv.name : pv.code }}
+                {{ pv.name !== null ? pv.name : pv.code }}&nbsp;
               </a-col>
               <a-col :span="5">
                 <a-select readOnly :value="pv.valueType">
@@ -152,7 +152,7 @@
         </a-form-model-item>
 
         <a-form-model-item label="输出">
-          <a-textarea readOnly :rows="2"/>
+          <a-textarea readOnly :rows="2" :value="runTest.form.output"/>
         </a-form-model-item>
 
       </a-form-model>
@@ -165,7 +165,7 @@
 import PageLayout from '@/layouts/PageLayout'
 import StandardTable from '@/components/table/StandardTable'
 
-import {functionList, selectFunctionById} from '@/services/function'
+import {functionList, selectFunctionById, runFunction} from '@/services/function'
 
 const columns = [
   {
@@ -212,34 +212,11 @@ export default {
         dialogFormVisible: false,
         confirmLoading: false,
         form: {
-          name: 'test',
-          returnValueType: 'NUMBER',
-          paramValues: [
-            {
-              valueType: 'NUMBER',
-              value: '',
-              code: 'age',
-              name: '年龄',
-            },
-            {
-              valueType: 'BOOLEAN',
-              value: '',
-              code: '？？',
-              name: '单身？',
-            },
-            {
-              valueType: 'STRING',
-              value: '',
-              code: '1123',
-              name: '什么玩意？',
-            },
-            {
-              valueType: 'DATE',
-              value: '',
-              code: 'sadf',
-              name: '我是时间',
-            }
-          ]
+          id: null,
+          name: '',
+          returnValueType: '',
+          paramValues: [],
+          output: null,
         }
       },
       tableData: columns,
@@ -280,6 +257,18 @@ export default {
     },
     run() {
       this.runTest.confirmLoading = true
+      runFunction({
+        "id": this.runTest.form.id,
+        "paramValues": this.runTest.form.paramValues
+      }).then(res => {
+        const resp = res.data;
+        if (resp.data != null) {
+          this.runTest.form.output = resp.data;
+        } else {
+          this.runTest.form.output = null;
+        }
+        this.runTest.confirmLoading = false
+      })
     },
     //  翻页
     onChange(pagination) {
@@ -302,8 +291,17 @@ export default {
       })
     },
     test(row) {
-      console.log(row)
-      this.runTest.dialogFormVisible = true
+      this.runTest.form.output = null;
+      selectFunctionById(row).then(res => {
+        const resp = res.data;
+        if (resp.code === 200) {
+          this.runTest.form.id = resp.data.id;
+          this.runTest.form.returnValueType = resp.data.returnValueType;
+          this.runTest.form.name = resp.data.name;
+          this.runTest.form.paramValues = resp.data.params;
+          this.runTest.dialogFormVisible = true
+        }
+      })
     },
     runTestHandleCancel() {
       this.runTest.dialogFormVisible = false
