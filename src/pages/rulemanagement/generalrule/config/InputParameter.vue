@@ -66,6 +66,15 @@
           <a-form-model-item label="参数编码" has-feedback prop="code">
             <a-input v-model="add.form.code" placeholder="请输入参数编码"/>
           </a-form-model-item>
+          <a-form-model-item label="参数类型">
+            <a-select placeholder="请选择数据类型">
+              <a-select-option value="STRING">字符串</a-select-option>
+              <a-select-option value="BOOLEAN">布尔</a-select-option>
+              <a-select-option value="NUMBER">数值</a-select-option>
+              <a-select-option value="COLLECTION">集合</a-select-option>
+              <a-select-option value="DATE">日期</a-select-option>
+            </a-select>
+          </a-form-model-item>
           <a-form-model-item label="参数值描述" has-feedback prop="description">
             <a-input v-model="add.form.description" type="textarea" placeholder="请输入描述"/>
           </a-form-model-item>
@@ -90,13 +99,15 @@ export default {
         form: {
           name: "",
           code: "",
-          description: ""
+          description: "",
+          type: ""
         },
       },
       rules: {
-        name: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入参数名称",},
+        name: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入参数名称"},
         code: {min: 1, trigger: ['change', 'blur'], message: "请输入参数编码", required: true},
         description: {trigger: ['change', 'blur'], required: false, message: ""},
+        type: {trigger: ['change', 'blur'], required: true, message: "请选择参数类型"}
       },
       loading: false,
       selectedRows: [],
