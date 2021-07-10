@@ -200,6 +200,7 @@
         components: {PageLayout, FooterToolBar, InputParameter},
         data() {
             return {
+                id: 215,
                 footer: {
                     loading: false,
                 },
@@ -355,6 +356,7 @@
                 let newConditionGroup = {
                     id: null,
                     name: "条件组",
+                    ruleId: this.id,
                     orderNo: newOrderNo,
                     conditionGroupCondition: []
                 };
