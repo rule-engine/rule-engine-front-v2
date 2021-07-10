@@ -46,6 +46,9 @@ module.exports = {
         SELECT_FUNCTION_BY_ID: `${BASE_URL}/ruleEngine/function/get`,
         RUN: `${COMPUTE_BASE_URL}/ruleEngine/function/run`,
     },
+    conditionGroup: {
+        SAVE_OR_UPDATE: `${BASE_URL}/ruleEngine/conditionGroup/saveOrUpdate`,
+    },
     ROUTES: `${BASE_URL}/routes`,
     GOODS: `${BASE_URL}/goods`,
     GOODS_COLUMNS: `${BASE_URL}/columns`,

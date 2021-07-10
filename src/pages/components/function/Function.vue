@@ -124,7 +124,7 @@
 
         <a-form-model-item label="函数参数" v-if="runTest.form.paramValues.length!==0">
           <br>
-          <a-form-model-item v-for="(pv) in runTest.form.paramValues" style="margin-top: 18px;" :key="pv.code">
+          <a-form-model-item v-for="(pv) in runTest.form.paramValues" style="margin-bottom: 10px;" :key="pv.code">
             <a-row>
               <a-col :span="5">
                 {{ pv.name !== null ? pv.name : pv.code }}&nbsp;
