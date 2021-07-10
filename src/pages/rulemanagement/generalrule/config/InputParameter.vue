@@ -67,7 +67,7 @@
             <a-input v-model="add.form.code" placeholder="请输入参数编码"/>
           </a-form-model-item>
           <a-form-model-item label="参数类型">
-            <a-select placeholder="请选择数据类型">
+            <a-select v-model="add.form.type" placeholder="请选择数据类型" prop="type">
               <a-select-option value="STRING">字符串</a-select-option>
               <a-select-option value="BOOLEAN">布尔</a-select-option>
               <a-select-option value="NUMBER">数值</a-select-option>
