@@ -10,6 +10,10 @@ export async function deleteGeneralRule(query) {
 }
 
 
+export async function getRuleConfig(query) {
+    return request(generalRule.GET_RULE_CONFIG, METHOD.POST, query)
+}
+
 export default {
     list,
 }

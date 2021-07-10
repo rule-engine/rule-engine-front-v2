@@ -11,10 +11,13 @@
 
                 <a-card title="条件集" class="condition_set">
 
-                    <a-skeleton v-if="conditionGroup.length===0" :paragraph="{ rows: 3 }"/>
+                    <a-skeleton v-if="generalRule.conditionGroup.length===0" :paragraph="{ rows: 3 }"/>
 
-                    <a-card :title="cg.name" :bordered="false" v-for="cg in conditionGroup" :key="cg.id">
-                        <a-icon type="close" slot="extra" @click="deleteConditionGroup(cg)"></a-icon>
+                    <a-card :title="cg.name" :bordered="false" v-for="cg in generalRule.conditionGroup" :key="cg.id">
+
+                        <a-icon type="delete" class="dynamic-delete-button" style="font-size: 18px" slot="extra"
+                                @click="deleteConditionGroup(cg)"></a-icon>
+
                         <a-skeleton v-if="cg.conditionGroupCondition.length===0" :paragraph="{ rows: 2 }"/>
 
                         <a-alert closable style="background-color: #f4f4f5;border:none;padding: 6px 30px 6px 6px;"
@@ -52,13 +55,33 @@
                     </a-button>
                 </a-card>
                 <br>
+                <a-icon type="arrow-down"  style="color: #777;display:block;margin:0 auto;font-size: 40px" />
+                <br>
                 <a-card title="结果">
-                    1
+                    <a-row>
+                        <a-col :span="4">
+                            <a-select style="width:100%" v-model="generalRule.action.valueType">
+                                <a-select-option value="PARAMETER">参数</a-select-option>
+                                <a-select-option value="VARIABLE">变量</a-select-option>
+                                <a-select-option value="BOOLEAN">布尔</a-select-option>
+                                <a-select-option value="COLLECTION">集合</a-select-option>
+                                <a-select-option value="STRING">字符串</a-select-option>
+                                <a-select-option value="NUMBER">数值</a-select-option>
+                                <a-select-option value="DATE">日期</a-select-option>
+                            </a-select>
+                        </a-col>
+                        <a-col :span="1"></a-col>
+                        <a-col :span="19">
+                            <a-input  v-model="generalRule.action.value"></a-input>
+                        </a-col>
+                    </a-row>
                 </a-card>
                 <br>
                 <a-card title="默认结果">
                     1
                 </a-card>
+                <br>
+                <br>
             </a-card>
         </page-layout>
 
@@ -72,8 +95,8 @@
                 @cancel="addConditionHandleCancel()"
                 okText="确认添加"
         >
-            <a-form-model ref="addConditionForm" :model="selectCondition.from" :rules="rules" :label-col="{span: 4}"
-                          :wrapper-col="{span: 14}">
+            <a-form-model ref="addConditionForm" :model="selectCondition.from" :rules="rules" :label-col="{span: 3}"
+                          :wrapper-col="{span: 19}">
                 <a-form-model-item label="名称" prop="name">
                     <a-input v-model="selectCondition.from.name">
                     </a-input>
@@ -105,7 +128,7 @@
                             <a-input-number v-else-if="selectCondition.from.leftValue.valueType==='NUMBER'"
                                             v-model="selectCondition.from.leftValue.value" style="width: 100%"/>
                             <a-date-picker v-else-if="selectCondition.from.leftValue.valueType==='DATE'" show-time
-                                           style="width: 100%"/>
+                                           style="width: 100%"></a-date-picker>
                             <a-input v-else v-model="selectCondition.from.leftValue.value"></a-input>
                         </a-col>
                     </a-row>
@@ -147,7 +170,7 @@
                             <a-input-number v-else-if="selectCondition.from.rightValue.valueType==='NUMBER'"
                                             v-model="selectCondition.from.rightValue.value" style="width: 100%"/>
                             <a-date-picker v-else-if="selectCondition.from.rightValue.valueType==='DATE'" show-time
-                                           style="width: 100%"/>
+                                           style="width: 100%"></a-date-picker>
                             <a-input v-else v-model="selectCondition.from.rightValue.value"></a-input>
                         </a-col>
                     </a-row>
@@ -170,8 +193,9 @@
                 width="460px"
                 :visible="drawer.visible"
                 @close="onClose"
+                :mask="true"
+                :zIndex="999"
         >
-
             <a-tabs default-active-key="1">
                 <a-tab-pane key="1" tab="参数">
                     <input-parameter/>
@@ -193,37 +217,45 @@
     import InputParameter from "./InputParameter";
 
     // api
-    import {saveOrUpdate} from '@/services/conditionGroup'
+    import {saveOrUpdate, deleteConditionGroup} from '@/services/conditionGroup'
+    import {getRuleConfig} from '@/services/generalRule'
 
     export default {
         name: "Config",
         components: {PageLayout, FooterToolBar, InputParameter},
         data() {
             return {
-                id: 215,
-                footer: {
-                    loading: false,
-                },
-                activeKey: ['1'],
                 generalRule: {
-                    id: null,
+                    id: 215,
                     name: null,
                     code: null,
                     description: null,
+                    ruleId: null,
+                    conditionGroup: [],
+                    action: {
+                        value: undefined,
+                        valueName: null,
+                        valueType: null,
+                        type: null,
+                        loading: false,
+                        options: []
+                    },
+                    defaultAction: {
+                        enableDefaultAction: 1,
+                        value: undefined,
+                        valueName: null,
+                        valueType: null,
+                        type: null,
+                        loading: false,
+                        options: [],
+                    },
+                },
+                footer: {
+                    loading: false,
                 },
                 rules: {},
                 drawer: {
                     visible: false
-                },
-                formItemLayout: {
-                    labelCol: {
-                        xs: {span: 24},
-                        sm: {span: 4},
-                    },
-                    wrapperCol: {
-                        xs: {span: 24},
-                        sm: {span: 20},
-                    },
                 },
                 selectCondition: {
                     open: false,
@@ -243,63 +275,11 @@
                         }
                     }
                 },
-                conditionGroup: [{
-                    "id": 2708,
-                    "name": "条件组",
-                    "orderNo": 1,
-                    "conditionGroupCondition": [{
-                        "id": 3895,
-                        "orderNo": 1,
-                        "condition": {
-                            "id": 244,
-                            "name": "abc",
-                            "description": null,
-                            "config": {
-                                "leftValue": {
-                                    "type": 0,
-                                    "value": "239",
-                                    "valueName": "abcd",
-                                    "variableValue": null,
-                                    "valueType": "NUMBER"
-                                },
-                                "symbol": "GT",
-                                "rightValue": {
-                                    "type": 2,
-                                    "value": "50",
-                                    "valueName": "50",
-                                    "variableValue": null,
-                                    "valueType": "NUMBER"
-                                }
-                            }
-                        }
-                    }]
-                }],
-                action: {
-                    value: undefined,
-                    valueName: null,
-                    valueType: null,
-                    type: null,
-                    loading: false,
-                    options: []
-                },
-                // actionRules: {
-                //     type: [
-                //         {required: true, message: '请选择规则结果类型', trigger: ['blur', 'change']},
-                //     ],
-                //     value: [
-                //         {required: true, message: '请输入结果值', trigger: ['blur']},
-                //     ],
-                // },
-                defaultAction: {
-                    enableDefaultAction: 1,
-                    value: undefined,
-                    valueName: null,
-                    valueType: null,
-                    type: null,
-                    loading: false,
-                    options: [],
-                },
             }
+        },
+        mounted() {
+            // this.id = this.$route.query.ruleId;
+            this.getRuleConfig();
         },
         methods: {
             getConditionNamePrefix(type) {
@@ -344,35 +324,93 @@
             addConditionGroup() {
                 // 增加一个条件组
                 let newOrderNo = 1;
-                if (this.conditionGroup != null) {
-                    let length = this.conditionGroup.length;
-                    let conditionGroupElement = this.conditionGroup[length - 1];
+                if (this.generalRule.conditionGroup != null) {
+                    let length = this.generalRule.conditionGroup.length;
+                    let conditionGroupElement = this.generalRule.conditionGroup[length - 1];
                     if (conditionGroupElement !== undefined) {
                         newOrderNo = conditionGroupElement.orderNo + 1;
                     }
                 } else {
-                    this.conditionGroup = [];
+                    this.generalRule.conditionGroup = [];
                 }
                 let newConditionGroup = {
                     id: null,
                     name: "条件组",
-                    ruleId: this.id,
+                    ruleId: this.generalRule.ruleId,
                     orderNo: newOrderNo,
                     conditionGroupCondition: []
                 };
                 saveOrUpdate(newConditionGroup).then(res => {
                     // 回显的id
-                    newConditionGroup.id = res.data.data;
-                });
-                this.conditionGroup.push(newConditionGroup);
-            },
-            deleteConditionGroup(cg) {
-                // todo 调用接口 删除一个条件组
-                this.conditionGroup.forEach((value, index) => {
-                    if (value.id === cg.id) {
-                        this.conditionGroup.splice(index, 1);
+                    if (res.data.code === 200) {
+                        newConditionGroup.id = res.data.data;
+                        this.generalRule.conditionGroup.push(newConditionGroup);
+                    } else {
+                        this.$message.error("添加条件组失败");
                     }
                 });
+            },
+            deleteConditionGroup(cg) {
+                // 删除条件组
+                deleteConditionGroup({id: cg.id}).then(res => {
+                    console.log(res)
+                });
+                this.generalRule.conditionGroup.forEach((value, index) => {
+                    if (value.id === cg.id) {
+                        this.generalRule.conditionGroup.splice(index, 1);
+                    }
+                });
+            },
+            getRuleConfig() {
+                this.loading = true;
+                getRuleConfig({
+                    "id": this.generalRule.id
+                }).then(res => {
+                    let da = res.data.data;
+                    if (da != null) {
+                        this.generalRule = da;
+                        // this.id = da.id;
+                        // this.name = da.name;
+                        // this.code = da.code;
+                        // this.description = da.description;
+                        // this.ruleId = da.ruleId;
+                        // // condition group
+                        // this.conditionGroup = da.conditionGroup;
+                        // // action
+                        // if (da.action != null) {
+                        //     this.action.type = da.action.type;
+                        //     this.action.value = da.action.value;
+                        //     this.action.valueName = da.action.valueName;
+                        //     this.action.valueType = da.action.valueType;
+                        // }
+                        // if (da.defaultAction != null) {
+                        //     // default action
+                        //     this.defaultAction.enableDefaultAction = da.defaultAction.enableDefaultAction;
+                        //     this.defaultAction.type = da.defaultAction.type;
+                        //     this.defaultAction.value = da.defaultAction.value;
+                        //     this.defaultAction.valueName = da.defaultAction.valueName;
+                        //     this.defaultAction.valueType = da.defaultAction.valueType;
+                        // }
+                    }
+                    this.loading = false;
+                });
+            },
+            /** @deprecated */
+            getType(type, valueType) {
+                if (type > 1) {
+                    if (valueType === "COLLECTION") {
+                        return 5;
+                    } else if (valueType === "STRING") {
+                        return 2;
+                    } else if (valueType === "BOOLEAN") {
+                        return 3;
+                    } else if (valueType === "NUMBER") {
+                        return 4;
+                    } else if (valueType === "DATE") {
+                        return 6;
+                    }
+                }
+                return type;
             },
             getSymbolExplanation(name) {
                 switch (name) {
@@ -493,6 +531,16 @@
         color: #999;
         transition: all 0.3s;
     }
+
+    .dynamic-delete-button:hover {
+        color: #777;
+    }
+
+    .dynamic-delete-button[disabled] {
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+
 
     .dynamic-delete-button:hover {
         color: #777;

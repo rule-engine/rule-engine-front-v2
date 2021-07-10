@@ -50,13 +50,13 @@
 
     <!--   新建参数-->
     <a-modal
-        title="新建参数"
-        :visible="add.visible"
-        :zIndex="9999999"
-        :confirm-loading="add.confirmLoading"
-        :width="700"
-        @ok="handleAddOk()"
-        @cancel="handleAddCancel()">
+            title="新建参数"
+            :visible="add.visible"
+            :zIndex="1000"
+            :confirm-loading="add.confirmLoading"
+            :width="700"
+            @ok="handleAddOk()"
+            @cancel="handleAddCancel()">
       <template>
         <a-form-model ref="addWorkspace" :model="add.form" :rules="rules" :label-col="{span: 4}"
                       :wrapper-col="{span: 14}">
@@ -66,17 +66,13 @@
           <a-form-model-item label="参数编码" has-feedback prop="code">
             <a-input v-model="add.form.code" placeholder="请输入参数编码"/>
           </a-form-model-item>
-          <a-form-model-item label="返回类型" prop="returnValueType" style="z-index: 99999999999">
-            <a-select  :value="add.form.type" placeholder="返回类型" style="z-index: 99999999999">
-              <a-select-option style="z-index: 99999999999" value="BOOLEAN">布尔</a-select-option>
-              <a-select-option style="z-index: 99999999999" value="COLLECTION">集合</a-select-option>
-              <a-select-option style="z-index: 99999999999" value="STRING">字符串</a-select-option>
-              <a-select-option style="z-index: 99999999999" value="NUMBER">数值</a-select-option>
-              <a-select-option style="z-index: 99999999999" value="DATE">日期</a-select-option>
-              <a-select-option style="z-index: 99999999999" value="UNKNOWN">未知</a-select-option>
-              <a-select-option style="z-index: 99999999999" value="UNKNOWN">未知</a-select-option>
-              <a-select-option style="z-index: 99999999999" value="UNKNOWN">未知</a-select-option>
-              <a-select-option style="z-index: 99999999999" value="UNKNOWN">未知</a-select-option>
+          <a-form-model-item label="返回类型" prop="returnValueType">
+            <a-select  :value="add.form.type" placeholder="返回类型">
+              <a-select-option  value="BOOLEAN">布尔</a-select-option>
+              <a-select-option  value="COLLECTION">集合</a-select-option>
+              <a-select-option  value="STRING">字符串</a-select-option>
+              <a-select-option  value="NUMBER">数值</a-select-option>
+              <a-select-option  value="DATE">日期</a-select-option>
             </a-select>
           </a-form-model-item>
           <a-form-model-item label="参数值描述" has-feedback prop="description">
@@ -85,6 +81,7 @@
         </a-form-model>
       </template>
     </a-modal>
+
   </div>
 </template>
 
@@ -97,14 +94,14 @@ export default {
   data() {
     return {
       add: {
-        visible: true,
+        visible: false,
         confirmLoading: false,
         //表单数据
         form: {
           name: "",
           code: "",
           description: "",
-          type: ""
+          type: "BOOLEAN"
         },
       },
       rules: {
