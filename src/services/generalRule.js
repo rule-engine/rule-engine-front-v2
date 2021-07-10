@@ -9,6 +9,16 @@ export async function deleteGeneralRule(query) {
     return request(generalRule.DELETE, METHOD.POST, query)
 }
 
+//保存规则定义
+export async function add(param) {
+    return request(generalRule.ADD, METHOD.POST, param)
+}
+
+//更新规则定义
+export async function update(param) {
+    return request(generalRule.UPDATE, METHOD.POST, param)
+}
+
 
 export default {
     list,

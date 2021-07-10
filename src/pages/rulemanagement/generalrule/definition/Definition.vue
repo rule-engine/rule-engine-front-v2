@@ -42,7 +42,7 @@
 import FooterToolBar from '@/components/tool/FooterToolBar'
 import PageLayout from "@/layouts/PageLayout";
 
-import {saveRuleDefinition} from '@/services/definition'
+import {add,update} from '@/services/generalRule'
 
 export default {
   name: "Definition",
@@ -68,12 +68,21 @@ export default {
     //保存规则定义
     saveRuleDefinition() {
       this.loading = true;
-      saveRuleDefinition(this.generalRule).then(res => {
-        console.log(res.data)
-        if (res.data.code===200){
-          this.$router.push('/generalRuleConfig')
-        }
-      })
+      if (this.generalRule.id!=null){
+        update(this.generalRule).then(res => {
+          console.log(res.data)
+          if (res.data.code===200){
+            this.$router.push('/generalRuleConfig')
+          }
+        })
+      }else {
+        add(this.generalRule).then(res => {
+          console.log(res.data)
+          if (res.data.code===200){
+            this.$router.push('/generalRuleConfig')
+          }
+        })
+      }
     }
   }
 }

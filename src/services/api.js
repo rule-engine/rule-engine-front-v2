@@ -34,6 +34,8 @@ module.exports = {
     generalRule: {
         LIST: `${BASE_URL}/ruleEngine/generalRule/list`,
         DELETE: `${BASE_URL}/ruleEngine/generalRule/delete`,
+        ADD : `${BASE_URL}/ruleEngine/generalRule/saveRuleDefinition`,
+        UPDATE : `${BASE_URL}/ruleEngine/generalRule/updateRuleDefinition`,
     },
     dataPermission: {
         LIST: `${BASE_URL}/ruleEngine/dataPermission/list`,
@@ -42,9 +44,6 @@ module.exports = {
     myfunction: {
         LIST: `${BASE_URL}/ruleEngine/function/list`,
         SELECT_FUNCTION_BY_ID: `${BASE_URL}/ruleEngine/function/get`,
-    },
-    ruleDefinition: {
-        SAVERULEDEFINITION:`${BASE_URL}/ruleEngine/ruleSet/saveOrUpdateRuleSetDefinition`,
     },
     ROUTES: `${BASE_URL}/routes`,
     GOODS: `${BASE_URL}/goods`,
