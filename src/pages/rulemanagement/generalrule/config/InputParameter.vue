@@ -14,7 +14,7 @@
 
     <br>
 
-    <a-button type="primary">新建</a-button>
+    <a-button type="primary" @click="this.add.visible=true">新建</a-button>
     <br> <br>
     <standard-table
         rowKey="id"
@@ -48,6 +48,30 @@
       </div>
     </standard-table>
 
+    <!--   新建参数-->
+    <a-modal
+        title="新建参数"
+        :visible="add.visible"
+        :wrapClassName="'beauty-scroll'"
+        :confirm-loading="add.confirmLoading"
+        :width="700"
+        @ok="handleAddOk()"
+        @cancel="handleAddCancel()">
+      <template>
+        <a-form-model ref="addWorkspace" :model="add.form" :rules="rules" :label-col="{span: 4}"
+                      :wrapper-col="{span: 14}">
+          <a-form-model-item label="参数名称" has-feedback prop="name">
+            <a-input v-model="add.form.name" placeholder="请输入参数名称"/>
+          </a-form-model-item>
+          <a-form-model-item label="参数编码" has-feedback prop="code">
+            <a-input v-model="add.form.code" placeholder="请输入参数编码"/>
+          </a-form-model-item>
+          <a-form-model-item label="参数值描述" has-feedback prop="description">
+            <a-input v-model="add.form.description" type="textarea" placeholder="请输入描述"/>
+          </a-form-model-item>
+        </a-form-model>
+      </template>
+    </a-modal>
   </div>
 </template>
 
@@ -59,24 +83,40 @@ export default {
   components: {StandardTable},
   data() {
     return {
+      add: {
+        visible: true,
+        confirmLoading: false,
+        //表单数据
+        form: {
+          name: "",
+          code: "",
+          description: ""
+        },
+      },
+      rules: {
+        name: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入参数名称",},
+        code: {min: 1, trigger: ['change', 'blur'], message: "请输入参数编码", required: true},
+        description: {trigger: ['change', 'blur'], required: false, message: ""},
+      },
       loading: false,
       selectedRows: [],
       columns: [
         {
           title: '名称',
-          width: '180px',
+          width: '120px',
           dataIndex: 'name'
         },
         {
           title: '编码',
           dataIndex: 'code',
-          width: '180px',
+          width: '120px',
         },
         {
           title: '操作',
-          width: '220px',
-          scopedSlots: {customRender: 'action'}
-        }
+          key: 'operation',
+          width: '150px',
+          scopedSlots: {customRender: 'action'},
+        },
       ],
       dataSource: [
         {
@@ -108,7 +148,14 @@ export default {
       },
     }
   },
-  methods: {}
+  methods: {
+    handleAddOk() {
+
+    },
+    handleAddCancel() {
+      this.add.visible = false
+    }
+  }
 }
 </script>
 
