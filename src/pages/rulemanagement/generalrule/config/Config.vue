@@ -55,11 +55,53 @@
                     </a-button>
                 </a-card>
                 <br>
-                <a-icon type="arrow-down"  style="color: #777;display:block;margin:0 auto;font-size: 40px" />
                 <br>
                 <a-card title="结果">
+
+                    <span slot="extra">
+                        <a-popover title="温馨提示">
+                            <template slot="content">
+                                <p>普通规则结果类型确认后，及规则发布后，则不支持修改！</p>
+                                <p>（具体原因可参考链接：T320523）</p>
+                            </template>
+                            <a-icon type="info-circle" class="dynamic-delete-button" style="font-size: 18px"></a-icon>
+                        </a-popover>
+                    </span>
+                    <span slot="extra" style="margin-left: 16px;">
+                        <a-popover title="默认结果" trigger="click" arrow-point-at-center >
+                            <template slot="content">
+                                <div style="width: 400px;">
+                                                 <a-switch v-model="generalRule.defaultAction.enableDefaultAction"/>
+                                    <br> <br>
+                                    <a-row>
+                                        <a-col :span="5">
+                                            <a-select style="width:100%"
+                                                      v-model="generalRule.defaultAction.valueType">
+                                                <a-select-option value="PARAMETER">参数</a-select-option>
+                                                <a-select-option value="VARIABLE">变量</a-select-option>
+                                                <a-select-option value="BOOLEAN">布尔</a-select-option>
+                                                <a-select-option value="COLLECTION">集合</a-select-option>
+                                                <a-select-option value="STRING">字符串</a-select-option>
+                                                <a-select-option value="NUMBER">数值</a-select-option>
+                                                <a-select-option value="DATE">日期</a-select-option>
+                                            </a-select>
+                                        </a-col>
+                                        <a-col :span="1"></a-col>
+                                        <a-col :span="18">
+                                            <a-input
+                                                    v-model="generalRule.defaultAction.value"></a-input>
+                                        </a-col>
+                                    </a-row>
+                                </div>
+                            </template>
+
+                              <a-icon type="pull-request" class="dynamic-delete-button"
+                                      style="font-size: 18px"></a-icon>
+                        </a-popover>
+                    </span>
+
                     <a-row>
-                        <a-col :span="4">
+                        <a-col :span="5">
                             <a-select style="width:100%" v-model="generalRule.action.valueType">
                                 <a-select-option value="PARAMETER">参数</a-select-option>
                                 <a-select-option value="VARIABLE">变量</a-select-option>
@@ -71,15 +113,12 @@
                             </a-select>
                         </a-col>
                         <a-col :span="1"></a-col>
-                        <a-col :span="19">
-                            <a-input  v-model="generalRule.action.value"></a-input>
+                        <a-col :span="18">
+                            <a-input v-model="generalRule.action.value"></a-input>
                         </a-col>
                     </a-row>
                 </a-card>
                 <br>
-                <a-card title="默认结果">
-                    1
-                </a-card>
                 <br>
                 <br>
             </a-card>
@@ -235,7 +274,7 @@
                     action: {
                         value: undefined,
                         valueName: null,
-                        valueType: null,
+                        valueType: 'NUMBER',
                         type: null,
                         loading: false,
                         options: []
@@ -244,7 +283,7 @@
                         enableDefaultAction: 1,
                         value: undefined,
                         valueName: null,
-                        valueType: null,
+                        valueType: 'NUMBER',
                         type: null,
                         loading: false,
                         options: [],
