@@ -52,7 +52,7 @@
     <a-modal
         title="新建参数"
         :visible="add.visible"
-        :wrapClassName="'beauty-scroll'"
+        :zIndex="999999999"
         :confirm-loading="add.confirmLoading"
         :width="700"
         @ok="handleAddOk()"
