@@ -1,6 +1,8 @@
 //跨域代理前缀
-const API_PROXY_PREFIX = '/api'
+const API_PROXY_PREFIX = '/api' //web服务的
+const COMPUTE_API_PROXY_PREFIX = '/compute_api' //计算服务的
 const BASE_URL = process.env.NODE_ENV === 'production' ? process.env.WEB_BASE_URL : API_PROXY_PREFIX
+const COMPUTE_BASE_URL = process.env.NODE_ENV === 'production' ? process.env.COMPUTE_BASE_URL : COMPUTE_API_PROXY_PREFIX
 // const BASE_URL = process.env.WEB_BASE_URL
 module.exports = {
     user: {
@@ -42,7 +44,7 @@ module.exports = {
     myfunction: {
         LIST: `${BASE_URL}/ruleEngine/function/list`,
         SELECT_FUNCTION_BY_ID: `${BASE_URL}/ruleEngine/function/get`,
-        RUN: `http://localhost:8081/ruleEngine/function/run`,
+        RUN: `${COMPUTE_BASE_URL}/ruleEngine/function/run`,
     },
     ROUTES: `${BASE_URL}/routes`,
     GOODS: `${BASE_URL}/goods`,

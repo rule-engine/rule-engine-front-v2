@@ -58,7 +58,10 @@ npm run build --report
 ###### 修改 .env 配置信息
 
 ```env
-VUE_APP_API_BASE_URL=http://xxx.yourdomain.com
+#web服务的
+WEB_BASE_URL=http://xxx.yourdomain.com
+#计算服务的
+COMPUTE_BASE_URL=http://xxx.yourdomain.com:8011 
 ```
 
 ###### 关于 Nginx 的一些配置
