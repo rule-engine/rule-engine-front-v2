@@ -43,6 +43,9 @@ module.exports = {
         LIST: `${BASE_URL}/ruleEngine/function/list`,
         SELECT_FUNCTION_BY_ID: `${BASE_URL}/ruleEngine/function/get`,
     },
+    ruleDefinition: {
+        SAVERULEDEFINITION:`${BASE_URL}/ruleEngine/ruleSet/saveOrUpdateRuleSetDefinition`,
+    },
     ROUTES: `${BASE_URL}/routes`,
     GOODS: `${BASE_URL}/goods`,
     GOODS_COLUMNS: `${BASE_URL}/columns`,

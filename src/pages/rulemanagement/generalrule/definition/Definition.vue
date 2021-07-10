@@ -33,7 +33,7 @@
 
     <!--    谁来修复footer-tool-bar闪现问题-->
     <footer-tool-bar>
-      <a-button type="primary" @click="nextStep()" :loading="footer.loading">下一步</a-button>
+      <a-button type="primary" @click="saveRuleDefinition()" :loading="footer.loading">下一步</a-button>
     </footer-tool-bar>
   </div>
 </template>
@@ -41,6 +41,8 @@
 <script>
 import FooterToolBar from '@/components/tool/FooterToolBar'
 import PageLayout from "@/layouts/PageLayout";
+
+import {saveRuleDefinition} from '@/services/definition'
 
 export default {
   name: "Definition",
@@ -63,8 +65,15 @@ export default {
     }
   },
   methods: {
-    nextStep() {
-      this.$router.push('/generalRuleConfig')
+    //保存规则定义
+    saveRuleDefinition() {
+      this.loading = true;
+      saveRuleDefinition(this.generalRule).then(res => {
+        console.log(res.data)
+        if (res.data.code===200){
+          this.$router.push('/generalRuleConfig')
+        }
+      })
     }
   }
 }
