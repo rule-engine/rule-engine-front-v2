@@ -66,26 +66,17 @@
           <a-form-model-item label="参数编码" has-feedback prop="code">
             <a-input v-model="add.form.code" placeholder="请输入参数编码"/>
           </a-form-model-item>
-          <!--          <a-form-model-item label="参数类型">-->
-          <!--            <a-select v-model="add.form.type" placeholder="请选择数据类型" prop="type">-->
-          <!--              <a-select-option value="STRING">字符串</a-select-option>-->
-          <!--              <a-select-option value="BOOLEAN">布尔</a-select-option>-->
-          <!--              <a-select-option value="NUMBER">数值</a-select-option>-->
-          <!--              <a-select-option value="COLLECTION">集合</a-select-option>-->
-          <!--              <a-select-option value="DATE">日期</a-select-option>-->
-          <!--            </a-select>-->
-          <!--          </a-form-model-item>-->
-          <a-form-model-item label="返回类型" prop="returnValueType" :zIndex="99999999">
-            <a-select readOnly :value="add.form.type" placeholder="返回类型">
-              <a-select-option value="BOOLEAN">布尔</a-select-option>
-              <a-select-option value="COLLECTION">集合</a-select-option>
-              <a-select-option value="STRING">字符串</a-select-option>
-              <a-select-option value="NUMBER">数值</a-select-option>
-              <a-select-option value="DATE">日期</a-select-option>
-              <a-select-option value="UNKNOWN">未知</a-select-option>
-              <a-select-option value="UNKNOWN">未知</a-select-option>
-              <a-select-option value="UNKNOWN">未知</a-select-option>
-              <a-select-option value="UNKNOWN">未知</a-select-option>
+          <a-form-model-item label="返回类型" prop="returnValueType" style="z-index: 99999999999">
+            <a-select  :value="add.form.type" placeholder="返回类型" style="z-index: 99999999999">
+              <a-select-option style="z-index: 99999999999" value="BOOLEAN">布尔</a-select-option>
+              <a-select-option style="z-index: 99999999999" value="COLLECTION">集合</a-select-option>
+              <a-select-option style="z-index: 99999999999" value="STRING">字符串</a-select-option>
+              <a-select-option style="z-index: 99999999999" value="NUMBER">数值</a-select-option>
+              <a-select-option style="z-index: 99999999999" value="DATE">日期</a-select-option>
+              <a-select-option style="z-index: 99999999999" value="UNKNOWN">未知</a-select-option>
+              <a-select-option style="z-index: 99999999999" value="UNKNOWN">未知</a-select-option>
+              <a-select-option style="z-index: 99999999999" value="UNKNOWN">未知</a-select-option>
+              <a-select-option style="z-index: 99999999999" value="UNKNOWN">未知</a-select-option>
             </a-select>
           </a-form-model-item>
           <a-form-model-item label="参数值描述" has-feedback prop="description">
