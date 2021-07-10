@@ -10,12 +10,12 @@ export async function deleteGeneralRule(query) {
 }
 
 //保存规则定义
-export async function add(param) {
+export async function addGeneralRule(param) {
     return request(generalRule.ADD, METHOD.POST, param)
 }
 
 //更新规则定义
-export async function update(param) {
+export async function updateGeneralRule(param) {
     return request(generalRule.UPDATE, METHOD.POST, param)
 }
 

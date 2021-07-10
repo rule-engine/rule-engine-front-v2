@@ -42,7 +42,7 @@
 import FooterToolBar from '@/components/tool/FooterToolBar'
 import PageLayout from "@/layouts/PageLayout";
 
-import {add,update} from '@/services/generalRule'
+import {addGeneralRule,updateGeneralRule} from '@/services/generalRule'
 
 export default {
   name: "Definition",
@@ -69,14 +69,14 @@ export default {
     saveRuleDefinition() {
       this.loading = true;
       if (this.generalRule.id!=null){
-        update(this.generalRule).then(res => {
+        updateGeneralRule(this.generalRule).then(res => {
           console.log(res.data)
           if (res.data.code===200){
             this.$router.push('/generalRuleConfig')
           }
         })
       }else {
-        add(this.generalRule).then(res => {
+        addGeneralRule(this.generalRule).then(res => {
           console.log(res.data)
           if (res.data.code===200){
             this.$router.push('/generalRuleConfig')
