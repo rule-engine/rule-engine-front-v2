@@ -11,6 +11,10 @@ export async function selectFunctionById(param) {
 }
 
 
+export async function runFunction(param) {
+    return request(myfunction.RUN, METHOD.POST, param)
+}
+
 export default {
     functionList
 

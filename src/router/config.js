@@ -57,7 +57,7 @@ const options = {
                     ]
                 },
                 {
-                    path: 'systemcomponents',
+                    path: 'components',
                     name: '组件',
                     meta: {
                         icon: 'gold'
@@ -72,8 +72,23 @@ const options = {
                                     closable: true
                                 }
                             },
-                            component: () => import('@/pages/systemcomponents/function'),
+                            component: () => import('@/pages/components/function'),
                         },
+                        {
+                            path: 'taskCard',
+                            name: '任务卡片',
+                            component: () => import('@/pages/components/TaskCard')
+                        },
+                        {
+                            path: 'palette',
+                            name: '颜色复选框',
+                            component: () => import('@/pages/components/Palette')
+                        },
+                        {
+                            path: 'table',
+                            name: '高级表格',
+                            component: () => import('@/pages/components/table')
+                        }
                     ]
                 },
                 {
@@ -311,31 +326,6 @@ const options = {
                             path: '500',
                             name: 'Exp500',
                             component: () => import('@/pages/exception/500')
-                        }
-                    ]
-                },
-                {
-                    path: 'components',
-                    name: '内置组件',
-                    meta: {
-                        icon: 'appstore-o'
-                    },
-                    component: PageView,
-                    children: [
-                        {
-                            path: 'taskCard',
-                            name: '任务卡片',
-                            component: () => import('@/pages/components/TaskCard')
-                        },
-                        {
-                            path: 'palette',
-                            name: '颜色复选框',
-                            component: () => import('@/pages/components/Palette')
-                        },
-                        {
-                            path: 'table',
-                            name: '高级表格',
-                            component: () => import('@/pages/components/table')
                         }
                     ]
                 },

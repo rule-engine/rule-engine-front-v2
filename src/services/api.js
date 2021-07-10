@@ -1,7 +1,9 @@
 //跨域代理前缀
-const API_PROXY_PREFIX = '/api'
-const BASE_URL = process.env.NODE_ENV === 'production' ? process.env.VUE_APP_API_BASE_URL : API_PROXY_PREFIX
-// const BASE_URL = process.env.VUE_APP_API_BASE_URL
+const API_PROXY_PREFIX = '/api' //web服务的
+const COMPUTE_API_PROXY_PREFIX = '/compute_api' //计算服务的
+const BASE_URL = process.env.NODE_ENV === 'production' ? process.env.WEB_BASE_URL : API_PROXY_PREFIX
+const COMPUTE_BASE_URL = process.env.NODE_ENV === 'production' ? process.env.COMPUTE_BASE_URL : COMPUTE_API_PROXY_PREFIX
+// const BASE_URL = process.env.WEB_BASE_URL
 module.exports = {
     user: {
         LOGIN: `${BASE_URL}/user/login`,
@@ -44,6 +46,10 @@ module.exports = {
     myfunction: {
         LIST: `${BASE_URL}/ruleEngine/function/list`,
         SELECT_FUNCTION_BY_ID: `${BASE_URL}/ruleEngine/function/get`,
+        RUN: `${COMPUTE_BASE_URL}/ruleEngine/function/run`,
+    },
+    conditionGroup: {
+        SAVE_OR_UPDATE: `${BASE_URL}/ruleEngine/conditionGroup/saveOrUpdate`,
     },
     ROUTES: `${BASE_URL}/routes`,
     GOODS: `${BASE_URL}/goods`,
