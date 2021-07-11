@@ -53,6 +53,13 @@ module.exports = {
         SAVE_OR_UPDATE: `${WEB_BASE_URL}/ruleEngine/conditionGroup/saveOrUpdate`,
         DELETE_CONDITION_GROUP: `${WEB_BASE_URL}/ruleEngine/conditionGroup/delete`,
     },
+    inputParameter: {
+        ADD: `${WEB_BASE_URL}/ruleEngine/inputParameter/add`,
+        LIST: `${WEB_BASE_URL}/ruleEngine/inputParameter/list`,
+        GET:`${WEB_BASE_URL}/ruleEngine/inputParameter/get`,
+        UPDATE:`${WEB_BASE_URL}/ruleEngine/inputParameter/update`,
+        DELETE:`${WEB_BASE_URL}/ruleEngine/inputParameter/delete`,
+    },
     ROUTES: `${WEB_BASE_URL}/routes`,
     GOODS: `${WEB_BASE_URL}/goods`,
     GOODS_COLUMNS: `${WEB_BASE_URL}/columns`,
