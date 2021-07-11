@@ -68,7 +68,7 @@
                         </a-popover>
                     </span>
                     <span slot="extra" style="margin-left: 16px;">
-                        <a-popover title="默认结果" trigger="click" arrow-point-at-center >
+                        <a-popover title="默认结果" trigger="click" arrow-point-at-center>
                             <template slot="content">
                                 <div style="width: 400px;">
                                                  <a-switch v-model="generalRule.defaultAction.enableDefaultAction"/>
@@ -147,7 +147,8 @@
                             左值
                         </a-col>
                         <a-col :span="6">
-                            <a-select v-model="selectCondition.from.leftValue.valueType">
+                            <a-select v-model="selectCondition.from.leftValue.valueType"
+                                      @change="leftValueTypeChange()">
                                 <a-select-option value="PARAMETER">参数</a-select-option>
                                 <a-select-option value="VARIABLE">变量</a-select-option>
                                 <a-select-option value="BOOLEAN">布尔</a-select-option>
@@ -159,7 +160,26 @@
                         </a-col>
                         <a-col :span="1"/>
                         <a-col :span="14">
-                            <a-select v-if="selectCondition.from.leftValue.valueType==='BOOLEAN'"
+
+                            <a-select
+                                    v-if="selectCondition.from.leftValue.valueType==='PARAMETER'||selectCondition.from.leftValue.valueType==='VARIABLE'"
+                                    show-search
+                                    :value="searchSelect.value"
+                                    placeholder="请输入关键字进行搜索"
+                                    style="width: 200px"
+                                    :default-active-first-option="false"
+                                    :show-arrow="false"
+                                    :filter-option="false"
+                                    :not-found-content="null"
+                                    @search="conditionLeftSearch"
+                                    @change="conditionLeftChange"
+                            >
+                                <a-select-option v-for="d in searchSelect.data" :key="d.id">
+                                    {{ d.name }}
+                                </a-select-option>
+                            </a-select>
+
+                            <a-select v-else-if="selectCondition.from.leftValue.valueType==='BOOLEAN'"
                                       v-model="selectCondition.from.leftValue.value" placeholder="请选择数据 ">
                                 <a-select-option value="true">true</a-select-option>
                                 <a-select-option value="false">false</a-select-option>
@@ -254,10 +274,12 @@
     import FooterToolBar from '@/components/tool/FooterToolBar'
     import PageLayout from "@/layouts/PageLayout";
     import InputParameter from "./InputParameter";
-
     // api
     import {saveOrUpdate, deleteConditionGroup} from '@/services/conditionGroup'
     import {getRuleConfig} from '@/services/generalRule'
+    //import {listInputParameter} from '@/services/inputParameter'
+    import {selectSearchVariableOrElement} from '@/utils/selectSearch'
+
 
     export default {
         name: "Config",
@@ -314,6 +336,10 @@
                         }
                     }
                 },
+                searchSelect: {
+                    data: [],
+                    value: undefined,
+                }
             }
         },
         mounted() {
@@ -321,6 +347,23 @@
             this.getRuleConfig();
         },
         methods: {
+            conditionLeftSearch(value) {
+                selectSearchVariableOrElement(value, data => (this.searchSelect.data = data), 1, null);
+            },
+            conditionLeftChange(value) {
+                console.log(value);
+                this.searchSelect.value = value;
+                selectSearchVariableOrElement(value, data => (this.searchSelect.data = data), 1, null);
+            },
+            /**
+             * 条件左值类型修改
+             */
+            leftValueTypeChange() {
+                // 如果是变量或者元素
+
+                //左面发生改变，右边也改变  如果值类型相同，则不需要更改
+
+            },
             getConditionNamePrefix(type) {
                 if (type === 0) {
                     return "参数";

@@ -61,6 +61,9 @@ module.exports = {
         UPDATE:`${WEB_BASE_URL}/ruleEngine/inputParameter/update`,
         DELETE:`${WEB_BASE_URL}/ruleEngine/inputParameter/delete`,
     },
+    variable:{
+        LIST: `${WEB_BASE_URL}/ruleEngine/variable/list`,
+    },
     ROUTES: `${WEB_BASE_URL}/routes`,
     GOODS: `${WEB_BASE_URL}/goods`,
     GOODS_COLUMNS: `${WEB_BASE_URL}/columns`,

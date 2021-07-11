@@ -4,7 +4,6 @@ import {inputParameter} from "@/services/api";
 /**
  * 保存规则参数
  * @param param
- * @returns {Promise<AxiosResponse<any>>}
  */
 export async function addInputParameter(param) {
     return request(inputParameter.ADD, METHOD.POST, param)
@@ -13,16 +12,14 @@ export async function addInputParameter(param) {
 /**
  * 获取参数列表
  * @param query
- * @returns {Promise<AxiosResponse<any>>}
  */
-export async function list(query) {
+export async function listInputParameter(query) {
     return request(inputParameter.LIST, METHOD.POST, query)
 }
 
 /**
  * 根据id查询
  * @param query
- * @returns {Promise<AxiosResponse<any>>}
  */
 export async function get(query) {
     return request(inputParameter.GET, METHOD.POST, query)
@@ -31,7 +28,6 @@ export async function get(query) {
 /**
  * 根据id更新
  * @param query
- * @returns {Promise<AxiosResponse<any>>}
  * @constructor
  */
 export async function update(query) {
@@ -41,7 +37,6 @@ export async function update(query) {
 /**
  * 根据id删除
  * @param query
- * @returns {Promise<AxiosResponse<any>>}
  * @constructor
  */
 export async function deleteById(query) {
