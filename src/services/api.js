@@ -39,6 +39,7 @@ module.exports = {
         ADD: `${WEB_BASE_URL}/ruleEngine/generalRule/saveRuleDefinition`,
         UPDATE: `${WEB_BASE_URL}/ruleEngine/generalRule/updateRuleDefinition`,
         GET_RULE_CONFIG: `${WEB_BASE_URL}/ruleEngine/generalRule/getRuleConfig`,
+        GET_RULE_DEFINITION: `${WEB_BASE_URL}/ruleEngine/generalRule/getRuleDefinition`,
     },
     dataPermission: {
         LIST: `${WEB_BASE_URL}/ruleEngine/dataPermission/list`,

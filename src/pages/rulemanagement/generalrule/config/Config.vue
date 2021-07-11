@@ -317,7 +317,7 @@
             }
         },
         mounted() {
-            // this.id = this.$route.query.ruleId;
+            this.generalRule.id = this.$route.query.id;
             this.getRuleConfig();
         },
         methods: {
@@ -333,7 +333,7 @@
                 }
             },
             previous() {
-                this.$router.push('/generalRuleDefinition')
+                this.$router.push({path: '/generalRuleDefinition', query: {id: this.generalRule.id}})
             },
             nextStep() {
                 //this.$router.push('/')
@@ -408,48 +408,9 @@
                     let da = res.data.data;
                     if (da != null) {
                         this.generalRule = da;
-                        // this.id = da.id;
-                        // this.name = da.name;
-                        // this.code = da.code;
-                        // this.description = da.description;
-                        // this.ruleId = da.ruleId;
-                        // // condition group
-                        // this.conditionGroup = da.conditionGroup;
-                        // // action
-                        // if (da.action != null) {
-                        //     this.action.type = da.action.type;
-                        //     this.action.value = da.action.value;
-                        //     this.action.valueName = da.action.valueName;
-                        //     this.action.valueType = da.action.valueType;
-                        // }
-                        // if (da.defaultAction != null) {
-                        //     // default action
-                        //     this.defaultAction.enableDefaultAction = da.defaultAction.enableDefaultAction;
-                        //     this.defaultAction.type = da.defaultAction.type;
-                        //     this.defaultAction.value = da.defaultAction.value;
-                        //     this.defaultAction.valueName = da.defaultAction.valueName;
-                        //     this.defaultAction.valueType = da.defaultAction.valueType;
-                        // }
                     }
                     this.loading = false;
                 });
-            },
-            /** @deprecated */
-            getType(type, valueType) {
-                if (type > 1) {
-                    if (valueType === "COLLECTION") {
-                        return 5;
-                    } else if (valueType === "STRING") {
-                        return 2;
-                    } else if (valueType === "BOOLEAN") {
-                        return 3;
-                    } else if (valueType === "NUMBER") {
-                        return 4;
-                    } else if (valueType === "DATE") {
-                        return 6;
-                    }
-                }
-                return type;
             },
             getSymbolExplanation(name) {
                 switch (name) {

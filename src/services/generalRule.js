@@ -24,6 +24,11 @@ export async function getRuleConfig(query) {
     return request(generalRule.GET_RULE_CONFIG, METHOD.POST, query)
 }
 
+
+export async function getRuleDefinition(query) {
+    return request(generalRule.GET_RULE_DEFINITION, METHOD.POST, query)
+}
+
 export default {
     list,
 }
