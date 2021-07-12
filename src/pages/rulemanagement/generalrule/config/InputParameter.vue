@@ -35,11 +35,7 @@
           total: this.query.page.total}"
     >
       <div slot="valueType" slot-scope="{record}">
-        <a-tag color="green" v-if="record.valueType==='BOOLEAN'">布尔</a-tag>
-        <a-tag color="green" v-if="record.valueType==='COLLECTION'">集合</a-tag>
-        <a-tag color="green" v-if="record.valueType==='STRING'">字符串</a-tag>
-        <a-tag color="green" v-if="record.valueType==='NUMBER'">数值</a-tag>
-        <a-tag color="green" v-if="record.valueType==='DATE'">日期</a-tag>
+        <a-tag color="cyan">{{ getValueTypeName(record.valueType) }}</a-tag>
       </div>
 
       <div slot="action" slot-scope="{record}">
@@ -237,6 +233,20 @@ export default {
     // this.query.query.dataId
   },
   methods: {
+    getValueTypeName(valueType) {
+      switch (valueType) {
+        case 'STRING':
+          return '字符串'
+        case 'NUMBER':
+          return '数值'
+        case 'COLLECTION':
+          return '集合'
+        case 'BOOLEAN':
+          return '布尔'
+        case 'DATE':
+          return '日期'
+      }
+    },
     handleAddOk(formName) {
       const _this = this;
       this.add.visible = true;
