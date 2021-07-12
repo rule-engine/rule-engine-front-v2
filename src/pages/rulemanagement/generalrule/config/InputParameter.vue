@@ -134,11 +134,21 @@
 
 <script>
 import StandardTable from "@/components/table/StandardTable";
-import {addInputParameter, listInputParameter, update, get,deleteById} from "@/services/inputParameter";
+import {addInputParameter, listInputParameter, update, get, deleteById} from "@/services/inputParameter";
 
 export default {
   name: "InputParameter",
   components: {StandardTable},
+  props: {
+    dataId: {
+      type: Number,
+      required: true
+    },
+    dataType: {
+      type: Number,
+      required: true
+    },
+  },
   data() {
     return {
       add: {
@@ -149,7 +159,9 @@ export default {
           name: "",
           code: "",
           description: "",
-          valueType: undefined
+          valueType: undefined,
+          dataId: this.dataId,
+          dataType: this.dataType
         },
       }
       , update: {
@@ -161,7 +173,9 @@ export default {
           name: "",
           code: "",
           description: "",
-          valueType: undefined
+          valueType: undefined,
+          dataId: this.dataId,
+          dataType: this.dataType
         },
       },
       rules: {
@@ -212,12 +226,15 @@ export default {
         },
         query: {
           nameOrCode: null,
+          dataId: this.dataId,
+          dataType: this.dataType
         }
       },
     }
   },
   created() {
     this.loadInputParameterList()
+    // this.query.query.dataId
   },
   methods: {
     handleAddOk(formName) {
@@ -227,7 +244,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           addInputParameter(this.add.form).then(res => {
-            if (res.data.code===200) {
+            if (res.data.code === 200) {
               this.$message.success("添加成功！");
               _this.add.visible = false;
               _this.$refs[formName].resetFields();
@@ -251,7 +268,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           update(this.update.form).then(res => {
-            if (res.data.code===200) {
+            if (res.data.code === 200) {
               this.$message.success("修改成功！");
               _this.update.visible = false;
               _this.$refs[formName].resetFields();
