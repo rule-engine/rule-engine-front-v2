@@ -291,7 +291,7 @@
     >
       <a-tabs default-active-key="1">
         <a-tab-pane key="1" tab="参数">
-          <input-parameter/>
+          <input-parameter :data-id="generalRule.id" :data-type="dataType"/>
         </a-tab-pane>
         <a-tab-pane key="2" tab="变量">
          <Variable/>
@@ -321,6 +321,7 @@ export default {
   components: {PageLayout, FooterToolBar, InputParameter,Variable},
   data() {
     return {
+      dataType:0,
       generalRule: {
         id: 215,
         name: null,
