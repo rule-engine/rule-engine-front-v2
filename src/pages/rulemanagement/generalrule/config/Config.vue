@@ -53,6 +53,7 @@
                          style="background-color: #f4f4f5;border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"
                          v-for="cgc in cg.conditionGroupCondition"
                          :key="cgc.id"
+                         @close="deleteCondition(cg.conditionGroupCondition,cgc.id,cgc.id)"
                          class="conditionItem">
                   <p slot="description" style="margin-bottom: 0;">
                     <a-tag color="blue" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
@@ -346,7 +347,7 @@ import Variable from "./Variable";
 // api
 import {saveOrUpdate, deleteConditionGroup} from '@/services/conditionGroup'
 import {getRuleConfig} from '@/services/generalRule'
-import {saveConditionAndBindGroup} from '@/services/conditionGroupCondition'
+import {saveConditionAndBindGroup, deleteCondition} from '@/services/conditionGroupCondition'
 
 //import {listInputParameter} from '@/services/inputParameter'
 import {selectSearchVariableOrElement} from '@/utils/selectSearch'
@@ -433,13 +434,28 @@ export default {
     this.getRuleConfig();
   },
   methods: {
+    deleteCondition(cgc, conditionGroupRefId, conditionId) {
+      deleteCondition({
+        conditionId: conditionId,
+        conditionGroupRefId: conditionGroupRefId
+      }).then(res => {
+        console.log(res)
+        // 删除掉前端数组中的数据
+        // cg.conditionGroupCondition
+        cgc.forEach((value, index) => {
+          if (value.condition.id === conditionId) {
+            cgc.splice(index, 1);
+          }
+        });
+      })
+    },
     conditionLeftSearch(value) {
       selectSearchVariableOrElement({
-        name: value,
-        dataId: this.generalRule.id,
-        dataType: this.dataType,
-        valueType: null
-      }, data => (this.selectCondition.from.config.leftValue.searchSelect.data = data)
+            name: value,
+            dataId: this.generalRule.id,
+            dataType: this.dataType,
+            valueType: null // 查询所有类型
+          }, data => (this.selectCondition.from.config.leftValue.searchSelect.data = data)
           , this.selectCondition.from.config.leftValue.type)
     },
     conditionLeftChange(value) {
@@ -515,8 +531,23 @@ export default {
       selectSearchVariableOrElement({
         name: value,
         dataId: this.generalRule.id,
-        dataType: this.dataType
+        dataType: this.dataType,
+        // 查询指定类型右值
+        valueType: this.getRValueType(this.selectCondition.from.config.leftValue.valueType, this.selectCondition.from.config.symbol)
       }, data => (this.selectCondition.from.config.rightValue.searchSelect.data = data), this.selectCondition.from.config.rightValue.type, null);
+    },
+    getRValueType(valueType, symbol) {
+      if (valueType == null) {
+        return [];
+      }
+      // 如果左值为集合时
+      if (valueType === 'COLLECTION' && symbol != null) {
+        // 并且 只有左值为COLLECTION 运算符为CONTAIN/NOT_CONTAIN 返回所有的类型
+        if (symbol === 'CONTAIN' || symbol === 'NOT_CONTAIN') {
+          return ["STRING", "NUMBER", "BOOLEAN", "COLLECTION", "DATE"];
+        }
+      }
+      return new Array(valueType);
     },
     conditionRightChange(value) {
       console.log(value);

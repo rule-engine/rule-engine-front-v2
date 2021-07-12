@@ -9,7 +9,6 @@ export async function saveConditionAndBindGroup(param) {
 /**
  * 删除条件
  * @param param
- * @returns {Promise<AxiosResponse<any>>}
  */
 export async function deleteCondition(param) {
     return request(conditionGroupCondition.DELETE_CONDITION, METHOD.POST, param)
