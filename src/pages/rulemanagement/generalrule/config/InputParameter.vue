@@ -134,7 +134,7 @@
 
 <script>
 import StandardTable from "@/components/table/StandardTable";
-import {addInputParameter, list, update, get,deleteById} from "@/services/inputParameter";
+import {addInputParameter, listInputParameter, update, get,deleteById} from "@/services/inputParameter";
 
 export default {
   name: "InputParameter",
@@ -306,7 +306,7 @@ export default {
     loadInputParameterList() {
       this.loading = true
       const _this = this;
-      list(this.query).then(res => {
+      listInputParameter(this.query).then(res => {
         const resp = res.data;
         if (resp.data) {
           _this.dataSource = resp.data.rows
