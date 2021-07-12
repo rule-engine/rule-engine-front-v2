@@ -393,10 +393,10 @@ export default {
         this.selectCondition.operators = []
       } else {
         this.selectCondition.from.leftValue.type = 2;
-        //左面发生改变，右边也改变  如果值类型相同，则不需要更改
         // 根据左值更改运算符
         this.selectCondition.operators = this.getSymbolByValueType(valueType)
       }
+      //左面发生改变，右边也改变  如果值类型相同，则不需要更改
       if (valueType !== this.selectCondition.from.rightValue.valueType) {
         this.selectCondition.from.rightValue = {
           valueType: '',
