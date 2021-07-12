@@ -294,7 +294,7 @@
           <input-parameter/>
         </a-tab-pane>
         <a-tab-pane key="2" tab="变量">
-          我是变量列表
+         <Variable/>
         </a-tab-pane>
         <a-tab-pane key="3" tab="表达式">
           我是表达式列表
@@ -308,6 +308,7 @@
 import FooterToolBar from '@/components/tool/FooterToolBar'
 import PageLayout from "@/layouts/PageLayout";
 import InputParameter from "./InputParameter";
+import Variable from "./Variable";
 // api
 import {saveOrUpdate, deleteConditionGroup} from '@/services/conditionGroup'
 import {getRuleConfig} from '@/services/generalRule'
@@ -317,7 +318,7 @@ import {selectSearchVariableOrElement} from '@/utils/selectSearch'
 
 export default {
   name: "Config",
-  components: {PageLayout, FooterToolBar, InputParameter},
+  components: {PageLayout, FooterToolBar, InputParameter,Variable},
   data() {
     return {
       generalRule: {

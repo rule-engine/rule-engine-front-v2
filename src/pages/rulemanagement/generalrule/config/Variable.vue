@@ -48,7 +48,7 @@
           编辑
         </a>
         <a-popconfirm
-            title="你确定要删除这个参数吗"
+            title="你确定要删除这个变量吗"
             ok-text="是"
             cancel-text="不了"
             @confirm="deleteById(record.id)"
@@ -62,9 +62,9 @@
       </div>
     </standard-table>
 
-    <!--   新建参数-->
+    <!--   新建变量-->
     <a-modal
-        title="新建参数"
+        title="新建变量"
         :visible="add.visible"
         :zIndex="1000"
         :confirm-loading="add.confirmLoading"
@@ -74,14 +74,14 @@
       <template>
         <a-form-model ref="addInputParameter" :model="add.form" :rules="rules" :label-col="{span: 4}"
                       :wrapper-col="{span: 14}">
-          <a-form-model-item label="参数名称" has-feedback prop="name">
-            <a-input v-model="add.form.name" placeholder="请输入参数名称"/>
+          <a-form-model-item label="变量名称" has-feedback prop="name">
+            <a-input v-model="add.form.name" placeholder="请输入变量名称"/>
           </a-form-model-item>
-          <a-form-model-item label="参数编码" has-feedback prop="code">
-            <a-input v-model="add.form.code" placeholder="请输入参数编码"/>
+          <a-form-model-item label="变量编码" has-feedback prop="code">
+            <a-input v-model="add.form.code" placeholder="请输入变量编码"/>
           </a-form-model-item>
-          <a-form-model-item label="参数值类型" prop="valueType">
-            <a-select v-model="add.form.valueType" placeholder="参数值类型">
+          <a-form-model-item label="变量值类型" prop="valueType">
+            <a-select v-model="add.form.valueType" placeholder="变量值类型">
               <a-select-option value="BOOLEAN">布尔</a-select-option>
               <a-select-option value="COLLECTION">集合</a-select-option>
               <a-select-option value="STRING">字符串</a-select-option>
@@ -89,15 +89,15 @@
               <a-select-option value="DATE">日期</a-select-option>
             </a-select>
           </a-form-model-item>
-          <a-form-model-item label="参数值描述" has-feedback prop="description">
+          <a-form-model-item label="变量值描述" has-feedback prop="description">
             <a-input v-model="add.form.description" type="textarea" placeholder="请输入描述"/>
           </a-form-model-item>
         </a-form-model>
       </template>
     </a-modal>
-    <!--   编辑参数-->
+    <!--   编辑变量-->
     <a-modal
-        title="编辑参数"
+        title="编辑变量"
         :visible="update.visible"
         :zIndex="1000"
         :confirm-loading="update.confirmLoading"
@@ -107,14 +107,14 @@
       <template>
         <a-form-model ref="updateInputParameter" :model="update.form" :rules="rules" :label-col="{span: 4}"
                       :wrapper-col="{span: 14}">
-          <a-form-model-item label="参数名称" has-feedback prop="name">
-            <a-input v-model="update.form.name" placeholder="请输入参数名称"/>
+          <a-form-model-item label="变量名称" has-feedback prop="name">
+            <a-input v-model="update.form.name" placeholder="请输入变量名称"/>
           </a-form-model-item>
-          <a-form-model-item label="参数编码" has-feedback prop="code">
-            <a-input v-model="update.form.code" placeholder="请输入参数编码" disabled/>
+          <a-form-model-item label="变量编码" has-feedback prop="code">
+            <a-input v-model="update.form.code" placeholder="请输入变量编码" disabled/>
           </a-form-model-item>
-          <a-form-model-item label="参数值类型" prop="valueType">
-            <a-select v-model="update.form.valueType" placeholder="参数值类型" disabled>
+          <a-form-model-item label="变量值类型" prop="valueType">
+            <a-select v-model="update.form.valueType" placeholder="变量值类型" disabled>
               <a-select-option value="BOOLEAN">布尔</a-select-option>
               <a-select-option value="COLLECTION">集合</a-select-option>
               <a-select-option value="STRING">字符串</a-select-option>
@@ -122,7 +122,7 @@
               <a-select-option value="DATE">日期</a-select-option>
             </a-select>
           </a-form-model-item>
-          <a-form-model-item label="参数值描述" has-feedback prop="description">
+          <a-form-model-item label="变量值描述" has-feedback prop="description">
             <a-input v-model="update.form.description" type="textarea" placeholder="请输入描述"/>
           </a-form-model-item>
         </a-form-model>
@@ -165,10 +165,10 @@ export default {
         },
       },
       rules: {
-        name: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入参数名称"},
-        code: {min: 1, trigger: ['change', 'blur'], message: "请输入参数编码", required: true},
+        name: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入变量名称"},
+        code: {min: 1, trigger: ['change', 'blur'], message: "请输入变量编码", required: true},
         description: {trigger: ['change', 'blur'], required: false, message: ""},
-        valueType: {trigger: ['change', 'blur'], required: true, message: "请选择参数值类型"}
+        valueType: {trigger: ['change', 'blur'], required: true, message: "请选择变量值类型"}
       },
       loading: true,
       selectedRows: [],
