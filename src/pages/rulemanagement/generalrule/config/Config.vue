@@ -20,7 +20,8 @@
 
             <a-skeleton v-if="cg.conditionGroupCondition.length===0" :paragraph="{ rows: 2 }"/>
 
-            <a-alert closable style="background-color: #f4f4f5;border:none;padding: 6px 30px 6px 6px;"
+            <a-alert closable
+                     style="background-color: #f4f4f5;border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"
                      v-for="cgc in cg.conditionGroupCondition"
                      :key="cgc.id"
                      class="conditionItem">
@@ -31,7 +32,7 @@
                 <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
                   {{ getConditionNamePrefix(cgc.condition.config.leftValue.type) }}
                 </a-tag>
-                {{ cgc.condition.config.leftValue.valueName }}
+                {{ getViewValue(cgc.condition.config.leftValue) }}
                 &nbsp;
                 <a-tag color="orange" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
                   {{ getSymbolExplanation(cgc.condition.config.symbol) }}
@@ -39,7 +40,7 @@
                 <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
                   {{ getConditionNamePrefix(cgc.condition.config.rightValue.type) }}
                 </a-tag>
-                {{ cgc.condition.config.rightValue.valueName }}
+                {{ getViewValue(cgc.condition.config.rightValue) }}
               </p>
             </a-alert>
             <br>
@@ -370,6 +371,7 @@ export default {
               type: 2,
               valueType: null,
               value: '',
+              valueName: null,
               searchSelect: {
                 data: [],
                 value: undefined,
@@ -380,6 +382,7 @@ export default {
               type: null,
               valueType: null,
               value: '',
+              valueName: null,
               searchSelect: {
                 data: [],
                 value: undefined,
@@ -399,14 +402,23 @@ export default {
       selectSearchVariableOrElement(value, data => (this.selectCondition.from.config.leftValue.searchSelect.data = data), this.selectCondition.from.config.leftValue.type, null);
     },
     conditionLeftChange(value) {
-      console.log(value);
       this.selectCondition.from.config.leftValue.searchSelect.value = value;
     },
     conditionLeftSearchOptionClick(d) {
-      console.log(d);
       this.selectCondition.from.config.leftValue.value = d.id;
       this.selectCondition.from.config.leftValue.valueType = d.valueType;
+      this.selectCondition.from.config.leftValue.valueName = d.name;
       this.selectCondition.operators = this.getSymbolByValueType(d.valueType)
+    },
+    getViewValue(v) {
+      // 如果是固定值
+      if (v.type === 2) {
+        return v.value;
+      }
+      if (v.valueName !== null) {
+        return v.valueName;
+      }
+      return v.value;
     },
     /**
      * 条件左值类型修改
@@ -414,6 +426,7 @@ export default {
     leftValueTypeChange(valueType) {
       this.selectCondition.operators = []
       this.selectCondition.from.config.leftValue.value = '';
+      this.selectCondition.from.config.leftValue.valueName = null;
       this.selectCondition.from.config.leftValue.valueType = valueType;
       // 如果是变量或者元素
       if (valueType === 'PARAMETER') {
@@ -458,9 +471,11 @@ export default {
     conditionRightSearchOptionClick(d) {
       this.selectCondition.from.config.rightValue.value = d.id;
       this.selectCondition.from.config.rightValue.valueType = d.valueType;
+      this.selectCondition.from.config.rightValue.valueName = d.name;
     },
     rightValueTypeChange(valueType) {
       this.selectCondition.from.config.rightValue.value = '';
+      this.selectCondition.from.config.rightValue.valueName = null;
       this.selectCondition.from.config.rightValue.valueType = valueType;
       // 如果是变量或者元素
       if (valueType === 'PARAMETER') {
@@ -546,7 +561,6 @@ export default {
         this.selectCondition.open = false;
         // 当前条件组内插入一条数据
         this.selectCondition.from.id = res.data.data.conditionId;
-        // todo 有点问题
         this.selectCondition.currentConditionGroup.conditionGroupCondition.push({
           "id": res.data.data.conditionGroupConditionId,
           "orderNo": orderNo,
