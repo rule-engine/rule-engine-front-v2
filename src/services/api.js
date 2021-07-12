@@ -54,6 +54,9 @@ module.exports = {
         SAVE_OR_UPDATE: `${WEB_BASE_URL}/ruleEngine/conditionGroup/saveOrUpdate`,
         DELETE_CONDITION_GROUP: `${WEB_BASE_URL}/ruleEngine/conditionGroup/delete`,
     },
+    conditionGroupCondition:{
+        SAVE_CONDITION_AND_BIND_GROUP: `${WEB_BASE_URL}/ruleEngine/conditionGroupCondition/saveConditionAndBindGroup`,
+    },
     inputParameter: {
         ADD: `${WEB_BASE_URL}/ruleEngine/inputParameter/add`,
         LIST: `${WEB_BASE_URL}/ruleEngine/inputParameter/list`,

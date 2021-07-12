@@ -148,7 +148,7 @@
             </a-col>
             <a-col :span="6">
               <a-select
-                  :value="selectCondition.from.leftValue.type===0?'PARAMETER':(selectCondition.from.leftValue.type===1?'VARIABLE':selectCondition.from.leftValue.valueType)"
+                  :value="selectCondition.from.config.leftValue.type===0?'PARAMETER':(selectCondition.from.config.leftValue.type===1?'VARIABLE':selectCondition.from.config.leftValue.valueType)"
                   placeholder="请选择"
                   @change="leftValueTypeChange">
                 <a-select-option value="PARAMETER">参数</a-select-option>
@@ -164,9 +164,9 @@
             <a-col :span="14">
 
               <a-select
-                  v-if="selectCondition.from.leftValue.type===0||selectCondition.from.leftValue.type===1"
+                  v-if="selectCondition.from.config.leftValue.type===0||selectCondition.from.config.leftValue.type===1"
                   show-search
-                  :value="selectCondition.from.leftValue.searchSelect.value"
+                  :value="selectCondition.from.config.leftValue.searchSelect.value"
                   placeholder="请输入关键字进行搜索"
                   :default-active-first-option="false"
                   :show-arrow="false"
@@ -175,28 +175,29 @@
                   @search="conditionLeftSearch"
                   @change="conditionLeftChange"
               >
-                <a-select-option v-for="d in selectCondition.from.leftValue.searchSelect.data" :value="d.id" :key="d.id"
+                <a-select-option v-for="d in selectCondition.from.config.leftValue.searchSelect.data" :value="d.id"
+                                 :key="d.id"
                                  @click.native="conditionLeftSearchOptionClick(d)">
                   {{ d.name }}
                 </a-select-option>
               </a-select>
 
               <a-select
-                  v-else-if="selectCondition.from.leftValue.valueType==='BOOLEAN'"
+                  v-else-if="selectCondition.from.config.leftValue.valueType==='BOOLEAN'"
                   defaultValue="true"
-                  v-model="selectCondition.from.leftValue.value" placeholder="请选择数据">
+                  v-model="selectCondition.from.config.leftValue.value" placeholder="请选择数据">
                 <a-select-option value="true">true</a-select-option>
                 <a-select-option value="false">false</a-select-option>
               </a-select>
               <a-input-number
-                  v-else-if="selectCondition.from.leftValue.valueType==='NUMBER'"
-                  v-model="selectCondition.from.leftValue.value" style="width: 100%"/>
+                  v-else-if="selectCondition.from.config.leftValue.valueType==='NUMBER'"
+                  v-model="selectCondition.from.config.leftValue.value" style="width: 100%"/>
               <a-date-picker
-                  v-else-if="selectCondition.from.leftValue.valueType==='DATE'"
+                  v-else-if="selectCondition.from.config.leftValue.valueType==='DATE'"
                   show-time
                   style="width: 100%"></a-date-picker>
               <a-input v-else
-                       v-model="selectCondition.from.leftValue.value"></a-input>
+                       v-model="selectCondition.from.config.leftValue.value"></a-input>
             </a-col>
           </a-row>
 
@@ -205,7 +206,7 @@
               运算符
             </a-col>
             <a-col :span="6">
-              <a-select placeholder="请选择" v-model="selectCondition.from.symbol">
+              <a-select placeholder="请选择" v-model="selectCondition.from.config.symbol">
                 <a-select-option v-for="op in selectCondition.operators" :value="op.name" :key="op.name">
                   {{ op.explanation }}
                 </a-select-option>
@@ -220,13 +221,13 @@
             </a-col>
             <a-col :span="6">
               <a-select
-                  :value="selectCondition.from.rightValue.type===0?'PARAMETER':(selectCondition.from.rightValue.type===1?'VARIABLE':selectCondition.from.rightValue.valueType)"
+                  :value="selectCondition.from.config.rightValue.type===0?'PARAMETER':(selectCondition.from.config.rightValue.type===1?'VARIABLE':selectCondition.from.config.rightValue.valueType)"
                   placeholder="请选择"
                   @change="rightValueTypeChange"
               >
-                <a-select-option v-if="selectCondition.from.leftValue.valueType!=null" value="PARAMETER">参数
+                <a-select-option v-if="selectCondition.from.config.leftValue.valueType!=null" value="PARAMETER">参数
                 </a-select-option>
-                <a-select-option v-if="selectCondition.from.leftValue.valueType!=null" value="VARIABLE">变量
+                <a-select-option v-if="selectCondition.from.config.leftValue.valueType!=null" value="VARIABLE">变量
                 </a-select-option>
                 <a-select-option v-if="isRightTypeSelectView('BOOLEAN')" value="BOOLEAN">布尔</a-select-option>
                 <a-select-option v-if="isRightTypeSelectView('COLLECTION')" value="COLLECTION">集合</a-select-option>
@@ -238,9 +239,9 @@
             <a-col :span="1"/>
             <a-col :span="14">
               <a-select
-                  v-if="selectCondition.from.rightValue.type===0||selectCondition.from.rightValue.type===1"
+                  v-if="selectCondition.from.config.rightValue.type===0||selectCondition.from.config.rightValue.type===1"
                   show-search
-                  :value="selectCondition.from.rightValue.searchSelect.value"
+                  :value="selectCondition.from.config.rightValue.searchSelect.value"
                   placeholder="请输入关键字进行搜索"
                   :default-active-first-option="false"
                   :show-arrow="false"
@@ -249,27 +250,27 @@
                   @search="conditionRightSearch"
                   @change="conditionRightChange"
               >
-                <a-select-option v-for="d in selectCondition.from.rightValue.searchSelect.data" :value="d.id"
+                <a-select-option v-for="d in selectCondition.from.config.rightValue.searchSelect.data" :value="d.id"
                                  :key="d.id"
                                  @click.native="conditionRightSearchOptionClick(d)">
                   {{ d.name }}
                 </a-select-option>
               </a-select>
-              <a-select v-else-if="selectCondition.from.rightValue.valueType==='BOOLEAN'"
-                        v-model="selectCondition.from.rightValue.value" placeholder="请选择数据 ">
+              <a-select v-else-if="selectCondition.from.config.rightValue.valueType==='BOOLEAN'"
+                        v-model="selectCondition.from.config.rightValue.value" placeholder="请选择数据 ">
                 <a-select-option value="true">true</a-select-option>
                 <a-select-option value="false">false</a-select-option>
               </a-select>
-              <a-input-number v-else-if="selectCondition.from.rightValue.valueType==='NUMBER'"
-                              v-model="selectCondition.from.rightValue.value" style="width: 100%"/>
-              <a-date-picker v-else-if="selectCondition.from.rightValue.valueType==='DATE'" show-time
+              <a-input-number v-else-if="selectCondition.from.config.rightValue.valueType==='NUMBER'"
+                              v-model="selectCondition.from.config.rightValue.value" style="width: 100%"/>
+              <a-date-picker v-else-if="selectCondition.from.config.rightValue.valueType==='DATE'" show-time
                              style="width: 100%"></a-date-picker>
-              <a-input v-else v-model="selectCondition.from.rightValue.value"></a-input>
+              <a-input v-else v-model="selectCondition.from.config.rightValue.value"></a-input>
             </a-col>
           </a-row>
         </a-form-model-item>
         <a-form-model-item label="说明" prop="description">
-          <a-textarea readOnly :value="selectCondition.from.description" :rows="3"/>
+          <a-textarea v-model="selectCondition.from.description" :rows="3"/>
         </a-form-model-item>
       </a-form-model>
     </a-modal>
@@ -294,7 +295,7 @@
           <input-parameter/>
         </a-tab-pane>
         <a-tab-pane key="2" tab="变量">
-         <Variable/>
+          <Variable/>
         </a-tab-pane>
         <a-tab-pane key="3" tab="表达式">
           我是表达式列表
@@ -312,13 +313,15 @@ import Variable from "./Variable";
 // api
 import {saveOrUpdate, deleteConditionGroup} from '@/services/conditionGroup'
 import {getRuleConfig} from '@/services/generalRule'
+import {saveConditionAndBindGroup} from '@/services/conditionGroupCondition'
+
 //import {listInputParameter} from '@/services/inputParameter'
 import {selectSearchVariableOrElement} from '@/utils/selectSearch'
 
 
 export default {
   name: "Config",
-  components: {PageLayout, FooterToolBar, InputParameter,Variable},
+  components: {PageLayout, FooterToolBar, InputParameter, Variable},
   data() {
     return {
       generalRule: {
@@ -362,23 +365,25 @@ export default {
           id: null,
           name: null,
           description: null,
-          leftValue: {
-            type: 2,
-            valueType: null,
-            value: '',
-            searchSelect: {
-              data: [],
-              value: undefined,
-            }
-          },
-          symbol: null,
-          rightValue: {
-            type: null,
-            valueType: null,
-            value: '',
-            searchSelect: {
-              data: [],
-              value: undefined,
+          config: {
+            leftValue: {
+              type: 2,
+              valueType: null,
+              value: '',
+              searchSelect: {
+                data: [],
+                value: undefined,
+              }
+            },
+            symbol: null,
+            rightValue: {
+              type: null,
+              valueType: null,
+              value: '',
+              searchSelect: {
+                data: [],
+                value: undefined,
+              }
             }
           }
         }
@@ -391,16 +396,16 @@ export default {
   },
   methods: {
     conditionLeftSearch(value) {
-      selectSearchVariableOrElement(value, data => (this.selectCondition.from.leftValue.searchSelect.data = data), this.selectCondition.from.leftValue.type, null);
+      selectSearchVariableOrElement(value, data => (this.selectCondition.from.config.leftValue.searchSelect.data = data), this.selectCondition.from.config.leftValue.type, null);
     },
     conditionLeftChange(value) {
       console.log(value);
-      this.selectCondition.from.leftValue.searchSelect.value = value;
+      this.selectCondition.from.config.leftValue.searchSelect.value = value;
     },
     conditionLeftSearchOptionClick(d) {
       console.log(d);
-      this.selectCondition.from.leftValue.value = d.id;
-      this.selectCondition.from.leftValue.valueType = d.valueType;
+      this.selectCondition.from.config.leftValue.value = d.id;
+      this.selectCondition.from.config.leftValue.valueType = d.valueType;
       this.selectCondition.operators = this.getSymbolByValueType(d.valueType)
     },
     /**
@@ -408,25 +413,25 @@ export default {
      */
     leftValueTypeChange(valueType) {
       this.selectCondition.operators = []
-      this.selectCondition.from.leftValue.value = '';
-      this.selectCondition.from.leftValue.valueType = valueType;
+      this.selectCondition.from.config.leftValue.value = '';
+      this.selectCondition.from.config.leftValue.valueType = valueType;
       // 如果是变量或者元素
       if (valueType === 'PARAMETER') {
-        this.selectCondition.from.leftValue.type = 0;
+        this.selectCondition.from.config.leftValue.type = 0;
         // 参数的类型
-        this.selectCondition.from.leftValue.valueType = '';
+        this.selectCondition.from.config.leftValue.valueType = '';
       } else if (valueType === 'VARIABLE') {
-        this.selectCondition.from.leftValue.type = 1;
+        this.selectCondition.from.config.leftValue.type = 1;
         // 变量的类型
-        this.selectCondition.from.leftValue.valueType = '';
+        this.selectCondition.from.config.leftValue.valueType = '';
       } else {
-        this.selectCondition.from.leftValue.type = 2;
+        this.selectCondition.from.config.leftValue.type = 2;
         // 根据左值更改运算符
         this.selectCondition.operators = this.getSymbolByValueType(valueType)
       }
       //左面发生改变，右边也改变  如果值类型相同，则不需要更改
-      if (valueType !== this.selectCondition.from.rightValue.valueType) {
-        this.selectCondition.from.rightValue = {
+      if (valueType !== this.selectCondition.from.config.rightValue.valueType) {
+        this.selectCondition.from.config.rightValue = {
           valueType: '',
           type: null,
           value: '',
@@ -437,42 +442,42 @@ export default {
         }
       } else {
         // 清空远程搜索缓存
-        this.selectCondition.from.leftValue.searchSelect.data = []
-        this.selectCondition.from.leftValue.searchSelect.value = undefined
+        this.selectCondition.from.config.leftValue.searchSelect.data = []
+        this.selectCondition.from.config.leftValue.searchSelect.value = undefined
       }
       // 删除运算符
-      this.selectCondition.from.symbol = null;
+      this.selectCondition.from.config.symbol = null;
     },
     conditionRightSearch(value) {
-      selectSearchVariableOrElement(value, data => (this.selectCondition.from.rightValue.searchSelect.data = data), this.selectCondition.from.rightValue.type, null);
+      selectSearchVariableOrElement(value, data => (this.selectCondition.from.config.rightValue.searchSelect.data = data), this.selectCondition.from.config.rightValue.type, null);
     },
     conditionRightChange(value) {
       console.log(value);
-      this.selectCondition.from.rightValue.searchSelect.value = value;
+      this.selectCondition.from.config.rightValue.searchSelect.value = value;
     },
     conditionRightSearchOptionClick(d) {
-      this.selectCondition.from.rightValue.value = d.id;
-      this.selectCondition.from.rightValue.valueType = d.valueType;
+      this.selectCondition.from.config.rightValue.value = d.id;
+      this.selectCondition.from.config.rightValue.valueType = d.valueType;
     },
     rightValueTypeChange(valueType) {
-      this.selectCondition.from.rightValue.value = '';
-      this.selectCondition.from.rightValue.valueType = valueType;
+      this.selectCondition.from.config.rightValue.value = '';
+      this.selectCondition.from.config.rightValue.valueType = valueType;
       // 如果是变量或者元素
       if (valueType === 'PARAMETER') {
-        this.selectCondition.from.rightValue.type = 0;
+        this.selectCondition.from.config.rightValue.type = 0;
         // 参数的类型
-        this.selectCondition.from.rightValue.valueType = '';
+        this.selectCondition.from.config.rightValue.valueType = '';
       } else if (valueType === 'VARIABLE') {
-        this.selectCondition.from.rightValue.type = 1;
+        this.selectCondition.from.config.rightValue.type = 1;
         // 变量的类型
-        this.selectCondition.from.rightValue.valueType = '';
+        this.selectCondition.from.config.rightValue.valueType = '';
       } else {
-        this.selectCondition.from.rightValue.type = 2;
+        this.selectCondition.from.config.rightValue.type = 2;
         // 根据左值更改运算符
       }
       // 清空远程搜索缓存
-      this.selectCondition.from.rightValue.searchSelect.data = []
-      this.selectCondition.from.rightValue.searchSelect.value = undefined
+      this.selectCondition.from.config.rightValue.searchSelect.data = []
+      this.selectCondition.from.config.rightValue.searchSelect.value = undefined
     },
     getConditionNamePrefix(type) {
       if (type === 0) {
@@ -486,19 +491,19 @@ export default {
       }
     },
     isRightTypeSelectView(valueType) {
-      if (this.selectCondition.from.leftValue.valueType === null) {
+      if (this.selectCondition.from.config.leftValue.valueType === null) {
         return false;
       }
-      if (this.selectCondition.from.leftValue.valueType === valueType) {
+      if (this.selectCondition.from.config.leftValue.valueType === valueType) {
         return true;
       }
       // 如果左值为集合时
-      if (this.selectCondition.from.leftValue.valueType === 'COLLECTION') {
-        if (this.selectCondition.from.symbol === null) {
+      if (this.selectCondition.from.config.leftValue.valueType === 'COLLECTION') {
+        if (this.selectCondition.from.config.symbol === null) {
           return true;
         }
         // 并且 只有左值为CONTAIN/NOT_CONTAIN 返回所有的类型
-        return this.selectCondition.from.symbol === 'CONTAIN' || this.selectCondition.from.symbol === 'NOT_CONTAIN';
+        return this.selectCondition.from.config.symbol === 'CONTAIN' || this.selectCondition.from.config.symbol === 'NOT_CONTAIN';
       }
     },
     previous() {
@@ -524,9 +529,30 @@ export default {
       this.selectCondition.confirmLoading = true;
       // 传入条件组信息，条件信息 绑定关系
       // this.selectCondition.currentConditionGroup.id;
-      console.log('保存条件', this.selectCondition)
-      this.selectCondition.confirmLoading = false;
-      this.selectCondition.open = false;
+      // 获取最后一条的orderNo
+      let orderNo = 0;
+      let conditionGroupCondition = this.selectCondition.currentConditionGroup.conditionGroupCondition;
+      if (conditionGroupCondition.length > 0) {
+        orderNo = conditionGroupCondition[conditionGroupCondition.length - 1].orderNo + 1;
+      }
+      // 插入一条记录
+      saveConditionAndBindGroup({
+        generalRuleId: this.generalRule.id,
+        conditionGroupId: this.selectCondition.currentConditionGroup.id,
+        orderNo: orderNo,
+        addConditionRequest: this.selectCondition.from
+      }).then(res => {
+        this.selectCondition.confirmLoading = false;
+        this.selectCondition.open = false;
+        // 当前条件组内插入一条数据
+        this.selectCondition.from.id = res.data.data.conditionId;
+        // todo 有点问题
+        this.selectCondition.currentConditionGroup.conditionGroupCondition.push({
+          "id": res.data.data.conditionGroupConditionId,
+          "orderNo": orderNo,
+          "condition": this.selectCondition.from
+        });
+      })
     },
     addConditionHandleCancel() {
       this.selectCondition.open = false;
