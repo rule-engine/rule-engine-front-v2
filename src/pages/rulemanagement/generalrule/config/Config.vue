@@ -2,6 +2,33 @@
   <div>
     <page-layout>
       <a-card title="规则配置" :bordered="false">
+        <span slot="extra" style="margin-left: 16px;">
+                    <a-popover title="当前编辑人员" trigger="click" arrow-point-at-center>
+                        <template slot="content">
+                        <a-list item-layout="horizontal" :data-source="[{
+    title: '张三',
+  },
+  {
+    title: '里斯',
+  }]">
+                          <a-list-item slot="renderItem" slot-scope="item">
+                            <a-list-item-meta
+                                description="我新增了一个条件组（最后一次操作记录）"
+                            >
+                              <a slot="title" href="https://www.antdv.com/">{{ item.title }}</a>
+                              <a-avatar
+                                  slot="avatar"
+                                  src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                              />
+                            </a-list-item-meta>
+                          </a-list-item>
+                        </a-list>
+                        </template>
+                          <a-icon type="usergroup-add"
+                                  style="font-size: 18px"></a-icon>
+                    </a-popover>
+        </span>
+
         <div class="openLeft">
           <a-icon type="appstore" style="font-size: 19px;color: #777;" @click="showDrawer"/>
           <br>
