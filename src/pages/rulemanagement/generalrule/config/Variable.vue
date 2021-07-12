@@ -35,11 +35,7 @@
           total: this.query.page.total}"
     >
       <div slot="valueType" slot-scope="{record}">
-        <a-tag color="green" v-if="record.valueType==='BOOLEAN'">布尔</a-tag>
-        <a-tag color="green" v-if="record.valueType==='COLLECTION'">集合</a-tag>
-        <a-tag color="green" v-if="record.valueType==='STRING'">字符串</a-tag>
-        <a-tag color="green" v-if="record.valueType==='NUMBER'">数值</a-tag>
-        <a-tag color="green" v-if="record.valueType==='DATE'">日期</a-tag>
+        <a-tag color="cyan">{{ getValueTypeName(record.valueType) }}</a-tag>
       </div>
 
       <div slot="action" slot-scope="{record}">
@@ -69,16 +65,13 @@
         :zIndex="1000"
         :confirm-loading="add.confirmLoading"
         :width="700"
-        @ok="handleAddOk('addInputParameter')"
-        @cancel="handleAddCancel('addInputParameter')">
+        @ok="handleAddOk('addVariable')"
+        @cancel="handleAddCancel('addVariable')">
       <template>
-        <a-form-model ref="addInputParameter" :model="add.form" :rules="rules" :label-col="{span: 4}"
+        <a-form-model ref="addVariable" :model="add.form" :rules="rules" :label-col="{span: 4}"
                       :wrapper-col="{span: 14}">
           <a-form-model-item label="变量名称" has-feedback prop="name">
             <a-input v-model="add.form.name" placeholder="请输入变量名称"/>
-          </a-form-model-item>
-          <a-form-model-item label="变量编码" has-feedback prop="code">
-            <a-input v-model="add.form.code" placeholder="请输入变量编码"/>
           </a-form-model-item>
           <a-form-model-item label="变量值类型" prop="valueType">
             <a-select v-model="add.form.valueType" placeholder="变量值类型">
@@ -89,6 +82,23 @@
               <a-select-option value="DATE">日期</a-select-option>
             </a-select>
           </a-form-model-item>
+          <div>
+            <a-form-model-item label="变量值" has-feedback prop="value">
+              <a-input v-model="add.form.value" placeholder="请输入变量值"
+                       v-if="add.form.valueType==='STRING' || add.form.valueType==='NUMBER'"/>
+              <a-select v-model="add.form.value" placeholder="选择值" v-else-if="add.form.valueType==='BOOLEAN'">
+                <a-select-option value="true">true</a-select-option>
+                <a-select-option value="false">false</a-select-option>
+              </a-select>
+              <a-date-picker :mode="'time'" :format="'YYYY-MM-DD hh:mm:ss'" :locale="locale" v-model="add.date"
+                             v-else-if="add.form.valueType==='DATE'"/>
+              <a-input v-model="add.form.value" type="textarea" placeholder="变量值"
+                       v-else-if="add.form.valueType==='COLLECTION'"/>
+              <a-input v-model="add.form.value" placeholder="请输入变量值" disabled
+                       v-else/>
+            </a-form-model-item>
+
+          </div>
           <a-form-model-item label="变量值描述" has-feedback prop="description">
             <a-input v-model="add.form.description" type="textarea" placeholder="请输入描述"/>
           </a-form-model-item>
@@ -102,10 +112,10 @@
         :zIndex="1000"
         :confirm-loading="update.confirmLoading"
         :width="700"
-        @ok="handleUpdateOk('updateInputParameter')"
-        @cancel="handleUpdateCancel('updateInputParameter')">
+        @ok="handleUpdateOk('updateVariable')"
+        @cancel="handleUpdateCancel('updateVariable')">
       <template>
-        <a-form-model ref="updateInputParameter" :model="update.form" :rules="rules" :label-col="{span: 4}"
+        <a-form-model ref="updateVariable" :model="update.form" :rules="rules" :label-col="{span: 4}"
                       :wrapper-col="{span: 14}">
           <a-form-model-item label="变量名称" has-feedback prop="name">
             <a-input v-model="update.form.name" placeholder="请输入变量名称"/>
@@ -122,7 +132,7 @@
               <a-select-option value="DATE">日期</a-select-option>
             </a-select>
           </a-form-model-item>
-          <a-form-model-item label="变量值描述" has-feedback prop="description">
+          <a-form-model-item label="变量描述" has-feedback prop="description">
             <a-input v-model="update.form.description" type="textarea" placeholder="请输入描述"/>
           </a-form-model-item>
         </a-form-model>
@@ -134,22 +144,38 @@
 
 <script>
 import StandardTable from "@/components/table/StandardTable";
-import {addInputParameter, listInputParameter, update, get,deleteById} from "@/services/inputParameter";
+import {addVariable, listVariable, update, get, deleteById} from "@/services/variable";
+import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
 
 export default {
-  name: "InputParameter",
+  name: "Variable",
   components: {StandardTable},
+  props: {
+    dataId: {
+      type: Number,
+      required: true
+    },
+    dataType: {
+      type: Number,
+      required: true
+    },
+  },
   data() {
     return {
+      locale,
       add: {
         visible: false,
         confirmLoading: false,
+        date: undefined,
         //表单数据
         form: {
-          name: "",
-          code: "",
-          description: "",
-          valueType: undefined
+          value: undefined,
+          name: undefined,
+          type: 2,
+          description: undefined,
+          valueType: undefined,
+          dataId: this.dataId,
+          dataType: this.dataType
         },
       }
       , update: {
@@ -157,16 +183,19 @@ export default {
         confirmLoading: false,
         //表单数据
         form: {
+          value: undefined,
           id: "",
           name: "",
           code: "",
           description: "",
-          valueType: undefined
+          valueType: undefined,
+          dataId: this.dataId,
+          dataType: this.dataType
         },
       },
       rules: {
         name: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入变量名称"},
-        code: {min: 1, trigger: ['change', 'blur'], message: "请输入变量编码", required: true},
+        value: {min: 1, trigger: ['change', 'blur'], message: "变量不能为空", required: true},
         description: {trigger: ['change', 'blur'], required: false, message: ""},
         valueType: {trigger: ['change', 'blur'], required: true, message: "请选择变量值类型"}
       },
@@ -179,15 +208,15 @@ export default {
           dataIndex: 'name'
         },
         {
-          title: '编码',
-          dataIndex: 'code',
-          width: '90px',
-        },
-        {
           title: '值类型',
           dataIndex: 'valueType',
-          width: '120px',
+          width: '80px',
           scopedSlots: {customRender: 'valueType'},
+        },
+        {
+          title: '值',
+          dataIndex: 'value',
+          width: '120px',
         },
         {
           title: '操作',
@@ -212,26 +241,53 @@ export default {
         },
         query: {
           nameOrCode: null,
+          dataId: this.dataId,
+          dataType: this.dataType
         }
       },
     }
   },
+  watch: {
+    "add.form.valueType"() {
+      this.add.form.value = undefined
+      this.add.form.type = 2
+    },
+    "add.date"(newVal) {
+      if (newVal) {
+        this.add.form.value = newVal.format('YYYY-MM-DD hh:mm:ss');
+      }
+    }
+  },
   created() {
-    this.loadInputParameterList()
+    this.loadVariableList()
   },
   methods: {
+    getValueTypeName(valueType) {
+      switch (valueType) {
+        case 'STRING':
+          return '字符串'
+        case 'NUMBER':
+          return '数值'
+        case 'COLLECTION':
+          return '集合'
+        case 'BOOLEAN':
+          return '布尔'
+        case 'DATE':
+          return '日期'
+      }
+    },
     handleAddOk(formName) {
       const _this = this;
       this.add.visible = true;
       this.add.confirmLoading = true;
       this.$refs[formName].validate(valid => {
         if (valid) {
-          addInputParameter(this.add.form).then(res => {
-            if (res.data.code===200) {
+          addVariable(this.add.form).then(res => {
+            if (res.data.code === 200) {
               this.$message.success("添加成功！");
               _this.add.visible = false;
               _this.$refs[formName].resetFields();
-              _this.loadInputParameterList();
+              _this.loadVariableList();
             }
           }).finally(() => _this.add.confirmLoading = false)
         } else {
@@ -251,11 +307,11 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           update(this.update.form).then(res => {
-            if (res.data.code===200) {
+            if (res.data.code === 200) {
               this.$message.success("修改成功！");
               _this.update.visible = false;
               _this.$refs[formName].resetFields();
-              _this.loadInputParameterList();
+              _this.loadVariableList();
             }
           }).finally(() => _this.update.confirmLoading = false)
         } else {
@@ -277,13 +333,13 @@ export default {
         this.query.orders[0].desc = (!sorter.order || sorter.order === 'ascend')
       }
       console.log(pagination, filters, sorter, currentDataSource)
-      this.loadInputParameterList()
+      this.loadVariableList()
     }, submitSearch() {
-      this.loadInputParameterList()
+      this.loadVariableList()
     },
     resetForm() {
       this.query.query.name = this.query.query.code = ''
-      this.loadInputParameterList()
+      this.loadVariableList()
     },
     info(id) {
       let _this = this
@@ -299,14 +355,14 @@ export default {
       let _this = this
       deleteById({id: id}).then(res => {
         if (res.data.code === 200) {
-          _this.loadInputParameterList()
+          _this.loadVariableList()
         }
       })
     },
-    loadInputParameterList() {
+    loadVariableList() {
       this.loading = true
       const _this = this;
-      listInputParameter(this.query).then(res => {
+      listVariable(this.query).then(res => {
         const resp = res.data;
         if (resp.data) {
           _this.dataSource = resp.data.rows

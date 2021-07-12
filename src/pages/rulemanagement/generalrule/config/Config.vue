@@ -367,10 +367,10 @@
     >
       <a-tabs default-active-key="1">
         <a-tab-pane key="1" tab="参数">
-          <input-parameter :data-id="generalRule.id" :data-type="dataType"/>
+          <input-parameter :data-id="parseInt(generalRule.id)" :data-type="dataType"/>
         </a-tab-pane>
         <a-tab-pane key="2" tab="变量">
-          <Variable/>
+          <Variable :data-id="parseInt(generalRule.id)" :data-type="dataType"/>
         </a-tab-pane>
         <a-tab-pane key="3" tab="表达式">
           我是表达式列表
