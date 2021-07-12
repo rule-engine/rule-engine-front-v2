@@ -434,7 +434,13 @@ export default {
   },
   methods: {
     conditionLeftSearch(value) {
-      selectSearchVariableOrElement(value, data => (this.selectCondition.from.config.leftValue.searchSelect.data = data), this.selectCondition.from.config.leftValue.type, null);
+      selectSearchVariableOrElement({
+        name: value,
+        dataId: this.generalRule.id,
+        dataType: this.dataType,
+        valueType: null
+      }, data => (this.selectCondition.from.config.leftValue.searchSelect.data = data)
+          , this.selectCondition.from.config.leftValue.type)
     },
     conditionLeftChange(value) {
       this.selectCondition.from.config.leftValue.searchSelect.value = value;
@@ -506,7 +512,11 @@ export default {
       this.selectCondition.from.config.symbol = null;
     },
     conditionRightSearch(value) {
-      selectSearchVariableOrElement(value, data => (this.selectCondition.from.config.rightValue.searchSelect.data = data), this.selectCondition.from.config.rightValue.type, null);
+      selectSearchVariableOrElement({
+        name: value,
+        dataId: this.generalRule.id,
+        dataType: this.dataType
+      }, data => (this.selectCondition.from.config.rightValue.searchSelect.data = data), this.selectCondition.from.config.rightValue.type, null);
     },
     conditionRightChange(value) {
       console.log(value);

@@ -5,28 +5,25 @@ import {listVariable} from '@/services/variable'
 let timeout;
 let currentValue;
 
-export function selectSearchVariableOrElement(value, callback, type, valueType) {
+export function selectSearchVariableOrElement(param, callback, type) {
     if (timeout) {
         clearTimeout(timeout);
         timeout = null;
     }
-    currentValue = value;
+    currentValue = param.value;
 
     function fake() {
         let requestData = {
-            "page": {
-                "pageSize": 10,
-                "pageIndex": 1
+            page: {
+                pageSize: 10,
+                pageIndex: 1
             },
-            "query": {
-                "name": value,
-                "valueType": valueType,
-            },
-            "orders": []
+            query: param,
+            orders: []
         };
         if (type === 0) {
             listInputParameter(requestData).then(res => {
-                if (currentValue === value) {
+                if (currentValue === param.value) {
                     if (res.data.data) {
                         callback(res.data.data.rows);
                     } else {
@@ -36,7 +33,7 @@ export function selectSearchVariableOrElement(value, callback, type, valueType) 
             });
         } else if (type === 1) {
             listVariable(requestData).then(res => {
-                if (currentValue === value) {
+                if (currentValue === param.value) {
                     if (res.data.data) {
                         callback(res.data.data.rows);
                     } else {
