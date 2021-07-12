@@ -101,7 +101,8 @@
                         <a-popover title="默认结果" trigger="click" arrow-point-at-center>
                             <template slot="content">
                                 <div style="width: 400px;">
-                                                 <a-switch v-model="generalRule.defaultAction.enableDefaultAction"/>
+                                         <a-switch
+                                             :checked="generalRule.defaultAction.enableDefaultAction===0"/>
                                     <br> <br>
                                     <a-row>
                                         <a-col :span="5">

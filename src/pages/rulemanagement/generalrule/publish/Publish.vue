@@ -4,6 +4,19 @@
       <a-card title="规则预览发布" :bordered="false">
         <span slot="extra" style="margin-left: 16px;">
               <a-popover trigger="click" arrow-point-at-center overlayClassName="runTest">
+                            <a-card slot="content" title="请求参数" style="width: 380px">
+                              <a-icon slot="extra" type="copy"
+                                      style="font-size: 16px;"></a-icon>
+
+                              1
+                            </a-card>
+                    <a-icon type="copy"
+                            style="font-size: 18px;"></a-icon>
+              </a-popover>
+        </span>
+
+        <span slot="extra" style="margin-left: 16px;">
+              <a-popover trigger="click" arrow-point-at-center overlayClassName="runTest">
 
                             <a-card slot="content" title="模拟运行" style="width: 380px">
                               <a-icon slot="extra" type="right" @click="runTestMethod"
