@@ -325,7 +325,7 @@ export default {
   components: {PageLayout, FooterToolBar, InputParameter, Variable},
   data() {
     return {
-      dataType:0,
+      dataType: 0,
       generalRule: {
         id: 215,
         name: null,
@@ -373,6 +373,7 @@ export default {
               valueType: null,
               value: '',
               valueName: null,
+              variableValue: null,
               searchSelect: {
                 data: [],
                 value: undefined,
@@ -384,6 +385,7 @@ export default {
               valueType: null,
               value: '',
               valueName: null,
+              variableValue: null,
               searchSelect: {
                 data: [],
                 value: undefined,
@@ -409,12 +411,20 @@ export default {
       this.selectCondition.from.config.leftValue.value = d.id;
       this.selectCondition.from.config.leftValue.valueType = d.valueType;
       this.selectCondition.from.config.leftValue.valueName = d.name;
+      // 变量  d.type 如果是固定值 则直接显示变量的值
+      if (this.selectCondition.from.config.leftValue.type === 1 && d.type === 2) {
+        this.selectCondition.from.config.leftValue.variableValue = d.value;
+      }
       this.selectCondition.operators = this.getSymbolByValueType(d.valueType)
     },
     getViewValue(v) {
       // 如果是固定值
       if (v.type === 2) {
         return v.value;
+      }
+      // 如果是固定值变量的 变量值
+      if (v.variableValue !== null) {
+        return v.variableValue;
       }
       if (v.valueName !== null) {
         return v.valueName;
@@ -428,6 +438,7 @@ export default {
       this.selectCondition.operators = []
       this.selectCondition.from.config.leftValue.value = '';
       this.selectCondition.from.config.leftValue.valueName = null;
+      this.selectCondition.from.config.leftValue.variableValue = null;
       this.selectCondition.from.config.leftValue.valueType = valueType;
       // 如果是变量或者元素
       if (valueType === 'PARAMETER') {
@@ -473,10 +484,15 @@ export default {
       this.selectCondition.from.config.rightValue.value = d.id;
       this.selectCondition.from.config.rightValue.valueType = d.valueType;
       this.selectCondition.from.config.rightValue.valueName = d.name;
+      // 变量  d.type 如果是固定值
+      if (this.selectCondition.from.config.rightValue.type === 1 && d.type === 2) {
+        this.selectCondition.from.config.rightValue.variableValue = d.value;
+      }
     },
     rightValueTypeChange(valueType) {
       this.selectCondition.from.config.rightValue.value = '';
       this.selectCondition.from.config.rightValue.valueName = null;
+      this.selectCondition.from.config.rightValue.variableValue = null;
       this.selectCondition.from.config.rightValue.valueType = valueType;
       // 如果是变量或者元素
       if (valueType === 'PARAMETER') {
