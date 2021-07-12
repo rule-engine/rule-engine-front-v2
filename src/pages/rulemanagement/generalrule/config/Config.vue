@@ -352,7 +352,6 @@ import {saveConditionAndBindGroup, deleteCondition} from '@/services/conditionGr
 //import {listInputParameter} from '@/services/inputParameter'
 import {selectSearchVariableOrElement} from '@/utils/selectSearch'
 
-
 export default {
   name: "Config",
   components: {PageLayout, FooterToolBar, InputParameter, Variable},
@@ -402,7 +401,7 @@ export default {
           description: null,
           config: {
             leftValue: {
-              type: 2,
+              type: null,
               valueType: null,
               value: '',
               valueName: null,
@@ -629,6 +628,37 @@ export default {
     addCondition(cg) {
       this.selectCondition.open = true;
       this.selectCondition.currentConditionGroup = cg;
+      // 还原配置
+      this.selectCondition.from = {
+        id: null,
+        name: null,
+        description: null,
+        config: {
+          leftValue: {
+            type: null,
+            valueType: null,
+            value: '',
+            valueName: null,
+            variableValue: null,
+            searchSelect: {
+              data: [],
+              value: undefined,
+            }
+          },
+          symbol: null,
+          rightValue: {
+            type: null,
+            valueType: null,
+            value: '',
+            valueName: null,
+            variableValue: null,
+            searchSelect: {
+              data: [],
+              value: undefined,
+            }
+          }
+        }
+      }
     },
     addConditionOk() {
       this.selectCondition.confirmLoading = true;
