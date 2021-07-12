@@ -2,11 +2,31 @@
   <div>
     <page-layout>
       <a-card title="规则预览发布" :bordered="false">
-              <span slot="extra" style="margin-left: 16px;">
-                1
-              </span>
+        <a-card title="规则配置" :bordered="false">
+        <span slot="extra" style="margin-left: 16px;">
+              <a-popover trigger="click" arrow-point-at-center overlayClassName="runTest">
 
-        11
+                            <a-card slot="content" title="模拟运行1" style="width: 380px">
+                                              <a-icon slot="extra" type="right"
+                                                      style="font-size: 18px;"></a-icon>
+                              <a-icon slot="extra" type="reload" style="font-size: 18px;margin-left: 10px;"/>
+
+                                                  <a-empty v-if="request.param.length===0"/>
+<a-form-model>
+    <a-form-model-item :label="param.name+'('+param.code+')'" v-for="param in request.param" :key="param.code">
+      <a-input/>
+    </a-form-model-item>
+</a-form-model>
+                            </a-card>
+
+
+                    <a-icon type="play-circle"
+                            style="font-size: 18px;"></a-icon>
+              </a-popover>
+        </span>
+
+          11
+        </a-card>
       </a-card>
     </page-layout>
 
@@ -62,7 +82,17 @@ export default {
       },
       footer: {
         loading: false,
-      }
+      },
+      request: {
+        url: "http://ruleserver.cn/ruleEngine/generalRule/execute",
+        requestJson: null,
+        param: [{
+          name: "年龄",
+          value: null,
+          code: "age",
+          valueType: 'STRING',
+        }],
+      },
     }
   },
   mounted() {
@@ -83,6 +113,11 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less">
+.runTest {
+  .ant-popover-inner-content {
+    padding: 0 0;
+  }
+}
 
 </style>
