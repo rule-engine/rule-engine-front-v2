@@ -41,6 +41,9 @@ module.exports = {
         GET_RULE_CONFIG: `${WEB_BASE_URL}/ruleEngine/generalRule/getRuleConfig`,
         GET_RULE_DEFINITION: `${WEB_BASE_URL}/ruleEngine/generalRule/getRuleDefinition`,
         SAVE_ACTION: `${WEB_BASE_URL}/ruleEngine/generalRule/saveAction`,
+        GENERATION_RELEASE: `${WEB_BASE_URL}/ruleEngine/generalRule/generationRelease`,
+        RUN_TEST: `${COMPUTE_WEB_BASE_URL}/ruleEngine/generalRuleTest/run`,
+        VIEW: `${WEB_BASE_URL}/ruleEngine/generalRule/view`,
     },
     dataPermission: {
         LIST: `${WEB_BASE_URL}/ruleEngine/dataPermission/list`,

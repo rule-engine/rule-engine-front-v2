@@ -34,6 +34,18 @@ export async function saveAction(query) {
     return request(generalRule.SAVE_ACTION, METHOD.POST, query)
 }
 
+export async function generationRelease(query) {
+    return request(generalRule.GENERATION_RELEASE, METHOD.POST, query)
+}
+
+export async function runTest(query) {
+    return request(generalRule.RUN_TEST, METHOD.POST, query)
+}
+
+
+export async function viewGeneralRule(query) {
+    return request(generalRule.VIEW, METHOD.POST, query)
+}
 
 export default {
     list,

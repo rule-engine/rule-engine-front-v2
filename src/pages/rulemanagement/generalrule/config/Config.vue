@@ -386,7 +386,7 @@ import InputParameter from "./InputParameter";
 import Variable from "./Variable";
 // api
 import {saveOrUpdate, deleteConditionGroup} from '@/services/conditionGroup'
-import {getRuleConfig, saveAction} from '@/services/generalRule'
+import {getRuleConfig, saveAction, generationRelease} from '@/services/generalRule'
 import {saveConditionAndBindGroup, deleteCondition} from '@/services/conditionGroupCondition'
 
 //import {listInputParameter} from '@/services/inputParameter'
@@ -712,7 +712,10 @@ export default {
       this.$router.push({path: '/generalRuleDefinition', query: {id: this.generalRule.id}})
     },
     nextStep() {
-      this.$router.push({path: '/generalRulePublish', query: {id: this.generalRule.id}})
+      generationRelease(this.generalRule).then(res => {
+        console.log(res)
+        this.$router.push({path: '/generalRulePublish', query: {id: this.generalRule.id}})
+      })
     },
     showDrawer() {
       this.drawer.visible = true;
