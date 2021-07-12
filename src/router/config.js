@@ -126,6 +126,14 @@ const options = {
                             component: () => import('@/pages/rulemanagement/generalrule/config'),
                         },
                         {
+                            path: '/generalRulePublish',
+                            name: '规则发布',
+                            meta: {
+                                invisible: true
+                            },
+                            component: () => import('@/pages/rulemanagement/generalrule/publish'),
+                        },
+                        {
                             path: 'ruleSet',
                             name: '规则集',
                             meta: {

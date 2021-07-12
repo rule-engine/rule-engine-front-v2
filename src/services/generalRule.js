@@ -29,6 +29,12 @@ export async function getRuleDefinition(query) {
     return request(generalRule.GET_RULE_DEFINITION, METHOD.POST, query)
 }
 
+
+export async function saveAction(query) {
+    return request(generalRule.SAVE_ACTION, METHOD.POST, query)
+}
+
+
 export default {
     list,
 }

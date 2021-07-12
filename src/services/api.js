@@ -40,6 +40,7 @@ module.exports = {
         UPDATE: `${WEB_BASE_URL}/ruleEngine/generalRule/updateRuleDefinition`,
         GET_RULE_CONFIG: `${WEB_BASE_URL}/ruleEngine/generalRule/getRuleConfig`,
         GET_RULE_DEFINITION: `${WEB_BASE_URL}/ruleEngine/generalRule/getRuleDefinition`,
+        SAVE_ACTION: `${WEB_BASE_URL}/ruleEngine/generalRule/saveAction`,
     },
     dataPermission: {
         LIST: `${WEB_BASE_URL}/ruleEngine/dataPermission/list`,
@@ -54,23 +55,23 @@ module.exports = {
         SAVE_OR_UPDATE: `${WEB_BASE_URL}/ruleEngine/conditionGroup/saveOrUpdate`,
         DELETE_CONDITION_GROUP: `${WEB_BASE_URL}/ruleEngine/conditionGroup/delete`,
     },
-    conditionGroupCondition:{
+    conditionGroupCondition: {
         SAVE_CONDITION_AND_BIND_GROUP: `${WEB_BASE_URL}/ruleEngine/conditionGroupCondition/saveConditionAndBindGroup`,
         DELETE_CONDITION: `${WEB_BASE_URL}/ruleEngine/conditionGroupCondition/deleteCondition`,
     },
     inputParameter: {
         ADD: `${WEB_BASE_URL}/ruleEngine/inputParameter/add`,
         LIST: `${WEB_BASE_URL}/ruleEngine/inputParameter/list`,
-        GET:`${WEB_BASE_URL}/ruleEngine/inputParameter/get`,
-        UPDATE:`${WEB_BASE_URL}/ruleEngine/inputParameter/update`,
-        DELETE:`${WEB_BASE_URL}/ruleEngine/inputParameter/delete`,
+        GET: `${WEB_BASE_URL}/ruleEngine/inputParameter/get`,
+        UPDATE: `${WEB_BASE_URL}/ruleEngine/inputParameter/update`,
+        DELETE: `${WEB_BASE_URL}/ruleEngine/inputParameter/delete`,
     },
-    variable:{
+    variable: {
         ADD: `${WEB_BASE_URL}/ruleEngine/variable/add`,
         LIST: `${WEB_BASE_URL}/ruleEngine/variable/list`,
-        GET:`${WEB_BASE_URL}/ruleEngine/variable/get`,
-        UPDATE:`${WEB_BASE_URL}/ruleEngine/variable/update`,
-        DELETE:`${WEB_BASE_URL}/ruleEngine/variable/delete`,
+        GET: `${WEB_BASE_URL}/ruleEngine/variable/get`,
+        UPDATE: `${WEB_BASE_URL}/ruleEngine/variable/update`,
+        DELETE: `${WEB_BASE_URL}/ruleEngine/variable/delete`,
     },
     ROUTES: `${WEB_BASE_URL}/routes`,
     GOODS: `${WEB_BASE_URL}/goods`,

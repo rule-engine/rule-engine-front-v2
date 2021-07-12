@@ -88,8 +88,7 @@
             <br>
             <br>
             <a-card title="结果">
-
-                    <span slot="extra">
+              <span slot="extra">
                         <a-popover title="温馨提示">
                             <template slot="content">
                                 <p>普通规则结果类型确认后，及规则发布后，则不支持修改！</p>
@@ -131,9 +130,15 @@
                         </a-popover>
                     </span>
 
+              <a-icon slot="extra" class="dynamic-delete-button" type="save"
+                      style="font-size: 18px;margin-left: 16px;" @click="saveAction"></a-icon>
+
               <a-row>
                 <a-col :span="5">
-                  <a-select style="width:100%" v-model="generalRule.action.valueType">
+                  <a-select style="width:100%"
+                            :value="generalRule.action.type===0?'PARAMETER':(generalRule.action.type===1?'VARIABLE':generalRule.action.valueType)"
+                            @change="actionValueTypeChange"
+                  >
                     <a-select-option value="PARAMETER">参数</a-select-option>
                     <a-select-option value="VARIABLE">变量</a-select-option>
                     <a-select-option value="BOOLEAN">布尔</a-select-option>
@@ -145,7 +150,42 @@
                 </a-col>
                 <a-col :span="1"></a-col>
                 <a-col :span="18">
-                  <a-input v-model="generalRule.action.value"></a-input>
+
+                  <a-select
+                      v-if="generalRule.action.type===0||generalRule.action.type===1"
+                      show-search
+                      :value="generalRule.action.searchSelect.value"
+                      placeholder="请输入关键字进行搜索"
+                      :default-active-first-option="false"
+                      :show-arrow="false"
+                      :filter-option="false"
+                      :not-found-content="null"
+                      @search="actionSearch"
+                  >
+                    <a-select-option v-for="d in generalRule.action.searchSelect.data" :value="d.id"
+                                     :key="d.id"
+                                     @click.native="actionSearchOptionClick(d)">
+                      {{ d.name }}
+                    </a-select-option>
+                  </a-select>
+
+                  <a-select
+                      v-else-if="generalRule.action.valueType==='BOOLEAN'"
+                      defaultValue="true"
+                      v-model="generalRule.action.value" placeholder="请选择数据">
+                    <a-select-option value="true">true</a-select-option>
+                    <a-select-option value="false">false</a-select-option>
+                  </a-select>
+                  <a-input-number
+                      v-else-if="generalRule.action.valueType==='NUMBER'"
+                      v-model="generalRule.action.value" style="width: 100%"/>
+                  <a-date-picker
+                      v-else-if="generalRule.action.valueType==='DATE'"
+                      show-time
+                      style="width: 100%"></a-date-picker>
+                  <a-input v-else
+                           v-model="generalRule.action.value"></a-input>
+
                 </a-col>
               </a-row>
             </a-card>
@@ -346,7 +386,7 @@ import InputParameter from "./InputParameter";
 import Variable from "./Variable";
 // api
 import {saveOrUpdate, deleteConditionGroup} from '@/services/conditionGroup'
-import {getRuleConfig} from '@/services/generalRule'
+import {getRuleConfig, saveAction} from '@/services/generalRule'
 import {saveConditionAndBindGroup, deleteCondition} from '@/services/conditionGroupCondition'
 
 //import {listInputParameter} from '@/services/inputParameter'
@@ -359,7 +399,7 @@ export default {
     return {
       dataType: 0,
       generalRule: {
-        id: 215,
+        id: null,
         name: null,
         code: null,
         description: null,
@@ -371,7 +411,10 @@ export default {
           valueType: 'NUMBER',
           type: null,
           loading: false,
-          options: []
+          searchSelect: {
+            data: [],
+            value: undefined,
+          }
         },
         defaultAction: {
           enableDefaultAction: 1,
@@ -380,7 +423,10 @@ export default {
           valueType: 'NUMBER',
           type: null,
           loading: false,
-          options: [],
+          searchSelect: {
+            data: [],
+            value: undefined,
+          }
         },
       },
       footer: {
@@ -433,6 +479,34 @@ export default {
     this.getRuleConfig();
   },
   methods: {
+    saveAction() {
+      saveAction({
+        ruleId: this.generalRule.ruleId,
+        configValue: this.generalRule.action
+      }).then(res => {
+        if (res.data.data) {
+          this.$message.success("结果保存成功");
+        }
+      })
+    },
+    actionSearch(value) {
+      selectSearchVariableOrElement({
+            name: value,
+            dataId: this.generalRule.id,
+            dataType: this.dataType,
+            valueType: null // 查询所有类型
+          }, data => (this.generalRule.action.searchSelect.data = data)
+          , this.generalRule.action.type)
+    },
+    actionSearchOptionClick(d) {
+      this.generalRule.action.value = d.id;
+      this.generalRule.action.valueType = d.valueType;
+      this.generalRule.action.valueName = d.name;
+      // 变量  d.type 如果是固定值 则直接显示变量的值
+      if (this.generalRule.action.type === 1 && d.type === 2) {
+        this.generalRule.action.variableValue = d.value;
+      }
+    },
     deleteCondition(cgc, conditionGroupRefId, conditionId) {
       deleteCondition({
         conditionId: conditionId,
@@ -483,6 +557,30 @@ export default {
         return v.valueName;
       }
       return v.value;
+    },
+    actionValueTypeChange(valueType) {
+      this.generalRule.action.value = '';
+      this.generalRule.action.valueName = null;
+      this.generalRule.action.variableValue = null;
+      this.generalRule.action.valueType = valueType;
+      // 如果是变量或者元素
+      if (valueType === 'PARAMETER') {
+        this.generalRule.action.type = 0;
+        // 参数的类型
+        this.generalRule.action.valueType = '';
+      } else if (valueType === 'VARIABLE') {
+        this.generalRule.action.type = 1;
+        // 变量的类型
+        this.generalRule.action.valueType = '';
+      } else {
+        this.generalRule.action.type = 2;
+      }
+      // 清空远程搜索缓存
+      this.generalRule.action.searchSelect = {
+        data: [],
+        value: undefined,
+      }
+      console.log(this.generalRule.action)
     },
     /**
      * 条件左值类型修改
@@ -614,7 +712,7 @@ export default {
       this.$router.push({path: '/generalRuleDefinition', query: {id: this.generalRule.id}})
     },
     nextStep() {
-      //this.$router.push('/')
+      this.$router.push({path: '/generalRulePublish', query: {id: this.generalRule.id}})
     },
     showDrawer() {
       this.drawer.visible = true;
