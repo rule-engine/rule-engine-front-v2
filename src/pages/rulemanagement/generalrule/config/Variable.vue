@@ -146,6 +146,7 @@
 import StandardTable from "@/components/table/StandardTable";
 import {addVariable, listVariable, update, get, deleteById} from "@/services/variable";
 import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
+import {getValueTypeName} from '@/utils/value-type'
 
 export default {
   name: "Variable",
@@ -263,18 +264,7 @@ export default {
   },
   methods: {
     getValueTypeName(valueType) {
-      switch (valueType) {
-        case 'STRING':
-          return '字符串'
-        case 'NUMBER':
-          return '数值'
-        case 'COLLECTION':
-          return '集合'
-        case 'BOOLEAN':
-          return '布尔'
-        case 'DATE':
-          return '日期'
-      }
+      return getValueTypeName(valueType)
     },
     handleAddOk(formName) {
       const _this = this;
