@@ -5,7 +5,7 @@ import {variable} from "@/services/api";
  * 保存规则变量
  * @param param
  */
-export async function addInputParameter(param) {
+export async function addVariable(param) {
     return request(variable.ADD, METHOD.POST, param)
 }
 
