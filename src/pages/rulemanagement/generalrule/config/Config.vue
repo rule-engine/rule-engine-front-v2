@@ -3,61 +3,63 @@
     <page-layout>
       <a-card title="规则配置" :bordered="false">
         <div class="openLeft">
-          <a-icon type="appstore" style="font-size: 18px;color: #777;" @click="showDrawer"/>
+          <a-icon type="appstore" style="font-size: 19px;color: #777;" @click="showDrawer"/>
           <br>
           <br>
-          <a-icon type="setting" style="font-size: 18px;color: #777;"/>
+          <a-icon type="setting" style="font-size: 19px;color: #777;"/>
         </div>
+        <a-row>
+          <a-col :span="1"></a-col>
+          <a-col :span="22">
+            <a-card title="条件集" class="condition_set">
 
-        <a-card title="条件集" class="condition_set">
+              <a-skeleton v-if="generalRule.conditionGroup.length===0" :paragraph="{ rows: 3 }"/>
 
-          <a-skeleton v-if="generalRule.conditionGroup.length===0" :paragraph="{ rows: 3 }"/>
+              <a-card :title="cg.name" :bordered="false" v-for="cg in generalRule.conditionGroup" :key="cg.id">
 
-          <a-card :title="cg.name" :bordered="false" v-for="cg in generalRule.conditionGroup" :key="cg.id">
+                <a-icon type="delete" class="dynamic-delete-button" style="font-size: 18px" slot="extra"
+                        @click="deleteConditionGroup(cg)"></a-icon>
 
-            <a-icon type="delete" class="dynamic-delete-button" style="font-size: 18px" slot="extra"
-                    @click="deleteConditionGroup(cg)"></a-icon>
+                <a-skeleton v-if="cg.conditionGroupCondition.length===0" :paragraph="{ rows: 2 }"/>
 
-            <a-skeleton v-if="cg.conditionGroupCondition.length===0" :paragraph="{ rows: 2 }"/>
+                <a-alert closable
+                         style="background-color: #f4f4f5;border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"
+                         v-for="cgc in cg.conditionGroupCondition"
+                         :key="cgc.id"
+                         class="conditionItem">
+                  <p slot="description" style="margin-bottom: 0;">
+                    <a-tag color="blue" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                      （{{ cgc.condition.name }}）
+                    </a-tag>
+                    <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                      {{ getConditionNamePrefix(cgc.condition.config.leftValue.type) }}
+                    </a-tag>
+                    {{ getViewValue(cgc.condition.config.leftValue) }}
+                    &nbsp;
+                    <a-tag color="orange" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                      {{ getSymbolExplanation(cgc.condition.config.symbol) }}
+                    </a-tag>
+                    <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                      {{ getConditionNamePrefix(cgc.condition.config.rightValue.type) }}
+                    </a-tag>
+                    {{ getViewValue(cgc.condition.config.rightValue) }}
+                  </p>
+                </a-alert>
+                <br>
+                <a-button type="dashed" style="width: 50%;display:block;margin:0 auto" @click="addCondition(cg)">
+                  <a-icon type="plus" style="color: #777;"/>
+                  添加条件
+                </a-button>
 
-            <a-alert closable
-                     style="background-color: #f4f4f5;border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"
-                     v-for="cgc in cg.conditionGroupCondition"
-                     :key="cgc.id"
-                     class="conditionItem">
-              <p slot="description" style="margin-bottom: 0;">
-                <a-tag color="blue" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                  （{{ cgc.condition.name }}）
-                </a-tag>
-                <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                  {{ getConditionNamePrefix(cgc.condition.config.leftValue.type) }}
-                </a-tag>
-                {{ getViewValue(cgc.condition.config.leftValue) }}
-                &nbsp;
-                <a-tag color="orange" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                  {{ getSymbolExplanation(cgc.condition.config.symbol) }}
-                </a-tag>
-                <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                  {{ getConditionNamePrefix(cgc.condition.config.rightValue.type) }}
-                </a-tag>
-                {{ getViewValue(cgc.condition.config.rightValue) }}
-              </p>
-            </a-alert>
+              </a-card>
+              <a-button type="dashed" style="width: 100%" @click="addConditionGroup()">
+                <a-icon type="plus" style="color: #777;"/>
+                添加条件组
+              </a-button>
+            </a-card>
             <br>
-            <a-button type="dashed" style="width: 50%;display:block;margin:0 auto" @click="addCondition(cg)">
-              <a-icon type="plus" style="color: #777;"/>
-              添加条件
-            </a-button>
-
-          </a-card>
-          <a-button type="dashed" style="width: 100%" @click="addConditionGroup()">
-            <a-icon type="plus" style="color: #777;"/>
-            添加条件组
-          </a-button>
-        </a-card>
-        <br>
-        <br>
-        <a-card title="结果">
+            <br>
+            <a-card title="结果">
 
                     <span slot="extra">
                         <a-popover title="温馨提示">
@@ -68,7 +70,7 @@
                             <a-icon type="info-circle" class="dynamic-delete-button" style="font-size: 18px"></a-icon>
                         </a-popover>
                     </span>
-          <span slot="extra" style="margin-left: 16px;">
+              <span slot="extra" style="margin-left: 16px;">
                         <a-popover title="默认结果" trigger="click" arrow-point-at-center>
                             <template slot="content">
                                 <div style="width: 400px;">
@@ -101,24 +103,27 @@
                         </a-popover>
                     </span>
 
-          <a-row>
-            <a-col :span="5">
-              <a-select style="width:100%" v-model="generalRule.action.valueType">
-                <a-select-option value="PARAMETER">参数</a-select-option>
-                <a-select-option value="VARIABLE">变量</a-select-option>
-                <a-select-option value="BOOLEAN">布尔</a-select-option>
-                <a-select-option value="COLLECTION">集合</a-select-option>
-                <a-select-option value="STRING">字符串</a-select-option>
-                <a-select-option value="NUMBER">数值</a-select-option>
-                <a-select-option value="DATE">日期</a-select-option>
-              </a-select>
-            </a-col>
-            <a-col :span="1"></a-col>
-            <a-col :span="18">
-              <a-input v-model="generalRule.action.value"></a-input>
-            </a-col>
-          </a-row>
-        </a-card>
+              <a-row>
+                <a-col :span="5">
+                  <a-select style="width:100%" v-model="generalRule.action.valueType">
+                    <a-select-option value="PARAMETER">参数</a-select-option>
+                    <a-select-option value="VARIABLE">变量</a-select-option>
+                    <a-select-option value="BOOLEAN">布尔</a-select-option>
+                    <a-select-option value="COLLECTION">集合</a-select-option>
+                    <a-select-option value="STRING">字符串</a-select-option>
+                    <a-select-option value="NUMBER">数值</a-select-option>
+                    <a-select-option value="DATE">日期</a-select-option>
+                  </a-select>
+                </a-col>
+                <a-col :span="1"></a-col>
+                <a-col :span="18">
+                  <a-input v-model="generalRule.action.value"></a-input>
+                </a-col>
+              </a-row>
+            </a-card>
+          </a-col>
+          <a-col :span="1"></a-col>
+        </a-row>
         <br>
         <br>
         <br>
