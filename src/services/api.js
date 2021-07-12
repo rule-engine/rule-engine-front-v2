@@ -62,7 +62,11 @@ module.exports = {
         DELETE:`${WEB_BASE_URL}/ruleEngine/inputParameter/delete`,
     },
     variable:{
+        ADD: `${WEB_BASE_URL}/ruleEngine/variable/add`,
         LIST: `${WEB_BASE_URL}/ruleEngine/variable/list`,
+        GET:`${WEB_BASE_URL}/ruleEngine/variable/get`,
+        UPDATE:`${WEB_BASE_URL}/ruleEngine/variable/update`,
+        DELETE:`${WEB_BASE_URL}/ruleEngine/variable/delete`,
     },
     ROUTES: `${WEB_BASE_URL}/routes`,
     GOODS: `${WEB_BASE_URL}/goods`,
