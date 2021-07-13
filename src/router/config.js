@@ -121,7 +121,9 @@ const options = {
                             path: '/generalRuleConfig',
                             name: '规则配置',
                             meta: {
-                                invisible: true
+                                invisible: true,
+                                keepAlive:false
+
                             },
                             component: () => import('@/pages/rulemanagement/generalrule/config'),
                         },
