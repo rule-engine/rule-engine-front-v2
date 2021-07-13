@@ -1,9 +1,9 @@
 //跨域代理前缀
 const API_PROXY_PREFIX = '/api'; //web服务的
 const COMPUTE_API_PROXY_PREFIX = '/compute_api'; //计算服务的
-const WEB_BASE_URL = process.env.NODE_ENV === 'production' ? process.env.WEB_BASE_URL : API_PROXY_PREFIX;
-const COMPUTE_WEB_BASE_URL = process.env.NODE_ENV === 'production' ? process.env.COMPUTE_BASE_URL : COMPUTE_API_PROXY_PREFIX;
-// const WEB_BASE_URL = process.env.WEB_BASE_URL
+const WEB_BASE_URL = process.env.NODE_ENV === 'production' ? process.env.VUE_APP_WEB_BASE_URL : API_PROXY_PREFIX;
+const COMPUTE_WEB_BASE_URL = process.env.NODE_ENV === 'production' ? process.env.VUE_APP_COMPUTE_BASE_URL : COMPUTE_API_PROXY_PREFIX;
+// const WEB_BASE_URL = process.env.VUE_APP_WEB_BASE_URL
 module.exports = {
     user: {
         LOGIN: `${WEB_BASE_URL}/user/login`,

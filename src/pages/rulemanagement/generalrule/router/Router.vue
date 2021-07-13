@@ -36,6 +36,9 @@ export default {
         console.debug(e)
       }
     }
+    // 刚进页面 查询到规则name
+    let nameElement = document.getElementsByClassName('ant-tabs-tab-active')[0].getElementsByClassName('title')[0];
+    nameElement.innerHTML = '规则(' + '啊啊啊' + ')';
   }, methods: {
     choicePage(params) {
       this.currentPage = params.pageIndex
