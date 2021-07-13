@@ -29,10 +29,10 @@
                                       @click="runTestMethod"
                                       style="font-size: 16px;margin-left: 10px;"/>
 
-                              <a-empty v-if="request.param.length===0"/>
+                              <a-empty v-if="!runTest.run&&!runTest.resultView&&request.param.length===0"/>
 
 
-                              <a-form-model v-if="!runTest.run&&runTest.resultView">
+                              <a-form-model v-else-if="!runTest.run&&runTest.resultView">
                                   <a-form-model-item label="结果">
                                     <a-textarea v-model="runTest.value"/>
                                   </a-form-model-item>

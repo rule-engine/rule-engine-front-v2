@@ -1,8 +1,7 @@
 <template>
-  <a-spin :spinning="loading">
-    <div>
-      <page-layout>
-        <a-card title="规则配置" :bordered="false">
+  <div>
+    <page-layout>
+      <a-card title="规则配置" :bordered="false">
         <span slot="extra" style="margin-left: 16px;">
                     <a-popover title="当前编辑人员" trigger="click" arrow-point-at-center>
                         <template slot="content">
@@ -30,65 +29,65 @@
                     </a-popover>
         </span>
 
-          <div class="openLeft">
-            <a-icon type="appstore" style="font-size: 19px;color: #777;" @click="showDrawer"/>
-            <br>
-            <br>
-            <a-icon type="setting" style="font-size: 19px;color: #777;"/>
-          </div>
-          <a-row>
-            <a-col :span="1"></a-col>
-            <a-col :span="22">
-              <a-card title="条件集" class="condition_set">
+        <div class="openLeft">
+          <a-icon type="appstore" style="font-size: 19px;color: #777;" @click="showDrawer"/>
+          <br>
+          <br>
+          <a-icon type="setting" style="font-size: 19px;color: #777;"/>
+        </div>
+        <a-row>
+          <a-col :span="1"></a-col>
+          <a-col :span="22">
+            <a-card title="条件集" class="condition_set">
 
-                <a-skeleton v-if="generalRule.conditionGroup.length===0" :paragraph="{ rows: 3 }"/>
+              <a-skeleton v-if="generalRule.conditionGroup.length===0" :paragraph="{ rows: 3 }"/>
 
-                <a-card :title="cg.name" :bordered="false" v-for="cg in generalRule.conditionGroup" :key="cg.id">
+              <a-card :title="cg.name" :bordered="false" v-for="cg in generalRule.conditionGroup" :key="cg.id">
 
-                  <a-icon type="delete" class="dynamic-delete-button" style="font-size: 18px" slot="extra"
-                          @click="deleteConditionGroup(cg)"></a-icon>
+                <a-icon type="delete" class="dynamic-delete-button" style="font-size: 18px" slot="extra"
+                        @click="deleteConditionGroup(cg)"></a-icon>
 
-                  <a-skeleton v-if="cg.conditionGroupCondition.length===0" :paragraph="{ rows: 2 }"/>
+                <a-skeleton v-if="cg.conditionGroupCondition.length===0" :paragraph="{ rows: 2 }"/>
 
-                  <a-alert closable
-                           style="background-color: #f4f4f5;border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"
-                           v-for="cgc in cg.conditionGroupCondition"
-                           :key="cgc.id"
-                           @close="deleteCondition(cg.conditionGroupCondition,cgc.id,cgc.id)"
-                           class="conditionItem">
-                    <p slot="description" style="margin-bottom: 0;">
-                      <a-tag color="blue" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                        （{{ cgc.condition.name }}）
-                      </a-tag>
-                      <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                        {{ getConditionNamePrefix(cgc.condition.config.leftValue.type) }}
-                      </a-tag>
-                      {{ getViewValue(cgc.condition.config.leftValue) }}
-                      &nbsp;
-                      <a-tag color="orange" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                        {{ getSymbolExplanation(cgc.condition.config.symbol) }}
-                      </a-tag>
-                      <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                        {{ getConditionNamePrefix(cgc.condition.config.rightValue.type) }}
-                      </a-tag>
-                      {{ getViewValue(cgc.condition.config.rightValue) }}
-                    </p>
-                  </a-alert>
-                  <br>
-                  <a-button type="dashed" style="width: 50%;display:block;margin:0 auto" @click="addCondition(cg)">
-                    <a-icon type="plus" style="color: #777;"/>
-                    添加条件
-                  </a-button>
-
-                </a-card>
-                <a-button type="dashed" style="width: 100%" @click="addConditionGroup()">
+                <a-alert closable
+                         style="background-color: #f4f4f5;border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"
+                         v-for="cgc in cg.conditionGroupCondition"
+                         :key="cgc.id"
+                         @close="deleteCondition(cg.conditionGroupCondition,cgc.id,cgc.id)"
+                         class="conditionItem">
+                  <p slot="description" style="margin-bottom: 0;">
+                    <a-tag color="blue" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                      （{{ cgc.condition.name }}）
+                    </a-tag>
+                    <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                      {{ getConditionNamePrefix(cgc.condition.config.leftValue.type) }}
+                    </a-tag>
+                    {{ getViewValue(cgc.condition.config.leftValue) }}
+                    &nbsp;
+                    <a-tag color="orange" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                      {{ getSymbolExplanation(cgc.condition.config.symbol) }}
+                    </a-tag>
+                    <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                      {{ getConditionNamePrefix(cgc.condition.config.rightValue.type) }}
+                    </a-tag>
+                    {{ getViewValue(cgc.condition.config.rightValue) }}
+                  </p>
+                </a-alert>
+                <br>
+                <a-button type="dashed" style="width: 50%;display:block;margin:0 auto" @click="addCondition(cg)">
                   <a-icon type="plus" style="color: #777;"/>
-                  添加条件组
+                  添加条件
                 </a-button>
+
               </a-card>
-              <br>
-              <br>
-              <a-card title="结果">
+              <a-button type="dashed" style="width: 100%" @click="addConditionGroup()">
+                <a-icon type="plus" style="color: #777;"/>
+                添加条件组
+              </a-button>
+            </a-card>
+            <br>
+            <br>
+            <a-card title="结果">
               <span slot="extra">
                         <a-popover title="温馨提示">
                             <template slot="content">
@@ -98,7 +97,7 @@
                             <a-icon type="info-circle" class="dynamic-delete-button" style="font-size: 18px"></a-icon>
                         </a-popover>
                     </span>
-                <span slot="extra" style="margin-left: 16px;">
+              <span slot="extra" style="margin-left: 16px;">
                         <a-popover title="默认结果" trigger="click" arrow-point-at-center>
                             <template slot="content">
                                 <div style="width: 400px;">
@@ -132,254 +131,254 @@
                         </a-popover>
                     </span>
 
-                <a-icon slot="extra" class="dynamic-delete-button" type="save"
-                        style="font-size: 18px;margin-left: 16px;" @click="saveAction"></a-icon>
+              <a-icon slot="extra" class="dynamic-delete-button" type="save"
+                      style="font-size: 18px;margin-left: 16px;" @click="saveAction"></a-icon>
 
-                <a-row>
-                  <a-col :span="5">
-                    <a-select style="width:100%"
-                              :value="generalRule.action.type===0?'PARAMETER':(generalRule.action.type===1?'VARIABLE':generalRule.action.valueType)"
-                              @change="actionValueTypeChange"
-                    >
-                      <a-select-option value="PARAMETER">参数</a-select-option>
-                      <a-select-option value="VARIABLE">变量</a-select-option>
-                      <a-select-option value="BOOLEAN">布尔</a-select-option>
-                      <a-select-option value="COLLECTION">集合</a-select-option>
-                      <a-select-option value="STRING">字符串</a-select-option>
-                      <a-select-option value="NUMBER">数值</a-select-option>
-                      <a-select-option value="DATE">日期</a-select-option>
-                    </a-select>
-                  </a-col>
-                  <a-col :span="1"></a-col>
-                  <a-col :span="18">
+              <a-row>
+                <a-col :span="5">
+                  <a-select style="width:100%"
+                            :value="generalRule.action.type===0?'PARAMETER':(generalRule.action.type===1?'VARIABLE':generalRule.action.valueType)"
+                            @change="actionValueTypeChange"
+                  >
+                    <a-select-option value="PARAMETER">参数</a-select-option>
+                    <a-select-option value="VARIABLE">变量</a-select-option>
+                    <a-select-option value="BOOLEAN">布尔</a-select-option>
+                    <a-select-option value="COLLECTION">集合</a-select-option>
+                    <a-select-option value="STRING">字符串</a-select-option>
+                    <a-select-option value="NUMBER">数值</a-select-option>
+                    <a-select-option value="DATE">日期</a-select-option>
+                  </a-select>
+                </a-col>
+                <a-col :span="1"></a-col>
+                <a-col :span="18">
 
-                    <a-select
-                        v-if="generalRule.action.type===0||generalRule.action.type===1"
-                        show-search
-                        :value="generalRule.action.searchSelect.value"
-                        placeholder="请输入关键字进行搜索"
-                        :default-active-first-option="false"
-                        :show-arrow="false"
-                        :filter-option="false"
-                        :not-found-content="null"
-                        @search="actionSearch"
-                    >
-                      <a-select-option v-for="d in generalRule.action.searchSelect.data" :value="d.id"
-                                       :key="d.id"
-                                       @click.native="actionSearchOptionClick(d)">
-                        {{ d.name }}
-                      </a-select-option>
-                    </a-select>
+                  <a-select
+                      v-if="generalRule.action.type===0||generalRule.action.type===1"
+                      show-search
+                      :value="generalRule.action.searchSelect.value"
+                      placeholder="请输入关键字进行搜索"
+                      :default-active-first-option="false"
+                      :show-arrow="false"
+                      :filter-option="false"
+                      :not-found-content="null"
+                      @search="actionSearch"
+                  >
+                    <a-select-option v-for="d in generalRule.action.searchSelect.data" :value="d.id"
+                                     :key="d.id"
+                                     @click.native="actionSearchOptionClick(d)">
+                      {{ d.name }}
+                    </a-select-option>
+                  </a-select>
 
-                    <a-select
-                        v-else-if="generalRule.action.valueType==='BOOLEAN'"
-                        defaultValue="true"
-                        v-model="generalRule.action.value" placeholder="请选择数据">
-                      <a-select-option value="true">true</a-select-option>
-                      <a-select-option value="false">false</a-select-option>
-                    </a-select>
-                    <a-input-number
-                        v-else-if="generalRule.action.valueType==='NUMBER'"
-                        v-model="generalRule.action.value" style="width: 100%"/>
-                    <a-date-picker
-                        v-else-if="generalRule.action.valueType==='DATE'"
-                        show-time
-                        style="width: 100%"></a-date-picker>
-                    <a-input v-else
-                             v-model="generalRule.action.value"></a-input>
+                  <a-select
+                      v-else-if="generalRule.action.valueType==='BOOLEAN'"
+                      defaultValue="true"
+                      style="width: 100%"
+                      v-model="generalRule.action.value" placeholder="请选择数据">
+                    <a-select-option value="true">true</a-select-option>
+                    <a-select-option value="false">false</a-select-option>
+                  </a-select>
+                  <a-input-number
+                      v-else-if="generalRule.action.valueType==='NUMBER'"
+                      v-model="generalRule.action.value" style="width: 100%"/>
+                  <a-date-picker
+                      v-else-if="generalRule.action.valueType==='DATE'"
+                      show-time
+                      style="width: 100%"></a-date-picker>
+                  <a-input v-else
+                           v-model="generalRule.action.value"></a-input>
 
-                  </a-col>
-                </a-row>
-              </a-card>
+                </a-col>
+              </a-row>
+            </a-card>
+          </a-col>
+          <a-col :span="1"></a-col>
+        </a-row>
+        <br>
+        <br>
+        <br>
+      </a-card>
+    </page-layout>
+
+
+    <a-modal
+        title="创建条件"
+        :visible="selectCondition.open"
+        :confirm-loading="selectCondition.confirmLoading"
+        :width="700"
+        @ok="addConditionOk()"
+        @cancel="addConditionHandleCancel()"
+        okText="确认添加"
+    >
+      <a-form-model ref="addConditionForm" :model="selectCondition.from" :rules="rules" :label-col="{span: 3}"
+                    :wrapper-col="{span: 19}">
+        <a-form-model-item label="名称" prop="name">
+          <a-input v-model="selectCondition.from.name">
+          </a-input>
+        </a-form-model-item>
+        <a-form-model-item label="配置">
+          <br>
+          <a-row style="margin-bottom: 10px">
+            <a-col :span="3">
+              左值
             </a-col>
-            <a-col :span="1"></a-col>
+            <a-col :span="6">
+              <a-select
+                  :value="selectCondition.from.config.leftValue.type===0?'PARAMETER':(selectCondition.from.config.leftValue.type===1?'VARIABLE':selectCondition.from.config.leftValue.valueType)"
+                  placeholder="请选择"
+                  @change="leftValueTypeChange">
+                <a-select-option value="PARAMETER">参数</a-select-option>
+                <a-select-option value="VARIABLE">变量</a-select-option>
+                <a-select-option value="BOOLEAN">布尔</a-select-option>
+                <a-select-option value="COLLECTION">集合</a-select-option>
+                <a-select-option value="STRING">字符串</a-select-option>
+                <a-select-option value="NUMBER">数值</a-select-option>
+                <a-select-option value="DATE">日期</a-select-option>
+              </a-select>
+            </a-col>
+            <a-col :span="1"/>
+            <a-col :span="14">
+
+              <a-select
+                  v-if="selectCondition.from.config.leftValue.type===0||selectCondition.from.config.leftValue.type===1"
+                  show-search
+                  :value="selectCondition.from.config.leftValue.searchSelect.value"
+                  placeholder="请输入关键字进行搜索"
+                  :default-active-first-option="false"
+                  :show-arrow="false"
+                  :filter-option="false"
+                  :not-found-content="null"
+                  @search="conditionLeftSearch"
+                  @change="conditionLeftChange"
+              >
+                <a-select-option v-for="d in selectCondition.from.config.leftValue.searchSelect.data" :value="d.id"
+                                 :key="d.id"
+                                 @click.native="conditionLeftSearchOptionClick(d)">
+                  {{ d.name }}
+                </a-select-option>
+              </a-select>
+
+              <a-select
+                  v-else-if="selectCondition.from.config.leftValue.valueType==='BOOLEAN'"
+                  defaultValue="true"
+                  v-model="selectCondition.from.config.leftValue.value" placeholder="请选择数据">
+                <a-select-option value="true">true</a-select-option>
+                <a-select-option value="false">false</a-select-option>
+              </a-select>
+              <a-input-number
+                  v-else-if="selectCondition.from.config.leftValue.valueType==='NUMBER'"
+                  v-model="selectCondition.from.config.leftValue.value" style="width: 100%"/>
+              <a-date-picker
+                  v-else-if="selectCondition.from.config.leftValue.valueType==='DATE'"
+                  show-time
+                  style="width: 100%"></a-date-picker>
+              <a-input v-else
+                       v-model="selectCondition.from.config.leftValue.value"></a-input>
+            </a-col>
           </a-row>
-          <br>
-          <br>
-          <br>
-        </a-card>
-      </page-layout>
+
+          <a-row style="margin-bottom: 10px">
+            <a-col :span="3">
+              运算符
+            </a-col>
+            <a-col :span="6">
+              <a-select placeholder="请选择" v-model="selectCondition.from.config.symbol">
+                <a-select-option v-for="op in selectCondition.operators" :value="op.name" :key="op.name">
+                  {{ op.explanation }}
+                </a-select-option>
+              </a-select>
+            </a-col>
+            <a-col :span="15"></a-col>
+          </a-row>
+
+          <a-row>
+            <a-col :span="3">
+              右值
+            </a-col>
+            <a-col :span="6">
+              <a-select
+                  :value="selectCondition.from.config.rightValue.type===0?'PARAMETER':(selectCondition.from.config.rightValue.type===1?'VARIABLE':selectCondition.from.config.rightValue.valueType)"
+                  placeholder="请选择"
+                  @change="rightValueTypeChange"
+              >
+                <a-select-option v-if="selectCondition.from.config.leftValue.valueType!=null" value="PARAMETER">参数
+                </a-select-option>
+                <a-select-option v-if="selectCondition.from.config.leftValue.valueType!=null" value="VARIABLE">变量
+                </a-select-option>
+                <a-select-option v-if="isRightTypeSelectView('BOOLEAN')" value="BOOLEAN">布尔</a-select-option>
+                <a-select-option v-if="isRightTypeSelectView('COLLECTION')" value="COLLECTION">集合</a-select-option>
+                <a-select-option v-if="isRightTypeSelectView('STRING')" value="STRING">字符串</a-select-option>
+                <a-select-option v-if="isRightTypeSelectView('NUMBER')" value="NUMBER">数值</a-select-option>
+                <a-select-option v-if="isRightTypeSelectView('DATE')" value="DATE">日期</a-select-option>
+              </a-select>
+            </a-col>
+            <a-col :span="1"/>
+            <a-col :span="14">
+              <a-select
+                  v-if="selectCondition.from.config.rightValue.type===0||selectCondition.from.config.rightValue.type===1"
+                  show-search
+                  :value="selectCondition.from.config.rightValue.searchSelect.value"
+                  placeholder="请输入关键字进行搜索"
+                  :default-active-first-option="false"
+                  :show-arrow="false"
+                  :filter-option="false"
+                  :not-found-content="null"
+                  @search="conditionRightSearch"
+                  @change="conditionRightChange"
+              >
+                <a-select-option v-for="d in selectCondition.from.config.rightValue.searchSelect.data" :value="d.id"
+                                 :key="d.id"
+                                 @click.native="conditionRightSearchOptionClick(d)">
+                  {{ d.name }}
+                </a-select-option>
+              </a-select>
+              <a-select v-else-if="selectCondition.from.config.rightValue.valueType==='BOOLEAN'"
+                        v-model="selectCondition.from.config.rightValue.value" placeholder="请选择数据 ">
+                <a-select-option value="true">true</a-select-option>
+                <a-select-option value="false">false</a-select-option>
+              </a-select>
+              <a-input-number v-else-if="selectCondition.from.config.rightValue.valueType==='NUMBER'"
+                              v-model="selectCondition.from.config.rightValue.value" style="width: 100%"/>
+              <a-date-picker v-else-if="selectCondition.from.config.rightValue.valueType==='DATE'" show-time
+                             style="width: 100%"></a-date-picker>
+              <a-input v-else v-model="selectCondition.from.config.rightValue.value"></a-input>
+            </a-col>
+          </a-row>
+        </a-form-model-item>
+        <a-form-model-item label="说明" prop="description">
+          <a-textarea v-model="selectCondition.from.description" :rows="3"/>
+        </a-form-model-item>
+      </a-form-model>
+    </a-modal>
 
 
-      <a-modal
-          title="创建条件"
-          :visible="selectCondition.open"
-          :confirm-loading="selectCondition.confirmLoading"
-          :width="700"
-          @ok="addConditionOk()"
-          @cancel="addConditionHandleCancel()"
-          okText="确认添加"
-      >
-        <a-form-model ref="addConditionForm" :model="selectCondition.from" :rules="rules" :label-col="{span: 3}"
-                      :wrapper-col="{span: 19}">
-          <a-form-model-item label="名称" prop="name">
-            <a-input v-model="selectCondition.from.name">
-            </a-input>
-          </a-form-model-item>
-          <a-form-model-item label="配置">
-            <br>
-            <a-row style="margin-bottom: 10px">
-              <a-col :span="3">
-                左值
-              </a-col>
-              <a-col :span="6">
-                <a-select
-                    :value="selectCondition.from.config.leftValue.type===0?'PARAMETER':(selectCondition.from.config.leftValue.type===1?'VARIABLE':selectCondition.from.config.leftValue.valueType)"
-                    placeholder="请选择"
-                    @change="leftValueTypeChange">
-                  <a-select-option value="PARAMETER">参数</a-select-option>
-                  <a-select-option value="VARIABLE">变量</a-select-option>
-                  <a-select-option value="BOOLEAN">布尔</a-select-option>
-                  <a-select-option value="COLLECTION">集合</a-select-option>
-                  <a-select-option value="STRING">字符串</a-select-option>
-                  <a-select-option value="NUMBER">数值</a-select-option>
-                  <a-select-option value="DATE">日期</a-select-option>
-                </a-select>
-              </a-col>
-              <a-col :span="1"/>
-              <a-col :span="14">
+    <footer-tool-bar>
+      <a-button type="primary" @click="previous()" :loading="footer.loading">上一步</a-button>&nbsp;&nbsp;&nbsp;&nbsp;
+      <a-button type="primary" @click="nextStep()" :loading="footer.loading">下一步</a-button>
+    </footer-tool-bar>
 
-                <a-select
-                    v-if="selectCondition.from.config.leftValue.type===0||selectCondition.from.config.leftValue.type===1"
-                    show-search
-                    :value="selectCondition.from.config.leftValue.searchSelect.value"
-                    placeholder="请输入关键字进行搜索"
-                    :default-active-first-option="false"
-                    :show-arrow="false"
-                    :filter-option="false"
-                    :not-found-content="null"
-                    @search="conditionLeftSearch"
-                    @change="conditionLeftChange"
-                >
-                  <a-select-option v-for="d in selectCondition.from.config.leftValue.searchSelect.data" :value="d.id"
-                                   :key="d.id"
-                                   @click.native="conditionLeftSearchOptionClick(d)">
-                    {{ d.name }}
-                  </a-select-option>
-                </a-select>
-
-                <a-select
-                    v-else-if="selectCondition.from.config.leftValue.valueType==='BOOLEAN'"
-                    defaultValue="true"
-                    v-model="selectCondition.from.config.leftValue.value" placeholder="请选择数据">
-                  <a-select-option value="true">true</a-select-option>
-                  <a-select-option value="false">false</a-select-option>
-                </a-select>
-                <a-input-number
-                    v-else-if="selectCondition.from.config.leftValue.valueType==='NUMBER'"
-                    v-model="selectCondition.from.config.leftValue.value" style="width: 100%"/>
-                <a-date-picker
-                    v-else-if="selectCondition.from.config.leftValue.valueType==='DATE'"
-                    show-time
-                    style="width: 100%"></a-date-picker>
-                <a-input v-else
-                         v-model="selectCondition.from.config.leftValue.value"></a-input>
-              </a-col>
-            </a-row>
-
-            <a-row style="margin-bottom: 10px">
-              <a-col :span="3">
-                运算符
-              </a-col>
-              <a-col :span="6">
-                <a-select placeholder="请选择" v-model="selectCondition.from.config.symbol">
-                  <a-select-option v-for="op in selectCondition.operators" :value="op.name" :key="op.name">
-                    {{ op.explanation }}
-                  </a-select-option>
-                </a-select>
-              </a-col>
-              <a-col :span="15"></a-col>
-            </a-row>
-
-            <a-row>
-              <a-col :span="3">
-                右值
-              </a-col>
-              <a-col :span="6">
-                <a-select
-                    :value="selectCondition.from.config.rightValue.type===0?'PARAMETER':(selectCondition.from.config.rightValue.type===1?'VARIABLE':selectCondition.from.config.rightValue.valueType)"
-                    placeholder="请选择"
-                    @change="rightValueTypeChange"
-                >
-                  <a-select-option v-if="selectCondition.from.config.leftValue.valueType!=null" value="PARAMETER">参数
-                  </a-select-option>
-                  <a-select-option v-if="selectCondition.from.config.leftValue.valueType!=null" value="VARIABLE">变量
-                  </a-select-option>
-                  <a-select-option v-if="isRightTypeSelectView('BOOLEAN')" value="BOOLEAN">布尔</a-select-option>
-                  <a-select-option v-if="isRightTypeSelectView('COLLECTION')" value="COLLECTION">集合</a-select-option>
-                  <a-select-option v-if="isRightTypeSelectView('STRING')" value="STRING">字符串</a-select-option>
-                  <a-select-option v-if="isRightTypeSelectView('NUMBER')" value="NUMBER">数值</a-select-option>
-                  <a-select-option v-if="isRightTypeSelectView('DATE')" value="DATE">日期</a-select-option>
-                </a-select>
-              </a-col>
-              <a-col :span="1"/>
-              <a-col :span="14">
-                <a-select
-                    v-if="selectCondition.from.config.rightValue.type===0||selectCondition.from.config.rightValue.type===1"
-                    show-search
-                    :value="selectCondition.from.config.rightValue.searchSelect.value"
-                    placeholder="请输入关键字进行搜索"
-                    :default-active-first-option="false"
-                    :show-arrow="false"
-                    :filter-option="false"
-                    :not-found-content="null"
-                    @search="conditionRightSearch"
-                    @change="conditionRightChange"
-                >
-                  <a-select-option v-for="d in selectCondition.from.config.rightValue.searchSelect.data" :value="d.id"
-                                   :key="d.id"
-                                   @click.native="conditionRightSearchOptionClick(d)">
-                    {{ d.name }}
-                  </a-select-option>
-                </a-select>
-                <a-select v-else-if="selectCondition.from.config.rightValue.valueType==='BOOLEAN'"
-                          v-model="selectCondition.from.config.rightValue.value" placeholder="请选择数据 ">
-                  <a-select-option value="true">true</a-select-option>
-                  <a-select-option value="false">false</a-select-option>
-                </a-select>
-                <a-input-number v-else-if="selectCondition.from.config.rightValue.valueType==='NUMBER'"
-                                v-model="selectCondition.from.config.rightValue.value" style="width: 100%"/>
-                <a-date-picker v-else-if="selectCondition.from.config.rightValue.valueType==='DATE'" show-time
-                               style="width: 100%"></a-date-picker>
-                <a-input v-else v-model="selectCondition.from.config.rightValue.value"></a-input>
-              </a-col>
-            </a-row>
-          </a-form-model-item>
-          <a-form-model-item label="说明" prop="description">
-            <a-textarea v-model="selectCondition.from.description" :rows="3"/>
-          </a-form-model-item>
-        </a-form-model>
-      </a-modal>
-
-
-      <footer-tool-bar>
-        <a-button type="primary" @click="previous()" :loading="footer.loading">上一步</a-button>&nbsp;&nbsp;&nbsp;&nbsp;
-        <a-button type="primary" @click="nextStep()" :loading="footer.loading">下一步</a-button>
-      </footer-tool-bar>
-
-      <a-drawer
-          placement="left"
-          :closable="false"
-          width="460px"
-          :visible="drawer.visible"
-          @close="onClose"
-          :mask="true"
-          :zIndex="999"
-      >
-        <a-tabs default-active-key="1">
-          <a-tab-pane key="1" tab="参数">
-            <input-parameter :data-id="parseInt(generalRule.id)" :data-type="dataType"/>
-          </a-tab-pane>
-          <a-tab-pane key="2" tab="变量">
-            <Variable :data-id="parseInt(generalRule.id)" :data-type="dataType"/>
-          </a-tab-pane>
-          <a-tab-pane key="3" tab="表达式">
-            我是表达式列表
-          </a-tab-pane>
-        </a-tabs>
-      </a-drawer>
-    </div>
-  </a-spin>
+    <a-drawer
+        placement="left"
+        :closable="false"
+        width="460px"
+        :visible="drawer.visible"
+        @close="onClose"
+        :mask="true"
+        :zIndex="999"
+    >
+      <a-tabs default-active-key="1">
+        <a-tab-pane key="1" tab="参数">
+          <input-parameter :data-id="parseInt(generalRule.id)" :data-type="dataType"/>
+        </a-tab-pane>
+        <a-tab-pane key="2" tab="变量">
+          <Variable :data-id="parseInt(generalRule.id)" :data-type="dataType"/>
+        </a-tab-pane>
+        <a-tab-pane key="3" tab="表达式">
+          我是表达式列表
+        </a-tab-pane>
+      </a-tabs>
+    </a-drawer>
+  </div>
 </template>
 
 <script>
