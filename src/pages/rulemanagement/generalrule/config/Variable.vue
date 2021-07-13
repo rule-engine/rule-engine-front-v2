@@ -184,9 +184,14 @@
               <a-select-option value="true">true</a-select-option>
               <a-select-option value="false">false</a-select-option>
             </a-select>
-            <a-date-picker style="width: 100%" :mode="'time'" :format="'YYYY-MM-DD hh:mm:ss'" :locale="locale"
-                           v-model="add.form.value"
-                           v-else-if="add.form.valueType==='DATE'"/>
+
+            <a-date-picker
+                v-else-if="add.form.valueType==='DATE'"
+                v-model="add.form.value"
+                format="YYYY-MM-DD hh:mm:ss"
+                show-time
+                style="width: 100%"></a-date-picker>
+
             <a-input v-model="add.form.value" type="textarea" placeholder="变量值"
                      v-else-if="add.form.valueType==='COLLECTION'"/>
             <a-input v-model="add.form.value" placeholder="请输入变量值" disabled
@@ -251,8 +256,8 @@ export default {
       },
       rules: {
         name: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入变量名称"},
-        value: {min: 1, trigger: ['change', 'blur'], message: "变量不能为空", required: true},
-        description: {trigger: ['change', 'blur'], required: false, message: ""},
+        // value: {min: 1, trigger: ['change', 'blur'], message: "变量不能为空", required: true},
+        // description: {trigger: ['change', 'blur'], required: false, message: ""},
         // valueType: {trigger: ['change', 'blur'], required: true, message: "请选择变量值类型"}
       },
       loading: true,
