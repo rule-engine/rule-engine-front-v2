@@ -46,7 +46,7 @@ module.exports = {
         VIEW: `${WEB_BASE_URL}/ruleEngine/generalRule/view`,
     },
     importExport: {
-        EXPORT: `${WEB_BASE_URL}/ruleEngine/dataPermission/export`,
+        EXPORT: `${WEB_BASE_URL}/ruleEngine/importExport/export`,
     },
     dataPermission: {
         LIST: `${WEB_BASE_URL}/ruleEngine/dataPermission/list`,
