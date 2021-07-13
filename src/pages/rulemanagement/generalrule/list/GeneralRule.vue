@@ -402,7 +402,7 @@
                 console.log(current, pageSize);
             },
             addNew() {
-                this.$router.push('/generalRuleDefinition')
+                this.$router.push('/generalRuleRouter')
             },
             handleMenuClick() {
 
