@@ -397,6 +397,12 @@ import {selectSearch} from '@/utils/selectSearch'
 export default {
   name: "Config",
   components: {PageLayout, FooterToolBar, InputParameter, Variable},
+  props: {
+    ruleId: {
+      type: Number,
+      required: true
+    }
+  },
   data() {
     return {
       loading: true,
@@ -478,7 +484,7 @@ export default {
     }
   },
   mounted() {
-    this.generalRule.id = this.$route.query.id;
+    this.generalRule.id = this.ruleId
     this.getRuleConfig();
   },
   methods: {
@@ -712,12 +718,12 @@ export default {
       }
     },
     previous() {
-      this.$router.push({path: '/generalRuleDefinition', query: {id: this.generalRule.id}})
+      this.$emit("choicePage", {pageIndex: 1, id: this.generalRule.id})
     },
     nextStep() {
       generationRelease(this.generalRule).then(res => {
         console.log(res)
-        this.$router.push({path: '/generalRulePublish', query: {id: this.generalRule.id}})
+        this.$emit("choicePage", {pageIndex: 3, id: this.generalRule.id})
       })
     },
     showDrawer() {
