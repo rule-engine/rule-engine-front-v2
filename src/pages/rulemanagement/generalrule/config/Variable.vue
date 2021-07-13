@@ -101,6 +101,7 @@
           <a-form-model-item label="函数名称" prop="function.name" v-if="add.form.type===3">
             <a-select
                 show-search
+                :disabled="add.form.id!==null"
                 :value="add.form.function.name"
                 placeholder="请输入关键字进行搜索"
                 :default-active-first-option="false"
