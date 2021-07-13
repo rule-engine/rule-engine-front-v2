@@ -48,6 +48,12 @@ import {addGeneralRule, updateGeneralRule, getRuleDefinition} from '@/services/g
 export default {
   name: "Definition",
   components: {PageLayout, FooterToolBar},
+  props: {
+    ruleId: {
+      type: Number,
+      required: true
+    }
+  },
   data() {
     return {
       footer: {
@@ -66,7 +72,7 @@ export default {
     }
   },
   mounted() {
-    this.generalRule.id = this.$route.query.id;
+    this.generalRule.id = this.ruleId
     this.getRuleDefinition();
   },
   methods: {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Definition @choicePage="choicePage" v-if="currentPage===1"></Definition>
+    <Definition @choicePage="choicePage" :ruleId="ruleId" v-if="currentPage===1"></Definition>
     <Config @choicePage="choicePage" :ruleId="ruleId" v-if="currentPage===2"></Config>
     <Publish @choicePage="choicePage" :ruleId="ruleId" v-if="currentPage===3"></Publish>
   </div>
@@ -22,10 +22,19 @@ export default {
       ruleId: undefined,
     }
   }, mounted() {
+    console.log("$router", this.$router)
+    console.log("$route", this.$route)
     let query = this.$route.query
-    if (query) {
-      this.ruleId = parseInt(query.id);
+    let params = this.$route.params
+    if (query.pageIndex) {
       this.currentPage = parseInt(query.pageIndex)
+    }
+    if (params.ruleId) {
+      try {
+        this.ruleId = parseInt(params.ruleId);
+      } catch (e) {
+        console.debug(e)
+      }
     }
   }, methods: {
     choicePage(params) {

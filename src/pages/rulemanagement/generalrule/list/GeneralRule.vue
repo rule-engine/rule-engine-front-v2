@@ -414,7 +414,7 @@ export default {
       console.log(current, pageSize);
     },
     addNew() {
-      this.$router.push('/generalRuleRouter')
+      this.$router.push('/generalRuleRouter/new')
     },
     handleMenuClick() {
 
@@ -441,7 +441,7 @@ export default {
       //this.selectedRows = this.selectedRows.filter(item => item.key !== key)
     },
     edit(record) {
-      this.$router.push({path: '/generalRuleRouter', query: {id: record.id, pageIndex: 2}})
+      this.$router.push({path: '/generalRuleRouter/' + record.id, query: {pageIndex: 2}})
     },
     downloadGeneralRule(record) {
       console.log(record)
