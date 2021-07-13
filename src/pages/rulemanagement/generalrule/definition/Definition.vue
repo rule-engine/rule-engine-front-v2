@@ -77,7 +77,7 @@ export default {
   },
   methods: {
     getRuleDefinition() {
-      if (this.generalRule.id != null) {
+      if (this.generalRule.id) {
         getRuleDefinition({id: this.generalRule.id}).then(res => {
           this.generalRule = res.data.data;
           // 刚进页面 查询到规则name
