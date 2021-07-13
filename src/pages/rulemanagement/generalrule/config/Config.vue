@@ -392,7 +392,7 @@ import {getRuleConfig, saveAction, generationRelease} from '@/services/generalRu
 import {saveConditionAndBindGroup, deleteCondition} from '@/services/conditionGroupCondition'
 
 //import {listInputParameter} from '@/services/inputParameter'
-import {selectSearchVariableOrElement} from '@/utils/selectSearch'
+import {selectSearch} from '@/utils/selectSearch'
 
 export default {
   name: "Config",
@@ -493,7 +493,7 @@ export default {
       })
     },
     actionSearch(value) {
-      selectSearchVariableOrElement({
+      selectSearch({
             name: value,
             dataId: this.generalRule.id,
             dataType: this.dataType,
@@ -526,7 +526,7 @@ export default {
       })
     },
     conditionLeftSearch(value) {
-      selectSearchVariableOrElement({
+      selectSearch({
             name: value,
             dataId: this.generalRule.id,
             dataType: this.dataType,
@@ -628,7 +628,7 @@ export default {
       this.selectCondition.from.config.symbol = null;
     },
     conditionRightSearch(value) {
-      selectSearchVariableOrElement({
+      selectSearch({
         name: value,
         dataId: this.generalRule.id,
         dataType: this.dataType,

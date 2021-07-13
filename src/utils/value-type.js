@@ -10,6 +10,8 @@ function getValueTypeName(valueType) {
             return '布尔'
         case 'DATE':
             return '日期'
+        case 'FUNCTION':
+            return '函数'
     }
 }
 

@@ -21,7 +21,7 @@
 
     <br>
 
-    <a-button type="primary" @click="add.visible=true">新建</a-button>
+    <a-button type="primary" @click="createVariable">新建</a-button>
     <br> <br>
     <standard-table
         :loading="loading"
@@ -35,11 +35,20 @@
           total: this.query.page.total}"
     >
       <div slot="valueType" slot-scope="{record}">
-        <a-tag color="cyan">{{ getValueTypeName(record.valueType) }}</a-tag>
+        <a-tag color="cyan">
+          ({{ getValueTypeName(record.valueType) }})
+        </a-tag>
+      </div>
+
+      <div slot="value" slot-scope="{record}">
+        <a-tag color="cyan" v-if="record.type === 3">
+          函数(函数名称)
+        </a-tag>
+        <span v-else>{{ record.value }}</span>
       </div>
 
       <div slot="action" slot-scope="{record}">
-        <a style="margin-right: 8px" @click="info(record.id)">
+        <a style="margin-right: 8px" @click="editVariable(record.id)">
           <a-icon type="edit"/>
           编辑
         </a>
@@ -60,7 +69,7 @@
 
     <!--   新建变量-->
     <a-modal
-        title="新建变量"
+        :title="add.form.id!==null?'更新变量':'新建变量'"
         :visible="add.visible"
         :zIndex="1000"
         :confirm-loading="add.confirmLoading"
@@ -73,8 +82,13 @@
           <a-form-model-item label="变量名称" has-feedback prop="name">
             <a-input v-model="add.form.name" placeholder="请输入变量名称"/>
           </a-form-model-item>
+
           <a-form-model-item label="变量值类型" prop="valueType">
-            <a-select v-model="add.form.valueType" placeholder="变量值类型">
+            <a-select :disabled="add.form.id!==null"
+                      :value="add.form.type===3?'FUNCTION':add.form.valueType"
+                      placeholder="变量类型"
+                      @change="variableChangeValueType">
+              <a-select-option value="FUNCTION">函数</a-select-option>
               <a-select-option value="BOOLEAN">布尔</a-select-option>
               <a-select-option value="COLLECTION">集合</a-select-option>
               <a-select-option value="STRING">字符串</a-select-option>
@@ -82,63 +96,107 @@
               <a-select-option value="DATE">日期</a-select-option>
             </a-select>
           </a-form-model-item>
-          <div>
-            <a-form-model-item label="变量值" has-feedback prop="value">
-              <a-input v-model="add.form.value" placeholder="请输入变量值"
-                       v-if="add.form.valueType==='STRING' || add.form.valueType==='NUMBER'"/>
-              <a-select v-model="add.form.value" placeholder="选择值" v-else-if="add.form.valueType==='BOOLEAN'">
-                <a-select-option value="true">true</a-select-option>
-                <a-select-option value="false">false</a-select-option>
-              </a-select>
-              <a-date-picker :mode="'time'" :format="'YYYY-MM-DD hh:mm:ss'" :locale="locale" v-model="add.date"
-                             v-else-if="add.form.valueType==='DATE'"/>
-              <a-input v-model="add.form.value" type="textarea" placeholder="变量值"
-                       v-else-if="add.form.valueType==='COLLECTION'"/>
-              <a-input v-model="add.form.value" placeholder="请输入变量值" disabled
-                       v-else/>
+
+
+          <a-form-model-item label="函数名称" prop="function.name" v-if="add.form.type===3">
+            <a-select
+                show-search
+                :value="add.form.function.name"
+                placeholder="请输入关键字进行搜索"
+                :default-active-first-option="false"
+                :show-arrow="false"
+                :filter-option="false"
+                :not-found-content="null"
+                @search="functionSearch"
+            >
+              <a-select-option v-for="d in add.form.searchSelect.data" :value="d.id"
+                               :key="d.id"
+                               @click.native="functionSearchOptionClick(d)">
+                {{ d.name }}
+              </a-select-option>
+            </a-select>
+          </a-form-model-item>
+
+          <a-form-model-item label="函数参数"
+                             v-if="add.form.type===3&&add.form.function.paramValues.length!==0">
+            <br>
+
+            <a-form-model-item v-for="(pv) in add.form.function.paramValues" style="margin-bottom: 10px;"
+                               :key="pv.code">
+              <a-row>
+                <a-col :span="5">
+                  {{ pv.name !== null ? pv.name : pv.code }}&nbsp;
+                </a-col>
+                <a-col :span="5">
+                  <a-select
+                      :value="pv.type===0?'PARAMETER':(pv.type===1?'VARIABLE':pv.valueType)"
+                      @change="(valueType)=>{functionParamValueTypeChange(valueType,pv)}"
+                  >
+                    <a-select-option value="PARAMETER">参数</a-select-option>
+                    <a-select-option value="VARIABLE">变量</a-select-option>
+                    <a-select-option value="BOOLEAN" v-if="pv.valueType==='BOOLEAN'">布尔</a-select-option>
+                    <a-select-option value="COLLECTION" v-if="pv.valueType==='COLLECTION'">集合</a-select-option>
+                    <a-select-option value="STRING" v-if="pv.valueType==='STRING'">字符串</a-select-option>
+                    <a-select-option value="NUMBER" v-if="pv.valueType==='NUMBER'">数值</a-select-option>
+                    <a-select-option value="DATE" v-if="pv.valueType==='DATE'">日期</a-select-option>
+                  </a-select>
+                </a-col>
+                <a-col :span="1">
+                </a-col>
+                <a-col :span="13">
+                  <a-select
+                      v-if="pv.type===0||pv.type===1"
+                      show-search
+                      :value="pv.valueName"
+                      placeholder="请输入关键字进行搜索"
+                      :default-active-first-option="false"
+                      :show-arrow="false"
+                      :filter-option="false"
+                      :not-found-content="null"
+                      @search="(value)=>{functionParamSearch(value,pv)}"
+                  >
+                    <a-select-option v-for="d in pv.searchSelect.data" :value="d.id"
+                                     :key="d.id"
+                                     @click.native="functionParamSearchOptionClick(d,pv)">
+                      {{ d.name }}
+                    </a-select-option>
+                  </a-select>
+
+                  <a-select v-else-if="pv.valueType==='BOOLEAN'" v-model="pv.value" placeholder="请选择数据 ">
+                    <a-select-option value="true">true</a-select-option>
+                    <a-select-option value="false">false</a-select-option>
+                  </a-select>
+                  <a-input-number v-else-if="pv.valueType==='NUMBER'" v-model="pv.value" style="width: 100%"/>
+                  <a-date-picker v-else-if="pv.valueType==='DATE'" show-time style="width: 100%"/>
+                  <a-input v-else v-model="pv.value"></a-input>
+                </a-col>
+              </a-row>
             </a-form-model-item>
 
-          </div>
+          </a-form-model-item>
+
+          <a-form-model-item label="变量值" v-if="add.form.type!==3" prop="value">
+            <a-input-number v-model="add.form.value" placeholder="请输入变量值" style="width: 100%"
+                            v-if="add.form.valueType==='NUMBER'"/>
+
+            <a-select v-model="add.form.value" placeholder="选择值" v-else-if="add.form.valueType==='BOOLEAN'">
+              <a-select-option value="true">true</a-select-option>
+              <a-select-option value="false">false</a-select-option>
+            </a-select>
+            <a-date-picker style="width: 100%" :mode="'time'" :format="'YYYY-MM-DD hh:mm:ss'" :locale="locale"
+                           v-model="add.form.value"
+                           v-else-if="add.form.valueType==='DATE'"/>
+            <a-input v-model="add.form.value" type="textarea" placeholder="变量值"
+                     v-else-if="add.form.valueType==='COLLECTION'"/>
+            <a-input v-model="add.form.value" placeholder="请输入变量值" disabled
+                     v-else/>
+          </a-form-model-item>
           <a-form-model-item label="变量值描述" has-feedback prop="description">
             <a-input v-model="add.form.description" type="textarea" placeholder="请输入描述"/>
           </a-form-model-item>
         </a-form-model>
       </template>
     </a-modal>
-    <!--   编辑变量-->
-    <a-modal
-        title="编辑变量"
-        :visible="update.visible"
-        :zIndex="1000"
-        :confirm-loading="update.confirmLoading"
-        :width="700"
-        @ok="handleUpdateOk('updateVariable')"
-        @cancel="handleUpdateCancel('updateVariable')">
-      <template>
-        <a-form-model ref="updateVariable" :model="update.form" :rules="rules" :label-col="{span: 4}"
-                      :wrapper-col="{span: 14}">
-          <a-form-model-item label="变量名称" has-feedback prop="name">
-            <a-input v-model="update.form.name" placeholder="请输入变量名称"/>
-          </a-form-model-item>
-          <a-form-model-item label="变量编码" has-feedback prop="code">
-            <a-input v-model="update.form.code" placeholder="请输入变量编码" disabled/>
-          </a-form-model-item>
-          <a-form-model-item label="变量值类型" prop="valueType">
-            <a-select v-model="update.form.valueType" placeholder="变量值类型" disabled>
-              <a-select-option value="BOOLEAN">布尔</a-select-option>
-              <a-select-option value="COLLECTION">集合</a-select-option>
-              <a-select-option value="STRING">字符串</a-select-option>
-              <a-select-option value="NUMBER">数值</a-select-option>
-              <a-select-option value="DATE">日期</a-select-option>
-            </a-select>
-          </a-form-model-item>
-          <a-form-model-item label="变量描述" has-feedback prop="description">
-            <a-input v-model="update.form.description" type="textarea" placeholder="请输入描述"/>
-          </a-form-model-item>
-        </a-form-model>
-      </template>
-    </a-modal>
-
   </div>
 </template>
 
@@ -147,6 +205,7 @@ import StandardTable from "@/components/table/StandardTable";
 import {addVariable, listVariable, update, get, deleteById} from "@/services/variable";
 import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
 import {getValueTypeName} from '@/utils/value-type'
+import {selectSearch} from '@/utils/selectSearch'
 
 export default {
   name: "Variable",
@@ -165,6 +224,7 @@ export default {
     return {
       locale,
       add: {
+        id: null,
         visible: false,
         confirmLoading: false,
         date: undefined,
@@ -176,29 +236,23 @@ export default {
           description: undefined,
           valueType: undefined,
           dataId: this.dataId,
-          dataType: this.dataType
-        },
-      }
-      , update: {
-        visible: false,
-        confirmLoading: false,
-        //表单数据
-        form: {
-          value: undefined,
-          id: "",
-          name: "",
-          code: "",
-          description: "",
-          valueType: undefined,
-          dataId: this.dataId,
-          dataType: this.dataType
+          dataType: this.dataType,
+          function: {
+            returnValueType: null,
+            name: '',
+            paramValues: []
+          },
+          searchSelect: {
+            data: [],
+            value: undefined,
+          }
         },
       },
       rules: {
         name: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入变量名称"},
         value: {min: 1, trigger: ['change', 'blur'], message: "变量不能为空", required: true},
         description: {trigger: ['change', 'blur'], required: false, message: ""},
-        valueType: {trigger: ['change', 'blur'], required: true, message: "请选择变量值类型"}
+        // valueType: {trigger: ['change', 'blur'], required: true, message: "请选择变量值类型"}
       },
       loading: true,
       selectedRows: [],
@@ -216,8 +270,8 @@ export default {
         },
         {
           title: '值',
-          dataIndex: 'value',
-          width: '120px',
+          width: '160px',
+          scopedSlots: {customRender: 'value'},
         },
         {
           title: '操作',
@@ -249,22 +303,123 @@ export default {
     }
   },
   watch: {
-    "add.form.valueType"() {
-      this.add.form.value = undefined
-      this.add.form.type = 2
-    },
-    "add.date"(newVal) {
-      if (newVal) {
-        this.add.form.value = newVal.format('YYYY-MM-DD hh:mm:ss');
-      }
-    }
+    // "add.form.valueType"() {
+    //   this.add.form.value = undefined
+    //   this.add.form.type = 2
+    // },
+    // "add.date"(newVal) {
+    //   if (newVal) {
+    //     this.add.form.value = newVal.format('YYYY-MM-DD hh:mm:ss');
+    //   }
+    // }
   },
   created() {
-    this.loadVariableList()
+    this.loadVariableList();
   },
   methods: {
+    createVariable() {
+      this.add.visible = true;
+      // 重置表单数据
+      this.add.form = {
+        id: null,
+        value: undefined,
+        name: undefined,
+        type: 2,
+        description: undefined,
+        valueType: undefined,
+        dataId: this.dataId,
+        dataType: this.dataType,
+        function: {
+          returnValueType: null,
+          name: '',
+          paramValues: []
+        },
+        searchSelect: {
+          data: [],
+          value: undefined,
+        }
+      }
+    },
+    functionParamValueTypeChange(valueType, pv) {
+      pv.valueType = valueType;
+      // 如果是变量或者元素
+      if (valueType === 'PARAMETER') {
+        pv.type = 0;
+        // 参数的类型
+        pv.valueType = '';
+      } else if (valueType === 'VARIABLE') {
+        pv.type = 1;
+        // 变量的类型
+        pv.valueType = '';
+      } else {
+        pv.type = 2;
+      }
+    },
+    variableChangeValueType(valueType) {
+      this.add.form.value = '';
+      if (valueType === 'FUNCTION') {
+        // 函数
+        this.add.form.type = 3;
+        this.add.form.valueType = '';
+      } else {
+        // 固定值
+        this.add.form.type = 2;
+        this.add.form.valueType = valueType;
+      }
+    },
     getValueTypeName(valueType) {
       return getValueTypeName(valueType)
+    },
+    functionSearch(value) {
+      selectSearch({
+            name: value,
+            valueType: null // 查询所有类型
+          }, data => (this.add.form.searchSelect.data = data)
+          , this.add.form.type)
+    },
+    functionSearchOptionClick(d) {
+      this.add.form.searchSelect.value = d.id;
+      this.add.form.value = d.id;
+      this.add.form.function.name = d.name;
+      this.add.form.valueType = d.returnValueType;
+      this.add.form.function.returnValueType = d.returnValueType;
+      this.add.form.function.paramValues = this.getParamValues(d.params);
+    },
+    functionParamSearch(value, pv) {
+      selectSearch({
+            name: value,
+            dataId: this.dataId,
+            dataType: this.dataType,
+            valueType: null // 查询所有类型
+          }, data => (pv.searchSelect.data = data)
+          , pv.type)
+    },
+    functionParamSearchOptionClick(d, pv) {
+      this.add.form.function.name = d.name;
+      pv.value = d.id;
+      pv.valueType = d.valueType;
+      pv.valueName = d.name;
+      // 变量  d.type 如果是固定值
+      if (pv.type === 1 && d.type === 2) {
+        pv.variableValue = d.value;
+      }
+    },
+    getParamValues(paramValues) {
+      return Array.from(paramValues)
+          .map(item => ({
+            // 搜索用元素变量用
+            searchSelect: {
+              data: [],
+              value: undefined,
+            },
+            // ...
+            name: item.name,
+            code: item.code,
+            type: (item.type == null ? 2 : item.type), //默认固定值
+            value: item.value,
+            valueName: item.valueName,
+            valueType: item.valueType,
+          }));
     },
     handleAddOk(formName) {
       const _this = this;
@@ -272,14 +427,25 @@ export default {
       this.add.confirmLoading = true;
       this.$refs[formName].validate(valid => {
         if (valid) {
-          addVariable(this.add.form).then(res => {
-            if (res.data.code === 200) {
-              this.$message.success("添加成功！");
-              _this.add.visible = false;
-              _this.$refs[formName].resetFields();
-              _this.loadVariableList();
-            }
-          }).finally(() => _this.add.confirmLoading = false)
+          if (this.add.form.id != null) {
+            update(this.add.form).then(res => {
+              if (res.data.code === 200) {
+                this.$message.success("添加成功！");
+                _this.add.visible = false;
+                _this.$refs[formName].resetFields();
+                _this.loadVariableList();
+              }
+            }).finally(() => _this.add.confirmLoading = false)
+          } else {
+            addVariable(this.add.form).then(res => {
+              if (res.data.code === 200) {
+                this.$message.success("添加成功！");
+                _this.add.visible = false;
+                _this.$refs[formName].resetFields();
+                _this.loadVariableList();
+              }
+            }).finally(() => _this.add.confirmLoading = false)
+          }
         } else {
           console.log('error submit!!');
           _this.add.confirmLoading = false;
@@ -290,29 +456,6 @@ export default {
     handleAddCancel(formName) {
       this.$refs[formName].resetFields();
       this.add.visible = false
-    }, handleUpdateOk(formName) {
-      const _this = this;
-      this.update.visible = true;
-      this.update.confirmLoading = true;
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          update(this.update.form).then(res => {
-            if (res.data.code === 200) {
-              this.$message.success("修改成功！");
-              _this.update.visible = false;
-              _this.$refs[formName].resetFields();
-              _this.loadVariableList();
-            }
-          }).finally(() => _this.update.confirmLoading = false)
-        } else {
-          console.log('error submit!!');
-          _this.update.confirmLoading = false;
-          return false;
-        }
-      });
-    }, handleUpdateCancel(formName) {
-      this.$refs[formName].resetFields();
-      this.update.visible = false
     },
     onPageChange(pagination, filters, sorter, {currentDataSource}) {
       if (pagination) {
@@ -331,14 +474,23 @@ export default {
       this.query.query.name = this.query.query.code = ''
       this.loadVariableList()
     },
-    info(id) {
+    editVariable(id) {
       let _this = this
       get({id: id}).then(res => {
         if (res.data.code === 200) {
-          _this.update.form = res.data.data
-          _this.update.visible = true
+          let da = res.data.data;
+          this.add.form.id = da.id;
+          this.add.form.name = da.name;
+          this.add.form.value = da.value;
+          this.add.form.type = da.type;
+          this.add.form.valueType = da.valueType;
+          this.add.form.description = da.description;
+          if (da.function != null) {
+            this.add.form.function.paramValues = this.getParamValues(da.function.paramValues);
+            this.add.form.function.name = da.function.name;
+          }
+          _this.add.visible = true
         }
-
       })
     },
     deleteById(id) {
