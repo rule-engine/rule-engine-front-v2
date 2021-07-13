@@ -18,7 +18,7 @@ export default {
   components: {Definition, Config, Publish},
   data() {
     return {
-      currentPage: 1,
+      currentPage: null,
       ruleId: undefined,
     }
   }, mounted() {
