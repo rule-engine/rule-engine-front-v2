@@ -51,7 +51,7 @@ export default {
   props: {
     ruleId: {
       type: Number,
-      required: true
+      required: false
     }
   },
   data() {
