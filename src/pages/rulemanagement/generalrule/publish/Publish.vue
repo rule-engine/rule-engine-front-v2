@@ -139,6 +139,12 @@ import {runTest, viewGeneralRule} from '@/services/generalRule'
 export default {
   name: "Publish.vue",
   components: {PageLayout, FooterToolBar},
+  props: {
+    ruleId: {
+      type: Number,
+      required: true
+    }
+  },
   data() {
     return {
       generalRule: {
@@ -197,7 +203,7 @@ export default {
     }
   },
   mounted() {
-    this.generalRule.id = this.$route.query.id;
+    this.generalRule.id = this.ruleId
     this.getRuleConfig();
   },
   methods: {
@@ -289,7 +295,7 @@ export default {
       })
     },
     previous() {
-      this.$router.push({path: '/generalRuleConfig', query: {id: this.generalRule.id}})
+      this.$emit("choicePage", {pageIndex: 2, id: this.generalRule.id})
     },
     publish() {
 

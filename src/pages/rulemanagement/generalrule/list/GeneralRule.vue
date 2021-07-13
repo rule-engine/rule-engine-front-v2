@@ -52,6 +52,7 @@
           :columns="columns"
           :dataSource="dataSource"
           :selectedRows.sync="selectedRows"
+          :loading="loading"
           @clear="onClear"
           @change="onChange"
           @selectedRowChange="onSelectChange"
@@ -262,6 +263,7 @@ export default {
   i18n: require('./i18n'),
   data() {
     return {
+      loading: true,
       query: {
         orders: [
           {
@@ -395,8 +397,7 @@ export default {
         } else {
           _this.dataSource = []
         }
-        this.loading = false
-      });
+      }).finally(() => this.loading = false);
     },
     submitForm() {
       this.loadDataList();
@@ -440,7 +441,7 @@ export default {
       //this.selectedRows = this.selectedRows.filter(item => item.key !== key)
     },
     edit(record) {
-      this.$router.push({path: '/generalRuleConfig', query: {id: record.id}})
+      this.$router.push({path: '/generalRuleRouter', query: {id: record.id, pageIndex: 2}})
     },
     downloadGeneralRule(record) {
       console.log(record)
