@@ -21,7 +21,7 @@
             </a-input>
           </a-form-model-item>
           <a-form-model-item label="编码" prop="code">
-            <a-input :disabled="generalRule.id!=null" v-model="generalRule.code" type="code"
+            <a-input :disabled="!isNaN(generalRule.id)" v-model="generalRule.code" type="code"
                      placeholder="请输入规则编码">
             </a-input>
           </a-form-model-item>
