@@ -60,7 +60,7 @@
                       total: this.query.page.total}"
             >
                 <div slot="user" slot-scope="{text, record}">
-                    <a-avatar size="small" icon="user" :src="record.userAvatar"/>
+                    <a-avatar size="small" icon="user" :src="record.createUserAvatar"/>
                     {{ record.createUserName }}
                 </div>
 
