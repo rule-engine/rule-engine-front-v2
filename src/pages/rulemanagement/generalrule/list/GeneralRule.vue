@@ -79,10 +79,10 @@
         </div>
 
         <div slot="action" slot-scope="{ record}">
-<!--          <a style="margin-right: 8px" @click="view(record)">-->
-<!--            <a-icon type="eye"/>-->
-<!--            查看-->
-<!--          </a>-->
+          <!--          <a style="margin-right: 8px" @click="view(record)">-->
+          <!--            <a-icon type="eye"/>-->
+          <!--            查看-->
+          <!--          </a>-->
           <a style="margin-right: 8px" @click="edit(record)">
             <a-icon type="edit"/>
             编辑
@@ -94,7 +94,7 @@
               <a-icon type="down"/>
             </a>
             <a-menu slot="overlay">
-              <a-menu-item>
+              <a-menu-item @click="downloadGeneralRule(record)">
                 <a-icon type="download"/>
                 下载
               </a-menu-item>
@@ -223,8 +223,10 @@
 <script>
 import PageLayout from '@/layouts/PageLayout'
 import StandardTable from '@/components/table/StandardTable'
+
 import {list, deleteGeneralRule} from '@/services/generalRule'
 import {dataPermissionList, update} from '@/services/dataPermission'
+import {exportData} from '@/services/importExport'
 
 const columns = [
   {
@@ -439,6 +441,10 @@ export default {
     },
     edit(record) {
       this.$router.push({path: '/generalRuleConfig', query: {id: record.id}})
+    },
+    downloadGeneralRule(record) {
+      console.log(record)
+      exportData({dataType: 1, dataId: record.id});
     },
     showHistoryVersion(record) {
       this.historyVersion.visible = true;

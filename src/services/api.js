@@ -45,6 +45,9 @@ module.exports = {
         RUN_TEST: `${COMPUTE_WEB_BASE_URL}/ruleEngine/generalRuleTest/run`,
         VIEW: `${WEB_BASE_URL}/ruleEngine/generalRule/view`,
     },
+    importExport: {
+        EXPORT: `${WEB_BASE_URL}/ruleEngine/dataPermission/export`,
+    },
     dataPermission: {
         LIST: `${WEB_BASE_URL}/ruleEngine/dataPermission/list`,
         UPDATE: `${WEB_BASE_URL}/ruleEngine/dataPermission/saveOrUpdateDataPermission`,
