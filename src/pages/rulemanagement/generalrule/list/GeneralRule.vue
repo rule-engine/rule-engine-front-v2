@@ -229,8 +229,6 @@ import {list, deleteGeneralRule} from '@/services/generalRule'
 import {dataPermissionList, update} from '@/services/dataPermission'
 import {exportData} from '@/services/importExport'
 
-//import {router} from '@/router/index'
-
 const columns = [
   {
     title: '名称',
@@ -416,29 +414,6 @@ export default {
       console.log(current, pageSize);
     },
     addNew() {
-      let route = {
-        path: '/generalRuleRouter/new',
-        name: '新建规则',
-        meta: {
-          invisible: true,
-          page: {
-            title: "新建规则",
-            closable: true,
-          },
-          authority: {
-            permission: '*'
-          },
-          pAuthorities: [
-            {permission: '*'}
-          ]
-        },
-        matched: [],
-        page: {
-          title: "asdf",
-        },
-        component: () => import('@/pages/rulemanagement/generalrule/router'),
-      };
-      this.$routers.addRoute('规则管理', route)
       this.$router.push('/generalRuleRouter/new')
     },
     handleMenuClick() {
@@ -466,26 +441,7 @@ export default {
       //this.selectedRows = this.selectedRows.filter(item => item.key !== key)
     },
     edit(record) {
-      let route = {
-        path: `/generalRuleRouter/${record.id}/:ruleId`,
-        name: `规则(${record.name})`,
-        meta: {
-          invisible: true,
-          page: {
-            title:  `规则(${record.name})`,
-            closable: true,
-          },
-          authority: {
-            permission: '*'
-          },
-          pAuthorities: [
-            {permission: '*'}
-          ]
-        },
-        component: () => import('@/pages/rulemanagement/generalrule/router'),
-      };
-      this.$routers.addRoute('规则管理', route)
-      this.$router.push({path: `/generalRuleRouter/${record.id}/` + record.id, query: {pageIndex: 2}})
+      this.$router.push({path: '/generalRuleRouter/' + record.id, query: {pageIndex: 2}})
     },
     downloadGeneralRule(record) {
       console.log(record)
