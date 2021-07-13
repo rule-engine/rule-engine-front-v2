@@ -445,7 +445,12 @@ export default {
     },
     downloadGeneralRule(record) {
       console.log(record)
-      exportData({dataType: 1, dataId: record.id});
+      exportData({
+        dataType: 0,
+        dataId: record.id,
+        // 默认有最新版本下载最新的，否则下载已发布的
+        version: (record.currentVersion != null ? record.currentVersion : record.publishVersion)
+      });
     },
     showHistoryVersion(record) {
       this.historyVersion.visible = true;

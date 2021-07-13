@@ -8,7 +8,15 @@ export function exportData(query) {
         const downloadElement = document.createElement("a");
         const href = window.URL.createObjectURL(blob);
         downloadElement.href = href;
-        downloadElement.download = decodeURIComponent(res.data.data.name);
+        let suffix;
+        if (query.dataType === 0) {
+            suffix = '.r';
+        } else if (query.dataType === 1) {
+            suffix = '.rs';
+        } else if (query.dataType === 2) {
+            suffix = '.dt';
+        }
+        downloadElement.download = decodeURIComponent(res.data.data.code + suffix);
         document.body.appendChild(downloadElement);
         downloadElement.click();
         document.body.removeChild(downloadElement);
