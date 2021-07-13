@@ -84,7 +84,7 @@ export default {
           let nameElement = document.getElementsByClassName('ant-tabs-tab-active')[0].getElementsByClassName('title')[0];
           nameElement.innerHTML = '规则(' + this.generalRule.name + ')';
         })
-      }else{
+      } else {
         let nameElement = document.getElementsByClassName('ant-tabs-tab-active')[0].getElementsByClassName('title')[0];
         nameElement.innerHTML = '新建规则';
       }
@@ -92,7 +92,7 @@ export default {
     //保存规则定义
     saveRuleDefinition() {
       this.loading = true;
-      if (this.generalRule.id != null) {
+      if (!isNaN(this.generalRule.id)) {
         updateGeneralRule(this.generalRule).then(res => {
           if (res.data.code === 200) {
             this.$emit("choicePage", {pageIndex: 2, id: this.generalRule.id})
