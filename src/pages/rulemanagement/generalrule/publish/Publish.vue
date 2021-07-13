@@ -68,7 +68,56 @@
               </a-popover>
         </span>
 
-        11
+        <a-timeline>
+          <a-timeline-item v-for="(cg,cgi) in generalRule.conditionGroup" :key="cg.id">
+            <span style="color: #606266;font-size: 14px;" v-if="0===cgi">如果</span>
+            <span style="color: #606266;font-size: 14px;" v-else>或者</span>
+            <div v-for="(cgc) in cg.conditionGroupCondition" style="margin-left: 20px;" :key="cgc.id">
+              <a-alert style="background-color: #f4f4f5;border:none;padding: 6px 6px 6px 6px;margin-bottom: 10px"
+                       class="conditionItem">
+                <p slot="description" style="margin-bottom: 0;">
+                  <a-tag color="blue" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                    （{{ cgc.condition.name }}）
+                  </a-tag>
+                  <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                    {{ getConditionNamePrefix(cgc.condition.config.leftValue.type) }}
+                  </a-tag>
+                  {{ getViewValue(cgc.condition.config.leftValue) }}
+                  &nbsp;
+                  <a-tag color="orange" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                    {{ cgc.condition.config.symbol }}
+                  </a-tag>
+                  <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                    {{ getConditionNamePrefix(cgc.condition.config.rightValue.type) }}
+                  </a-tag>
+                  {{ getViewValue(cgc.condition.config.rightValue) }}
+                </p>
+              </a-alert>
+            </div>
+          </a-timeline-item>
+        </a-timeline>
+
+        <span style="color: #606266;font-size: 14px;">返回</span>
+        <div style="margin-left: 20px;margin-top: 3px;">
+          <a-alert :closable="false" type="success" style="border:none;padding: 6px 6px 6px 6px;margin-bottom: 10px">
+            <p slot="description" style="margin-bottom: 0;">
+              {{ getActionView(generalRule.action) }}
+            </p>
+          </a-alert>
+        </div>
+        <span v-if="generalRule.conditionGroup.length!==0">
+                    <span style="color: #606266;font-size: 14px;">否则返回</span>
+                    <br>
+                    <div style="margin-left: 20px;margin-top: 3px;">
+                      <a-alert :closable="false" type="warning"
+                               style="border:none;padding: 6px 6px 6px 6px;margin-bottom: 10px">
+                        <p slot="description" style="margin-bottom: 0;">
+                        {{ getDefaultActionView(generalRule.defaultAction) }}
+                        </p>
+                      </a-alert>
+                    </div>
+       </span>
+
       </a-card>
     </page-layout>
 
@@ -152,6 +201,33 @@ export default {
     this.getRuleConfig();
   },
   methods: {
+    getActionView(action) {
+      if (action.variableValue != null) {
+        return action.variableValue;
+      }
+      if (action.valueName === '') {
+        return '空';
+      }
+      return action.valueName;
+    },
+    getDefaultActionView(defaultAction) {
+      if (defaultAction.enableDefaultAction === 0) {
+        return this.getActionView(defaultAction);
+      } else {
+        return 'null';
+      }
+    },
+    getConditionNamePrefix(type) {
+      if (type === 0) {
+        return "参数";
+      }
+      if (type === 1) {
+        return "变量";
+      }
+      if (type === 2) {
+        return "固定值";
+      }
+    },
     backToTest() {
       this.runTest.resultView = false;
     },
@@ -217,7 +293,21 @@ export default {
     },
     publish() {
 
-    }
+    },
+    getViewValue(v) {
+      // 如果是固定值
+      if (v.type === 2) {
+        return v.value;
+      }
+      // 如果是固定值变量的 变量值
+      if (v.variableValue !== null) {
+        return v.variableValue;
+      }
+      if (v.valueName !== null) {
+        return v.valueName;
+      }
+      return v.value;
+    },
   }
 }
 </script>
