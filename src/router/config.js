@@ -109,32 +109,32 @@ const options = {
                             },
                             component: () => import('@/pages/rulemanagement/generalrule/list'),
                         },
-                        {
-                            path: '/generalRuleDefinition',
-                            name: '规则定义',
-                            meta: {
-                                invisible: true
-                            },
-                            component: () => import('@/pages/rulemanagement/generalrule/definition'),
-                        },
-                        {
-                            path: '/generalRuleConfig',
-                            name: '规则配置',
-                            meta: {
-                                invisible: true,
-                                keepAlive:false
-
-                            },
-                            component: () => import('@/pages/rulemanagement/generalrule/config'),
-                        },
-                        {
-                            path: '/generalRulePublish',
-                            name: '规则发布',
-                            meta: {
-                                invisible: true
-                            },
-                            component: () => import('@/pages/rulemanagement/generalrule/publish'),
-                        },
+                        // {
+                        //     path: '/generalRuleDefinition',
+                        //     name: '规则定义',
+                        //     meta: {
+                        //         invisible: true
+                        //     },
+                        //     component: () => import('@/pages/rulemanagement/generalrule/definition'),
+                        // },
+                        // {
+                        //     path: '/generalRuleConfig',
+                        //     name: '规则配置',
+                        //     meta: {
+                        //         invisible: true,
+                        //         keepAlive:false
+                        //
+                        //     },
+                        //     component: () => import('@/pages/rulemanagement/generalrule/config'),
+                        // },
+                        // {
+                        //     path: '/generalRulePublish',
+                        //     name: '规则发布',
+                        //     meta: {
+                        //         invisible: true
+                        //     },
+                        //     component: () => import('@/pages/rulemanagement/generalrule/publish'),
+                        // },
                         {
                             path: '/generalRuleRouter',
                             name: '-规则名称-',
