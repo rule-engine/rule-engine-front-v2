@@ -135,14 +135,14 @@ const options = {
                         //     },
                         //     component: () => import('@/pages/rulemanagement/generalrule/publish'),
                         // },
-                        {
-                            path: '/generalRuleRouter/:ruleId',
-                            name: '-规则编辑-',
-                            meta: {
-                                invisible: true
-                            },
-                            component: () => import('@/pages/rulemanagement/generalrule/router'),
-                        },
+                        // {
+                        //     path: '/generalRuleRouter/:ruleId',
+                        //     name: '-规则编辑-',
+                        //     meta: {
+                        //         invisible: true
+                        //     },
+                        //     component: () => import('@/pages/rulemanagement/generalrule/router'),
+                        // },
                         // {
                         //     path: 'ruleSet',
                         //     name: '规则集',
