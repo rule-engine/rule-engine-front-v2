@@ -136,8 +136,8 @@ const options = {
                         //     component: () => import('@/pages/rulemanagement/generalrule/publish'),
                         // },
                         {
-                            path: '/generalRuleRouter',
-                            name: '-规则名称-',
+                            path: '/generalRuleRouter/:ruleId',
+                            name: '-规则编辑-',
                             meta: {
                                 invisible: true
                             },
