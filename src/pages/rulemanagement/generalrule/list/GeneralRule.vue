@@ -414,7 +414,7 @@ export default {
       console.log(current, pageSize);
     },
     addNew() {
-      this.$router.push('/generalRuleRouter/new')
+      this.$router.push({path: '/generalRuleRouter/new', query: {pageIndex: 1}})
     },
     handleMenuClick() {
 
