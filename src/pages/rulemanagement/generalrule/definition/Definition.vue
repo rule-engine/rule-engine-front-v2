@@ -80,6 +80,9 @@ export default {
       if (this.generalRule.id != null) {
         getRuleDefinition({id: this.generalRule.id}).then(res => {
           this.generalRule = res.data.data;
+          // 刚进页面 查询到规则name
+          let nameElement = document.getElementsByClassName('ant-tabs-tab-active')[0].getElementsByClassName('title')[0];
+          nameElement.innerHTML = '规则(' + this.generalRule.name + ')';
         })
       }
     },

@@ -848,6 +848,9 @@ export default {
         let da = res.data.data;
         if (da != null) {
           this.generalRule = da;
+          // 刚进页面 查询到规则name
+          let nameElement = document.getElementsByClassName('ant-tabs-tab-active')[0].getElementsByClassName('title')[0];
+          nameElement.innerHTML = '规则(' + this.generalRule.name + ')';
         }
       }).finally(() => {
         this.loading = false
