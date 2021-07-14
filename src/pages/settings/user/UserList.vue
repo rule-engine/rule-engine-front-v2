@@ -209,7 +209,8 @@ export default {
         username: '',
         email: '',
         phone: '',
-        sex: '男'
+        sex: '男',
+        orgEmail: ''
       },
       showAddUserModel: false,
       confirmLoading: false,
@@ -227,6 +228,9 @@ export default {
       rules: {
         username: {
           trigger: ['blur'], required: true, asyncValidator: (rule, value, callback) => {
+            if (this.edit.visible) {
+              return false
+            }
             if (value.length < 2 || value.length > 16) {
               callback(new Error('用户名长度应该在2-16位'));
             } else {
@@ -242,6 +246,10 @@ export default {
         },
         email: {
           type: 'email', trigger: ['blur'], asyncValidator: (rule, value, callback) => {
+            if (this.edit.visible && this.userEditForm.email === this.userEditForm.orgEmail ) {
+              callback();
+              return
+            }
             if (!isEmail(value)) {
               callback(new Error('请输入正确的邮箱'));
             } else {
@@ -366,7 +374,7 @@ export default {
           this.userEditForm.id = resp.data.id;
           this.userEditForm.username = resp.data.username;
           this.userEditForm.sex = resp.data.sex;
-          this.userEditForm.email = resp.data.email;
+          this.userEditForm.email = this.userEditForm.orgEmail = resp.data.email;
           this.userEditForm.phone = resp.data.phone;
           this.edit.visible = true;
         }
