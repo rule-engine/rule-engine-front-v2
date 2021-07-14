@@ -295,63 +295,86 @@
 
               <a-icon slot="extra" class="dynamic-delete-button" type="save"
                       style="font-size: 18px;margin-left: 16px;" @click="saveAction"></a-icon>
+              <a-form-model ref="actionForm" :model="generalRule">
+                <a-row>
+                  <a-col :span="5">
+                    <a-form-model-item prop="action.type"
+                                       :rules="{
+                                        required: true,
+                                        message: '请选择结果类型',
+                                        trigger: ['change', 'blur'],
+                                      }">
+                      <a-select style="width:100%"
+                                :value="generalRule.action.type===0?'PARAMETER':(generalRule.action.type===1?'VARIABLE':generalRule.action.valueType)"
+                                @change="actionValueTypeChange">
+                        <a-select-option value="PARAMETER">参数</a-select-option>
+                        <a-select-option value="VARIABLE">变量</a-select-option>
+                        <a-select-option value="BOOLEAN">布尔</a-select-option>
+                        <a-select-option value="COLLECTION">集合</a-select-option>
+                        <a-select-option value="STRING">字符串</a-select-option>
+                        <a-select-option value="NUMBER">数值</a-select-option>
+                        <a-select-option value="DATE">日期</a-select-option>
+                      </a-select>
+                    </a-form-model-item>
+                  </a-col>
+                  <a-col :span="1"></a-col>
+                  <a-col :span="18">
+                    <a-form-model-item prop="action.value"
+                                       :rules="{
+                                        required: true,
+                                        message: '请输入结果值',
+                                        trigger: ['change', 'blur'],
+                                      }">
+                      <a-select
+                          v-if="generalRule.action.type===0||generalRule.action.type===1"
+                          show-search
+                          :disabled="generalRule.action.type==null"
+                          :value="generalRule.action.valueName"
+                          placeholder="请输入关键字进行搜索"
+                          :default-active-first-option="false"
+                          :show-arrow="false"
+                          :filter-option="false"
+                          :not-found-content="null"
+                          @search="actionSearch"
+                      >
+                        <a-select-option v-for="d in actionSearchSelect.data" :value="d.id"
+                                         :key="d.id"
+                                         @click.native="actionSearchOptionClick(d)">
+                          {{ d.name }}
+                        </a-select-option>
+                      </a-select>
 
-              <a-row>
-                <a-col :span="5">
-                  <a-select style="width:100%"
-                            :value="generalRule.action.type===0?'PARAMETER':(generalRule.action.type===1?'VARIABLE':generalRule.action.valueType)"
-                            @change="actionValueTypeChange"
-                  >
-                    <a-select-option value="PARAMETER">参数</a-select-option>
-                    <a-select-option value="VARIABLE">变量</a-select-option>
-                    <a-select-option value="BOOLEAN">布尔</a-select-option>
-                    <a-select-option value="COLLECTION">集合</a-select-option>
-                    <a-select-option value="STRING">字符串</a-select-option>
-                    <a-select-option value="NUMBER">数值</a-select-option>
-                    <a-select-option value="DATE">日期</a-select-option>
-                  </a-select>
-                </a-col>
-                <a-col :span="1"></a-col>
-                <a-col :span="18">
-
-                  <a-select
-                      v-if="generalRule.action.type===0||generalRule.action.type===1"
-                      show-search
-                      :value="generalRule.action.searchSelect.value"
-                      placeholder="请输入关键字进行搜索"
-                      :default-active-first-option="false"
-                      :show-arrow="false"
-                      :filter-option="false"
-                      :not-found-content="null"
-                      @search="actionSearch"
-                  >
-                    <a-select-option v-for="d in generalRule.action.searchSelect.data" :value="d.id"
-                                     :key="d.id"
-                                     @click.native="actionSearchOptionClick(d)">
-                      {{ d.name }}
-                    </a-select-option>
-                  </a-select>
-
-                  <a-select
-                      v-else-if="generalRule.action.valueType==='BOOLEAN'"
-                      defaultValue="true"
-                      style="width: 100%"
-                      v-model="generalRule.action.value" placeholder="请选择数据">
-                    <a-select-option value="true">true</a-select-option>
-                    <a-select-option value="false">false</a-select-option>
-                  </a-select>
-                  <a-input-number
-                      v-else-if="generalRule.action.valueType==='NUMBER'"
-                      v-model="generalRule.action.value" style="width: 100%"/>
-                  <a-date-picker
-                      v-else-if="generalRule.action.valueType==='DATE'"
-                      show-time
-                      style="width: 100%"></a-date-picker>
-                  <a-input v-else
-                           v-model="generalRule.action.value"></a-input>
-
-                </a-col>
-              </a-row>
+                      <a-select
+                          :disabled="!generalRule.action.type"
+                          v-else-if="generalRule.action.valueType==='BOOLEAN'"
+                          defaultValue="true"
+                          @blur="saveAction"
+                          style="width: 100%"
+                          v-model="generalRule.action.value" placeholder="请选择数据">
+                        <a-select-option value="true">true</a-select-option>
+                        <a-select-option value="false">false</a-select-option>
+                      </a-select>
+                      <a-input-number
+                          :disabled="!generalRule.action.type"
+                          @blur="saveAction"
+                          v-else-if="generalRule.action.valueType==='NUMBER'"
+                          v-model="generalRule.action.value" style="width: 100%"/>
+                      <a-date-picker
+                          :disabled="!generalRule.action.type"
+                          @openChange="actionValueDatePickerOpenChange"
+                          v-else-if="generalRule.action.valueType==='DATE'"
+                          show-time
+                          format="YYYY-MM-DD hh:mm:ss"
+                          v-model="generalRule.action.value"
+                          style="width: 100%"></a-date-picker>
+                      <a-input v-else
+                               :disabled="!generalRule.action.type"
+                               @blur="saveAction"
+                               v-model="generalRule.action.value"></a-input>
+                    </a-form-model-item>
+                  </a-col>
+                </a-row>
+              </a-form-model>
             </a-card>
           </a-col>
           <a-col :span="1"></a-col>
@@ -365,7 +388,7 @@
 
     <footer-tool-bar>
       <!--      <a-button type="primary" @click="previous()" :loading="footer.loading">上一步</a-button>&nbsp;&nbsp;&nbsp;&nbsp;-->
-      <a-button type="primary" @click="nextStep()" :loading="footer.loading">下一步</a-button>
+      <a-button type="primary" @click="nextStep()" :loading="footer.nextStepLoading">下一步</a-button>
     </footer-tool-bar>
 
     <a-drawer
@@ -432,10 +455,6 @@ export default {
           valueType: 'NUMBER',
           type: null,
           loading: false,
-          searchSelect: {
-            data: [],
-            value: undefined,
-          }
         },
         defaultAction: {
           enableDefaultAction: 1,
@@ -450,8 +469,12 @@ export default {
           }
         },
       },
+      actionSearchSelect: {
+        data: [],
+        value: undefined,
+      },
       footer: {
-        loading: false,
+        nextStepLoading: false,
       },
       rules: {},
       drawer: {
@@ -501,6 +524,15 @@ export default {
   },
   methods: {
     saveAction() {
+      if (this.generalRule.action.type == null) {
+        return;
+      }
+      if (!this.generalRule.action.value) {
+        return;
+      }
+      if (!this.generalRule.action.valueType) {
+        return;
+      }
       saveAction({
         ruleId: this.generalRule.ruleId,
         configValue: this.generalRule.action
@@ -510,13 +542,18 @@ export default {
         }
       })
     },
+    actionValueDatePickerOpenChange(s) {
+      if (!s) {
+        this.saveAction();
+      }
+    },
     actionSearch(value) {
       selectSearch({
             name: value,
             dataId: this.generalRule.id,
             dataType: this.dataType,
             valueType: null // 查询所有类型
-          }, data => (this.generalRule.action.searchSelect.data = data)
+          }, data => (this.actionSearchSelect.data = data)
           , this.generalRule.action.type)
     },
     actionSearchOptionClick(d) {
@@ -527,6 +564,7 @@ export default {
       if (this.generalRule.action.type === 1 && d.type === 2) {
         this.generalRule.action.variableValue = d.value;
       }
+      this.saveAction();
     },
     deleteCondition(cgc, conditionGroupRefId, conditionId) {
       deleteCondition({
@@ -597,7 +635,7 @@ export default {
         this.generalRule.action.type = 2;
       }
       // 清空远程搜索缓存
-      this.generalRule.action.searchSelect = {
+      this.actionSearchSelect = {
         data: [],
         value: undefined,
       }
@@ -733,10 +771,19 @@ export default {
       this.$emit("choicePage", {pageIndex: 1, id: this.generalRule.id})
     },
     nextStep() {
-      generationRelease(this.generalRule).then(res => {
-        console.log(res)
-        this.$emit("choicePage", {pageIndex: 3, id: this.generalRule.id})
-      })
+      this.$refs['actionForm'].validate(valid => {
+        if (valid) {
+          this.footer.nextStepLoading = true;
+          generationRelease(this.generalRule).then(res => {
+            console.log(res)
+            this.footer.nextStepLoading = false;
+            this.$emit("choicePage", {pageIndex: 3, id: this.generalRule.id})
+          })
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
     },
     showDrawer() {
       this.drawer.visible = true;
