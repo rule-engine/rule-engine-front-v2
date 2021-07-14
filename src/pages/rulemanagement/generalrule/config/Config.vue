@@ -74,83 +74,6 @@
                   </p>
                 </a-alert>
 
-                <!--                <a-alert closable-->
-                <!--                         style="background-color: #f4f4f5;border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"-->
-                <!--                         class="conditionItem">-->
-                <!--                  <p slot="description" style="margin-bottom: 0;">-->
-
-                <!--                    <a-tag color="blue" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">-->
-                <!--                      请输入-->
-                <!--                    </a-tag>-->
-                <!--                    <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">-->
-                <!--                      选择-->
-                <!--                    </a-tag>-->
-                <!--                    -&#45;&#45;-->
-                <!--                    &nbsp;-->
-                <!--                    <a-tag color="orange" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">-->
-                <!--                      选择-->
-                <!--                    </a-tag>-->
-                <!--                    <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">-->
-                <!--                      选择-->
-                <!--                    </a-tag>-->
-                <!--                    -&#45;&#45;-->
-
-                <!--                  </p>-->
-                <!--                </a-alert>-->
-
-
-                <!--                <a-alert closable-->
-                <!--                         style="background-color: #f4f4f5;border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"-->
-                <!--                         class="conditionItem">-->
-                <!--                  <p slot="description" style="margin-bottom: 0;">-->
-
-
-                <!--                    &lt;!&ndash;                    <a-input style="width: 200px"></a-input>&ndash;&gt;-->
-
-
-                <!--                    &lt;!&ndash;&nbsp;&nbsp;&nbsp;&ndash;&gt;-->
-                <!--                    <a-row>-->
-                <!--                      <a-col :span="24">-->
-
-
-                <!--                        <a-input-group compact>-->
-                <!--                          <a-select value="STRING">-->
-                <!--                            <a-select-option value="PARAMETER">参数</a-select-option>-->
-                <!--                            <a-select-option value="VARIABLE">变量</a-select-option>-->
-                <!--                            <a-select-option value="BOOLEAN">布尔</a-select-option>-->
-                <!--                            <a-select-option value="COLLECTION">集合</a-select-option>-->
-                <!--                            <a-select-option value="STRING">字符串</a-select-option>-->
-                <!--                            <a-select-option value="NUMBER">数值</a-select-option>-->
-                <!--                            <a-select-option value="DATE">日期</a-select-option>-->
-                <!--                          </a-select>-->
-                <!--                          <a-input  style="width: 200px"  default-value="input content"></a-input>-->
-
-                <!--                          <a-select value="==">-->
-                <!--                            <a-select-option value="==">等于</a-select-option>-->
-                <!--                          </a-select>-->
-
-
-                <!--                          <a-select value="STRING">-->
-                <!--                            <a-select-option value="PARAMETER">参数</a-select-option>-->
-                <!--                            <a-select-option value="VARIABLE">变量</a-select-option>-->
-                <!--                            <a-select-option value="BOOLEAN">布尔</a-select-option>-->
-                <!--                            <a-select-option value="COLLECTION">集合</a-select-option>-->
-                <!--                            <a-select-option value="STRING">字符串</a-select-option>-->
-                <!--                            <a-select-option value="NUMBER">数值</a-select-option>-->
-                <!--                            <a-select-option value="DATE">日期</a-select-option>-->
-                <!--                          </a-select>-->
-                <!--                          <a-input style="width: 200px" default-value="input content"></a-input>-->
-
-
-                <!--                        </a-input-group>-->
-
-
-                <!--                      </a-col>-->
-                <!--                    </a-row>-->
-                <!--                  </p>-->
-                <!--                </a-alert>-->
-
-
                 <br>
 
                 <a-popover title="添加条件" trigger="click" arrow-point-at-center v-model="cg.popoverVisible">
@@ -481,6 +404,7 @@ import {saveConditionAndBindGroup, deleteCondition} from '@/services/conditionGr
 
 //import {listInputParameter} from '@/services/inputParameter'
 import {selectSearch} from '@/utils/selectSearch'
+import {getSymbolByValueType, getSymbolExplanation} from '@/utils/symbol'
 
 export default {
   name: "Config",
@@ -938,90 +862,10 @@ export default {
       });
     },
     getSymbolExplanation(name) {
-      switch (name) {
-        case "EQ":
-          return "等于";
-        case "NE":
-          return "不等于";
-        case "GT":
-          return "大于";
-        case "LT":
-          return "小于";
-        case "GE":
-          return "大于等于";
-        case "LE":
-          return "小于等于";
-        case "CONTAIN":
-          return "包含";
-        case "NOT_CONTAIN":
-          return "不包含";
-        case "IN":
-          return "在";
-        case "NOT_IN":
-          return "不在";
-        case "STARTS_WITH":
-          return "以..开始";
-        case "ENDS_WITH":
-          return "以..结束";
-      }
+      return getSymbolExplanation(name);
     },
     getSymbolByValueType(valueType) {
-      switch (valueType) {
-        case "STRING":
-          return [{"explanation": "等于", "name": "EQ", "symbol": "=="}, {
-            "explanation": "不等于",
-            "name": "NE",
-            "symbol": "!="
-          }, {"explanation": "包含", "name": "CONTAIN", "symbol": "contain"}, {
-            "explanation": "以..结束",
-            "name": "ENDS_WITH",
-            "symbol": "ends with"
-          }, {"explanation": "以..开始", "name": "STARTS_WITH", "symbol": "starts with"}];
-        case "BOOLEAN":
-          return [{"explanation": "等于", "name": "EQ", "symbol": "=="}, {
-            "explanation": "不等于",
-            "name": "NE",
-            "symbol": "!="
-          }];
-        case "NUMBER":
-          return [{"explanation": "大于", "name": "GT", "symbol": ">"}, {
-            "explanation": "小于",
-            "name": "LT",
-            "symbol": "<"
-          }, {"explanation": "等于", "name": "EQ", "symbol": "=="}, {
-            "explanation": "不等于",
-            "name": "NE",
-            "symbol": "!="
-          }, {"explanation": "大于等于", "name": "GE", "symbol": ">="}, {
-            "explanation": "小于等于",
-            "name": "LE",
-            "symbol": "<="
-          }];
-        case "COLLECTION":
-          return [{"explanation": "等于", "name": "EQ", "symbol": "=="}, {
-            "explanation": "在",
-            "name": "IN",
-            "symbol": "in"
-          }, {"explanation": "不在", "name": "NOT_IN", "symbol": "not in"}, {
-            "explanation": "包含",
-            "name": "CONTAIN",
-            "symbol": "contain"
-          }, {"explanation": "不包含", "name": "NOT_CONTAIN", "symbol": "not contain"}];
-        case "DATE":
-          return [{"explanation": "大于", "name": "GT", "symbol": ">"}, {
-            "explanation": "小于",
-            "name": "LT",
-            "symbol": "<"
-          }, {"explanation": "等于", "name": "EQ", "symbol": "=="}, {
-            "explanation": "不等于",
-            "name": "NE",
-            "symbol": "!="
-          }, {"explanation": "大于等于", "name": "GE", "symbol": ">="}, {
-            "explanation": "小于等于",
-            "name": "LE",
-            "symbol": "<="
-          }];
-      }
+      return getSymbolByValueType(valueType);
     }
   }
 }

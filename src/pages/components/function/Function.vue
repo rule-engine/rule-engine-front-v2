@@ -5,6 +5,18 @@
         <a-form-item label="名称">
           <a-input v-model="query.query.name"/>
         </a-form-item>
+
+        <a-form-item label="返回类型">
+          <a-select v-model="query.query.valueType" style="width: 120px">
+            <a-select-option value="">全部</a-select-option>
+            <a-select-option value="BOOLEAN">布尔</a-select-option>
+            <a-select-option value="COLLECTION">集合</a-select-option>
+            <a-select-option value="STRING">字符串</a-select-option>
+            <a-select-option value="NUMBER">数值</a-select-option>
+            <a-select-option value="DATE">日期</a-select-option>
+          </a-select>
+        </a-form-item>
+
         <a-form-item>
           <a-button type="primary" @click="loadFunctionList()">
             搜索
@@ -44,6 +56,10 @@
           pageSize: this.query.page.pageSize,
           total: this.query.page.total}"
       >
+        <div slot="valueType" slot-scope="{record}">
+          <a-tag color="cyan">{{ getValueTypeName(record.returnValueType) }}</a-tag>
+        </div>
+
         <div slot="action" slot-scope="{record}">
           <a style="margin-right: 8px" @click="view(record)">
             <a-icon type="edit"/>
@@ -169,6 +185,7 @@ import PageLayout from '@/layouts/PageLayout'
 import StandardTable from '@/components/table/StandardTable'
 
 import {functionList, selectFunctionById, runFunction} from '@/services/function'
+import {getValueTypeName} from "@/utils/value-type";
 
 const columns = [
   {
@@ -181,7 +198,7 @@ const columns = [
   },
   {
     title: '返回值类型',
-    dataIndex: 'returnValueType',
+    scopedSlots: {customRender: 'valueType'},
   },
   {
     title: '创建时间',
@@ -238,12 +255,16 @@ export default {
           total: 0
         },
         query: {
-          name: ''
+          name: '',
+          valueType: ''
         }
       },
     }
   },
   methods: {
+    getValueTypeName(valueType) {
+      return getValueTypeName(valueType)
+    },
     //  列表
     loadFunctionList() {
       this.loading = true;
