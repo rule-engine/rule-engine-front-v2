@@ -53,7 +53,7 @@ export default {
   methods: {
     cancel(data) {
       if (data)
-        location.reload()
+        this.currentPage = parseInt(this.$route.query.pageIndex)
     },
     choicePage(params) {
       this.currentPage = params.pageIndex
