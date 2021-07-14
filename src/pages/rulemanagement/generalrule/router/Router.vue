@@ -52,8 +52,9 @@ export default {
   },
   methods: {
     cancel(data) {
-      if (data)
-        this.currentPage = parseInt(this.$route.query.pageIndex)
+      var pageIndex = this.$route.query.pageIndex
+      if (data && pageIndex && !isNaN(pageIndex))
+        this.currentPage = parseInt(pageIndex)
     },
     choicePage(params) {
       this.currentPage = params.pageIndex
