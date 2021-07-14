@@ -34,8 +34,8 @@ export async function selectWorkSpaceById(query) {
  * @param query
  * @returns {Promise<AxiosResponse<any>>}
  */
-export async function checkWorkspaceCode(query) {
-    return request(workspace.CHECK_WORKSPACE_CODE, METHOD.POST, query)
+export async function verifyWorkspaceCode(query) {
+    return request(workspace.VERIFY_WORKSPACE_CODE, METHOD.POST, query)
 }
 
 export async function add(query) {
