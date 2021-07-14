@@ -38,6 +38,7 @@
     <a-card>
       <standard-table
           rowKey="id"
+          :loading="loading"
           style="clear: both"
           :columns="columns"
           :dataSource="dataSource"
@@ -387,16 +388,13 @@ export default {
       })
     },
     deleteUser(record) {
-      this.confirmLoading = true
       const _this = this;
-      console.log("deleteUser", record);
+      this.loading = true
       deleteUser({
         id: record.id,
       }).then(res => {
-        console.log(res)
         if (res.data.code === 200) {
           _this.$message.success("删除成功！")
-          _this.confirmLoading = false
           this.loadUserList();
         }
       })

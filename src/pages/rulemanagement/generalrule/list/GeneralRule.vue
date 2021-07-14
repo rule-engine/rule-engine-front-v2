@@ -420,6 +420,7 @@ export default {
   },
   methods: {
     deleteRow(record) {
+      this.loading = true;
       deleteGeneralRule({id: record.id}).then(res => {
         if (res.data) {
           this.$message.success("删除成功！");
