@@ -86,9 +86,18 @@
                 <a-icon type="file-protect"/>
                 密钥
               </a-menu-item>
-              <a-menu-item @click="deleteWorkspace(record)">
-                <a-icon type="delete"/>
-                删除
+              <a-menu-item>
+                <a-popconfirm
+                    title="你确定要删除这个工作空间吗"
+                    ok-text="是"
+                    cancel-text="不了"
+                    @confirm="deleteWorkspace(record)"
+                >
+                  <a>
+                    <a-icon type="delete"/>
+                    删除
+                  </a>
+                </a-popconfirm>
               </a-menu-item>
             </a-menu>
           </a-dropdown>
@@ -618,10 +627,8 @@ export default {
     deleteWorkspace(record) {
       this.loading = true
       deleteWorkspace({id: record.id}).then(res => {
-        if (res.data) {
+        if (res.data.data) {
           this.$message.success("删除成功！");
-        } else {
-          this.$message.error("删除失败！");
         }
       }).finally(() => this.loadWorkspaceList())
     },

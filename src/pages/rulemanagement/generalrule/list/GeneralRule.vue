@@ -109,7 +109,7 @@
               </a-menu-item>
               <a-menu-item>
                 <a-popconfirm
-                    title="你确定要删除这个变量吗"
+                    title="你确定要删除这个普通规则吗"
                     ok-text="是"
                     cancel-text="不了"
                     @confirm="deleteRow(record)"

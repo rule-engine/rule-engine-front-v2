@@ -58,10 +58,17 @@
             <a-icon type="edit"/>
             编辑
           </a>
-          <a style="margin-right: 8px" @click="deleteUser(record)">
-            <a-icon type="delete"/>
-            删除
-          </a>
+          <a-popconfirm
+              title="你确定要删除这个用户吗"
+              ok-text="是"
+              cancel-text="不了"
+              @confirm="deleteUser(record)"
+          >
+            <a style="margin-right: 8px">
+              <a-icon type="delete"/>
+              删除
+            </a>
+          </a-popconfirm>
         </div>
         <template slot="statusTitle">
           <a-icon @click.native="onStatusTitleClick" type="info-circle"/>
