@@ -101,6 +101,6 @@ const columnsConfig = [
   },
 ]
 
-Mock.mock(`${process.env.WEB_BASE_URL}/columns`, 'get', () => {
+Mock.mock(`${process.env.VUE_APP_WEB_BASE_URL}/columns`, 'get', () => {
   return columnsConfig
 })

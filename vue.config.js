@@ -37,13 +37,13 @@ module.exports = {
     devServer: {
         proxy: {
             '/api': { //此处要与 /services/api.js 中的 API_PROXY_PREFIX 值保持一致
-                target: process.env.WEB_BASE_URL,
+                target: process.env.VUE_APP_WEB_BASE_URL,
                 changeOrigin: true,
                 pathRewrite: {
                     '^/api': ''
                 }
             }, '/compute_api': { //此处要与 /services/api.js 中的 COMPUTE_API_PROXY_PREFIX 值保持一致
-                target: process.env.COMPUTE_BASE_URL,
+                target: process.env.VUE_APP_COMPUTE_BASE_URL,
                 changeOrigin: true,
                 pathRewrite: {
                     '^/compute_api': ''

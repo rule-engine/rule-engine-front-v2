@@ -29,7 +29,7 @@
                   placeholder="请输入密码"
                   autocomplete="autocomplete"
                   type="password"
-                  v-decorator="['password', {initialValue:'123',rules: [{ required: true, message: '请输入密码', whitespace: true}]}]"
+                  v-decorator="['password', {initialValue:'',rules: [{ required: true, message: '请输入密码', whitespace: true}]}]"
               >
                 <a-icon slot="prefix" type="lock"/>
               </a-input>
@@ -95,11 +95,7 @@ export default {
       if (loginRes.code === 200) {
         this.$message.success('登陆成功', 3)
         // 获取路由配置
-        getRoutesConfig().then(result => {
-          const routesConfig = result.data.data
-          loadRoutes(routesConfig)
-          this.$router.push('/dashboard/workplace')
-        })
+        this.$router.push('/dashboard/workplace')
       } else {
         this.error = loginRes.message
 

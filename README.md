@@ -59,9 +59,9 @@ npm run build --report
 
 ```env
 #web服务的
-WEB_BASE_URL=http://xxx.yourdomain.com
+VUE_APP_WEB_BASE_URL=http://xxx.yourdomain.com
 #计算服务的
-COMPUTE_BASE_URL=http://xxx.yourdomain.com:8011 
+VUE_APP_COMPUTE_BASE_URL=http://xxx.yourdomain.com:8011 
 ```
 
 ###### 关于 Nginx 的一些配置

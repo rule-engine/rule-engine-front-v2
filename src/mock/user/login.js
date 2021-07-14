@@ -7,7 +7,7 @@ const user = Mock.mock({
   address: '@CITY',
   position: '@POSITION'
 })
-Mock.mock(`${process.env.WEB_BASE_URL}/login`, 'post', ({body}) => {
+Mock.mock(`${process.env.VUE_APP_WEB_BASE_URL}/login`, 'post', ({body}) => {
   let result = {data: {}}
   const {name, password} = JSON.parse(body)
 
