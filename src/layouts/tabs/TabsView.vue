@@ -1,6 +1,6 @@
 <template>
   <admin-layout>
-    <contextmenu :itemList="menuItemList" :visible.sync="menuVisible" @select="onMenuSelect" />
+    <contextmenu :itemList="menuItemList" :visible.sync="menuVisible" @select="onMenuSelect"/>
     <tabs-head
         v-if="multiPage"
         :active="activePage"
@@ -13,9 +13,9 @@
     <div :class="['tabs-view-content', layout, pageWidth]" :style="`margin-top: ${multiPage ? -24 : 0}px`">
       <page-toggle-transition :disabled="animate.disabled" :animate="animate.name" :direction="animate.direction">
         <a-keep-alive :exclude-keys="excludeKeys" v-if="multiPage && cachePage" v-model="clearCaches">
-          <router-view v-if="!refreshing" ref="tabContent" :key="$route.path" />
+          <router-view v-if="!refreshing" ref="tabContent" :key="$route.path"/>
         </a-keep-alive>
-        <router-view ref="tabContent" v-else-if="!refreshing" />
+        <router-view ref="tabContent" v-else-if="!refreshing"/>
       </page-toggle-transition>
     </div>
   </admin-layout>
@@ -33,8 +33,8 @@ import TabsHead from '@/layouts/tabs/TabsHead'
 export default {
   name: 'TabsView',
   i18n: require('./i18n'),
-  components: {TabsHead, PageToggleTransition, Contextmenu, AdminLayout , AKeepAlive },
-  data () {
+  components: {TabsHead, PageToggleTransition, Contextmenu, AdminLayout, AKeepAlive},
+  data() {
     return {
       clearCaches: [],
       pageList: [],
@@ -48,17 +48,17 @@ export default {
     ...mapState('setting', ['multiPage', 'cachePage', 'animate', 'layout', 'pageWidth']),
     menuItemList() {
       return [
-        { key: '1', icon: 'vertical-right', text: this.$t('closeLeft') },
-        { key: '2', icon: 'vertical-left', text: this.$t('closeRight') },
-        { key: '3', icon: 'close', text: this.$t('closeOthers') },
-        { key: '4', icon: 'sync', text: this.$t('refresh') },
+        {key: '1', icon: 'vertical-right', text: this.$t('closeLeft')},
+        {key: '2', icon: 'vertical-left', text: this.$t('closeRight')},
+        {key: '3', icon: 'close', text: this.$t('closeOthers')},
+        {key: '4', icon: 'sync', text: this.$t('refresh')},
       ]
     },
     tabsOffset() {
       return this.multiPage ? 24 : 0
     }
   },
-  created () {
+  created() {
     this.loadCacheConfig(this.$router?.options?.routes)
     this.loadCachedTabs()
     const route = this.$route
@@ -73,7 +73,7 @@ export default {
       this.addListener()
     }
   },
-  mounted () {
+  mounted() {
     this.correctPageMinHeight(-this.tabsOffset)
   },
   beforeDestroy() {
@@ -114,12 +114,12 @@ export default {
     }
   },
   methods: {
-    changePage (key) {
+    changePage(key) {
       this.activePage = key
       const page = this.pageList.find(item => item.path === key)
       this.$router.push(page.fullPath)
     },
-    remove (key, next) {
+    remove(key, next) {
       if (this.pageList.length === 1) {
         return this.$message.warning(this.$t('warn'))
       }
@@ -134,7 +134,7 @@ export default {
         this.$router.push(this.activePage)
       }
     },
-    refresh (key, page) {
+    refresh(key, page) {
       page = page || this.pageList.find(item => item.path === key)
       page.loading = true
       this.clearCache(page)
@@ -152,16 +152,25 @@ export default {
         this.menuVisible = true
       }
     },
-    onMenuSelect (key, target, pageKey) {
+    onMenuSelect(key, target, pageKey) {
       switch (key) {
-        case '1': this.closeLeft(pageKey); break
-        case '2': this.closeRight(pageKey); break
-        case '3': this.closeOthers(pageKey); break
-        case '4': this.refresh(pageKey); break
-        default: break
+        case '1':
+          this.closeLeft(pageKey);
+          break
+        case '2':
+          this.closeRight(pageKey);
+          break
+        case '3':
+          this.closeOthers(pageKey);
+          break
+        case '4':
+          this.refresh(pageKey);
+          break
+        default:
+          break
       }
     },
-    closeOthers (pageKey) {
+    closeOthers(pageKey) {
       // 清除缓存
       const clearPages = this.pageList.filter(item => item.path !== pageKey && !item.unclose)
       this.clearCaches = clearPages.map(item => item.cachedKey)
@@ -172,7 +181,7 @@ export default {
         this.$router.push(this.activePage)
       }
     },
-    closeLeft (pageKey) {
+    closeLeft(pageKey) {
       const index = this.pageList.findIndex(item => item.path === pageKey)
       // 清除缓存
       const clearPages = this.pageList.filter((item, i) => i < index && !item.unclose)
@@ -184,7 +193,7 @@ export default {
         this.$router.push(this.activePage)
       }
     },
-    closeRight (pageKey) {
+    closeRight(pageKey) {
       // 清除缓存
       const index = this.pageList.findIndex(item => item.path === pageKey)
       const clearPages = this.pageList.filter((item, i) => i > index && !item.unclose)
@@ -262,7 +271,7 @@ export default {
         keyPath: route.matched[route.matched.length - 1].path,
         fullPath: route.fullPath, loading: false,
         path: route.path,
-        tagName:  route.query.tagName,
+        tagName: route.params.tagName,
         title: route.meta && route.meta.page && route.meta.page.title,
         unclose: route.meta && route.meta.page && (route.meta.page.closable === false),
       }
@@ -315,17 +324,20 @@ export default {
 </script>
 
 <style scoped lang="less">
-  .tabs-view{
-    margin: -16px auto 8px;
-    &.head.fixed{
-      max-width: 1400px;
-    }
+.tabs-view {
+  margin: -16px auto 8px;
+
+  &.head.fixed {
+    max-width: 1400px;
   }
-  .tabs-view-content{
-    position: relative;
-    &.head.fixed{
-      width: 1400px;
-      margin: 0 auto;
-    }
+}
+
+.tabs-view-content {
+  position: relative;
+
+  &.head.fixed {
+    width: 1400px;
+    margin: 0 auto;
   }
+}
 </style>

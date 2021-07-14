@@ -472,7 +472,12 @@ export default {
         if (res.data.code === 200) {
           this.$router.push({
             path: '/generalRuleRouter/' + res.data.data,
-            query: {pageIndex: 2, tagName: `规则(${this.newGeneralRule.form.name})`}
+            params: {
+              tagName: `规则(${this.newGeneralRule.form.name})`,
+              code: this.newGeneralRule.form.code,
+              ruleId: res.data.data
+            },
+            query: {pageIndex: 2}
           })
           this.newGeneralRule.visible = false;
         }
@@ -507,7 +512,17 @@ export default {
       //this.selectedRows = this.selectedRows.filter(item => item.key !== key)
     },
     edit(record) {
-      this.$router.push({path: '/generalRuleRouter/' + record.id, query: {pageIndex: 2, tagName: `规则(${record.name})`}})
+      this.$router.push({
+        path: '/generalRuleRouter/' + record.id,
+        name: '规则', // 必须有，否则params失效
+        params: {
+          tagName: `
+          规则(${record.name})`,
+          code: record.code,
+          ruleId: record.id
+        },
+        query: {pageIndex: 2}
+      })
     },
     downloadGeneralRule(record) {
       console.log(record)
