@@ -36,6 +36,16 @@ export default {
       }
     }
   },
+  watch: {
+    // 修改路由参数
+    currentPage(val) {
+      let path = this.$router.history.current.path;
+      this.$router.push({
+        path: path,
+        query: {pageIndex: val}
+      })
+    },
+  },
   methods: {
     choicePage(params) {
       this.currentPage = params.pageIndex
