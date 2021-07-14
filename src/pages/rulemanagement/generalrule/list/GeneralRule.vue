@@ -472,6 +472,7 @@ export default {
         if (res.data.code === 200) {
           this.$router.push({
             path: '/generalRuleRouter/' + res.data.data,
+            name: '规则', // 必须有，否则params失效
             params: {
               tagName: `规则(${this.newGeneralRule.form.name})`,
               code: this.newGeneralRule.form.code,
