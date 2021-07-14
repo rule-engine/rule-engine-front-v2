@@ -20,6 +20,23 @@ export async function getUserInfo() {
     return request(user.GET_USER_INFO, METHOD.POST)
 }
 
+/**
+ * 检查用户名是否可用
+ * @param param
+ * @returns {Promise<AxiosResponse<any>>}
+ */
+export async function checkUserName(param) {
+    return request(user.CHECK_USER_NAME, METHOD.POST, param)
+}
+
+/**
+ * 检查邮箱是否可用
+ * @param param
+ * @returns {Promise<AxiosResponse<any>>}
+ */
+export async function checkEmail(param) {
+    return request(user.CHECK_EMAIL, METHOD.POST, param)
+}
 export async function userList(param) {
     return request(user.LIST, METHOD.POST, param)
 }

@@ -80,7 +80,8 @@
         okText="确认添加"
     >
       <div class="add">
-        <a-form-model ref="userAddForm" :model="userAddForm" :rules="rules" :label-col="{span: 4}"
+        <a-form-model ref="userAddForm" :model="userAddForm" :rules="rules"
+                      :label-col="{span: 4}"
                       :wrapper-col="{span: 14}">
           <a-form-model-item label="姓名" has-feedback prop="username">
             <a-input v-model="userAddForm.username" placeholder="请输入姓名">
@@ -166,7 +167,8 @@
 import PageLayout from '@/layouts/PageLayout'
 import StandardTable from '@/components/table/StandardTable'
 
-import {userList, addUser, deleteUser, updateUserInfo,selectUserById} from '@/services/user'
+import {userList, addUser, deleteUser, updateUserInfo, selectUserById, checkUserName, checkEmail} from '@/services/user'
+import {isEmail} from '@/utils/util'
 
 const columns = [
   {
@@ -223,8 +225,36 @@ export default {
         sex: '男'
       },
       rules: {
-        username: {min: 1, max: 16, trigger: ['change', 'blur'], required: true, message: "名字长度为1-16位",},
-        email: {type: 'email', trigger: ['change', 'blur'], message: "请输入正确的邮箱", required: true},
+        username: {
+          trigger: ['blur'], required: true, asyncValidator: (rule, value, callback) => {
+            if (value.length < 2 || value.length > 16) {
+              callback(new Error('用户名长度应该在2-16位'));
+            } else {
+              checkUserName({username: value}).then(resp => {
+                if (resp.data.code === 200) {
+                  callback();
+                } else {
+                  callback(new Error(resp.data.message));
+                }
+              })
+            }
+          },
+        },
+        email: {
+          type: 'email', trigger: ['blur'], asyncValidator: (rule, value, callback) => {
+            if (!isEmail(value)) {
+              callback(new Error('请输入正确的邮箱'));
+            } else {
+              checkEmail({email: value}).then(resp => {
+                if (resp.data.code === 200) {
+                  callback();
+                } else {
+                  callback(new Error(resp.data.message));
+                }
+              })
+            }
+          }, required: true
+        },
         phone: {min: 6, trigger: ['change', 'blur'], required: false, message: "请输入正确的手机号"},
         password: {min: 3, trigger: ['change', 'blur'], required: true, message: "密码长度为3-16位"},
       },
@@ -253,6 +283,25 @@ export default {
     this.loadUserList()
   },
   methods: {
+    //当验证输入框的时候
+    onValidate(prop, result) {
+      if (result) {
+        if (prop === 'username') {
+          // this.checkUserName(prop)
+        } else if (prop === 'email') {
+          // this.checkEmail(prop)
+        }
+      }
+    },
+    checkUserName(username) {
+      checkUserName({username: username}).then(resp => {
+        console.log(resp)
+      })
+    }, checkEmail(email) {
+      checkEmail({email: email}).then(resp => {
+        console.log(resp)
+      })
+    },
     handleSubmit(formName) {
       this.confirmLoading = true
       const _this = this;
@@ -310,18 +359,18 @@ export default {
       })
     },
     editMethod(record) {
-        selectUserById(record).then(res => {
-            const resp = res.data;
-            if (resp.code===200){
-                // 查询数据
-                this.userEditForm.id = resp.data.id;
-                this.userEditForm.username = resp.data.username;
-                this.userEditForm.sex = resp.data.sex;
-                this.userEditForm.email = resp.data.email;
-                this.userEditForm.phone = resp.data.phone;
-                this.edit.visible = true;
-            }
-        })
+      selectUserById(record).then(res => {
+        const resp = res.data;
+        if (resp.code === 200) {
+          // 查询数据
+          this.userEditForm.id = resp.data.id;
+          this.userEditForm.username = resp.data.username;
+          this.userEditForm.sex = resp.data.sex;
+          this.userEditForm.email = resp.data.email;
+          this.userEditForm.phone = resp.data.phone;
+          this.edit.visible = true;
+        }
+      })
     },
     deleteUser(record) {
       this.confirmLoading = true
