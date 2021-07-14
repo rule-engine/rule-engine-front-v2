@@ -35,6 +35,10 @@ export default {
         console.debug(e)
       }
     }
+    window.addEventListener('popstate', this.cancel, false)
+  },
+  destroyed() {
+    window.removeEventListener('popstate', this.cancel, false);
   },
   watch: {
     // 修改路由参数
@@ -47,6 +51,10 @@ export default {
     },
   },
   methods: {
+    cancel(data) {
+      if (data)
+        location.reload()
+    },
     choicePage(params) {
       this.currentPage = params.pageIndex
       this.ruleId = params.id
