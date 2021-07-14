@@ -14,6 +14,8 @@ module.exports = {
         DELETE_USER: `${WEB_BASE_URL}/user/delete`,
         UPDATE_USER_INFO: `${WEB_BASE_URL}/user/updateUserInfo`,
         SELECT_USER_BY_ID: `${WEB_BASE_URL}/user/selectUserById`,
+        CHECK_USER_NAME: `${WEB_BASE_URL}/user/checkUserName`,
+        CHECK_EMAIL: `${WEB_BASE_URL}/user/checkEmail`,
     },
     workspace: {
         LIST: `${WEB_BASE_URL}/workspace/list`,
@@ -25,6 +27,7 @@ module.exports = {
         ACCESS_KEY: `${WEB_BASE_URL}/workspace/accessKey`,
         UPDATE_ACCESS_KEY: `${WEB_BASE_URL}/workspace/updateAccessKey`,
         SELECT_WORKSPACE_BY_ID: `${WEB_BASE_URL}/workspace/selectWorkSpaceById`,
+        CHECK_WORKSPACE_CODE: `${WEB_BASE_URL}/workspace/checkWorkspaceCode`,
     },
     workspaceMember: {
         LIST: `${WEB_BASE_URL}/workspaceMember/list`,
