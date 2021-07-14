@@ -517,8 +517,7 @@ export default {
         path: '/generalRuleRouter/' + record.id,
         name: '规则', // 必须有，否则params失效
         params: {
-          tagName: `
-          规则(${record.name})`,
+          tagName: `规则(${record.name})`,
           code: record.code,
           ruleId: record.id
         },
