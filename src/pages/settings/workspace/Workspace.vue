@@ -331,7 +331,7 @@ import {
   accessKey,
   updateAccessKey,
   selectWorkSpaceById,
-  checkWorkspaceCode
+  verifyWorkspaceCode
 } from '@/services/workspace'
 import {
   memberList,
@@ -414,9 +414,13 @@ export default {
             if (value.length < 1) {
               callback(new Error('工作空间编码不能为空'));
             } else {
-              checkWorkspaceCode({code: value}).then(resp => {
+              verifyWorkspaceCode({code: value}).then(resp => {
                 if (resp.data.code === 200) {
-                  callback();
+                  if (resp.data.data) {
+                    callback()
+                  } else {
+                    callback(new Error('该工作空间编码已经存在！'));
+                  }
                 } else {
                   callback(new Error(resp.data.message));
                 }

@@ -25,8 +25,8 @@ export async function getUserInfo() {
  * @param param
  * @returns {Promise<AxiosResponse<any>>}
  */
-export async function checkUserName(param) {
-    return request(user.CHECK_USER_NAME, METHOD.POST, param)
+export async function verifyUserName(param) {
+    return request(user.VERIFY_USER_NAME, METHOD.POST, param)
 }
 
 /**
@@ -34,8 +34,8 @@ export async function checkUserName(param) {
  * @param param
  * @returns {Promise<AxiosResponse<any>>}
  */
-export async function checkEmail(param) {
-    return request(user.CHECK_EMAIL, METHOD.POST, param)
+export async function verifyckEmail(param) {
+    return request(user.VERIFY_EMAIL, METHOD.POST, param)
 }
 export async function userList(param) {
     return request(user.LIST, METHOD.POST, param)

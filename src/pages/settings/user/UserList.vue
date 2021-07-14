@@ -167,7 +167,15 @@
 import PageLayout from '@/layouts/PageLayout'
 import StandardTable from '@/components/table/StandardTable'
 
-import {userList, addUser, deleteUser, updateUserInfo, selectUserById, checkUserName, checkEmail} from '@/services/user'
+import {
+  userList,
+  addUser,
+  deleteUser,
+  updateUserInfo,
+  selectUserById,
+  verifyUserName,
+  verifyckEmail
+} from '@/services/user'
 import {isEmail} from '@/utils/util'
 
 const columns = [
@@ -229,33 +237,43 @@ export default {
         username: {
           trigger: ['blur'], required: true, asyncValidator: (rule, value, callback) => {
             if (this.edit.visible) {
-              return false
+              callback();
+              return
             }
             if (value.length < 2 || value.length > 16) {
               callback(new Error('用户名长度应该在2-16位'));
             } else {
-              checkUserName({username: value}).then(resp => {
-                if (resp.data.code === 200) {
-                  callback();
-                } else {
-                  callback(new Error(resp.data.message));
-                }
-              })
+              verifyUserName({username: value}).then(resp => {
+                    if (resp.data.code === 200) {
+                      if (resp.data.data) {
+                        callback()
+                      } else {
+                        callback(new Error('该用户名已经存在！'));
+                      }
+                    } else {
+                      callback(new Error(resp.data.message));
+                    }
+                  }
+              )
             }
           },
         },
         email: {
           type: 'email', trigger: ['blur'], asyncValidator: (rule, value, callback) => {
-            if (this.edit.visible && this.userEditForm.email === this.userEditForm.orgEmail ) {
+            if (this.edit.visible && this.userEditForm.email === this.userEditForm.orgEmail) {
               callback();
               return
             }
             if (!isEmail(value)) {
               callback(new Error('请输入正确的邮箱'));
             } else {
-              checkEmail({email: value}).then(resp => {
+              verifyckEmail({email: value}).then(resp => {
                 if (resp.data.code === 200) {
-                  callback();
+                  if (resp.data.data) {
+                    callback()
+                  } else {
+                    callback(new Error('该邮箱已经存在！'));
+                  }
                 } else {
                   callback(new Error(resp.data.message));
                 }
