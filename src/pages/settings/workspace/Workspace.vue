@@ -289,7 +289,7 @@
             getRowSelection({ disabled: listDisabled, selectedKeys, itemSelectAll, itemSelect })
           " :loading="direction === 'left' ?addMember.leftLoading:addMember.rightLoading"
               :columns="addMember.columns"
-              :data-source="direction === 'left'?(addMember.query.query.username?filteredItems:[]):filteredItems"
+              :data-source="filteredItems"
               size="small"
               :style="{ pointerEvents: listDisabled ? 'none' : null }"
               :custom-row="
@@ -811,6 +811,15 @@ export default {
       optionalPersonnel(_this.query).then(res => {
         const resp = res.data;
         if (resp.data) {
+          // 删除掉没有引用的
+          let temp = [];
+          _this.dataSource.forEach(f => {
+            if (_this.targetKeys.indexOf(f.key) !== -1) {
+              temp.push(f);
+            }
+          })
+          _this.dataSource = temp;
+          // 加载新的
           resp.data.rows.forEach(f => {
             let boo = false;
             _this.dataSource.forEach(fe => {
