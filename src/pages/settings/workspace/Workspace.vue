@@ -273,9 +273,9 @@
           <a-table
               :row-selection="
             getRowSelection({ disabled: listDisabled, selectedKeys, itemSelectAll, itemSelect })
-          "
+          " :loading="direction === 'left' ?addMember.leftLoading:addMember.rightLoading"
               :columns="addMember.columns"
-              :data-source="filteredItems"
+              :data-source="direction === 'left'?(addMember.query.query.username?filteredItems:[]):filteredItems"
               size="small"
               :style="{ pointerEvents: listDisabled ? 'none' : null }"
               :custom-row="
@@ -519,7 +519,8 @@ export default {
             workspaceId: null,
           }
         },
-        loading: true,
+        leftLoading: false,
+        rightLoading: false,
         visible: false,
         confirmLoading: false,
         dataSource: [],
@@ -612,7 +613,7 @@ export default {
       if (dir === 'left') {
         this.addMember.query.query.username = value;
         // 有时间做个延迟事件，优化下
-        this.addMemberLoadUserList();
+        this.addMemberLoadUserList(dir);
       }
     },
     submitForm() {
@@ -763,35 +764,51 @@ export default {
     showAddMember() {
       this.addMember.targetKeys = [];
       this.addMember.dataSource = [];
+      this.addMember.query.query.username = '';
       // 查询用户列表
-      this.addMemberLoadUserList();
+      this.addMemberLoadUserList('left');
       this.addMember.visible = true;
     },
-    addMemberLoadUserList() {
-      this.addMember.loading = true
+    addMemberLoadUserList(dir) {
       const _this = this.addMember;
       if (_this.query.query.username === '') {
-        _this.dataSource = []
+        //_this.dataSource = []
         return;
+      }
+      // 判断是否为左边的加载table
+      if (dir === 'left') {
+        this.addMember.leftLoading = true;
+      } else {
+        this.addMember.rightLoading = true;
       }
       optionalPersonnel(_this.query).then(res => {
         const resp = res.data;
         if (resp.data) {
-          _this.dataSource = Array.from(resp.data.rows).map(m => (
-              {
-                key: m.userId + '',
-                title: m.username, // 搜索用
-                user: m.username,
-                email: m.email,
-                avatar: m.avatar,
-                disabled: false,
+          resp.data.rows.forEach(f => {
+            let boo = false;
+            _this.dataSource.forEach(fe => {
+              if (fe.key === f.userId + '') {
+                boo = true;
               }
-          ));
+            })
+            if (!boo) {
+              _this.dataSource.push({
+                key: f.userId + '',
+                title: f.username, // 搜索用
+                user: f.username,
+                email: f.email,
+                avatar: f.avatar,
+                disabled: false,
+              })
+            }
+          });
           _this.query.page = resp.data.page
-        } else {
-          _this.dataSource = []
         }
-        this.addMember.loading = false
+        if (dir === 'left') {
+          this.addMember.leftLoading = false;
+        } else {
+          this.addMember.rightLoading = false;
+        }
       })
     },
     memberHandleOk(/*e*/) {
