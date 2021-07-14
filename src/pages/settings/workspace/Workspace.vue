@@ -201,10 +201,17 @@
                 <a-icon type="disconnect"/>
                 解除管理
               </a>
-              <a style="margin-right: 8px" @click="deleteMember(record)">
-                <a-icon type="delete"/>
-                删除
-              </a>
+              <a-popconfirm
+                  title="你确定要删除这个工作空间管理员吗"
+                  ok-text="是"
+                  cancel-text="不了"
+                  @confirm="deleteMember(record)"
+              >
+                <a style="margin-right: 8px">
+                  <a-icon type="delete"/>
+                  删除
+                </a>
+              </a-popconfirm>
             </div>
           </standard-table>
 
@@ -227,10 +234,17 @@
                 <a-icon type="shrink"/>
                 设为管理
               </a>
-              <a style="margin-right: 8px" @click="deleteMember(record)">
-                <a-icon type="delete"/>
-                删除
-              </a>
+              <a-popconfirm
+                  title="你确定要删除这个工作空间成员吗"
+                  ok-text="是"
+                  cancel-text="不了"
+                  @confirm="deleteMember(record)"
+              >
+                <a style="margin-right: 8px">
+                  <a-icon type="delete"/>
+                  删除
+                </a>
+              </a-popconfirm>
             </div>
           </standard-table>
         </a-tab-pane>
