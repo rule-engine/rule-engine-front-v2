@@ -27,6 +27,7 @@ module.exports = {
         ACCESS_KEY: `${WEB_BASE_URL}/workspace/accessKey`,
         UPDATE_ACCESS_KEY: `${WEB_BASE_URL}/workspace/updateAccessKey`,
         SELECT_WORKSPACE_BY_ID: `${WEB_BASE_URL}/workspace/selectWorkSpaceById`,
+        CHECK_WORKSPACE_CODE: `${WEB_BASE_URL}/workspace/checkWorkspaceCode`,
     },
     workspaceMember: {
         LIST: `${WEB_BASE_URL}/workspaceMember/list`,

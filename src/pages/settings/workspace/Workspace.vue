@@ -330,7 +330,8 @@ import {
   deleteWorkspace,
   accessKey,
   updateAccessKey,
-  selectWorkSpaceById
+  selectWorkSpaceById,
+  checkWorkspaceCode
 } from '@/services/workspace'
 import {
   memberList,
@@ -405,7 +406,24 @@ export default {
       },
       rules: {
         name: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入空间名称",},
-        code: {min: 1, trigger: ['change', 'blur'], message: "请输入空间编码", required: true},
+        code: {
+          min: 1, trigger: ['blur'], asyncValidator: (rule, value, callback) => {
+            if (this.edit.visible) {
+              return false
+            }
+            if (value.length < 1) {
+              callback(new Error('工作空间编码不能为空'));
+            } else {
+              checkWorkspaceCode({code: value}).then(resp => {
+                if (resp.data.code === 200) {
+                  callback();
+                } else {
+                  callback(new Error(resp.data.message));
+                }
+              })
+            }
+          }, required: true
+        },
         description: {trigger: ['change', 'blur'], required: false, message: ""},
       },
       member: {
@@ -594,14 +612,14 @@ export default {
       this.add.visible = true;
     },
     deleteWorkspace(record) {
+      this.loading = true
       deleteWorkspace({id: record.id}).then(res => {
         if (res.data) {
           this.$message.success("删除成功！");
         } else {
           this.$message.error("删除失败！");
         }
-        this.loadWorkspaceList();
-      })
+      }).finally(() => this.loadWorkspaceList())
     },
     addHandleCancel(formName) {
       this.$refs[formName].resetFields();
@@ -697,9 +715,10 @@ export default {
       //this.selectedRows = this.selectedRows.filter(item => item.key !== key)
     },
     showEdit(record) {
+      this.loading = true
       selectWorkSpaceById(record).then(res => {
         const resp = res.data;
-        if (resp.code===200){
+        if (resp.code === 200) {
           this.edit.visible = true;
           // 回显数据
           this.edit.form.id = resp.data.id;
@@ -707,7 +726,7 @@ export default {
           this.edit.form.name = resp.data.name;
           this.edit.form.description = resp.data.description;
         }
-      })
+      }).finally(() => this.loading = false)
     },
     showMember(record) {
       this.member.visible = true;

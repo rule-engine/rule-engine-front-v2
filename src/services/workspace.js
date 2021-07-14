@@ -29,6 +29,15 @@ export async function selectWorkSpaceById(query) {
     return request(workspace.SELECT_WORKSPACE_BY_ID, METHOD.POST, query)
 }
 
+/**
+ * 检查工作空间code
+ * @param query
+ * @returns {Promise<AxiosResponse<any>>}
+ */
+export async function checkWorkspaceCode(query) {
+    return request(workspace.CHECK_WORKSPACE_CODE, METHOD.POST, query)
+}
+
 export async function add(query) {
     return request(workspace.ADD, METHOD.POST, query)
 }
