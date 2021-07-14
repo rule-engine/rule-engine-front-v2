@@ -11,7 +11,6 @@
 import Definition from '../definition/Definition'
 import Config from '../config/Config'
 import Publish from '../publish/Publish'
-import {mapGetters} from "vuex";
 
 
 export default {
@@ -23,12 +22,7 @@ export default {
       ruleId: undefined,
     }
   },
-  computed: {
-    ...mapGetters('setting', ['pageList']),
-  },
   mounted() {
-    console.log('全局pageList',this.pageList)
-
     let query = this.$route.query
     let params = this.$route.params
     if (query.pageIndex) {

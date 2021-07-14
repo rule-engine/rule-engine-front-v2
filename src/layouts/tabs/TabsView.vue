@@ -37,7 +37,7 @@ export default {
   data() {
     return {
       clearCaches: [],
-      // pageList:[],
+      pageList: [],
       activePage: '',
       menuVisible: false,
       refreshing: false,
@@ -45,7 +45,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('setting', ['pageList','multiPage', 'cachePage', 'animate', 'layout', 'pageWidth']),
+    ...mapState('setting', ['multiPage', 'cachePage', 'animate', 'layout', 'pageWidth']),
     menuItemList() {
       return [
         {key: '1', icon: 'vertical-right', text: this.$t('closeLeft')},

@@ -12,7 +12,6 @@ const customTitles = (customTitlesStr && JSON.parse(customTitlesStr)) || []
 export default {
   namespaced: true,
   state: {
-    pageList:[],
     isMobile: false,
     animates: ADMIN.animates,
     palettes: ADMIN.palettes,
@@ -25,9 +24,6 @@ export default {
     ...localSetting
   },
   getters: {
-    pageList(state){
-      return state.pageList
-    },
     menuData(state, getters, rootState) {
       if (state.filterMenu) {
         const {permissions, roles} = rootState.account
@@ -56,9 +52,6 @@ export default {
     }
   },
   mutations: {
-    setPageList(state,pageList){
-      state.pageList = pageList
-    },
     setDevice (state, isMobile) {
       state.isMobile = isMobile
     },
