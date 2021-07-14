@@ -58,8 +58,8 @@
 
 <script>
 import CommonLayout from '@/layouts/CommonLayout'
-import {getRoutesConfig, login} from '@/services/user'
-import {loadRoutes} from '@/utils/routerUtil'
+import {login} from '@/services/user'
+//import {loadRoutes} from '@/utils/routerUtil'
 import {mapMutations} from 'vuex'
 
 export default {
