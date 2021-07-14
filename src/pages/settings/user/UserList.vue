@@ -291,25 +291,6 @@ export default {
     this.loadUserList()
   },
   methods: {
-    //当验证输入框的时候
-    onValidate(prop, result) {
-      if (result) {
-        if (prop === 'username') {
-          // this.checkUserName(prop)
-        } else if (prop === 'email') {
-          // this.checkEmail(prop)
-        }
-      }
-    },
-    checkUserName(username) {
-      checkUserName({username: username}).then(resp => {
-        console.log(resp)
-      })
-    }, checkEmail(email) {
-      checkEmail({email: email}).then(resp => {
-        console.log(resp)
-      })
-    },
     handleSubmit(formName) {
       this.confirmLoading = true
       const _this = this;
