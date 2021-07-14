@@ -262,6 +262,7 @@ export default {
         keyPath: route.matched[route.matched.length - 1].path,
         fullPath: route.fullPath, loading: false,
         path: route.path,
+        tagName:  route.query.tagName,
         title: route.meta && route.meta.page && route.meta.page.title,
         unclose: route.meta && route.meta.page && (route.meta.page.closable === false),
       }

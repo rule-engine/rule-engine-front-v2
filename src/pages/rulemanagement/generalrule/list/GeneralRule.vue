@@ -218,6 +218,33 @@
       </standard-table>
     </a-modal>
 
+
+    <a-modal
+        title="新建规则"
+        :visible="newGeneralRule.visible"
+        :confirm-loading="newGeneralRule.confirmLoading"
+        :width="700"
+        ok-text="下一步"
+        @ok="newGeneralRuleHandleOk"
+        @cancel="newGeneralRuleHandleCancel"
+    >
+      <a-form-model ref="generalRule" :rules="newGeneralRule.rules" :model="newGeneralRule.form" :label-col="{span: 4}"
+                    :wrapper-col="{span: 14}">
+        <a-form-model-item label="名称" prop="name">
+          <a-input v-model="newGeneralRule.form.name" placeholder="请输入规则名称">
+          </a-input>
+        </a-form-model-item>
+        <a-form-model-item label="编码" prop="code">
+          <a-input v-model="newGeneralRule.form.code" type="code"
+                   placeholder="请输入规则编码">
+          </a-input>
+        </a-form-model-item>
+        <a-form-model-item label="说明" prop="description">
+          <a-input v-model="newGeneralRule.form.description" type="textarea" placeholder="请输入规则说明"/>
+        </a-form-model-item>
+      </a-form-model>
+    </a-modal>
+
   </page-layout>
 </template>
 
@@ -225,11 +252,11 @@
 import PageLayout from '@/layouts/PageLayout'
 import StandardTable from '@/components/table/StandardTable'
 
-import {list, deleteGeneralRule} from '@/services/generalRule'
+import {list, deleteGeneralRule, addGeneralRule} from '@/services/generalRule'
 import {dataPermissionList, update} from '@/services/dataPermission'
 import {exportData} from '@/services/importExport'
 
-import uuidv1 from 'uuid/v1'
+//import uuidv1 from 'uuid/v1'
 
 
 const columns = [
@@ -372,6 +399,20 @@ export default {
         ]
       },
       dataSource: [],
+      newGeneralRule: {
+        form: {
+          id: null,
+          name: null,
+          code: null,
+          description: null,
+        },
+        visible: false,
+        confirmLoading: false,
+        rules: {
+          name: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入规则名称",},
+          code: {min: 1, trigger: ['change', 'blur'], message: "请输入规则编码", required: true},
+        }
+      }
     }
   },
   created() {
@@ -417,7 +458,29 @@ export default {
       console.log(current, pageSize);
     },
     addNew() {
-      this.$router.push({path: '/generalRuleRouter/new-' + uuidv1(), query: {pageIndex: 1}})
+      this.newGeneralRule.visible = true;
+      this.newGeneralRule.form = {
+        id: null,
+        name: null,
+        code: null,
+        description: null,
+      }
+    },
+    newGeneralRuleHandleOk() {
+      this.newGeneralRule.confirmLoading = true;
+      addGeneralRule(this.newGeneralRule.form).then(res => {
+        if (res.data.code === 200) {
+          this.$router.push({
+            path: '/generalRuleRouter/' + res.data.data,
+            query: {pageIndex: 2, tagName: `规则(${this.newGeneralRule.form.name})`}
+          })
+          this.newGeneralRule.visible = false;
+        }
+        this.newGeneralRule.confirmLoading = false;
+      })
+    },
+    newGeneralRuleHandleCancel() {
+      this.newGeneralRule.visible = false;
     },
     handleMenuClick() {
 
@@ -444,7 +507,7 @@ export default {
       //this.selectedRows = this.selectedRows.filter(item => item.key !== key)
     },
     edit(record) {
-      this.$router.push({path: '/generalRuleRouter/' + record.id, query: {pageIndex: 2}})
+      this.$router.push({path: '/generalRuleRouter/' + record.id, query: {pageIndex: 2, tagName: `规则(${record.name})`}})
     },
     downloadGeneralRule(record) {
       console.log(record)

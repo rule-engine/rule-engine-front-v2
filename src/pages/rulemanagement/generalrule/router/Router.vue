@@ -21,9 +21,8 @@ export default {
       currentPage: null,
       ruleId: undefined,
     }
-  }, mounted() {
-    console.log("$router", this.$router)
-    console.log("$route", this.$route)
+  },
+  mounted() {
     let query = this.$route.query
     let params = this.$route.params
     if (query.pageIndex) {
@@ -36,7 +35,8 @@ export default {
         console.debug(e)
       }
     }
-  }, methods: {
+  },
+  methods: {
     choicePage(params) {
       this.currentPage = params.pageIndex
       this.ruleId = params.id
