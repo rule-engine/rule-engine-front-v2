@@ -318,17 +318,17 @@
         :visible="keySetting.visible"
         :confirm-loading="keySetting.confirmLoading"
         :width="700"
-        @ok="keySettingHandleOk()"
+        @ok="keySettingHandleOk('editWorkspace')"
         @cancel="keySettingHandleCancel()">
       <template>
-        <a-form-model ref="editWorkspace" :model="keySetting" :label-col="{span: 4}"
+        <a-form-model ref="editWorkspace" :model="keySetting.form" :label-col="{span: 4}" :rules="keySetting.rules"
                       :wrapper-col="{span: 14}">
-          <a-form-model-item label="账号" has-feedback prop="name">
+          <a-form-model-item label="账号" prop="accessKeyId">
             <a-input v-model="keySetting.form.accessKeyId">
               <a-icon slot="prefix" type="safety"></a-icon>
             </a-input>
           </a-form-model-item>
-          <a-form-model-item label="密码">
+          <a-form-model-item label="密码" prop="accessKeySecret">
             <a-input v-model="keySetting.form.accessKeySecret" type="password">
               <a-icon slot="prefix" type="lock"/>
             </a-input>
@@ -404,6 +404,10 @@ export default {
           id: null,
           accessKeyId: null,
           accessKeySecret: null,
+        },
+        rules: {
+          accessKeyId: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入工作空间账号",},
+          accessKeySecret: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入工作空间密码",},
         }
       },
       edit: {
@@ -568,14 +572,23 @@ export default {
     this.loadWorkspaceList()
   },
   methods: {
-    keySettingHandleOk() {
-      updateAccessKey(this.keySetting.form).then(res => {
-        if (res.data.data) {
-          this.$message.success("更新成功！");
-          this.keySetting.visible = false;
+    keySettingHandleOk(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.keySetting.confirmLoading = true;
+          updateAccessKey(this.keySetting.form).then(res => {
+            if (res.data.data) {
+              this.$message.success("更新成功！");
+              this.keySetting.visible = false;
+            }
+            this.keySetting.confirmLoading = false;
+          })
+        } else {
+          console.log('error submit!!');
+          this.keySetting.confirmLoading = false;
+          return false;
         }
-        this.keySetting.confirmLoading = false;
-      })
+      });
     },
     keySettingHandleCancel() {
       this.keySetting.visible = false;
