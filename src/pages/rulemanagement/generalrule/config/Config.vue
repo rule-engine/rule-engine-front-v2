@@ -316,6 +316,7 @@
             </a-card>
             <br>
             <br>
+
             <a-card title="结果">
               <span slot="extra">
                         <a-popover title="温馨提示">
@@ -326,40 +327,6 @@
                             <a-icon type="info-circle" class="dynamic-delete-button" style="font-size: 18px"></a-icon>
                         </a-popover>
                     </span>
-              <span slot="extra" style="margin-left: 16px;">
-                        <a-popover title="默认结果" trigger="click" arrow-point-at-center>
-                            <template slot="content">
-                                <div style="width: 400px;">
-                                         <a-switch
-                                             :checked="generalRule.defaultAction.enableDefaultAction===0"/>
-                                    <br> <br>
-                                    <a-row>
-                                        <a-col :span="5">
-                                            <a-select style="width:100%"
-                                                      v-model="generalRule.defaultAction.valueType">
-                                                <a-select-option value="PARAMETER">参数</a-select-option>
-                                                <a-select-option value="VARIABLE">变量</a-select-option>
-                                                <a-select-option value="BOOLEAN">布尔</a-select-option>
-                                                <a-select-option value="COLLECTION">集合</a-select-option>
-                                                <a-select-option value="STRING">字符串</a-select-option>
-                                                <a-select-option value="NUMBER">数值</a-select-option>
-                                                <a-select-option value="DATE">日期</a-select-option>
-                                            </a-select>
-                                        </a-col>
-                                        <a-col :span="1"></a-col>
-                                        <a-col :span="18">
-                                            <a-input
-                                                v-model="generalRule.defaultAction.value"></a-input>
-                                        </a-col>
-                                    </a-row>
-                                </div>
-                            </template>
-
-                              <a-icon type="pull-request" class="dynamic-delete-button"
-                                      style="font-size: 18px"></a-icon>
-                        </a-popover>
-                    </span>
-
               <a-form-model ref="actionForm" :model="generalRule">
                 <a-row>
                   <a-col :span="5">
@@ -370,7 +337,8 @@
                                         trigger: ['change', 'blur'],
                                       }">
                       <a-select style="width:100%"
-                                :value="generalRule.action.type===0?'PARAMETER':(generalRule.action.type===1?'VARIABLE':generalRule.action.valueType)"
+                                placeholder="请选择结果类型"
+                                :value="generalRule.action.type===0?'PARAMETER':(generalRule.action.type===1?'VARIABLE':generalRule.action.valueType===null?undefined:generalRule.action.valueType)"
                                 @change="actionValueTypeChange">
                         <a-select-option value="PARAMETER">参数</a-select-option>
                         <a-select-option value="VARIABLE">变量</a-select-option>
@@ -441,6 +409,93 @@
                   </a-col>
                 </a-row>
               </a-form-model>
+            </a-card>
+
+            <br>
+
+            <a-card title="默认结果">
+              <a-switch
+                  :disabled="generalRule.action.valueType==null"
+                  @change="enableDefaultActionChange"
+                  :checked="generalRule.defaultAction.enableDefaultAction===0"/>
+              <br> <br>
+              <a-row>
+                <a-col :span="6">
+                  <a-select style="width:100%"
+                            :disabled="generalRule.action.valueType==null"
+                            placeholder="请选择类型"
+                            :value="generalRule.defaultAction.type===0?'PARAMETER':(generalRule.defaultAction.type===1?'VARIABLE':generalRule.defaultAction.valueType===null?undefined:generalRule.defaultAction.valueType)"
+                            @change="defaultActionValueTypeChange"
+                  >
+                    <a-select-option value="PARAMETER">参数</a-select-option>
+                    <a-select-option value="VARIABLE">变量</a-select-option>
+                    <a-select-option value="BOOLEAN"
+                                     v-if="generalRule.action.valueType==='BOOLEAN'">布尔
+                    </a-select-option>
+                    <a-select-option value="COLLECTION"
+                                     v-if="generalRule.action.valueType==='COLLECTION'">集合
+                    </a-select-option>
+                    <a-select-option value="STRING"
+                                     v-if="generalRule.action.valueType==='STRING'">字符串
+                    </a-select-option>
+                    <a-select-option value="NUMBER"
+                                     v-if="generalRule.action.valueType==='NUMBER'">数值
+                    </a-select-option>
+                    <a-select-option value="DATE"
+                                     v-if="generalRule.action.valueType==='DATE'">日期
+                    </a-select-option>
+                  </a-select>
+                </a-col>
+                <a-col :span="1"></a-col>
+                <a-col :span="17">
+
+                  <a-select
+                      v-if="generalRule.defaultAction.type===0||generalRule.defaultAction.type===1"
+                      show-search
+                      style="width: 100%"
+                      :disabled="generalRule.defaultAction.type==null"
+                      :value="generalRule.defaultAction.valueName"
+                      placeholder="请输入关键字进行搜索"
+                      :default-active-first-option="false"
+                      :show-arrow="false"
+                      :filter-option="false"
+                      :not-found-content="null"
+                      @search="defaultActionSearch"
+                  >
+                    <a-select-option v-for="d in actionSearchSelect.data" :value="d.id"
+                                     :key="d.id"
+                                     @click.native="defaultActionSearchOptionClick(d)">
+                      {{ d.name }}
+                    </a-select-option>
+                  </a-select>
+
+                  <a-select
+                      :disabled="!generalRule.defaultAction.type"
+                      v-else-if="generalRule.defaultAction.valueType==='BOOLEAN'"
+                      defaultValue="true"
+                      style="width: 100%"
+                      v-model="generalRule.defaultAction.value" placeholder="请选择数据">
+                    <a-select-option value="true">true</a-select-option>
+                    <a-select-option value="false">false</a-select-option>
+                  </a-select>
+                  <a-input-number
+                      :disabled="!generalRule.defaultAction.type"
+                      v-else-if="generalRule.defaultAction.valueType==='NUMBER'"
+                      v-model="generalRule.defaultAction.value" style="width: 100%"/>
+                  <a-date-picker
+                      :disabled="!generalRule.defaultAction.type"
+                      v-else-if="generalRule.defaultAction.valueType==='DATE'"
+                      show-time
+                      @change="(date,dateString)=>(datePickerChange(generalRule.defaultAction,date,dateString))"
+                      format="YYYY-MM-DD hh:mm:ss"
+                      v-model="generalRule.defaultAction.value"
+                      style="width: 100%"></a-date-picker>
+                  <a-input v-else
+                           :disabled="!generalRule.defaultAction.type"
+                           v-model="generalRule.defaultAction.value"></a-input>
+
+                </a-col>
+              </a-row>
             </a-card>
           </a-col>
           <a-col :span="1"></a-col>
@@ -527,7 +582,6 @@ export default {
           valueName: undefined,
           valueType: undefined,
           type: undefined,
-          loading: false,
         },
         defaultAction: {
           enableDefaultAction: 1,
@@ -535,7 +589,6 @@ export default {
           valueName: undefined,
           valueType: undefined,
           type: undefined,
-          loading: false,
         },
       },
       actionSearchSelect: {
@@ -598,6 +651,37 @@ export default {
     },
   },
   methods: {
+    defaultActionValueTypeChange(valueType) {
+      this.generalRule.defaultAction.value = undefined;
+      this.generalRule.defaultAction.valueName = undefined;
+      this.generalRule.defaultAction.variableValue = null;
+      this.generalRule.defaultAction.valueType = valueType;
+      // 如果是变量或者元素
+      if (valueType === 'PARAMETER') {
+        this.generalRule.defaultAction.type = 0;
+        // 参数的类型
+        this.generalRule.defaultAction.valueType = '';
+      } else if (valueType === 'VARIABLE') {
+        this.generalRule.defaultAction.type = 1;
+        // 变量的类型
+        this.generalRule.defaultAction.valueType = '';
+      } else {
+        this.generalRule.defaultAction.type = 2;
+      }
+      // 清空远程搜索缓存
+      this.actionSearchSelect = {
+        data: [],
+        value: undefined,
+      }
+    },
+    enableDefaultActionChange() {
+      let defaultAction = this.generalRule.defaultAction;
+      if (defaultAction.enableDefaultAction === 0) {
+        defaultAction.enableDefaultAction = 1;
+      } else {
+        defaultAction.enableDefaultAction = 0;
+      }
+    },
     onContextmenu(e) {
       if (e) {
         e.preventDefault()
@@ -652,6 +736,15 @@ export default {
           }, data => (this.actionSearchSelect.data = data)
           , this.generalRule.action.type)
     },
+    defaultActionSearch(value) {
+      selectSearch({
+            name: value,
+            dataId: this.generalRule.id,
+            dataType: this.dataType,
+            valueType: null // 查询所有类型
+          }, data => (this.actionSearchSelect.data = data)
+          , this.generalRule.defaultAction.type)
+    },
     actionSearchOptionClick(d) {
       this.generalRule.action.value = d.id;
       this.generalRule.action.valueType = d.valueType;
@@ -661,6 +754,15 @@ export default {
         this.generalRule.action.variableValue = d.value;
       }
       this.saveAction();
+    },
+    defaultActionSearchOptionClick(d) {
+      this.generalRule.defaultAction.value = d.id;
+      this.generalRule.defaultAction.valueType = d.valueType;
+      this.generalRule.defaultAction.valueName = d.name;
+      // 变量  d.type 如果是固定值 则直接显示变量的值
+      if (this.generalRule.defaultAction.type === 1 && d.type === 2) {
+        this.generalRule.defaultAction.variableValue = d.value;
+      }
     },
     editCondition(cg, cgc) {
       cg.popoverVisible = true;
@@ -739,11 +841,11 @@ export default {
       if (valueType === 'PARAMETER') {
         this.generalRule.action.type = 0;
         // 参数的类型
-        this.generalRule.action.valueType = '';
+        this.generalRule.action.valueType = null;
       } else if (valueType === 'VARIABLE') {
         this.generalRule.action.type = 1;
         // 变量的类型
-        this.generalRule.action.valueType = '';
+        this.generalRule.action.valueType = null;
       } else {
         this.generalRule.action.type = 2;
       }
