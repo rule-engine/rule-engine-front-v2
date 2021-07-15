@@ -105,7 +105,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('account', {currUser: 'user'}),
+    ...mapState('user', {currUser: 'user'}),
     ...mapState('setting', ['lang'])
   },
   created() {

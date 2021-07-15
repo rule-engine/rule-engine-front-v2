@@ -66,8 +66,8 @@ export default {
     let _this = this
     currentWorkspace().then(res => {
       _this.currentWorkspace = res.data.data
-      _this.loading = false
-    })
+      _this.$store.commit("workspace/setWorkSpace", _this.currentWorkspace)
+    }).finally(() => _this.loading = false)
     this.loadList()
   },
   methods: {

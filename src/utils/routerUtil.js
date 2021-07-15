@@ -108,9 +108,9 @@ function loadRoutes(routesConfig) {
 
   // 如果 routesConfig 有值，则更新到本地，否则从本地获取
   if (routesConfig) {
-    store.commit('account/setRoutesConfig', routesConfig)
+    store.commit('user/setRoutesConfig', routesConfig)
   } else {
-    routesConfig = store.getters['account/routesConfig']
+    routesConfig = store.getters['user/routesConfig']
   }
   // 如果开启了异步路由，则加载异步路由配置
   const asyncRoutes = store.state.setting.asyncRoutes

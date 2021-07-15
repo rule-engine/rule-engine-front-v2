@@ -19,9 +19,9 @@
           </a-button>
         </a-form-item>
       </a-form>
-      <a-divider dashed/>
-      <a-space class="operator">
-        <a-button @click="addNew" type="primary">添加</a-button>
+      <a-divider dashed v-if="isAdmin"/>
+      <a-space class="operator" v-if="isAdmin">
+        <a-button  @click="addNew" type="primary">添加</a-button>
         <a-button>批量操作</a-button>
         <a-dropdown>
           <a-menu @click="handleMenuClick" slot="overlay">
@@ -186,6 +186,7 @@ import {
   verifyckEmail
 } from '@/services/user'
 import {isEmail} from '@/utils/util'
+import {mapGetters} from "vuex";
 
 const columns = [
   {
@@ -207,7 +208,7 @@ const columns = [
     sorter: true
   },
   {
-    title: '操作',fixed: 'right',
+    title: '操作', fixed: 'right',
     scopedSlots: {customRender: 'action'}
   }
 ];
@@ -275,6 +276,8 @@ export default {
   ,
   created() {
     this.loadUserList()
+  }, computed: {
+    ...mapGetters('user', ['isAdmin'])
   },
   methods: {
     usernameValidator(rule, value, callback) {

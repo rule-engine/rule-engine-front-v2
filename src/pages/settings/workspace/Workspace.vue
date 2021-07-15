@@ -21,7 +21,7 @@
       </a-form-model>
       <a-divider dashed/>
       <a-space class="operator">
-        <a-button @click="showAdd" type="primary">新建</a-button>
+        <a-button @click="showAdd" type="primary">新建{{this.isAdmin}}</a-button>
         <a-button>批量操作</a-button>
         <a-dropdown>
           <a-menu @click="handleMenuClick" slot="overlay">
@@ -364,6 +364,7 @@ import {
   deleteMember,
   permissionTransferApi
 } from '@/services/workspaceMember'
+import {mapGetters} from "vuex";
 
 
 const columns = [
@@ -385,7 +386,7 @@ const columns = [
     sorter: true
   },
   {
-    title: '操作',fixed: 'right',
+    title: '操作', fixed: 'right',
     scopedSlots: {customRender: 'action'}
   }
 ];
@@ -471,7 +472,7 @@ export default {
             dataIndex: 'email',
           },
           {
-            title: '操作',fixed: 'right',
+            title: '操作', fixed: 'right',
             scopedSlots: {customRender: 'action'}
           }
         ],
@@ -552,9 +553,12 @@ export default {
   },
   created() {
     this.loadWorkspaceList()
+  }, computed: {
+    ...mapGetters('workspace', ['isAdmin'])
+  }, mounted() {
   },
   methods: {
-    workspaceCodeValidator(rule, value, callback){
+    workspaceCodeValidator(rule, value, callback) {
       if (this.edit.visible) {
         return false
       }

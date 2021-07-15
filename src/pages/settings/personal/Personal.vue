@@ -46,7 +46,7 @@
     export default {
         name: "Personal",
         computed: {
-            ...mapGetters('account', ['user']),
+            ...mapGetters('user', ['user']),
         },
         components: {PageLayout},
         data() {
