@@ -49,6 +49,8 @@ module.exports = {
         RUN_TEST: `${COMPUTE_WEB_BASE_URL}/ruleEngine/generalRuleTest/run`,
         VIEW: `${WEB_BASE_URL}/ruleEngine/generalRule/view`,
         VERIFY_RULE_CODE: `${WEB_BASE_URL}/ruleEngine/generalRule/codeIsExists`,
+        SAVE_DEFAULT_ACTION: `${WEB_BASE_URL}/ruleEngine/generalRule/saveDefaultAction`,
+        DEFAULT_ACTION_SWITCH: `${WEB_BASE_URL}/ruleEngine/generalRule/defaultActionSwitch`,
     },
     importExport: {
         EXPORT: `${WEB_BASE_URL}/ruleEngine/importExport/export`,

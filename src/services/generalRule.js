@@ -56,6 +56,14 @@ export async function viewGeneralRule(query) {
     return request(generalRule.VIEW, METHOD.POST, query)
 }
 
+export async function saveDefaultAction(query) {
+    return request(generalRule.SAVE_DEFAULT_ACTION, METHOD.POST, query)
+}
+
+export async function defaultActionSwitch(query) {
+    return request(generalRule.DEFAULT_ACTION_SWITCH, METHOD.POST, query)
+}
+
 export default {
     list,
 }

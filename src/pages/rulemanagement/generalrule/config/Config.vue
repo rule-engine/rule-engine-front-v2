@@ -316,8 +316,8 @@
             </a-card>
             <br>
             <br>
-
-            <a-card title="结果">
+            <a-form-model ref="generalRuleForm" :model="generalRule">
+              <a-card title="结果">
               <span slot="extra">
                         <a-popover title="温馨提示">
                             <template slot="content">
@@ -327,7 +327,6 @@
                             <a-icon type="info-circle" class="dynamic-delete-button" style="font-size: 18px"></a-icon>
                         </a-popover>
                     </span>
-              <a-form-model ref="actionForm" :model="generalRule">
                 <a-row>
                   <a-col :span="5">
                     <a-form-model-item prop="action.type"
@@ -408,95 +407,112 @@
                     </a-form-model-item>
                   </a-col>
                 </a-row>
-              </a-form-model>
-            </a-card>
 
-            <br>
+              </a-card>
 
-            <a-card title="默认结果">
-              <a-switch
-                  :disabled="generalRule.action.valueType==null"
-                  @change="enableDefaultActionChange"
-                  :checked="generalRule.defaultAction.enableDefaultAction===0"/>
-              <br> <br>
-              <a-row>
-                <a-col :span="6">
-                  <a-select style="width:100%"
-                            :disabled="generalRule.action.valueType==null"
-                            placeholder="请选择类型"
-                            :value="generalRule.defaultAction.type===0?'PARAMETER':(generalRule.defaultAction.type===1?'VARIABLE':generalRule.defaultAction.valueType===null?undefined:generalRule.defaultAction.valueType)"
-                            @change="defaultActionValueTypeChange"
-                  >
-                    <a-select-option value="PARAMETER">参数</a-select-option>
-                    <a-select-option value="VARIABLE">变量</a-select-option>
-                    <a-select-option value="BOOLEAN"
-                                     v-if="generalRule.action.valueType==='BOOLEAN'">布尔
-                    </a-select-option>
-                    <a-select-option value="COLLECTION"
-                                     v-if="generalRule.action.valueType==='COLLECTION'">集合
-                    </a-select-option>
-                    <a-select-option value="STRING"
-                                     v-if="generalRule.action.valueType==='STRING'">字符串
-                    </a-select-option>
-                    <a-select-option value="NUMBER"
-                                     v-if="generalRule.action.valueType==='NUMBER'">数值
-                    </a-select-option>
-                    <a-select-option value="DATE"
-                                     v-if="generalRule.action.valueType==='DATE'">日期
-                    </a-select-option>
-                  </a-select>
-                </a-col>
-                <a-col :span="1"></a-col>
-                <a-col :span="17">
+              <br>
 
-                  <a-select
-                      v-if="generalRule.defaultAction.type===0||generalRule.defaultAction.type===1"
-                      show-search
-                      style="width: 100%"
-                      :disabled="generalRule.defaultAction.type==null"
-                      :value="generalRule.defaultAction.valueName"
-                      placeholder="请输入关键字进行搜索"
-                      :default-active-first-option="false"
-                      :show-arrow="false"
-                      :filter-option="false"
-                      :not-found-content="null"
-                      @search="defaultActionSearch"
-                  >
-                    <a-select-option v-for="d in actionSearchSelect.data" :value="d.id"
-                                     :key="d.id"
-                                     @click.native="defaultActionSearchOptionClick(d)">
-                      {{ d.name }}
-                    </a-select-option>
-                  </a-select>
+              <a-card title="默认结果">
+                <a-switch
+                    :disabled="generalRule.action.valueType==null"
+                    @change="enableDefaultActionChange"
+                    :checked="generalRule.defaultAction.enableDefaultAction===0"/>
+                <br> <br>
+                <a-row>
+                  <a-col :span="6">
+                    <a-form-model-item prop="defaultAction.type"
+                                       :rules="generalRule.defaultAction.enableDefaultAction===0?{
+                                        required: true,
+                                        message: '请选择默认结果类型',
+                                        trigger: ['change', 'blur'],
+                                      }:{required:false}">
+                      <a-select style="width:100%"
+                                :disabled="generalRule.action.valueType==null"
+                                placeholder="请选择类型"
+                                :value="generalRule.defaultAction.type===0?'PARAMETER':(generalRule.defaultAction.type===1?'VARIABLE':generalRule.defaultAction.valueType===null?undefined:generalRule.defaultAction.valueType)"
+                                @change="defaultActionValueTypeChange"
+                      >
+                        <a-select-option value="PARAMETER">参数</a-select-option>
+                        <a-select-option value="VARIABLE">变量</a-select-option>
+                        <a-select-option value="BOOLEAN"
+                                         v-if="generalRule.action.valueType==='BOOLEAN'">布尔
+                        </a-select-option>
+                        <a-select-option value="COLLECTION"
+                                         v-if="generalRule.action.valueType==='COLLECTION'">集合
+                        </a-select-option>
+                        <a-select-option value="STRING"
+                                         v-if="generalRule.action.valueType==='STRING'">字符串
+                        </a-select-option>
+                        <a-select-option value="NUMBER"
+                                         v-if="generalRule.action.valueType==='NUMBER'">数值
+                        </a-select-option>
+                        <a-select-option value="DATE"
+                                         v-if="generalRule.action.valueType==='DATE'">日期
+                        </a-select-option>
+                      </a-select>
+                    </a-form-model-item>
+                  </a-col>
+                  <a-col :span="1"></a-col>
+                  <a-col :span="17">
+                    <a-form-model-item prop="defaultAction.value"
+                                       :rules="generalRule.defaultAction.enableDefaultAction===0?{
+                                        required: true,
+                                        message: '请输入默认结果值',
+                                        trigger: ['change', 'blur'],
+                                      }:{required:false}">
+                      <a-select
+                          v-if="generalRule.defaultAction.type===0||generalRule.defaultAction.type===1"
+                          show-search
+                          style="width: 100%"
+                          :disabled="generalRule.defaultAction.type==null"
+                          :value="generalRule.defaultAction.valueName"
+                          placeholder="请输入关键字进行搜索"
+                          :default-active-first-option="false"
+                          :show-arrow="false"
+                          :filter-option="false"
+                          :not-found-content="null"
+                          @search="defaultActionSearch"
+                      >
+                        <a-select-option v-for="d in actionSearchSelect.data" :value="d.id"
+                                         :key="d.id"
+                                         @click.native="defaultActionSearchOptionClick(d)">
+                          {{ d.name }}
+                        </a-select-option>
+                      </a-select>
 
-                  <a-select
-                      :disabled="!generalRule.defaultAction.type"
-                      v-else-if="generalRule.defaultAction.valueType==='BOOLEAN'"
-                      defaultValue="true"
-                      style="width: 100%"
-                      v-model="generalRule.defaultAction.value" placeholder="请选择数据">
-                    <a-select-option value="true">true</a-select-option>
-                    <a-select-option value="false">false</a-select-option>
-                  </a-select>
-                  <a-input-number
-                      :disabled="!generalRule.defaultAction.type"
-                      v-else-if="generalRule.defaultAction.valueType==='NUMBER'"
-                      v-model="generalRule.defaultAction.value" style="width: 100%"/>
-                  <a-date-picker
-                      :disabled="!generalRule.defaultAction.type"
-                      v-else-if="generalRule.defaultAction.valueType==='DATE'"
-                      show-time
-                      @change="(date,dateString)=>(datePickerChange(generalRule.defaultAction,date,dateString))"
-                      format="YYYY-MM-DD hh:mm:ss"
-                      v-model="generalRule.defaultAction.value"
-                      style="width: 100%"></a-date-picker>
-                  <a-input v-else
-                           :disabled="!generalRule.defaultAction.type"
-                           v-model="generalRule.defaultAction.value"></a-input>
-
-                </a-col>
-              </a-row>
-            </a-card>
+                      <a-select
+                          :disabled="!generalRule.defaultAction.type"
+                          v-else-if="generalRule.defaultAction.valueType==='BOOLEAN'"
+                          defaultValue="true"
+                          @blur="saveDefaultAction"
+                          style="width: 100%"
+                          v-model="generalRule.defaultAction.value" placeholder="请选择数据">
+                        <a-select-option value="true">true</a-select-option>
+                        <a-select-option value="false">false</a-select-option>
+                      </a-select>
+                      <a-input-number
+                          @blur="saveDefaultAction"
+                          :disabled="!generalRule.defaultAction.type"
+                          v-else-if="generalRule.defaultAction.valueType==='NUMBER'"
+                          v-model="generalRule.defaultAction.value" style="width: 100%"/>
+                      <a-date-picker
+                          :disabled="!generalRule.defaultAction.type"
+                          v-else-if="generalRule.defaultAction.valueType==='DATE'"
+                          show-time
+                          @openChange="defaultActionValueDatePickerOpenChange"
+                          @change="(date,dateString)=>(datePickerChange(generalRule.defaultAction,date,dateString))"
+                          format="YYYY-MM-DD hh:mm:ss"
+                          v-model="generalRule.defaultAction.value"
+                          style="width: 100%"></a-date-picker>
+                      <a-input v-else
+                               @blur="saveDefaultAction"
+                               :disabled="!generalRule.defaultAction.type"
+                               v-model="generalRule.defaultAction.value"></a-input>
+                    </a-form-model-item>
+                  </a-col>
+                </a-row>
+              </a-card>
+            </a-form-model>
           </a-col>
           <a-col :span="1"></a-col>
         </a-row>
@@ -544,7 +560,13 @@ import Variable from "./Variable";
 import Contextmenu from '@/components/menu/Contextmenu'
 // api
 import {saveOrUpdate, deleteConditionGroup} from '@/services/conditionGroup'
-import {getRuleConfig, saveAction, generationRelease} from '@/services/generalRule'
+import {
+  getRuleConfig,
+  saveAction,
+  generationRelease,
+  saveDefaultAction,
+  defaultActionSwitch
+} from '@/services/generalRule'
 import {saveConditionAndBindGroup, deleteCondition} from '@/services/conditionGroupCondition'
 import {updateCondition} from '@/services/condition'
 
@@ -679,8 +701,27 @@ export default {
       if (defaultAction.enableDefaultAction === 0) {
         defaultAction.enableDefaultAction = 1;
       } else {
+        // 如果开启默认规则，判断是否填写，如果没有填写，手动触发提示错误
+        if (defaultAction.type == null) {
+          this.$refs['generalRuleForm'].fields[2].validateMessage = '请选择默认结果类型'
+          this.$refs['generalRuleForm'].fields[2].validateState = 'error'
+          return;
+        }
+        if (defaultAction.value == null) {
+          this.$refs['generalRuleForm'].fields[3].validateMessage = '请输入默认结果值'
+          this.$refs['generalRuleForm'].fields[3].validateState = 'error'
+          return;
+        }
         defaultAction.enableDefaultAction = 0;
       }
+      defaultActionSwitch({
+        generalRuleId: this.generalRule.id,
+        enableDefaultAction: defaultAction.enableDefaultAction
+      }).then(res => {
+        if (res.data.data) {
+          this.$message.success(defaultAction.enableDefaultAction === 0 ? '默认结果已开启' : '默认结果已关闭');
+        }
+      })
     },
     onContextmenu(e) {
       if (e) {
@@ -722,9 +763,33 @@ export default {
         }
       })
     },
+    saveDefaultAction() {
+      if (this.generalRule.defaultAction.type == null) {
+        return;
+      }
+      if (!this.generalRule.defaultAction.value) {
+        return;
+      }
+      if (!this.generalRule.defaultAction.valueType) {
+        return;
+      }
+      saveDefaultAction({
+        generalRuleId: this.generalRule.id,
+        configValue: this.generalRule.defaultAction
+      }).then(res => {
+        if (res.data.data) {
+          this.$message.success("默认结果保存成功");
+        }
+      })
+    },
     actionValueDatePickerOpenChange(s) {
       if (!s) {
         this.saveAction();
+      }
+    },
+    defaultActionValueDatePickerOpenChange(s) {
+      if (!s) {
+        this.saveDefaultAction();
       }
     },
     actionSearch(value) {
@@ -763,6 +828,7 @@ export default {
       if (this.generalRule.defaultAction.type === 1 && d.type === 2) {
         this.generalRule.defaultAction.variableValue = d.value;
       }
+      this.saveDefaultAction();
     },
     editCondition(cg, cgc) {
       cg.popoverVisible = true;
@@ -976,7 +1042,7 @@ export default {
       this.$emit("choicePage", {pageIndex: 1, id: this.generalRule.id})
     },
     nextStep() {
-      this.$refs['actionForm'].validate(valid => {
+      this.$refs['generalRuleForm'].validate(valid => {
         if (valid) {
           this.footer.nextStepLoading = true;
           generationRelease(this.generalRule).then(res => {
