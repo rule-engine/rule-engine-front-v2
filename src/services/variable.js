@@ -30,7 +30,7 @@ export async function get(query) {
  * @param query
  * @constructor
  */
-export async function update(query) {
+export async function updateVariable(query) {
     return request(variable.UPDATE, METHOD.POST, query)
 }
 
@@ -41,4 +41,13 @@ export async function update(query) {
  */
 export async function deleteById(query) {
     return request(variable.DELETE, METHOD.POST, query)
+}
+
+export default {
+    updateVariable,
+    deleteById,
+    get,
+    listVariable,
+    addVariable,
+
 }
