@@ -609,14 +609,13 @@ export default {
           this.showDrawer(pageKey);
           break
         case '2':
-          console.log('咱不支持')
+          alert('暂不支持')
           break
         default:
           break
       }
     },
-    datePickerChange(v, date, dateString) {
-      console.log(dateString)
+    datePickerChange(v, date) {
       v.value = moment(date).format('YYYY-MM-DD HH:mm:ss');
     },
     saveAction() {
@@ -673,14 +672,16 @@ export default {
         conditionId: conditionId,
         conditionGroupRefId: conditionGroupRefId
       }).then(res => {
-        console.log(res)
-        // 删除掉前端数组中的数据
-        // cg.conditionGroupCondition
-        cgc.forEach((value, index) => {
-          if (value.condition.id === conditionId) {
-            cgc.splice(index, 1);
-          }
-        });
+        if (res.data.data) {
+          // 删除掉前端数组中的数据
+          // cg.conditionGroupCondition
+          cgc.forEach((value, index) => {
+            if (value.condition.id === conditionId) {
+              cgc.splice(index, 1);
+            }
+          });
+          this.$message.success("删除条件成功");
+        }
       })
     },
     conditionLeftSearch(value) {
@@ -753,7 +754,6 @@ export default {
         data: [],
         value: undefined,
       }
-      console.log(this.generalRule.action)
     },
     /**
      * 条件左值类型修改
@@ -772,7 +772,6 @@ export default {
         this.selectCondition.from.config.leftValue.type = 2;
         // 固定值场景清空右值，如果变量或者参数，等搜索到选中时再去判断清空
         // 左面发生改变，右边也改变  如果值类型相同，则不需要更改
-        console.log(this.selectCondition.from.config.rightValue.valueType, valueType)
         if (valueType !== this.selectCondition.from.config.rightValue.valueType) {
           this.selectCondition.from.config.rightValue = {
             valueType: undefined,
@@ -818,7 +817,6 @@ export default {
       return new Array(valueType);
     },
     conditionRightChange(value) {
-      console.log(value);
       this.selectConditionRightSearchSelect.value = value;
     },
     conditionRightSearchOptionClick(d) {
@@ -864,9 +862,10 @@ export default {
       }
     },
     isRightTypeSelectView(valueType) {
-      // if (this.selectCondition.from.config.rightValue.valueType === valueType) {
-      //   return true;
-      // }
+      // 保留一个与目前右边值类型相等的
+      if (this.selectCondition.from.config.rightValue.valueType === valueType) {
+        return true;
+      }
       if (this.selectCondition.from.config.leftValue.valueType === null) {
         return false;
       }
@@ -890,12 +889,12 @@ export default {
         if (valid) {
           this.footer.nextStepLoading = true;
           generationRelease(this.generalRule).then(res => {
-            console.log(res)
-            this.footer.nextStepLoading = false;
-            this.$emit("choicePage", {pageIndex: 3, id: this.generalRule.id})
+            if (res.data.data) {
+              this.footer.nextStepLoading = false;
+              this.$emit("choicePage", {pageIndex: 3, id: this.generalRule.id})
+            }
           })
         } else {
-          console.log('error submit!!');
           return false;
         }
       });
@@ -912,7 +911,6 @@ export default {
     addCondition(cg, formName) {
       this.selectCondition.currentConditionGroup = cg;
       // 还原配置
-      console.log(formName)
       let $ref = this.$refs[formName];
       if ($ref) {
         $ref[0].resetFields();
@@ -960,10 +958,10 @@ export default {
                 "condition": this.selectCondition.from
               });
               cg.popoverVisible = false;
+              this.$message.success("添加成功");
             }
           })
         } else {
-          console.log('error submit!!');
           return false;
         }
       });
@@ -989,22 +987,23 @@ export default {
       };
       saveOrUpdate(newConditionGroup).then(res => {
         // 回显的id
-        if (res.data.code === 200) {
+        if (res.data.data) {
           newConditionGroup.id = res.data.data;
           this.generalRule.conditionGroup.push(newConditionGroup);
-        } else {
-          this.$message.error("添加条件组失败");
+          this.$message.success("添加条件组成功");
         }
       });
     },
     deleteConditionGroup(cg) {
       // 删除条件组
       deleteConditionGroup({id: cg.id}).then(res => {
-        console.log(res)
-      });
-      this.generalRule.conditionGroup.forEach((value, index) => {
-        if (value.id === cg.id) {
-          this.generalRule.conditionGroup.splice(index, 1);
+        if (res.data.data) {
+          this.generalRule.conditionGroup.forEach((value, index) => {
+            if (value.id === cg.id) {
+              this.generalRule.conditionGroup.splice(index, 1);
+            }
+          });
+          this.$message.success("删除条件组成功");
         }
       });
     },
