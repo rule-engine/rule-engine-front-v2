@@ -364,6 +364,7 @@
                           @openChange="actionValueDatePickerOpenChange"
                           v-else-if="generalRule.action.valueType==='DATE'"
                           show-time
+                          @change="(date,dateString)=>(datePickerChange(generalRule.action,date,dateString))"
                           format="YYYY-MM-DD hh:mm:ss"
                           v-model="generalRule.action.value"
                           style="width: 100%"></a-date-picker>
@@ -428,6 +429,8 @@ import {saveConditionAndBindGroup, deleteCondition} from '@/services/conditionGr
 //import {listInputParameter} from '@/services/inputParameter'
 import {selectSearch} from '@/utils/selectSearch'
 import {getSymbolByValueType, getSymbolExplanation} from '@/utils/symbol'
+import moment from 'moment';
+
 
 export default {
   name: "Config",
@@ -523,6 +526,10 @@ export default {
     this.getRuleConfig();
   },
   methods: {
+    datePickerChange(v, date, dateString) {
+      console.log(dateString)
+      v.value = moment(date).format('YYYY-MM-DD HH:mm:ss');
+    },
     saveAction() {
       if (this.generalRule.action.type == null) {
         return;
@@ -618,8 +625,8 @@ export default {
       return v.value;
     },
     actionValueTypeChange(valueType) {
-      this.generalRule.action.value = '';
-      this.generalRule.action.valueName = null;
+      this.generalRule.action.value = undefined;
+      this.generalRule.action.valueName = undefined;
       this.generalRule.action.variableValue = null;
       this.generalRule.action.valueType = valueType;
       // 如果是变量或者元素

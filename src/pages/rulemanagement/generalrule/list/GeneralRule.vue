@@ -422,12 +422,10 @@ export default {
     deleteRow(record) {
       this.loading = true;
       deleteGeneralRule({id: record.id}).then(res => {
-        if (res.data) {
+        if (res.data.data) {
           this.$message.success("删除成功！");
           // 重新加载列表
           this.loadDataList();
-        } else {
-          this.$message.error("删除失败！");
         }
       })
     },
