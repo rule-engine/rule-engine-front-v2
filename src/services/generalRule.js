@@ -1,6 +1,15 @@
 import {generalRule} from '@/services/api'
 import {request, METHOD} from '@/utils/request'
 
+/**
+ * 验证规则code
+ * @param query
+ * @returns {Promise<AxiosResponse<any>>}
+ */
+export async function verifyRuleCode(query) {
+    return request(generalRule.VERIFY_RULE_CODE, METHOD.POST, query)
+}
+
 export async function list(query) {
     return request(generalRule.LIST, METHOD.POST, query)
 }

@@ -243,51 +243,10 @@ export default {
       },
       rules: {
         username: {
-          trigger: ['blur'], required: true, asyncValidator: (rule, value, callback) => {
-            if (this.edit.visible) {
-              callback();
-              return
-            }
-            if (value.length < 2 || value.length > 16) {
-              callback(new Error('用户名长度应该在2-16位'));
-            } else {
-              verifyUserName({username: value}).then(resp => {
-                    if (resp.data.code === 200) {
-                      if (resp.data.data) {
-                        callback()
-                      } else {
-                        callback(new Error('该用户名已经存在！'));
-                      }
-                    } else {
-                      callback(new Error(resp.data.message));
-                    }
-                  }
-              )
-            }
-          },
+          trigger: ['blur'], required: true, asyncValidator: this.usernameValidator
         },
         email: {
-          type: 'email', trigger: ['blur'], asyncValidator: (rule, value, callback) => {
-            if (this.edit.visible && this.userEditForm.email === this.userEditForm.orgEmail) {
-              callback();
-              return
-            }
-            if (!isEmail(value)) {
-              callback(new Error('请输入正确的邮箱'));
-            } else {
-              verifyckEmail({email: value}).then(resp => {
-                if (resp.data.code === 200) {
-                  if (resp.data.data) {
-                    callback()
-                  } else {
-                    callback(new Error('该邮箱已经存在！'));
-                  }
-                } else {
-                  callback(new Error(resp.data.message));
-                }
-              })
-            }
-          }, required: true
+          type: 'email', trigger: ['blur'], asyncValidator: this.emailValidator, required: true
         },
         phone: {min: 6, trigger: ['change', 'blur'], required: false, message: "请输入正确的手机号"},
         password: {min: 3, trigger: ['change', 'blur'], required: true, message: "密码长度为3-16位"},
@@ -317,6 +276,49 @@ export default {
     this.loadUserList()
   },
   methods: {
+    usernameValidator(rule, value, callback) {
+      if (this.edit.visible) {
+        callback();
+        return
+      }
+      if (value.length < 2 || value.length > 16) {
+        callback(new Error('用户名长度应该在2-16位'));
+      } else {
+        verifyUserName({username: value}).then(resp => {
+              if (resp.data.code === 200) {
+                if (resp.data.data) {
+                  callback()
+                } else {
+                  callback(new Error('该用户名已经存在！'));
+                }
+              } else {
+                callback(new Error(resp.data.message));
+              }
+            }
+        )
+      }
+    },
+    emailValidator(rule, value, callback) {
+      if (this.edit.visible && this.userEditForm.email === this.userEditForm.orgEmail) {
+        callback();
+        return
+      }
+      if (!isEmail(value)) {
+        callback(new Error('请输入正确的邮箱'));
+      } else {
+        verifyckEmail({email: value}).then(resp => {
+          if (resp.data.code === 200) {
+            if (resp.data.data) {
+              callback()
+            } else {
+              callback(new Error('该邮箱已经存在！'));
+            }
+          } else {
+            callback(new Error(resp.data.message));
+          }
+        })
+      }
+    },
     handleSubmit(formName) {
       this.confirmLoading = true
       const _this = this;

@@ -47,6 +47,7 @@ module.exports = {
         GENERATION_RELEASE: `${WEB_BASE_URL}/ruleEngine/generalRule/generationRelease`,
         RUN_TEST: `${COMPUTE_WEB_BASE_URL}/ruleEngine/generalRuleTest/run`,
         VIEW: `${WEB_BASE_URL}/ruleEngine/generalRule/view`,
+        VERIFY_RULE_CODE: `${WEB_BASE_URL}/ruleEngine/generalRule/codeIsExists`,
     },
     importExport: {
         EXPORT: `${WEB_BASE_URL}/ruleEngine/importExport/export`,
