@@ -281,8 +281,8 @@ export default {
         callback();
         return
       }
-      if (value.length < 2 || value.length > 16) {
-        callback(new Error('用户名长度应该在2-16位'));
+      if (value.length < 2 || value.length > 10) {
+        callback(new Error('用户名长度应该在2-10位'));
       } else {
         verifyUserName({username: value}).then(resp => {
               if (resp.data.code === 200) {
