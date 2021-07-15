@@ -61,6 +61,9 @@ module.exports = {
         SELECT_FUNCTION_BY_ID: `${WEB_BASE_URL}/ruleEngine/function/get`,
         RUN: `${COMPUTE_WEB_BASE_URL}/ruleEngine/function/run`,
     },
+    condition: {
+        UPDATE_CONDITION: `${WEB_BASE_URL}/ruleEngine/condition/update`,
+    },
     conditionGroup: {
         SAVE_OR_UPDATE: `${WEB_BASE_URL}/ruleEngine/conditionGroup/saveOrUpdate`,
         DELETE_CONDITION_GROUP: `${WEB_BASE_URL}/ruleEngine/conditionGroup/delete`,

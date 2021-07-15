@@ -1,6 +1,6 @@
 <template>
   <div>
-    <page-layout>
+    <page-layout style="min-width: 600px">
       <a-card title="规则预览发布" :bordered="false">
         <span slot="extra" style="margin-left: 16px;">
               <a-popover trigger="click" arrow-point-at-center overlayClassName="runTest">

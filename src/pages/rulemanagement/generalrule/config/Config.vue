@@ -1,6 +1,6 @@
 <template>
   <div>
-    <page-layout>
+    <page-layout style="min-width: 600px">
 
       <contextmenu :itemList="menuItemList" :visible.sync="menuVisible" @select="onMenuSelect"/>
 
@@ -73,7 +73,7 @@
 
                 <br>
 
-                <a-popover title="添加条件" trigger="click"
+                <a-popover :title="selectCondition.from.id==null?'添加条件':'编辑条件'" trigger="click"
                            :getPopupContainer="triggerNode=>{return triggerNode.parentNode}"
                            arrow-point-at-center v-model="cg.popoverVisible">
                   <template slot="content">
@@ -142,7 +142,7 @@
                                   @search="conditionLeftSearch"
                                   @change="conditionLeftChange"
                               >
-                                <a-select-option v-for="d in selectCondition.from.config.leftValue.searchSelect.data"
+                                <a-select-option v-for="d in selectConditionLeftSearchSelect.data"
                                                  :value="d.id"
                                                  :key="d.id"
                                                  @click.native="conditionLeftSearchOptionClick(d)">
@@ -259,7 +259,7 @@
                                   @search="conditionRightSearch"
                                   @change="conditionRightChange"
                               >
-                                <a-select-option v-for="d in selectCondition.from.config.rightValue.searchSelect.data"
+                                <a-select-option v-for="d in selectConditionRightSearchSelect.data"
                                                  :value="d.id"
                                                  :key="d.id"
                                                  @click.native="conditionRightSearchOptionClick(d)">
@@ -296,7 +296,7 @@
 
                     <a-button type="primary" size="small" style="display:block;float: right;"
                               @click="addConditionOk(cg,`addConditionForm${cgi}`)">
-                      确认
+                      {{ selectCondition.from.id === null ? '确认添加' : '确认更新' }}
                     </a-button>
                     <br>
                   </template>
@@ -491,6 +491,8 @@ import Contextmenu from '@/components/menu/Contextmenu'
 import {saveOrUpdate, deleteConditionGroup} from '@/services/conditionGroup'
 import {getRuleConfig, saveAction, generationRelease} from '@/services/generalRule'
 import {saveConditionAndBindGroup, deleteCondition} from '@/services/conditionGroupCondition'
+import {updateCondition} from '@/services/condition'
+
 
 //import {listInputParameter} from '@/services/inputParameter'
 import {selectSearch} from '@/utils/selectSearch'
@@ -545,6 +547,14 @@ export default {
       drawer: {
         visible: false
       },
+      selectConditionLeftSearchSelect: {
+        data: [],
+        value: undefined,
+      },
+      selectConditionRightSearchSelect: {
+        data: [],
+        value: undefined,
+      },
       selectCondition: {
         currentConditionGroup: null,
         confirmLoading: false,
@@ -560,10 +570,6 @@ export default {
               value: undefined,
               valueName: undefined,
               variableValue: undefined,
-              searchSelect: {
-                data: [],
-                value: undefined,
-              }
             },
             symbol: undefined,
             rightValue: {
@@ -572,10 +578,6 @@ export default {
               value: undefined,
               valueName: undefined,
               variableValue: undefined,
-              searchSelect: {
-                data: [],
-                value: undefined,
-              }
             }
           }
         }
@@ -662,39 +664,9 @@ export default {
     },
     editCondition(cg, cgc) {
       cg.popoverVisible = true;
-      console.log(cgc)
       // 当前条件组
-      this.currentConditionGroup = cg;
-      this.selectCondition.from = {
-        id: cgc.condition.id,
-        name: cgc.condition.name,
-        description: cgc.condition.description,
-        config: {
-          leftValue: {
-            type: cgc.condition.config.leftValue.type,
-            valueType: cgc.condition.config.leftValue.valueType,
-            value: cgc.condition.config.leftValue.value,
-            valueName: cgc.condition.config.leftValue.valueName,
-            variableValue: cgc.condition.config.leftValue.variableValue,
-            searchSelect: {
-              data: [],
-              value: undefined,
-            }
-          },
-          symbol: cgc.condition.config.symbol,
-          rightValue: {
-            type: cgc.condition.config.rightValue.type,
-            valueType: cgc.condition.config.rightValue.valueType,
-            value: cgc.condition.config.rightValue.value,
-            valueName: cgc.condition.config.rightValue.valueName,
-            variableValue: cgc.condition.config.rightValue.variableValue,
-            searchSelect: {
-              data: [],
-              value: undefined,
-            }
-          }
-        }
-      };
+      this.selectCondition.currentConditionGroup = cg;
+      this.selectCondition.from = cgc.condition;
     },
     deleteCondition(cgc, conditionGroupRefId, conditionId) {
       deleteCondition({
@@ -717,11 +689,11 @@ export default {
             dataId: this.generalRule.id,
             dataType: this.dataType,
             valueType: null // 查询所有类型
-          }, data => (this.selectCondition.from.config.leftValue.searchSelect.data = data)
+          }, data => (this.selectConditionLeftSearchSelect.data = data)
           , this.selectCondition.from.config.leftValue.type)
     },
     conditionLeftChange(value) {
-      this.selectCondition.from.config.leftValue.searchSelect.value = value;
+      this.selectConditionLeftSearchSelect.value = value;
     },
     conditionLeftSearchOptionClick(d) {
       this.selectCondition.from.config.leftValue.value = d.id;
@@ -737,11 +709,7 @@ export default {
           valueType: undefined,
           type: undefined,
           value: undefined,
-          valueName: undefined,
-          searchSelect: {
-            data: [],
-            value: undefined,
-          }
+          valueName: undefined
         }
         // 并重置运算符，否则不重置
         this.selectCondition.operators = this.getSymbolByValueType(d.valueType)
@@ -824,8 +792,8 @@ export default {
         this.selectCondition.operators = this.getSymbolByValueType(valueType)
       }
       // 清空远程搜索缓存
-      this.selectCondition.from.config.leftValue.searchSelect.data = []
-      this.selectCondition.from.config.leftValue.searchSelect.value = undefined
+      this.selectConditionLeftSearchSelect.data = []
+      this.selectConditionLeftSearchSelect.value = undefined
     },
     conditionRightSearch(value) {
       selectSearch({
@@ -834,7 +802,7 @@ export default {
         dataType: this.dataType,
         // 查询指定类型右值
         valueType: this.getRValueType(this.selectCondition.from.config.leftValue.valueType, this.selectCondition.from.config.symbol)
-      }, data => (this.selectCondition.from.config.rightValue.searchSelect.data = data), this.selectCondition.from.config.rightValue.type, null);
+      }, data => (this.selectConditionRightSearchSelect.data = data), this.selectCondition.from.config.rightValue.type, null);
     },
     getRValueType(valueType, symbol) {
       if (valueType == null) {
@@ -851,7 +819,7 @@ export default {
     },
     conditionRightChange(value) {
       console.log(value);
-      this.selectCondition.from.config.rightValue.searchSelect.value = value;
+      this.selectConditionRightSearchSelect.value = value;
     },
     conditionRightSearchOptionClick(d) {
       this.selectCondition.from.config.rightValue.value = d.id;
@@ -881,8 +849,8 @@ export default {
         // 根据左值更改运算符
       }
       // 清空远程搜索缓存
-      this.selectCondition.from.config.rightValue.searchSelect.data = []
-      this.selectCondition.from.config.rightValue.searchSelect.value = undefined
+      this.selectConditionRightSearchSelect.data = []
+      this.selectConditionRightSearchSelect.value = undefined
     },
     getConditionNamePrefix(type) {
       if (type === 0) {
@@ -953,6 +921,22 @@ export default {
     addConditionOk(cg, formName) {
       this.$refs[formName][0].validate(valid => {
         if (valid) {
+          // 更新条件
+          if (this.selectCondition.from.id !== null) {
+            updateCondition(this.selectCondition.from).then(res => {
+              if (res.data.data) {
+                // 刷新页面条件数据
+                this.selectCondition.currentConditionGroup.conditionGroupCondition.forEach(f => {
+                  if (f.condition.id === this.selectCondition.from.id) {
+                    f.condition = this.selectCondition.from;
+                  }
+                })
+                this.$message.success("条件更新成功");
+                cg.popoverVisible = false;
+              }
+            })
+            return;
+          }
           // 获取最后一条的orderNo
           let orderNo = 0;
           let conditionGroupCondition = this.selectCondition.currentConditionGroup.conditionGroupCondition;
