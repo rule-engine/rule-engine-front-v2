@@ -75,6 +75,7 @@ module.exports = {
         GET: `${WEB_BASE_URL}/ruleEngine/inputParameter/get`,
         UPDATE: `${WEB_BASE_URL}/ruleEngine/inputParameter/update`,
         DELETE: `${WEB_BASE_URL}/ruleEngine/inputParameter/delete`,
+        VERIFY_INOUT_PARAMETER_CODE: `${WEB_BASE_URL}/ruleEngine/inputParameter/codeIsExists`,
     },
     variable: {
         ADD: `${WEB_BASE_URL}/ruleEngine/variable/add`,
@@ -82,6 +83,7 @@ module.exports = {
         GET: `${WEB_BASE_URL}/ruleEngine/variable/get`,
         UPDATE: `${WEB_BASE_URL}/ruleEngine/variable/update`,
         DELETE: `${WEB_BASE_URL}/ruleEngine/variable/delete`,
+        VERIFY_VARIABLE_NAME: `${WEB_BASE_URL}/ruleEngine/variable/nameIsExists`,
     },
     ROUTES: `${WEB_BASE_URL}/routes`,
     GOODS: `${WEB_BASE_URL}/goods`,
