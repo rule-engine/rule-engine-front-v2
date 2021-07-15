@@ -42,7 +42,7 @@
 
               <a-skeleton v-if="generalRule.conditionGroup.length===0" :paragraph="{ rows: 3 }"/>
 
-              <a-card :title="cg.name" :bordered="false" v-for="cg in generalRule.conditionGroup" :key="cg.id">
+              <a-card :title="cg.name" :bordered="false" v-for="(cg,cgi) in generalRule.conditionGroup" :key="cg.id">
 
                 <a-icon type="delete" class="dynamic-delete-button" style="font-size: 18px" slot="extra"
                         @click="deleteConditionGroup(cg)"></a-icon>
@@ -76,89 +76,122 @@
 
                 <br>
 
-                <a-popover title="添加条件" trigger="click" arrow-point-at-center v-model="cg.popoverVisible">
+                <a-popover title="添加条件" trigger="click"
+                           :getPopupContainer="triggerNode=>{return triggerNode.parentNode}"
+                           arrow-point-at-center v-model="cg.popoverVisible">
                   <template slot="content">
-                    <a-form-model style="width: 500px;" ref="addConditionForm" :model="selectCondition.from"
-                                  :rules="rules" :label-col="{span: 3}"
+                    <a-form-model style="width: 500px;"
+                                  :ref="`addConditionForm${cgi}`"
+                                  :model="selectCondition.from"
+                                  :label-col="{span: 3}"
                                   :wrapper-col="{span: 19}">
-                      <a-form-model-item label="名称" prop="name">
+                      <a-form-model-item label="名称" prop="name"
+                                         :rules="{
+                                        required: true,
+                                        message: '请输入条件名称',
+                                        trigger: ['change', 'blur'],
+                                      }">
                         <a-input v-model="selectCondition.from.name">
                         </a-input>
                       </a-form-model-item>
-                      <a-form-model-item label="配置">
+                      <a-form-model-item label="配置" prop="config" required>
                         <br>
-                        <a-row style="margin-bottom: 10px">
+                        <a-row>
                           <a-col :span="3">
                             左值
                           </a-col>
                           <a-col :span="6">
-                            <a-select
-                                :value="selectCondition.from.config.leftValue.type===0?'PARAMETER':(selectCondition.from.config.leftValue.type===1?'VARIABLE':selectCondition.from.config.leftValue.valueType)"
-                                placeholder="请选择"
-                                @change="leftValueTypeChange">
-                              <a-select-option value="PARAMETER">参数</a-select-option>
-                              <a-select-option value="VARIABLE">变量</a-select-option>
-                              <a-select-option value="BOOLEAN">布尔</a-select-option>
-                              <a-select-option value="COLLECTION">集合</a-select-option>
-                              <a-select-option value="STRING">字符串</a-select-option>
-                              <a-select-option value="NUMBER">数值</a-select-option>
-                              <a-select-option value="DATE">日期</a-select-option>
-                            </a-select>
+                            <a-form-model-item prop="config.leftValue.type"
+                                               style="margin-bottom: 10px;"
+                                               :rules="{
+                                        required: true,
+                                        message: '请选择左值类型',
+                                        trigger: ['change', 'blur'],
+                                      }">
+                              <a-select
+                                  :value="selectCondition.from.config.leftValue.type===0?'PARAMETER':(selectCondition.from.config.leftValue.type===1?'VARIABLE':selectCondition.from.config.leftValue.valueType)"
+                                  placeholder="请选择"
+                                  @change="leftValueTypeChange">
+                                <a-select-option value="PARAMETER">参数</a-select-option>
+                                <a-select-option value="VARIABLE">变量</a-select-option>
+                                <a-select-option value="BOOLEAN">布尔</a-select-option>
+                                <a-select-option value="COLLECTION">集合</a-select-option>
+                                <a-select-option value="STRING">字符串</a-select-option>
+                                <a-select-option value="NUMBER">数值</a-select-option>
+                                <a-select-option value="DATE">日期</a-select-option>
+                              </a-select>
+                            </a-form-model-item>
                           </a-col>
                           <a-col :span="1"/>
                           <a-col :span="14">
+                            <a-form-model-item prop="config.leftValue.value"
+                                               style="margin-bottom: 10px;"
+                                               :rules="{
+                                        required: true,
+                                        message: '请输入左值',
+                                        trigger: ['change', 'blur'],
+                                      }">
+                              <a-select
+                                  v-if="selectCondition.from.config.leftValue.type===0||selectCondition.from.config.leftValue.type===1"
+                                  show-search
+                                  :value="selectCondition.from.config.leftValue.searchSelect.value"
+                                  placeholder="请输入关键字进行搜索"
+                                  :default-active-first-option="false"
+                                  :show-arrow="false"
+                                  :filter-option="false"
+                                  :not-found-content="null"
+                                  @search="conditionLeftSearch"
+                                  @change="conditionLeftChange"
+                              >
+                                <a-select-option v-for="d in selectCondition.from.config.leftValue.searchSelect.data"
+                                                 :value="d.id"
+                                                 :key="d.id"
+                                                 @click.native="conditionLeftSearchOptionClick(d)">
+                                  {{ d.name }}
+                                </a-select-option>
+                              </a-select>
 
-                            <a-select
-                                v-if="selectCondition.from.config.leftValue.type===0||selectCondition.from.config.leftValue.type===1"
-                                show-search
-                                :value="selectCondition.from.config.leftValue.searchSelect.value"
-                                placeholder="请输入关键字进行搜索"
-                                :default-active-first-option="false"
-                                :show-arrow="false"
-                                :filter-option="false"
-                                :not-found-content="null"
-                                @search="conditionLeftSearch"
-                                @change="conditionLeftChange"
-                            >
-                              <a-select-option v-for="d in selectCondition.from.config.leftValue.searchSelect.data"
-                                               :value="d.id"
-                                               :key="d.id"
-                                               @click.native="conditionLeftSearchOptionClick(d)">
-                                {{ d.name }}
-                              </a-select-option>
-                            </a-select>
-
-                            <a-select
-                                v-else-if="selectCondition.from.config.leftValue.valueType==='BOOLEAN'"
-                                defaultValue="true"
-                                v-model="selectCondition.from.config.leftValue.value" placeholder="请选择数据">
-                              <a-select-option value="true">true</a-select-option>
-                              <a-select-option value="false">false</a-select-option>
-                            </a-select>
-                            <a-input-number
-                                v-else-if="selectCondition.from.config.leftValue.valueType==='NUMBER'"
-                                v-model="selectCondition.from.config.leftValue.value" style="width: 100%"/>
-                            <a-date-picker
-                                v-else-if="selectCondition.from.config.leftValue.valueType==='DATE'"
-                                show-time
-                                v-model="selectCondition.from.config.leftValue.value"
-                                @change="(date,dateString)=>(datePickerChange(selectCondition.from.config.leftValue,date,dateString))"
-                                style="width: 100%"></a-date-picker>
-                            <a-input v-else
-                                     v-model="selectCondition.from.config.leftValue.value"></a-input>
+                              <a-select
+                                  v-else-if="selectCondition.from.config.leftValue.valueType==='BOOLEAN'"
+                                  defaultValue="true"
+                                  v-model="selectCondition.from.config.leftValue.value" placeholder="请选择数据">
+                                <a-select-option value="true">true</a-select-option>
+                                <a-select-option value="false">false</a-select-option>
+                              </a-select>
+                              <a-input-number
+                                  v-else-if="selectCondition.from.config.leftValue.valueType==='NUMBER'"
+                                  v-model="selectCondition.from.config.leftValue.value" style="width: 100%"/>
+                              <a-date-picker
+                                  v-else-if="selectCondition.from.config.leftValue.valueType==='DATE'"
+                                  show-time
+                                  v-model="selectCondition.from.config.leftValue.value"
+                                  @change="(date,dateString)=>(datePickerChange(selectCondition.from.config.leftValue,date,dateString))"
+                                  style="width: 100%"></a-date-picker>
+                              <a-input v-else
+                                       v-model="selectCondition.from.config.leftValue.value"></a-input>
+                            </a-form-model-item>
                           </a-col>
                         </a-row>
 
-                        <a-row style="margin-bottom: 10px">
+                        <a-row>
                           <a-col :span="3">
                             运算符
                           </a-col>
                           <a-col :span="6">
-                            <a-select placeholder="请选择" v-model="selectCondition.from.config.symbol">
-                              <a-select-option v-for="op in selectCondition.operators" :value="op.name" :key="op.name">
-                                {{ op.explanation }}
-                              </a-select-option>
-                            </a-select>
+                            <a-form-model-item prop="config.symbol"
+                                               style="margin-bottom: 10px;"
+                                               :rules="{
+                                        required: true,
+                                        message: '请选择运算符',
+                                        trigger: ['change', 'blur'],
+                                      }">
+                              <a-select placeholder="请选择" v-model="selectCondition.from.config.symbol">
+                                <a-select-option v-for="op in selectCondition.operators" :value="op.name"
+                                                 :key="op.name">
+                                  {{ op.explanation }}
+                                </a-select-option>
+                              </a-select>
+                            </a-form-model-item>
                           </a-col>
                           <a-col :span="15"></a-col>
                         </a-row>
@@ -168,62 +201,79 @@
                             右值
                           </a-col>
                           <a-col :span="6">
-                            <a-select
-                                :value="selectCondition.from.config.rightValue.type===0?'PARAMETER':(selectCondition.from.config.rightValue.type===1?'VARIABLE':selectCondition.from.config.rightValue.valueType)"
-                                placeholder="请选择"
-                                @change="rightValueTypeChange"
-                            >
-                              <a-select-option v-if="selectCondition.from.config.leftValue.valueType!=null"
-                                               value="PARAMETER">参数
-                              </a-select-option>
-                              <a-select-option v-if="selectCondition.from.config.leftValue.valueType!=null"
-                                               value="VARIABLE">变量
-                              </a-select-option>
-                              <a-select-option v-if="isRightTypeSelectView('BOOLEAN')" value="BOOLEAN">布尔
-                              </a-select-option>
-                              <a-select-option v-if="isRightTypeSelectView('COLLECTION')" value="COLLECTION">集合
-                              </a-select-option>
-                              <a-select-option v-if="isRightTypeSelectView('STRING')" value="STRING">字符串
-                              </a-select-option>
-                              <a-select-option v-if="isRightTypeSelectView('NUMBER')" value="NUMBER">数值
-                              </a-select-option>
-                              <a-select-option v-if="isRightTypeSelectView('DATE')" value="DATE">日期</a-select-option>
-                            </a-select>
+                            <a-form-model-item prop="config.rightValue.type"
+                                               style="margin-bottom: 10px;"
+                                               :rules="{
+                                        required: true,
+                                        message: '请选择右值类型',
+                                        trigger: ['change', 'blur'],
+                                      }">
+                              <a-select
+                                  :value="selectCondition.from.config.rightValue.type===0?'PARAMETER':(selectCondition.from.config.rightValue.type===1?'VARIABLE':selectCondition.from.config.rightValue.valueType)"
+                                  placeholder="请选择"
+                                  @change="rightValueTypeChange"
+                              >
+                                <a-select-option v-if="selectCondition.from.config.leftValue.valueType!=null"
+                                                 value="PARAMETER">参数
+                                </a-select-option>
+                                <a-select-option v-if="selectCondition.from.config.leftValue.valueType!=null"
+                                                 value="VARIABLE">变量
+                                </a-select-option>
+                                <a-select-option v-if="isRightTypeSelectView('BOOLEAN')" value="BOOLEAN">布尔
+                                </a-select-option>
+                                <a-select-option v-if="isRightTypeSelectView('COLLECTION')" value="COLLECTION">集合
+                                </a-select-option>
+                                <a-select-option v-if="isRightTypeSelectView('STRING')" value="STRING">字符串
+                                </a-select-option>
+                                <a-select-option v-if="isRightTypeSelectView('NUMBER')" value="NUMBER">数值
+                                </a-select-option>
+                                <a-select-option v-if="isRightTypeSelectView('DATE')" value="DATE">日期</a-select-option>
+                              </a-select>
+                            </a-form-model-item>
                           </a-col>
                           <a-col :span="1"/>
                           <a-col :span="14">
-                            <a-select
-                                v-if="selectCondition.from.config.rightValue.type===0||selectCondition.from.config.rightValue.type===1"
-                                show-search
-                                :value="selectCondition.from.config.rightValue.searchSelect.value"
-                                placeholder="请输入关键字进行搜索"
-                                :default-active-first-option="false"
-                                :show-arrow="false"
-                                :filter-option="false"
-                                :not-found-content="null"
-                                @search="conditionRightSearch"
-                                @change="conditionRightChange"
-                            >
-                              <a-select-option v-for="d in selectCondition.from.config.rightValue.searchSelect.data"
-                                               :value="d.id"
-                                               :key="d.id"
-                                               @click.native="conditionRightSearchOptionClick(d)">
-                                {{ d.name }}
-                              </a-select-option>
-                            </a-select>
-                            <a-select v-else-if="selectCondition.from.config.rightValue.valueType==='BOOLEAN'"
-                                      v-model="selectCondition.from.config.rightValue.value" placeholder="请选择数据 ">
-                              <a-select-option value="true">true</a-select-option>
-                              <a-select-option value="false">false</a-select-option>
-                            </a-select>
-                            <a-input-number v-else-if="selectCondition.from.config.rightValue.valueType==='NUMBER'"
-                                            v-model="selectCondition.from.config.rightValue.value" style="width: 100%"/>
-                            <a-date-picker v-else-if="selectCondition.from.config.rightValue.valueType==='DATE'"
-                                           show-time
-                                           v-model="selectCondition.from.config.rightValue.value"
-                                           @change="(date,dateString)=>(datePickerChange(selectCondition.from.config.rightValue,date,dateString))"
-                                           style="width: 100%"></a-date-picker>
-                            <a-input v-else v-model="selectCondition.from.config.rightValue.value"></a-input>
+                            <a-form-model-item prop="config.rightValue.value"
+                                               style="margin-bottom: 10px;"
+                                               :rules="{
+                                        required: true,
+                                        message: '请输入右值',
+                                        trigger: ['change', 'blur'],
+                                      }">
+                              <a-select
+                                  v-if="selectCondition.from.config.rightValue.type===0||selectCondition.from.config.rightValue.type===1"
+                                  show-search
+                                  :value="selectCondition.from.config.rightValue.searchSelect.value"
+                                  placeholder="请输入关键字进行搜索"
+                                  :default-active-first-option="false"
+                                  :show-arrow="false"
+                                  :filter-option="false"
+                                  :not-found-content="null"
+                                  @search="conditionRightSearch"
+                                  @change="conditionRightChange"
+                              >
+                                <a-select-option v-for="d in selectCondition.from.config.rightValue.searchSelect.data"
+                                                 :value="d.id"
+                                                 :key="d.id"
+                                                 @click.native="conditionRightSearchOptionClick(d)">
+                                  {{ d.name }}
+                                </a-select-option>
+                              </a-select>
+                              <a-select v-else-if="selectCondition.from.config.rightValue.valueType==='BOOLEAN'"
+                                        v-model="selectCondition.from.config.rightValue.value" placeholder="请选择数据 ">
+                                <a-select-option value="true">true</a-select-option>
+                                <a-select-option value="false">false</a-select-option>
+                              </a-select>
+                              <a-input-number v-else-if="selectCondition.from.config.rightValue.valueType==='NUMBER'"
+                                              v-model="selectCondition.from.config.rightValue.value"
+                                              style="width: 100%"/>
+                              <a-date-picker v-else-if="selectCondition.from.config.rightValue.valueType==='DATE'"
+                                             show-time
+                                             v-model="selectCondition.from.config.rightValue.value"
+                                             @change="(date,dateString)=>(datePickerChange(selectCondition.from.config.rightValue,date,dateString))"
+                                             style="width: 100%"></a-date-picker>
+                              <a-input v-else v-model="selectCondition.from.config.rightValue.value"></a-input>
+                            </a-form-model-item>
                           </a-col>
                         </a-row>
                       </a-form-model-item>
@@ -233,12 +283,13 @@
                     </a-form-model>
 
                     <a-button type="primary" size="small" style="display:block;float: right;"
-                              @click="addConditionOk(cg)">
+                              @click="addConditionOk(cg,`addConditionForm${cgi}`)">
                       确认
                     </a-button>
                     <br>
                   </template>
-                  <a-button type="dashed" style="width: 50%;display:block;margin:0 auto" @click="addCondition(cg)">
+                  <a-button type="dashed" style="width: 50%;display:block;margin:0 auto"
+                            @click="addCondition(cg,`addConditionForm${cgi}`)">
                     <a-icon type="plus" style="color: #777;"/>
                     添加条件
                   </a-button>
@@ -477,7 +528,6 @@ export default {
       footer: {
         nextStepLoading: false,
       },
-      rules: {},
       drawer: {
         visible: false
       },
@@ -799,68 +849,48 @@ export default {
     handleClick() {
 
     },
-    addCondition(cg) {
+    addCondition(cg, formName) {
       this.selectCondition.currentConditionGroup = cg;
       // 还原配置
-      this.$refs['addConditionForm'].resetFields();
-      // this.selectCondition.from = {
-      //   id: null,
-      //   name: null,
-      //   description: null,
-      //   config: {
-      //     leftValue: {
-      //       type: null,
-      //       valueType: null,
-      //       value: '',
-      //       valueName: null,
-      //       variableValue: null,
-      //       searchSelect: {
-      //         data: [],
-      //         value: undefined,
-      //       }
-      //     },
-      //     symbol: null,
-      //     rightValue: {
-      //       type: null,
-      //       valueType: null,
-      //       value: '',
-      //       valueName: null,
-      //       variableValue: null,
-      //       searchSelect: {
-      //         data: [],
-      //         value: undefined,
-      //       }
-      //     }
-      //   }
-      // }
-    },
-    addConditionOk(cg) {
-      // 传入条件组信息，条件信息 绑定关系
-      // this.selectCondition.currentConditionGroup.id;
-      // 获取最后一条的orderNo
-      let orderNo = 0;
-      let conditionGroupCondition = this.selectCondition.currentConditionGroup.conditionGroupCondition;
-      if (conditionGroupCondition.length > 0) {
-        orderNo = conditionGroupCondition[conditionGroupCondition.length - 1].orderNo + 1;
+      console.log(formName)
+      let $ref = this.$refs[formName];
+      if ($ref) {
+        $ref[0].resetFields();
       }
-      // 插入一条记录
-      saveConditionAndBindGroup({
-        generalRuleId: this.generalRule.id,
-        conditionGroupId: this.selectCondition.currentConditionGroup.id,
-        orderNo: orderNo,
-        addConditionRequest: this.selectCondition.from
-      }).then(res => {
-        if (res.data.data) {
-          // 当前条件组内插入一条数据
-          this.selectCondition.from.id = res.data.data.conditionId;
-          this.selectCondition.currentConditionGroup.conditionGroupCondition.push({
-            "id": res.data.data.conditionGroupConditionId,
-            "orderNo": orderNo,
-            "condition": this.selectCondition.from
-          });
-          cg.popoverVisible = false;
+    },
+    addConditionOk(cg, formName) {
+      this.$refs[formName][0].validate(valid => {
+        if (valid) {
+          // 获取最后一条的orderNo
+          let orderNo = 0;
+          let conditionGroupCondition = this.selectCondition.currentConditionGroup.conditionGroupCondition;
+          if (conditionGroupCondition.length > 0) {
+            orderNo = conditionGroupCondition[conditionGroupCondition.length - 1].orderNo + 1;
+          }
+          // 插入一条记录
+          saveConditionAndBindGroup({
+            generalRuleId: this.generalRule.id,
+            // 传入条件组信息，条件信息 绑定关系
+            conditionGroupId: this.selectCondition.currentConditionGroup.id,
+            orderNo: orderNo,
+            addConditionRequest: this.selectCondition.from
+          }).then(res => {
+            if (res.data.data) {
+              // 当前条件组内插入一条数据
+              this.selectCondition.from.id = res.data.data.conditionId;
+              this.selectCondition.currentConditionGroup.conditionGroupCondition.push({
+                "id": res.data.data.conditionGroupConditionId,
+                "orderNo": orderNo,
+                "condition": this.selectCondition.from
+              });
+              cg.popoverVisible = false;
+            }
+          })
+        } else {
+          console.log('error submit!!');
+          return false;
         }
-      })
+      });
     },
     addConditionGroup() {
       // 增加一个条件组
