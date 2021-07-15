@@ -79,10 +79,10 @@
       <template>
         <a-form-model ref="addVariableForm" :model="add.form" :label-col="{span: 4}"
                       :wrapper-col="{span: 14}">
-          <a-form-model-item label="变量名称" prop="name" :rules="{
+          <a-form-model-item label="变量名称" prop="name" has-feedback :rules="{
                                         required: true,
-                                        message: '请输入变量名称',
-                                        trigger: ['change', 'blur'],
+                                        asyncValidator:this.variableNameValidator,
+                                        trigger: ['blur'],
                                       }">
             <a-input v-model="add.form.name" placeholder="请输入变量名称"/>
           </a-form-model-item>
@@ -244,7 +244,7 @@
 
 <script>
 import StandardTable from "@/components/table/StandardTable";
-import {addVariable, listVariable, updateVariable, get, deleteById} from "@/services/variable";
+import {addVariable, listVariable, updateVariable, get, deleteById, verifyVariableName} from "@/services/variable";
 import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
 import {getValueTypeName} from '@/utils/value-type'
 import {selectSearch} from '@/utils/selectSearch'
@@ -344,6 +344,27 @@ export default {
     this.loadVariableList();
   },
   methods: {
+    variableNameValidator(rule, value, callback) {
+      if (this.add.form.id && this.add.form.orgName === this.add.form.name) {
+        callback()
+        return false
+      }
+      if (value.length < 1 || value.length > 25) {
+        callback(new Error('变量名称长度在 1 到 25 个字符'));
+      } else {
+        verifyVariableName(this.add.form).then(resp => {
+          if (resp.data.code === 200) {
+            if (!resp.data.data) {
+              callback()
+            } else {
+              callback(new Error('该变量名称已经存在！'));
+            }
+          } else {
+            callback(new Error(resp.data.message));
+          }
+        })
+      }
+    },
     datePickerChange(v, date, dateString) {
       console.log(dateString)
       v.value = moment(date).format('YYYY-MM-DD HH:mm:ss');
@@ -532,7 +553,7 @@ export default {
         if (res.data.code === 200) {
           let da = res.data.data;
           this.add.form.id = da.id;
-          this.add.form.name = da.name;
+          this.add.form.name =  this.add.form.orgName = da.name;
           this.add.form.value = da.value;
           this.add.form.type = da.type;
           this.add.form.valueType = da.valueType;

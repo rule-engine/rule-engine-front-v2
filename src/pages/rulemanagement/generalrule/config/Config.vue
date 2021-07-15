@@ -1,6 +1,7 @@
 <template>
   <div>
     <page-layout>
+      <contextmenu :itemList="menuItemList" :visible.sync="menuVisible" @select="onMenuSelect"/>
       <a-card title="规则配置" :bordered="false">
         <span slot="extra" style="margin-left: 16px;">
                     <a-popover title="当前编辑人员" trigger="click" arrow-point-at-center>
@@ -29,7 +30,7 @@
                     </a-popover>
         </span>
 
-        <div class="openLeft">
+        <div class="openLeft" @contextmenu="onContextmenu">
           <a-icon type="appstore" style="font-size: 19px;color: #777;" @click="showDrawer"/>
           <br>
           <br>
@@ -489,6 +490,7 @@ import FooterToolBar from '@/components/tool/FooterToolBar'
 import PageLayout from "@/layouts/PageLayout";
 import InputParameter from "./InputParameter";
 import Variable from "./Variable";
+import Contextmenu from '@/components/menu/Contextmenu'
 // api
 import {saveOrUpdate, deleteConditionGroup} from '@/services/conditionGroup'
 import {getRuleConfig, saveAction, generationRelease} from '@/services/generalRule'
@@ -502,7 +504,7 @@ import moment from 'moment';
 
 export default {
   name: "Config",
-  components: {PageLayout, FooterToolBar, InputParameter, Variable},
+  components: {PageLayout, FooterToolBar, InputParameter, Variable, Contextmenu},
   props: {
     ruleId: {
       type: Number,
@@ -511,6 +513,7 @@ export default {
   },
   data() {
     return {
+      menuVisible: false,
       loading: true,
       dataType: 0,
       generalRule: {
@@ -588,7 +591,44 @@ export default {
     this.generalRule.id = this.ruleId
     this.getRuleConfig();
   },
+  computed: {
+    menuItemList() {
+      return [
+        {key: '1', icon: 'vertical-right', text: this.$t('closeLeft')},
+        {key: '2', icon: 'vertical-left', text: this.$t('closeRight')},
+        {key: '3', icon: 'close', text: this.$t('closeOthers')},
+        {key: '4', icon: 'sync', text: this.$t('refresh')},
+      ]
+    },
+  },
   methods: {
+    onContextmenu(pageKey, e) {
+      console.log(pageKey)
+      console.log(e)
+      if (pageKey) {
+        e.preventDefault()
+        e.meta = pageKey
+        this.menuVisible = true
+      }
+    },
+    onMenuSelect(key, target, pageKey) {
+      switch (key) {
+        case '1':
+          this.closeLeft(pageKey);
+          break
+        case '2':
+          this.closeRight(pageKey);
+          break
+        case '3':
+          this.closeOthers(pageKey);
+          break
+        case '4':
+          this.refresh(pageKey);
+          break
+        default:
+          break
+      }
+    },
     datePickerChange(v, date, dateString) {
       console.log(dateString)
       v.value = moment(date).format('YYYY-MM-DD HH:mm:ss');
@@ -744,7 +784,7 @@ export default {
         this.selectCondition.from.config.leftValue.type = 2;
         // 固定值场景清空右值，如果变量或者参数，等搜索到选中时再去判断清空
         // 左面发生改变，右边也改变  如果值类型相同，则不需要更改
-        console.log(this.selectCondition.from.config.rightValue.valueType,valueType)
+        console.log(this.selectCondition.from.config.rightValue.valueType, valueType)
         if (valueType !== this.selectCondition.from.config.rightValue.valueType) {
           this.selectCondition.from.config.rightValue = {
             valueType: undefined,
