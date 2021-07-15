@@ -434,26 +434,7 @@ export default {
       rules: {
         name: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入空间名称",},
         code: {
-          min: 1, trigger: ['blur'], asyncValidator: (rule, value, callback) => {
-            if (this.edit.visible) {
-              return false
-            }
-            if (value.length < 1) {
-              callback(new Error('工作空间编码不能为空'));
-            } else {
-              verifyWorkspaceCode({code: value}).then(resp => {
-                if (resp.data.code === 200) {
-                  if (resp.data.data) {
-                    callback()
-                  } else {
-                    callback(new Error('该工作空间编码已经存在！'));
-                  }
-                } else {
-                  callback(new Error(resp.data.message));
-                }
-              })
-            }
-          }, required: true
+          min: 1, trigger: ['blur'], asyncValidator: this.workspaceCodeValidator, required: true
         },
         description: {trigger: ['change', 'blur'], required: false, message: ""},
       },
@@ -572,6 +553,26 @@ export default {
     this.loadWorkspaceList()
   },
   methods: {
+    workspaceCodeValidator(rule, value, callback){
+      if (this.edit.visible) {
+        return false
+      }
+      if (value.length < 1) {
+        callback(new Error('工作空间编码不能为空'));
+      } else {
+        verifyWorkspaceCode({code: value}).then(resp => {
+          if (resp.data.code === 200) {
+            if (resp.data.data) {
+              callback()
+            } else {
+              callback(new Error('该工作空间编码已经存在！'));
+            }
+          } else {
+            callback(new Error(resp.data.message));
+          }
+        })
+      }
+    },
     keySettingHandleOk(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
