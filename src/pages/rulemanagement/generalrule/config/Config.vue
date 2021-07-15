@@ -498,6 +498,7 @@ import {updateCondition} from '@/services/condition'
 import {selectSearch} from '@/utils/selectSearch'
 import {getSymbolByValueType, getSymbolExplanation} from '@/utils/symbol'
 import moment from 'moment';
+import {setDefaultValue} from "@/utils/json";
 
 
 export default {
@@ -708,12 +709,7 @@ export default {
       }
       // 判断查询的变量或者元素 类型是否与右值相同，不相同则清空右值的
       if (d.valueType !== this.selectCondition.from.config.rightValue.valueType) {
-        this.selectCondition.from.config.rightValue = {
-          valueType: undefined,
-          type: undefined,
-          value: undefined,
-          valueName: undefined
-        }
+        this.selectCondition.from.config.rightValue = setDefaultValue(this.selectCondition.from.config.rightValue)
         // 并重置运算符，否则不重置
         this.selectCondition.operators = this.getSymbolByValueType(d.valueType)
         // 删除运算符
@@ -775,16 +771,7 @@ export default {
         // 固定值场景清空右值，如果变量或者参数，等搜索到选中时再去判断清空
         // 左面发生改变，右边也改变  如果值类型相同，则不需要更改
         if (valueType !== this.selectCondition.from.config.rightValue.valueType) {
-          this.selectCondition.from.config.rightValue = {
-            valueType: undefined,
-            type: undefined,
-            value: undefined,
-            valueName: undefined,
-            searchSelect: {
-              data: [],
-              value: undefined,
-            }
-          }
+          this.selectCondition.from.config.rightValue = setDefaultValue(this.selectCondition.from.config.rightValue);
           // 删除运算符
           this.selectCondition.from.config.symbol = undefined;
           this.selectCondition.operators = []
@@ -913,32 +900,7 @@ export default {
     addCondition(cg) {
       this.selectCondition.currentConditionGroup = cg;
       // 还原配置
-      // let $ref = this.$refs[formName];
-      // if ($ref) {
-      //   $ref[0].resetFields();
-      // }
-      this.selectCondition.from = {
-        id: null,
-        name: null,
-        description: null,
-        config: {
-          leftValue: {
-            type: undefined,
-            valueType: undefined,
-            value: undefined,
-            valueName: undefined,
-            variableValue: undefined,
-          },
-          symbol: undefined,
-          rightValue: {
-            type: undefined,
-            valueType: undefined,
-            value: undefined,
-            valueName: undefined,
-            variableValue: undefined,
-          }
-        }
-      }
+      this.selectCondition.from = setDefaultValue(this.selectCondition.from);
     },
     addConditionOk(cg, formName) {
       this.$refs[formName][0].validate(valid => {
