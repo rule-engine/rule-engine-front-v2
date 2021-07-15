@@ -46,6 +46,7 @@
 
     <a-card>
       <standard-table
+          :scroll="{ x: 1200 }"
           rowKey="id"
           style="clear: both"
           :columns="tableData"

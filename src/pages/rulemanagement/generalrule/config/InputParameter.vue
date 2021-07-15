@@ -24,6 +24,7 @@
     <a-button type="primary" @click="add.visible=true">新建</a-button>
     <br> <br>
     <standard-table
+        :scroll="{ x: 400 }"
         :loading="loading"
         rowKey="id"
         style="clear: both"
@@ -204,13 +205,11 @@ export default {
         {
           title: '值类型',
           dataIndex: 'valueType',
-          width: '120px',
           scopedSlots: {customRender: 'valueType'},
         },
         {
           title: '操作', fixed: 'right',
           key: 'operation',
-          width: '140px',
           scopedSlots: {customRender: 'action'},
         },
       ],

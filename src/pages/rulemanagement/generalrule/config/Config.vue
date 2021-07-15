@@ -460,7 +460,7 @@
     <a-drawer
         placement="left"
         :closable="false"
-        width="460px"
+        width="450px"
         :visible="drawer.visible"
         @close="onClose"
         :mask="true"

@@ -24,6 +24,7 @@
     <a-button type="primary" @click="createVariable">新建</a-button>
     <br> <br>
     <standard-table
+        :scroll="{ x: 500 }"
         :loading="loading"
         rowKey="id"
         style="clear: both"
@@ -297,24 +298,20 @@ export default {
       columns: [
         {
           title: '名称',
-          width: '80px',
           dataIndex: 'name'
         },
         {
           title: '值类型',
           dataIndex: 'valueType',
-          width: '80px',
           scopedSlots: {customRender: 'valueType'},
         },
         {
           title: '值',
-          width: '160px',
           scopedSlots: {customRender: 'value'},
         },
         {
-          title: '操作',fixed: 'right',
+          title: '操作', fixed: 'right',
           key: 'operation',
-          width: '140px',
           scopedSlots: {customRender: 'action'},
         },
       ],
@@ -552,7 +549,7 @@ export default {
         if (res.data.code === 200) {
           let da = res.data.data;
           this.add.form.id = da.id;
-          this.add.form.name =  this.add.form.orgName = da.name;
+          this.add.form.name = this.add.form.orgName = da.name;
           this.add.form.value = da.value;
           this.add.form.type = da.type;
           this.add.form.valueType = da.valueType;
