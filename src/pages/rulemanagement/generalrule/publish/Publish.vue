@@ -50,6 +50,8 @@
                                     <a-textarea v-model="param.value"
                                                 v-else-if="param.valueType==='COLLECTION'"/>
                                     <a-date-picker v-else-if="param.valueType==='DATE'" show-time
+                                                   v-model="param.value"
+                                                   @change="(date,dateString)=>(datePickerChange(param,date,dateString))"
                                                    style="width: 100%"></a-date-picker>
                                     <a-input v-else v-model="param.value"></a-input>
                                   </a-form-model-item>
@@ -135,6 +137,7 @@ import FooterToolBar from '@/components/tool/FooterToolBar'
 import PageLayout from "@/layouts/PageLayout";
 
 import {runTest, viewGeneralRule} from '@/services/generalRule'
+import moment from "moment";
 
 export default {
   name: "Publish.vue",
@@ -207,6 +210,10 @@ export default {
     this.getRuleConfig();
   },
   methods: {
+    datePickerChange(v, date, dateString) {
+      console.log(dateString)
+      v.value = moment(date).format('YYYY-MM-DD HH:mm:ss');
+    },
     getActionView(action) {
       if (action.variableValue != null) {
         return action.variableValue;
