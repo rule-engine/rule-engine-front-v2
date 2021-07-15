@@ -48,6 +48,7 @@ module.exports = {
         GENERATION_RELEASE: `${WEB_BASE_URL}/ruleEngine/generalRule/generationRelease`,
         RUN_TEST: `${COMPUTE_WEB_BASE_URL}/ruleEngine/generalRuleTest/run`,
         VIEW: `${WEB_BASE_URL}/ruleEngine/generalRule/view`,
+        VERIFY_RULE_CODE: `${WEB_BASE_URL}/ruleEngine/generalRule/codeIsExists`,
     },
     importExport: {
         EXPORT: `${WEB_BASE_URL}/ruleEngine/importExport/export`,
@@ -75,6 +76,7 @@ module.exports = {
         GET: `${WEB_BASE_URL}/ruleEngine/inputParameter/get`,
         UPDATE: `${WEB_BASE_URL}/ruleEngine/inputParameter/update`,
         DELETE: `${WEB_BASE_URL}/ruleEngine/inputParameter/delete`,
+        VERIFY_INOUT_PARAMETER_CODE: `${WEB_BASE_URL}/ruleEngine/inputParameter/codeIsExists`,
     },
     variable: {
         ADD: `${WEB_BASE_URL}/ruleEngine/variable/add`,
@@ -82,6 +84,7 @@ module.exports = {
         GET: `${WEB_BASE_URL}/ruleEngine/variable/get`,
         UPDATE: `${WEB_BASE_URL}/ruleEngine/variable/update`,
         DELETE: `${WEB_BASE_URL}/ruleEngine/variable/delete`,
+        VERIFY_VARIABLE_NAME: `${WEB_BASE_URL}/ruleEngine/variable/nameIsExists`,
     },
     ROUTES: `${WEB_BASE_URL}/routes`,
     GOODS: `${WEB_BASE_URL}/goods`,

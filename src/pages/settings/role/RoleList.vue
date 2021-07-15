@@ -99,7 +99,7 @@
             sorter: true
         },
         {
-            title: '操作',
+            title: '操作',fixed: 'right',
             width: '180px',
             scopedSlots: {customRender: 'action'}
         }

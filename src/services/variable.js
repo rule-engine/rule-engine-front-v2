@@ -10,6 +10,15 @@ export async function addVariable(param) {
 }
 
 /**
+ * 验证变量名字是否存在
+ * @param param
+ * @returns {Promise<AxiosResponse<any>>}
+ */
+export async function verifyVariableName(param) {
+    return request(variable.VERIFY_VARIABLE_NAME, METHOD.POST, param)
+}
+
+/**
  * 获取变量列表
  * @param query
  */
@@ -30,7 +39,7 @@ export async function get(query) {
  * @param query
  * @constructor
  */
-export async function update(query) {
+export async function updateVariable(query) {
     return request(variable.UPDATE, METHOD.POST, query)
 }
 
@@ -41,4 +50,13 @@ export async function update(query) {
  */
 export async function deleteById(query) {
     return request(variable.DELETE, METHOD.POST, query)
+}
+
+export default {
+    updateVariable,
+    deleteById,
+    get,
+    listVariable,
+    addVariable,
+
 }

@@ -86,9 +86,18 @@
                 <a-icon type="file-protect"/>
                 密钥
               </a-menu-item>
-              <a-menu-item @click="deleteWorkspace(record)">
-                <a-icon type="delete"/>
-                删除
+              <a-menu-item>
+                <a-popconfirm
+                    title="你确定要删除这个工作空间吗"
+                    ok-text="是"
+                    cancel-text="不了"
+                    @confirm="deleteWorkspace(record)"
+                >
+                  <a>
+                    <a-icon type="delete"/>
+                    删除
+                  </a>
+                </a-popconfirm>
               </a-menu-item>
             </a-menu>
           </a-dropdown>
@@ -192,10 +201,17 @@
                 <a-icon type="disconnect"/>
                 解除管理
               </a>
-              <a style="margin-right: 8px" @click="deleteMember(record)">
-                <a-icon type="delete"/>
-                删除
-              </a>
+              <a-popconfirm
+                  title="你确定要删除这个工作空间管理员吗"
+                  ok-text="是"
+                  cancel-text="不了"
+                  @confirm="deleteMember(record)"
+              >
+                <a style="margin-right: 8px">
+                  <a-icon type="delete"/>
+                  删除
+                </a>
+              </a-popconfirm>
             </div>
           </standard-table>
 
@@ -218,10 +234,17 @@
                 <a-icon type="shrink"/>
                 设为管理
               </a>
-              <a style="margin-right: 8px" @click="deleteMember(record)">
-                <a-icon type="delete"/>
-                删除
-              </a>
+              <a-popconfirm
+                  title="你确定要删除这个工作空间成员吗"
+                  ok-text="是"
+                  cancel-text="不了"
+                  @confirm="deleteMember(record)"
+              >
+                <a style="margin-right: 8px">
+                  <a-icon type="delete"/>
+                  删除
+                </a>
+              </a-popconfirm>
             </div>
           </standard-table>
         </a-tab-pane>
@@ -264,7 +287,7 @@
           <a-table
               :row-selection="
             getRowSelection({ disabled: listDisabled, selectedKeys, itemSelectAll, itemSelect })
-          "
+          " :loading="direction === 'left' ?addMember.leftLoading:addMember.rightLoading"
               :columns="addMember.columns"
               :data-source="filteredItems"
               size="small"
@@ -295,17 +318,17 @@
         :visible="keySetting.visible"
         :confirm-loading="keySetting.confirmLoading"
         :width="700"
-        @ok="keySettingHandleOk()"
+        @ok="keySettingHandleOk('editWorkspace')"
         @cancel="keySettingHandleCancel()">
       <template>
-        <a-form-model ref="editWorkspace" :model="keySetting" :label-col="{span: 4}"
+        <a-form-model ref="editWorkspace" :model="keySetting.form" :label-col="{span: 4}" :rules="keySetting.rules"
                       :wrapper-col="{span: 14}">
-          <a-form-model-item label="账号" has-feedback prop="name">
+          <a-form-model-item label="账号" prop="accessKeyId">
             <a-input v-model="keySetting.form.accessKeyId">
               <a-icon slot="prefix" type="safety"></a-icon>
             </a-input>
           </a-form-model-item>
-          <a-form-model-item label="密码">
+          <a-form-model-item label="密码" prop="accessKeySecret">
             <a-input v-model="keySetting.form.accessKeySecret" type="password">
               <a-icon slot="prefix" type="lock"/>
             </a-input>
@@ -361,7 +384,7 @@ const columns = [
     sorter: true
   },
   {
-    title: '操作',
+    title: '操作',fixed: 'right',
     scopedSlots: {customRender: 'action'}
   }
 ];
@@ -381,6 +404,10 @@ export default {
           id: null,
           accessKeyId: null,
           accessKeySecret: null,
+        },
+        rules: {
+          accessKeyId: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入工作空间账号",},
+          accessKeySecret: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入工作空间密码",},
         }
       },
       edit: {
@@ -407,26 +434,7 @@ export default {
       rules: {
         name: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入空间名称",},
         code: {
-          min: 1, trigger: ['blur'], asyncValidator: (rule, value, callback) => {
-            if (this.edit.visible) {
-              return false
-            }
-            if (value.length < 1) {
-              callback(new Error('工作空间编码不能为空'));
-            } else {
-              verifyWorkspaceCode({code: value}).then(resp => {
-                if (resp.data.code === 200) {
-                  if (resp.data.data) {
-                    callback()
-                  } else {
-                    callback(new Error('该工作空间编码已经存在！'));
-                  }
-                } else {
-                  callback(new Error(resp.data.message));
-                }
-              })
-            }
-          }, required: true
+          min: 1, trigger: ['blur'], asyncValidator: this.workspaceCodeValidator, required: true
         },
         description: {trigger: ['change', 'blur'], required: false, message: ""},
       },
@@ -462,7 +470,7 @@ export default {
             dataIndex: 'email',
           },
           {
-            title: '操作',
+            title: '操作',fixed: 'right',
             scopedSlots: {customRender: 'action'}
           }
         ],
@@ -510,7 +518,8 @@ export default {
             workspaceId: null,
           }
         },
-        loading: true,
+        leftLoading: false,
+        rightLoading: false,
         visible: false,
         confirmLoading: false,
         dataSource: [],
@@ -544,14 +553,43 @@ export default {
     this.loadWorkspaceList()
   },
   methods: {
-    keySettingHandleOk() {
-      updateAccessKey(this.keySetting.form).then(res => {
-        if (res.data.data) {
-          this.$message.success("更新成功！");
-          this.keySetting.visible = false;
+    workspaceCodeValidator(rule, value, callback){
+      if (this.edit.visible) {
+        return false
+      }
+      if (value.length < 1) {
+        callback(new Error('工作空间编码不能为空'));
+      } else {
+        verifyWorkspaceCode({code: value}).then(resp => {
+          if (resp.data.code === 200) {
+            if (resp.data.data) {
+              callback()
+            } else {
+              callback(new Error('该工作空间编码已经存在！'));
+            }
+          } else {
+            callback(new Error(resp.data.message));
+          }
+        })
+      }
+    },
+    keySettingHandleOk(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.keySetting.confirmLoading = true;
+          updateAccessKey(this.keySetting.form).then(res => {
+            if (res.data.data) {
+              this.$message.success("更新成功！");
+              this.keySetting.visible = false;
+            }
+            this.keySetting.confirmLoading = false;
+          })
+        } else {
+          console.log('error submit!!');
+          this.keySetting.confirmLoading = false;
+          return false;
         }
-        this.keySetting.confirmLoading = false;
-      })
+      });
     },
     keySettingHandleCancel() {
       this.keySetting.visible = false;
@@ -603,7 +641,7 @@ export default {
       if (dir === 'left') {
         this.addMember.query.query.username = value;
         // 有时间做个延迟事件，优化下
-        this.addMemberLoadUserList();
+        this.addMemberLoadUserList(dir);
       }
     },
     submitForm() {
@@ -618,10 +656,8 @@ export default {
     deleteWorkspace(record) {
       this.loading = true
       deleteWorkspace({id: record.id}).then(res => {
-        if (res.data) {
+        if (res.data.data) {
           this.$message.success("删除成功！");
-        } else {
-          this.$message.error("删除失败！");
         }
       }).finally(() => this.loadWorkspaceList())
     },
@@ -756,35 +792,60 @@ export default {
     showAddMember() {
       this.addMember.targetKeys = [];
       this.addMember.dataSource = [];
+      this.addMember.query.query.username = '';
       // 查询用户列表
-      this.addMemberLoadUserList();
+      this.addMemberLoadUserList('left');
       this.addMember.visible = true;
     },
-    addMemberLoadUserList() {
-      this.addMember.loading = true
+    addMemberLoadUserList(dir) {
       const _this = this.addMember;
       if (_this.query.query.username === '') {
-        _this.dataSource = []
+        //_this.dataSource = []
         return;
+      }
+      // 判断是否为左边的加载table
+      if (dir === 'left') {
+        this.addMember.leftLoading = true;
+      } else {
+        this.addMember.rightLoading = true;
       }
       optionalPersonnel(_this.query).then(res => {
         const resp = res.data;
         if (resp.data) {
-          _this.dataSource = Array.from(resp.data.rows).map(m => (
-              {
-                key: m.userId + '',
-                title: m.username, // 搜索用
-                user: m.username,
-                email: m.email,
-                avatar: m.avatar,
-                disabled: false,
+          // 删除掉没有引用的
+          let temp = [];
+          _this.dataSource.forEach(f => {
+            if (_this.targetKeys.indexOf(f.key) !== -1) {
+              temp.push(f);
+            }
+          })
+          _this.dataSource = temp;
+          // 加载新的
+          resp.data.rows.forEach(f => {
+            let boo = false;
+            _this.dataSource.forEach(fe => {
+              if (fe.key === f.userId + '') {
+                boo = true;
               }
-          ));
+            })
+            if (!boo) {
+              _this.dataSource.push({
+                key: f.userId + '',
+                title: f.username, // 搜索用
+                user: f.username,
+                email: f.email,
+                avatar: f.avatar,
+                disabled: false,
+              })
+            }
+          });
           _this.query.page = resp.data.page
-        } else {
-          _this.dataSource = []
         }
-        this.addMember.loading = false
+        if (dir === 'left') {
+          this.addMember.leftLoading = false;
+        } else {
+          this.addMember.rightLoading = false;
+        }
       })
     },
     memberHandleOk(/*e*/) {

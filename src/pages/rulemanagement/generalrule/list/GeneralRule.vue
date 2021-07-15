@@ -109,7 +109,7 @@
               </a-menu-item>
               <a-menu-item>
                 <a-popconfirm
-                    title="你确定要删除这个变量吗"
+                    title="你确定要删除这个普通规则吗"
                     ok-text="是"
                     cancel-text="不了"
                     @confirm="deleteRow(record)"
@@ -225,21 +225,21 @@
         :confirm-loading="newGeneralRule.confirmLoading"
         :width="700"
         ok-text="下一步"
-        @ok="newGeneralRuleHandleOk"
-        @cancel="newGeneralRuleHandleCancel"
+        @ok="newGeneralRuleHandleOk('generalRule')"
+        @cancel="newGeneralRuleHandleCancel('generalRule')"
     >
       <a-form-model ref="generalRule" :rules="newGeneralRule.rules" :model="newGeneralRule.form" :label-col="{span: 4}"
                     :wrapper-col="{span: 14}">
-        <a-form-model-item label="名称" prop="name">
+        <a-form-model-item label="名称" has-feedback prop="name">
           <a-input v-model="newGeneralRule.form.name" placeholder="请输入规则名称">
           </a-input>
         </a-form-model-item>
-        <a-form-model-item label="编码" prop="code">
+        <a-form-model-item label="编码" has-feedback prop="code">
           <a-input v-model="newGeneralRule.form.code" type="code"
                    placeholder="请输入规则编码">
           </a-input>
         </a-form-model-item>
-        <a-form-model-item label="说明" prop="description">
+        <a-form-model-item label="说明" has-feedback prop="description">
           <a-input v-model="newGeneralRule.form.description" type="textarea" placeholder="请输入规则说明"/>
         </a-form-model-item>
       </a-form-model>
@@ -252,7 +252,7 @@
 import PageLayout from '@/layouts/PageLayout'
 import StandardTable from '@/components/table/StandardTable'
 
-import {list, deleteGeneralRule, addGeneralRule} from '@/services/generalRule'
+import {list, deleteGeneralRule, addGeneralRule, verifyRuleCode} from '@/services/generalRule'
 import {dataPermissionList, update} from '@/services/dataPermission'
 import {exportData} from '@/services/importExport'
 
@@ -282,7 +282,7 @@ const columns = [
     sorter: true
   },
   {
-    title: '操作',
+    title: '操作',fixed: 'right',
     scopedSlots: {customRender: 'action'}
   }
 ];
@@ -393,7 +393,7 @@ export default {
             sorter: true
           },
           {
-            title: '操作',
+            title: '操作',fixed: 'right',
             scopedSlots: {customRender: 'action'}
           }
         ]
@@ -410,7 +410,7 @@ export default {
         confirmLoading: false,
         rules: {
           name: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入规则名称",},
-          code: {min: 1, trigger: ['change', 'blur'], message: "请输入规则编码", required: true},
+          code: {trigger: ['blur'], asyncValidator: this.ruleCodeValidator, required: true},
         }
       }
     }
@@ -419,14 +419,32 @@ export default {
     this.loadDataList();
   },
   methods: {
+    ruleCodeValidator(rule, value, callback) {
+      if (!value) {
+        callback(new Error('请输入规则编码'));
+        return
+      } else {
+        verifyRuleCode({param: value}).then(resp => {
+          if (resp.data.code === 200) {
+            if (!resp.data.data) {
+              callback()
+            } else {
+              callback(new Error('该规则编码已经存在！'));
+            }
+          } else {
+            callback(new Error(resp.data.message));
+          }
+        })
+      }
+
+    },
     deleteRow(record) {
+      this.loading = true;
       deleteGeneralRule({id: record.id}).then(res => {
-        if (res.data) {
+        if (res.data.data) {
           this.$message.success("删除成功！");
           // 重新加载列表
           this.loadDataList();
-        } else {
-          this.$message.error("删除失败！");
         }
       })
     },
@@ -466,27 +484,33 @@ export default {
         description: null,
       }
     },
-    newGeneralRuleHandleOk() {
+    newGeneralRuleHandleOk(formName) {
       this.newGeneralRule.confirmLoading = true;
-      addGeneralRule(this.newGeneralRule.form).then(res => {
-        if (res.data.code === 200) {
-          this.$router.push({
-            path: '/generalRuleRouter/' + res.data.data,
-            name: '规则', // 必须有，否则params失效
-            params: {
-              tagName: `规则(${this.newGeneralRule.form.name})`,
-              code: this.newGeneralRule.form.code,
-              ruleId: res.data.data
-            },
-            query: {pageIndex: 2}
-          })
-          this.newGeneralRule.visible = false;
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          addGeneralRule(this.newGeneralRule.form).then(res => {
+            if (res.data.code === 200) {
+              this.$router.push({
+                path: '/generalRuleRouter/' + res.data.data,
+                name: '规则', // 必须有，否则params失效
+                params: {
+                  tagName: `规则(${this.newGeneralRule.form.name})`,
+                  code: this.newGeneralRule.form.code,
+                  ruleId: res.data.data
+                },
+                query: {pageIndex: 2}
+              })
+              this.newGeneralRule.visible = false;
+            }
+          }).finally(()=>   this.newGeneralRule.confirmLoading = false)
+        }else {
+          this.newGeneralRule.confirmLoading = false;
         }
-        this.newGeneralRule.confirmLoading = false;
       })
     },
-    newGeneralRuleHandleCancel() {
+    newGeneralRuleHandleCancel(formName) {
       this.newGeneralRule.visible = false;
+      this.$refs[formName].resetFields();
     },
     handleMenuClick() {
 

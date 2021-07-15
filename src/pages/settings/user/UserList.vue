@@ -38,6 +38,7 @@
     <a-card>
       <standard-table
           rowKey="id"
+          :loading="loading"
           style="clear: both"
           :columns="columns"
           :dataSource="dataSource"
@@ -58,10 +59,17 @@
             <a-icon type="edit"/>
             编辑
           </a>
-          <a style="margin-right: 8px" @click="deleteUser(record)">
-            <a-icon type="delete"/>
-            删除
-          </a>
+          <a-popconfirm
+              title="你确定要删除这个用户吗"
+              ok-text="是"
+              cancel-text="不了"
+              @confirm="deleteUser(record)"
+          >
+            <a style="margin-right: 8px">
+              <a-icon type="delete"/>
+              删除
+            </a>
+          </a-popconfirm>
         </div>
         <template slot="statusTitle">
           <a-icon @click.native="onStatusTitleClick" type="info-circle"/>
@@ -198,7 +206,7 @@ const columns = [
     sorter: true
   },
   {
-    title: '操作',
+    title: '操作',fixed: 'right',
     scopedSlots: {customRender: 'action'}
   }
 ];
@@ -235,51 +243,10 @@ export default {
       },
       rules: {
         username: {
-          trigger: ['blur'], required: true, asyncValidator: (rule, value, callback) => {
-            if (this.edit.visible) {
-              callback();
-              return
-            }
-            if (value.length < 2 || value.length > 16) {
-              callback(new Error('用户名长度应该在2-16位'));
-            } else {
-              verifyUserName({username: value}).then(resp => {
-                    if (resp.data.code === 200) {
-                      if (resp.data.data) {
-                        callback()
-                      } else {
-                        callback(new Error('该用户名已经存在！'));
-                      }
-                    } else {
-                      callback(new Error(resp.data.message));
-                    }
-                  }
-              )
-            }
-          },
+          trigger: ['blur'], required: true, asyncValidator: this.usernameValidator
         },
         email: {
-          type: 'email', trigger: ['blur'], asyncValidator: (rule, value, callback) => {
-            if (this.edit.visible && this.userEditForm.email === this.userEditForm.orgEmail) {
-              callback();
-              return
-            }
-            if (!isEmail(value)) {
-              callback(new Error('请输入正确的邮箱'));
-            } else {
-              verifyckEmail({email: value}).then(resp => {
-                if (resp.data.code === 200) {
-                  if (resp.data.data) {
-                    callback()
-                  } else {
-                    callback(new Error('该邮箱已经存在！'));
-                  }
-                } else {
-                  callback(new Error(resp.data.message));
-                }
-              })
-            }
-          }, required: true
+          type: 'email', trigger: ['blur'], asyncValidator: this.emailValidator, required: true
         },
         phone: {min: 6, trigger: ['change', 'blur'], required: false, message: "请输入正确的手机号"},
         password: {min: 3, trigger: ['change', 'blur'], required: true, message: "密码长度为3-16位"},
@@ -309,6 +276,49 @@ export default {
     this.loadUserList()
   },
   methods: {
+    usernameValidator(rule, value, callback) {
+      if (this.edit.visible) {
+        callback();
+        return
+      }
+      if (value.length < 2 || value.length > 10) {
+        callback(new Error('用户名长度应该在2-10位'));
+      } else {
+        verifyUserName({username: value}).then(resp => {
+              if (resp.data.code === 200) {
+                if (resp.data.data) {
+                  callback()
+                } else {
+                  callback(new Error('该用户名已经存在！'));
+                }
+              } else {
+                callback(new Error(resp.data.message));
+              }
+            }
+        )
+      }
+    },
+    emailValidator(rule, value, callback) {
+      if (this.edit.visible && this.userEditForm.email === this.userEditForm.orgEmail) {
+        callback();
+        return
+      }
+      if (!isEmail(value)) {
+        callback(new Error('请输入正确的邮箱'));
+      } else {
+        verifyckEmail({email: value}).then(resp => {
+          if (resp.data.code === 200) {
+            if (resp.data.data) {
+              callback()
+            } else {
+              callback(new Error('该邮箱已经存在！'));
+            }
+          } else {
+            callback(new Error(resp.data.message));
+          }
+        })
+      }
+    },
     handleSubmit(formName) {
       this.confirmLoading = true
       const _this = this;
@@ -380,16 +390,13 @@ export default {
       })
     },
     deleteUser(record) {
-      this.confirmLoading = true
       const _this = this;
-      console.log("deleteUser", record);
+      this.loading = true
       deleteUser({
         id: record.id,
       }).then(res => {
-        console.log(res)
         if (res.data.code === 200) {
           _this.$message.success("删除成功！")
-          _this.confirmLoading = false
           this.loadUserList();
         }
       })

@@ -12,6 +12,8 @@ function getValueTypeName(valueType) {
             return '日期'
         case 'FUNCTION':
             return '函数'
+        case 'UNKNOWN':
+            return '未知' //返回值不确定
     }
 }
 
