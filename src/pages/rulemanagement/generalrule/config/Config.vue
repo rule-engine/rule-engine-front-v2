@@ -49,6 +49,7 @@
                          style="background-color: #f4f4f5;border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"
                          v-for="cgc in cg.conditionGroupCondition"
                          :key="cgc.id"
+                         @dblclick.native="editCondition(cg,cgc)"
                          @close="deleteCondition(cg.conditionGroupCondition,cgc.id,cgc.id)"
                          class="conditionItem">
                   <p slot="description" style="margin-bottom: 0;">
@@ -132,7 +133,7 @@
                                   v-if="selectCondition.from.config.leftValue.type===0||selectCondition.from.config.leftValue.type===1"
                                   show-search
                                   :disabled="selectCondition.from.config.leftValue.type==null"
-                                  :value="selectCondition.from.config.leftValue.searchSelect.value"
+                                  :value="selectCondition.from.config.leftValue.valueName"
                                   placeholder="请输入关键字进行搜索"
                                   :default-active-first-option="false"
                                   :show-arrow="false"
@@ -249,7 +250,7 @@
                                   :disabled="selectCondition.from.config.rightValue.type==null"
                                   v-if="selectCondition.from.config.rightValue.type===0||selectCondition.from.config.rightValue.type===1"
                                   show-search
-                                  :value="selectCondition.from.config.rightValue.searchSelect.value"
+                                  :value="selectCondition.from.config.rightValue.valueName"
                                   placeholder="请输入关键字进行搜索"
                                   :default-active-first-option="false"
                                   :show-arrow="false"
@@ -546,7 +547,6 @@ export default {
       },
       selectCondition: {
         currentConditionGroup: null,
-        open: false,
         confirmLoading: false,
         operators: this.getSymbolByValueType('STRING'),
         from: {
@@ -659,6 +659,42 @@ export default {
         this.generalRule.action.variableValue = d.value;
       }
       this.saveAction();
+    },
+    editCondition(cg, cgc) {
+      cg.popoverVisible = true;
+      console.log(cgc)
+      // 当前条件组
+      this.currentConditionGroup = cg;
+      this.selectCondition.from = {
+        id: cgc.condition.id,
+        name: cgc.condition.name,
+        description: cgc.condition.description,
+        config: {
+          leftValue: {
+            type: cgc.condition.config.leftValue.type,
+            valueType: cgc.condition.config.leftValue.valueType,
+            value: cgc.condition.config.leftValue.value,
+            valueName: cgc.condition.config.leftValue.valueName,
+            variableValue: cgc.condition.config.leftValue.variableValue,
+            searchSelect: {
+              data: [],
+              value: undefined,
+            }
+          },
+          symbol: cgc.condition.config.symbol,
+          rightValue: {
+            type: cgc.condition.config.rightValue.type,
+            valueType: cgc.condition.config.rightValue.valueType,
+            value: cgc.condition.config.rightValue.value,
+            valueName: cgc.condition.config.rightValue.valueName,
+            variableValue: cgc.condition.config.rightValue.variableValue,
+            searchSelect: {
+              data: [],
+              value: undefined,
+            }
+          }
+        }
+      };
     },
     deleteCondition(cgc, conditionGroupRefId, conditionId) {
       deleteCondition({
@@ -994,7 +1030,26 @@ export default {
       }).then(res => {
         let da = res.data.data;
         if (da != null) {
-          this.generalRule = da;
+          this.generalRule = {
+            "id": da.id,
+            "name": da.name,
+            "code": da.code,
+            "description": da.description,
+            "workspaceId": da.workspaceId,
+            "workspaceCode": da.workspaceCode,
+            "ruleId": da.ruleId,
+            "conditionGroup": Array.from(da.conditionGroup).map(m => (
+                {
+                  "id": m.id,
+                  "name": m.name,
+                  "orderNo": m.orderNo,
+                  "popoverVisible": false, //增加一个popoverVisible 否则编辑条件打不开
+                  "conditionGroupCondition": m.conditionGroupCondition
+                }
+            )),
+            "action": da.action,
+            "defaultAction": da.defaultAction
+          };
         }
       }).finally(() => {
         this.loading = false
