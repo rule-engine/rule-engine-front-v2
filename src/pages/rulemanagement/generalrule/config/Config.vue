@@ -666,6 +666,8 @@ export default {
       // 当前条件组
       this.selectCondition.currentConditionGroup = cg;
       this.selectCondition.from = cgc.condition;
+      // 加载运算符
+      this.selectCondition.operators = this.getSymbolByValueType(cgc.condition.config.leftValue.valueType)
     },
     deleteCondition(cgc, conditionGroupRefId, conditionId) {
       deleteCondition({
@@ -908,12 +910,34 @@ export default {
     handleClick() {
 
     },
-    addCondition(cg, formName) {
+    addCondition(cg) {
       this.selectCondition.currentConditionGroup = cg;
       // 还原配置
-      let $ref = this.$refs[formName];
-      if ($ref) {
-        $ref[0].resetFields();
+      // let $ref = this.$refs[formName];
+      // if ($ref) {
+      //   $ref[0].resetFields();
+      // }
+      this.selectCondition.from = {
+        id: null,
+        name: null,
+        description: null,
+        config: {
+          leftValue: {
+            type: undefined,
+            valueType: undefined,
+            value: undefined,
+            valueName: undefined,
+            variableValue: undefined,
+          },
+          symbol: undefined,
+          rightValue: {
+            type: undefined,
+            valueType: undefined,
+            value: undefined,
+            valueName: undefined,
+            variableValue: undefined,
+          }
+        }
       }
     },
     addConditionOk(cg, formName) {
