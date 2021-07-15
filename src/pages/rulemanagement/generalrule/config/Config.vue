@@ -1,8 +1,10 @@
 <template>
   <div>
     <page-layout>
+
       <contextmenu :itemList="menuItemList" :visible.sync="menuVisible" @select="onMenuSelect"/>
-      <a-card title="规则配置" :bordered="false">
+
+      <a-card title="规则配置" :bordered="false" @contextmenu="onContextmenu">
         <span slot="extra" style="margin-left: 16px;">
                     <a-popover title="当前编辑人员" trigger="click" arrow-point-at-center>
                         <template slot="content">
@@ -29,13 +31,6 @@
                                   style="font-size: 18px"></a-icon>
                     </a-popover>
         </span>
-
-        <div class="openLeft" @contextmenu="onContextmenu">
-          <a-icon type="appstore" style="font-size: 19px;color: #777;" @click="showDrawer"/>
-          <br>
-          <br>
-          <a-icon type="setting" style="font-size: 19px;color: #777;"/>
-        </div>
         <a-row>
           <a-col :span="1"></a-col>
           <a-col :span="22">
@@ -594,36 +589,25 @@ export default {
   computed: {
     menuItemList() {
       return [
-        {key: '1', icon: 'vertical-right', text: this.$t('closeLeft')},
-        {key: '2', icon: 'vertical-left', text: this.$t('closeRight')},
-        {key: '3', icon: 'close', text: this.$t('closeOthers')},
-        {key: '4', icon: 'sync', text: this.$t('refresh')},
+        {key: '1', icon: 'appstore', text: "组件"},
+        {key: '2', icon: 'setting', text: "设置"},
       ]
     },
   },
   methods: {
-    onContextmenu(pageKey, e) {
-      console.log(pageKey)
-      console.log(e)
-      if (pageKey) {
+    onContextmenu(e) {
+      if (e) {
         e.preventDefault()
-        e.meta = pageKey
         this.menuVisible = true
       }
     },
     onMenuSelect(key, target, pageKey) {
       switch (key) {
         case '1':
-          this.closeLeft(pageKey);
+          this.showDrawer(pageKey);
           break
         case '2':
-          this.closeRight(pageKey);
-          break
-        case '3':
-          this.closeOthers(pageKey);
-          break
-        case '4':
-          this.refresh(pageKey);
+          console.log('咱不支持')
           break
         default:
           break
