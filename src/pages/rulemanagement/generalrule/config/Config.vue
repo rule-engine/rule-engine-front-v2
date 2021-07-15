@@ -191,7 +191,8 @@
                                         message: '请选择运算符',
                                         trigger: ['change', 'blur'],
                                       }">
-                              <a-select placeholder="请选择" :disabled="selectCondition.from.config.leftValue.valueType==null"
+                              <a-select placeholder="请选择"
+                                        :disabled="(selectCondition.from.config.leftValue.value==null&&selectCondition.from.config.leftValue.type!==2&&selectCondition.from.config.rightValue.value==null)"
                                         v-model="selectCondition.from.config.symbol">
                                 <a-select-option v-for="op in selectCondition.operators" :value="op.name"
                                                  :key="op.name">
@@ -216,7 +217,7 @@
                                         trigger: ['change', 'blur'],
                                       }">
                               <a-select
-                                  :disabled="selectCondition.from.config.leftValue.valueType==null"
+                                  :disabled="(selectCondition.from.config.leftValue.value==null&&selectCondition.from.config.leftValue.type!==2&&selectCondition.from.config.rightValue.value==null)"
                                   :value="selectCondition.from.config.rightValue.type===0?'PARAMETER':(selectCondition.from.config.rightValue.type===1?'VARIABLE':selectCondition.from.config.rightValue.valueType)"
                                   placeholder="请选择"
                                   @change="rightValueTypeChange"
@@ -670,7 +671,23 @@ export default {
       if (this.selectCondition.from.config.leftValue.type === 1 && d.type === 2) {
         this.selectCondition.from.config.leftValue.variableValue = d.value;
       }
-      this.selectCondition.operators = this.getSymbolByValueType(d.valueType)
+      // 判断查询的变量或者元素 类型是否与右值相同，不相同则清空右值的
+      if (d.valueType !== this.selectCondition.from.config.rightValue.valueType) {
+        this.selectCondition.from.config.rightValue = {
+          valueType: undefined,
+          type: undefined,
+          value: undefined,
+          valueName: undefined,
+          searchSelect: {
+            data: [],
+            value: undefined,
+          }
+        }
+        // 并重置运算符，否则不重置
+        this.selectCondition.operators = this.getSymbolByValueType(d.valueType)
+        // 删除运算符
+        this.selectCondition.from.config.symbol = undefined;
+      }
     },
     getViewValue(v) {
       // 如果是固定值
@@ -714,7 +731,6 @@ export default {
      * 条件左值类型修改
      */
     leftValueTypeChange(valueType) {
-      this.selectCondition.operators = []
       this.selectCondition.from.config.leftValue.value = undefined;
       this.selectCondition.from.config.leftValue.valueName = undefined;
       this.selectCondition.from.config.leftValue.variableValue = undefined;
@@ -722,35 +738,34 @@ export default {
       // 如果是变量或者元素
       if (valueType === 'PARAMETER') {
         this.selectCondition.from.config.leftValue.type = 0;
-        // 参数的类型
-        this.selectCondition.from.config.leftValue.valueType = undefined;
       } else if (valueType === 'VARIABLE') {
         this.selectCondition.from.config.leftValue.type = 1;
-        // 变量的类型
-        this.selectCondition.from.config.leftValue.valueType = undefined;
       } else {
         this.selectCondition.from.config.leftValue.type = 2;
+        // 固定值场景清空右值，如果变量或者参数，等搜索到选中时再去判断清空
+        // 左面发生改变，右边也改变  如果值类型相同，则不需要更改
+        console.log(this.selectCondition.from.config.rightValue.valueType,valueType)
+        if (valueType !== this.selectCondition.from.config.rightValue.valueType) {
+          this.selectCondition.from.config.rightValue = {
+            valueType: undefined,
+            type: undefined,
+            value: undefined,
+            valueName: undefined,
+            searchSelect: {
+              data: [],
+              value: undefined,
+            }
+          }
+          // 删除运算符
+          this.selectCondition.from.config.symbol = undefined;
+          this.selectCondition.operators = []
+        }
         // 根据左值更改运算符
         this.selectCondition.operators = this.getSymbolByValueType(valueType)
       }
-      //左面发生改变，右边也改变  如果值类型相同，则不需要更改
-      if (valueType !== this.selectCondition.from.config.rightValue.valueType) {
-        this.selectCondition.from.config.rightValue = {
-          valueType: undefined,
-          type: undefined,
-          value: undefined,
-          searchSelect: {
-            data: [],
-            value: undefined,
-          }
-        }
-      } else {
-        // 清空远程搜索缓存
-        this.selectCondition.from.config.leftValue.searchSelect.data = []
-        this.selectCondition.from.config.leftValue.searchSelect.value = undefined
-      }
-      // 删除运算符
-      this.selectCondition.from.config.symbol = undefined;
+      // 清空远程搜索缓存
+      this.selectCondition.from.config.leftValue.searchSelect.data = []
+      this.selectCondition.from.config.leftValue.searchSelect.value = undefined
     },
     conditionRightSearch(value) {
       selectSearch({
@@ -821,6 +836,9 @@ export default {
       }
     },
     isRightTypeSelectView(valueType) {
+      // if (this.selectCondition.from.config.rightValue.valueType === valueType) {
+      //   return true;
+      // }
       if (this.selectCondition.from.config.leftValue.valueType === null) {
         return false;
       }
