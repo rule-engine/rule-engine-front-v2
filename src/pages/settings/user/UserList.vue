@@ -206,7 +206,7 @@ const columns = [
     sorter: true
   },
   {
-    title: '操作',
+    title: '操作',fixed: 'right',
     scopedSlots: {customRender: 'action'}
   }
 ];
