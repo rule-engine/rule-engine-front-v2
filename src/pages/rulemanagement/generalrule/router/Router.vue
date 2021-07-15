@@ -35,6 +35,10 @@ export default {
         console.debug(e)
       }
     }
+    window.addEventListener('popstate', this.cancel, false)
+  },
+  destroyed() {
+    window.removeEventListener('popstate', this.cancel, false);
   },
   watch: {
     // 修改路由参数
@@ -45,12 +49,13 @@ export default {
         query: {pageIndex: val}
       })
     },
-    '$route.query.pageIndex'(val) {
-      if (val && !isNaN(val))
-        this.currentPage = parseInt(val)
-    },
   },
   methods: {
+    cancel(data) {
+      var pageIndex = this.$route.query.pageIndex
+      if (data && pageIndex && !isNaN(pageIndex))
+        this.currentPage = parseInt(pageIndex)
+    },
     choicePage(params) {
       this.currentPage = params.pageIndex
       this.ruleId = params.id
