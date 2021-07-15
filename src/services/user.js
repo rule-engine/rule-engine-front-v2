@@ -57,6 +57,10 @@ export async function selectUserById(param) {
     return request(user.SELECT_USER_BY_ID, METHOD.POST, param)
 }
 
+export async function uploadAvatar(param) {
+    return request(user.UPLOADAVATAR, METHOD.POST, param)
+}
+
 export async function getRoutesConfig() {
     return request(ROUTES, METHOD.GET)
 }

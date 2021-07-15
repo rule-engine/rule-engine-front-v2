@@ -184,7 +184,7 @@ export default {
       },
       rules: {
         name: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入参数名称"},
-        code: {min: 1,max:25, trigger: ['blur'],asyncValidator: this.inputParameterCodeValidator, required: true},
+        code: {min: 1, max: 25, trigger: ['blur'], asyncValidator: this.inputParameterCodeValidator, required: true},
         description: {trigger: ['change', 'blur'], required: false, message: ""},
         valueType: {trigger: ['change', 'blur'], required: true, message: "请选择参数值类型"}
       },
@@ -208,10 +208,9 @@ export default {
           scopedSlots: {customRender: 'valueType'},
         },
         {
-          title: '操作',
+          title: '操作', fixed: 'right',
           key: 'operation',
           width: '140px',
-          fixed: 'right',
           scopedSlots: {customRender: 'action'},
         },
       ],
@@ -249,7 +248,7 @@ export default {
       if (value.length < 1 || value.length > 25) {
         callback(new Error('规则参数Code长度在 1 到 25 个字符'));
       } else {
-        if (!/^[a-zA-Z][a-zA-Z0-9_&#-]*$/.test(value)){
+        if (!/^[a-zA-Z][a-zA-Z0-9_&#-]*$/.test(value)) {
           callback(new Error('规则参数Code只能字母开头，以及字母数字_&#-组成'));
           return false
         }

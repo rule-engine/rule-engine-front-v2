@@ -16,6 +16,7 @@ module.exports = {
         SELECT_USER_BY_ID: `${WEB_BASE_URL}/user/selectUserById`,
         VERIFY_USER_NAME: `${WEB_BASE_URL}/user/verifyUserName`,
         VERIFY_EMAIL: `${WEB_BASE_URL}/user/verifyEmail`,
+        UPLOADAVATAR: `${WEB_BASE_URL}/user/uploadAvatar`,
     },
     workspace: {
         LIST: `${WEB_BASE_URL}/workspace/list`,

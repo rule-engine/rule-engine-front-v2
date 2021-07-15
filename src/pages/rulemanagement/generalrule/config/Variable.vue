@@ -312,10 +312,9 @@ export default {
           scopedSlots: {customRender: 'value'},
         },
         {
-          title: '操作',
+          title: '操作',fixed: 'right',
           key: 'operation',
           width: '140px',
-          fixed: 'right',
           scopedSlots: {customRender: 'action'},
         },
       ],

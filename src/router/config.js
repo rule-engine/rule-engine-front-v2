@@ -193,6 +193,16 @@ const options = {
                             },
                             component: () => import('@/pages/settings/workspace')
                         },
+                        {
+                            path: 'personal',
+                            name: '个人中心',
+                            meta: {
+                                page: {
+                                    closable: true
+                                }
+                            },
+                            component: () => import('@/pages/settings/personal')
+                        },
                     ]
                 },
                 {

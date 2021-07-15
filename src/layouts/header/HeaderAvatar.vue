@@ -5,7 +5,7 @@
       <span class="name">{{ user.username }}</span>
     </div>
     <a-menu :class="['avatar-menu']" slot="overlay">
-      <a-menu-item>
+      <a-menu-item @click="personal">
         <a-icon type="user"/>
         <span>个人中心</span>
       </a-menu-item>
@@ -38,6 +38,9 @@ export default {
   methods: {
     logout() {
       logout(this)
+    },
+    personal(){
+
     },
     afterGetUserInfo(res) {
       if (res.data.code === 200) {
