@@ -80,6 +80,7 @@
                            :getPopupContainer="triggerNode=>{return triggerNode.parentNode}"
                            arrow-point-at-center v-model="cg.popoverVisible">
                   <template slot="content">
+                    <br>
                     <a-form-model style="width: 500px;"
                                   :ref="`addConditionForm${cgi}`"
                                   :model="selectCondition.from"
@@ -134,6 +135,7 @@
                               <a-select
                                   v-if="selectCondition.from.config.leftValue.type===0||selectCondition.from.config.leftValue.type===1"
                                   show-search
+                                  :disabled="selectCondition.from.config.leftValue.type==null"
                                   :value="selectCondition.from.config.leftValue.searchSelect.value"
                                   placeholder="请输入关键字进行搜索"
                                   :default-active-first-option="false"
@@ -152,6 +154,7 @@
                               </a-select>
 
                               <a-select
+                                  :disabled="selectCondition.from.config.leftValue.type==null"
                                   v-else-if="selectCondition.from.config.leftValue.valueType==='BOOLEAN'"
                                   defaultValue="true"
                                   v-model="selectCondition.from.config.leftValue.value" placeholder="请选择数据">
@@ -159,15 +162,18 @@
                                 <a-select-option value="false">false</a-select-option>
                               </a-select>
                               <a-input-number
+                                  :disabled="selectCondition.from.config.leftValue.type==null"
                                   v-else-if="selectCondition.from.config.leftValue.valueType==='NUMBER'"
                                   v-model="selectCondition.from.config.leftValue.value" style="width: 100%"/>
                               <a-date-picker
+                                  :disabled="selectCondition.from.config.leftValue.type==null"
                                   v-else-if="selectCondition.from.config.leftValue.valueType==='DATE'"
                                   show-time
                                   v-model="selectCondition.from.config.leftValue.value"
                                   @change="(date,dateString)=>(datePickerChange(selectCondition.from.config.leftValue,date,dateString))"
                                   style="width: 100%"></a-date-picker>
                               <a-input v-else
+                                       :disabled="selectCondition.from.config.leftValue.type==null"
                                        v-model="selectCondition.from.config.leftValue.value"></a-input>
                             </a-form-model-item>
                           </a-col>
@@ -185,7 +191,8 @@
                                         message: '请选择运算符',
                                         trigger: ['change', 'blur'],
                                       }">
-                              <a-select placeholder="请选择" v-model="selectCondition.from.config.symbol">
+                              <a-select placeholder="请选择" :disabled="selectCondition.from.config.leftValue.valueType==null"
+                                        v-model="selectCondition.from.config.symbol">
                                 <a-select-option v-for="op in selectCondition.operators" :value="op.name"
                                                  :key="op.name">
                                   {{ op.explanation }}
@@ -209,6 +216,7 @@
                                         trigger: ['change', 'blur'],
                                       }">
                               <a-select
+                                  :disabled="selectCondition.from.config.leftValue.valueType==null"
                                   :value="selectCondition.from.config.rightValue.type===0?'PARAMETER':(selectCondition.from.config.rightValue.type===1?'VARIABLE':selectCondition.from.config.rightValue.valueType)"
                                   placeholder="请选择"
                                   @change="rightValueTypeChange"
@@ -241,6 +249,7 @@
                                         trigger: ['change', 'blur'],
                                       }">
                               <a-select
+                                  :disabled="selectCondition.from.config.rightValue.type==null"
                                   v-if="selectCondition.from.config.rightValue.type===0||selectCondition.from.config.rightValue.type===1"
                                   show-search
                                   :value="selectCondition.from.config.rightValue.searchSelect.value"
@@ -259,20 +268,25 @@
                                   {{ d.name }}
                                 </a-select-option>
                               </a-select>
-                              <a-select v-else-if="selectCondition.from.config.rightValue.valueType==='BOOLEAN'"
-                                        v-model="selectCondition.from.config.rightValue.value" placeholder="请选择数据 ">
+                              <a-select
+                                  :disabled="selectCondition.from.config.rightValue.type==null"
+                                  v-else-if="selectCondition.from.config.rightValue.valueType==='BOOLEAN'"
+                                  v-model="selectCondition.from.config.rightValue.value" placeholder="请选择数据 ">
                                 <a-select-option value="true">true</a-select-option>
                                 <a-select-option value="false">false</a-select-option>
                               </a-select>
                               <a-input-number v-else-if="selectCondition.from.config.rightValue.valueType==='NUMBER'"
+                                              :disabled="selectCondition.from.config.rightValue.type==null"
                                               v-model="selectCondition.from.config.rightValue.value"
                                               style="width: 100%"/>
                               <a-date-picker v-else-if="selectCondition.from.config.rightValue.valueType==='DATE'"
+                                             :disabled="selectCondition.from.config.rightValue.type==null"
                                              show-time
                                              v-model="selectCondition.from.config.rightValue.value"
                                              @change="(date,dateString)=>(datePickerChange(selectCondition.from.config.rightValue,date,dateString))"
                                              style="width: 100%"></a-date-picker>
-                              <a-input v-else v-model="selectCondition.from.config.rightValue.value"></a-input>
+                              <a-input v-else v-model="selectCondition.from.config.rightValue.value"
+                                       :disabled="selectCondition.from.config.rightValue.type==null"></a-input>
                             </a-form-model-item>
                           </a-col>
                         </a-row>
@@ -542,23 +556,23 @@ export default {
           description: null,
           config: {
             leftValue: {
-              type: null,
-              valueType: null,
-              value: '',
-              valueName: null,
-              variableValue: null,
+              type: undefined,
+              valueType: undefined,
+              value: undefined,
+              valueName: undefined,
+              variableValue: undefined,
               searchSelect: {
                 data: [],
                 value: undefined,
               }
             },
-            symbol: null,
+            symbol: undefined,
             rightValue: {
-              type: null,
-              valueType: null,
-              value: '',
-              valueName: null,
-              variableValue: null,
+              type: undefined,
+              valueType: undefined,
+              value: undefined,
+              valueName: undefined,
+              variableValue: undefined,
               searchSelect: {
                 data: [],
                 value: undefined,
@@ -701,19 +715,19 @@ export default {
      */
     leftValueTypeChange(valueType) {
       this.selectCondition.operators = []
-      this.selectCondition.from.config.leftValue.value = '';
-      this.selectCondition.from.config.leftValue.valueName = null;
-      this.selectCondition.from.config.leftValue.variableValue = null;
+      this.selectCondition.from.config.leftValue.value = undefined;
+      this.selectCondition.from.config.leftValue.valueName = undefined;
+      this.selectCondition.from.config.leftValue.variableValue = undefined;
       this.selectCondition.from.config.leftValue.valueType = valueType;
       // 如果是变量或者元素
       if (valueType === 'PARAMETER') {
         this.selectCondition.from.config.leftValue.type = 0;
         // 参数的类型
-        this.selectCondition.from.config.leftValue.valueType = '';
+        this.selectCondition.from.config.leftValue.valueType = undefined;
       } else if (valueType === 'VARIABLE') {
         this.selectCondition.from.config.leftValue.type = 1;
         // 变量的类型
-        this.selectCondition.from.config.leftValue.valueType = '';
+        this.selectCondition.from.config.leftValue.valueType = undefined;
       } else {
         this.selectCondition.from.config.leftValue.type = 2;
         // 根据左值更改运算符
@@ -722,9 +736,9 @@ export default {
       //左面发生改变，右边也改变  如果值类型相同，则不需要更改
       if (valueType !== this.selectCondition.from.config.rightValue.valueType) {
         this.selectCondition.from.config.rightValue = {
-          valueType: '',
-          type: null,
-          value: '',
+          valueType: undefined,
+          type: undefined,
+          value: undefined,
           searchSelect: {
             data: [],
             value: undefined,
@@ -736,7 +750,7 @@ export default {
         this.selectCondition.from.config.leftValue.searchSelect.value = undefined
       }
       // 删除运算符
-      this.selectCondition.from.config.symbol = null;
+      this.selectCondition.from.config.symbol = undefined;
     },
     conditionRightSearch(value) {
       selectSearch({
