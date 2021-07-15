@@ -293,8 +293,6 @@
                         </a-popover>
                     </span>
 
-              <a-icon slot="extra" class="dynamic-delete-button" type="save"
-                      style="font-size: 18px;margin-left: 16px;" @click="saveAction"></a-icon>
               <a-form-model ref="actionForm" :model="generalRule">
                 <a-row>
                   <a-col :span="5">
@@ -454,22 +452,18 @@ export default {
         conditionGroup: [],
         action: {
           value: undefined,
-          valueName: null,
-          valueType: 'NUMBER',
-          type: null,
+          valueName: undefined,
+          valueType: undefined,
+          type: undefined,
           loading: false,
         },
         defaultAction: {
           enableDefaultAction: 1,
           value: undefined,
-          valueName: null,
-          valueType: 'NUMBER',
-          type: null,
+          valueName: undefined,
+          valueType: undefined,
+          type: undefined,
           loading: false,
-          searchSelect: {
-            data: [],
-            value: undefined,
-          }
         },
       },
       actionSearchSelect: {
