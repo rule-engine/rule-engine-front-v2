@@ -141,6 +141,8 @@
                             <a-date-picker
                                 v-else-if="selectCondition.from.config.leftValue.valueType==='DATE'"
                                 show-time
+                                v-model="selectCondition.from.config.leftValue.value"
+                                @change="(date,dateString)=>(datePickerChange(selectCondition.from.config.leftValue,date,dateString))"
                                 style="width: 100%"></a-date-picker>
                             <a-input v-else
                                      v-model="selectCondition.from.config.leftValue.value"></a-input>
@@ -218,6 +220,8 @@
                                             v-model="selectCondition.from.config.rightValue.value" style="width: 100%"/>
                             <a-date-picker v-else-if="selectCondition.from.config.rightValue.valueType==='DATE'"
                                            show-time
+                                           v-model="selectCondition.from.config.rightValue.value"
+                                           @change="(date,dateString)=>(datePickerChange(selectCondition.from.config.rightValue,date,dateString))"
                                            style="width: 100%"></a-date-picker>
                             <a-input v-else v-model="selectCondition.from.config.rightValue.value"></a-input>
                           </a-col>
@@ -798,36 +802,37 @@ export default {
     addCondition(cg) {
       this.selectCondition.currentConditionGroup = cg;
       // 还原配置
-      this.selectCondition.from = {
-        id: null,
-        name: null,
-        description: null,
-        config: {
-          leftValue: {
-            type: null,
-            valueType: null,
-            value: '',
-            valueName: null,
-            variableValue: null,
-            searchSelect: {
-              data: [],
-              value: undefined,
-            }
-          },
-          symbol: null,
-          rightValue: {
-            type: null,
-            valueType: null,
-            value: '',
-            valueName: null,
-            variableValue: null,
-            searchSelect: {
-              data: [],
-              value: undefined,
-            }
-          }
-        }
-      }
+      this.$refs['addConditionForm'].resetFields();
+      // this.selectCondition.from = {
+      //   id: null,
+      //   name: null,
+      //   description: null,
+      //   config: {
+      //     leftValue: {
+      //       type: null,
+      //       valueType: null,
+      //       value: '',
+      //       valueName: null,
+      //       variableValue: null,
+      //       searchSelect: {
+      //         data: [],
+      //         value: undefined,
+      //       }
+      //     },
+      //     symbol: null,
+      //     rightValue: {
+      //       type: null,
+      //       valueType: null,
+      //       value: '',
+      //       valueName: null,
+      //       variableValue: null,
+      //       searchSelect: {
+      //         data: [],
+      //         value: undefined,
+      //       }
+      //     }
+      //   }
+      // }
     },
     addConditionOk(cg) {
       // 传入条件组信息，条件信息 绑定关系
