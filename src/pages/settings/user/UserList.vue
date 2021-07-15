@@ -37,6 +37,7 @@
     </a-card>
     <a-card>
       <standard-table
+          :scroll="{ x: 1200 }"
           rowKey="id"
           :loading="loading"
           style="clear: both"

@@ -47,6 +47,7 @@
 
     <a-card>
       <standard-table
+          :scroll="{ x: 1200 }"
           rowKey="id"
           style="clear: both"
           :columns="columns"
@@ -259,34 +260,6 @@ import {exportData} from '@/services/importExport'
 //import uuidv1 from 'uuid/v1'
 
 
-const columns = [
-  {
-    title: '名称',
-    dataIndex: 'name'
-  },
-  {
-    title: '编码',
-    dataIndex: 'code',
-  },
-  {
-    title: '规则版本状态',
-    scopedSlots: {customRender: 'versionStatus'}
-  },
-  {
-    title: '创建人',
-    scopedSlots: {customRender: 'user'}
-  },
-  {
-    title: '创建时间',
-    dataIndex: 'createTime',
-    sorter: true
-  },
-  {
-    title: '操作',fixed: 'right',
-    scopedSlots: {customRender: 'action'}
-  }
-];
-
 export default {
   name: 'GeneralRule',
   components: {PageLayout, StandardTable},
@@ -312,7 +285,33 @@ export default {
           status: '',
         }
       },
-      columns: columns,
+      columns: [
+        {
+          title: '名称',
+          dataIndex: 'name'
+        },
+        {
+          title: '编码',
+          dataIndex: 'code',
+        },
+        {
+          title: '规则版本状态',
+          scopedSlots: {customRender: 'versionStatus'}
+        },
+        {
+          title: '创建人',
+          scopedSlots: {customRender: 'user'}
+        },
+        {
+          title: '创建时间',
+          dataIndex: 'createTime',
+          sorter: true
+        },
+        {
+          title: '操作', fixed: 'right',
+          scopedSlots: {customRender: 'action'}
+        }
+      ],
       selectedRows: [],
       authority: {
         visible: false,
@@ -393,7 +392,7 @@ export default {
             sorter: true
           },
           {
-            title: '操作',fixed: 'right',
+            title: '操作', fixed: 'right',
             scopedSlots: {customRender: 'action'}
           }
         ]
@@ -502,8 +501,8 @@ export default {
               })
               this.newGeneralRule.visible = false;
             }
-          }).finally(()=>   this.newGeneralRule.confirmLoading = false)
-        }else {
+          }).finally(() => this.newGeneralRule.confirmLoading = false)
+        } else {
           this.newGeneralRule.confirmLoading = false;
         }
       })
