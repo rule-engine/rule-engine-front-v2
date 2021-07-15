@@ -10,6 +10,15 @@ export async function addInputParameter(param) {
 }
 
 /**
+ * 验证code是否存在
+ * @param param
+ * @returns {Promise<AxiosResponse<any>>}
+ */
+export async function verifyInputParameterCode(param) {
+    return request(inputParameter.VERIFY_INOUT_PARAMETER_CODE, METHOD.POST, param)
+}
+
+/**
  * 获取参数列表
  * @param query
  */
