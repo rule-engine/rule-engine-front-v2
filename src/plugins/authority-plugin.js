@@ -153,8 +153,8 @@ const AuthorityPlugin = {
          * @returns {boolean} 是否校验通过
          */
         $auth(check, type) {
-          const permissions = this.$store.getters['account/permissions']
-          const roles = this.$store.getters['account/roles']
+          const permissions = this.$store.getters['user/permissions']
+          const roles = this.$store.getters['user/roles']
           const permission = getRoutePermission(permissions, this.$route)
           const role = getRouteRole(roles, this.$route)
           return auth.apply(this, [{check, type}, permission, role, permissions, roles])

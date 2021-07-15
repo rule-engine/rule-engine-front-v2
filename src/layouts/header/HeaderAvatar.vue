@@ -29,8 +29,8 @@ import {logout, getUserInfo} from '@/services/user'
 export default {
   name: 'HeaderAvatar',
   computed: {
-    ...mapGetters('account', ['user']),
-    ...mapMutations('account', ['setUser', 'setPermissions', 'setRoles']),
+    ...mapGetters('user', ['user']),
+    ...mapMutations('user', ['setUser', 'setPermissions', 'setRoles']),
   },
   created() {
     getUserInfo().then(this.afterGetUserInfo)
@@ -45,7 +45,7 @@ export default {
     afterGetUserInfo(res) {
       if (res.data.code === 200) {
         const {data} = res.data
-        this.$store.commit('account/setUser', data)
+        this.$store.commit('user/setUser', data)
       }
     }
   }

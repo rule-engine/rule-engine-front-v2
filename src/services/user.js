@@ -72,6 +72,7 @@ export function logout(context) {
     localStorage.removeItem(process.env.VUE_APP_ROUTES_KEY)
     localStorage.removeItem(process.env.VUE_APP_PERMISSIONS_KEY)
     localStorage.removeItem(process.env.VUE_APP_ROLES_KEY)
+    localStorage.removeItem(process.env.VUE_APP_WORKSPACE_KEY)
     removeAuthorization();
     context.$router.push('/login')
 }

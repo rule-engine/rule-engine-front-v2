@@ -78,7 +78,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('account', ['setUser', 'setPermissions', 'setRoles']),
+    ...mapMutations('user', ['setUser', 'setPermissions', 'setRoles']),
     onSubmit(e) {
       e.preventDefault()
       this.form.validateFields((err) => {

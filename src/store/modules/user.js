@@ -3,17 +3,21 @@ export default {
     state: {
         user: {
             // 用户ID
-            uid: 0,
+            id: 0,
             // 用户昵称
             username: 'lq',
             // 性别
             sex: 0,
             // 个性签名
-            signature: '',
+            signature: undefined,
             // 个性头像
             avatar: require("@/assets/img/avatar.jpg"),
             // 当前登录状态
             loginStatus: false,
+            email: undefined,
+            phone: undefined,
+            //是否为管理员
+            isAdmin: false,
             position: '北京市xxx'
         },
         permissions: null,
@@ -21,6 +25,9 @@ export default {
         routesConfig: null
     },
     getters: {
+        isAdmin: (getters) => {
+            return getters.user.isAdmin
+        },
         user: state => {
             if (!state.user) {
                 try {
