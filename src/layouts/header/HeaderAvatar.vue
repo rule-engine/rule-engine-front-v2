@@ -39,8 +39,8 @@ export default {
     logout() {
       logout(this)
     },
-    personal(){
-
+    personal() {
+      this.$router.push("/settings/personal")
     },
     afterGetUserInfo(res) {
       if (res.data.code === 200) {
