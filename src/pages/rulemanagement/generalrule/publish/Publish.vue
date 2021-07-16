@@ -141,7 +141,7 @@
 import FooterToolBar from '@/components/tool/FooterToolBar'
 import PageLayout from "@/layouts/PageLayout";
 
-import {runTest, viewGeneralRule} from '@/services/generalRule'
+import {runTest, viewGeneralRule, generalRulePublish} from '@/services/generalRule'
 import moment from "moment";
 import {mapState} from "vuex";
 
@@ -325,7 +325,26 @@ export default {
       this.$emit("choicePage", {pageIndex: 2, id: this.generalRule.id})
     },
     publish() {
-
+      let id = this.generalRule.id;
+      let _this = this;
+      this.$confirm({
+        title: '发布规则',
+        content: '你确定发布吗，将会导致已发布规则变更！',
+        onOk() {
+          return new Promise((resolve) => {
+            generalRulePublish({
+              id: id
+            }).then(res => {
+              if (res.data.data) {
+                _this.$message.success("规则发布成功");
+                resolve();
+              }
+            })
+          }).catch(() => console.log('Oops errors!'));
+        },
+        onCancel() {
+        },
+      });
     },
     getViewValue(v) {
       // 如果是固定值

@@ -64,6 +64,10 @@ export async function defaultActionSwitch(query) {
     return request(generalRule.DEFAULT_ACTION_SWITCH, METHOD.POST, query)
 }
 
+export async function generalRulePublish(query) {
+    return request(generalRule.PUBLISH, METHOD.POST, query)
+}
+
 export default {
     list,
 }
