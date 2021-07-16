@@ -88,8 +88,6 @@ export default {
 
     },
     getRuleDefinition() {
-      //          this.$setPageTitle(this.$router.history.current.path, `规则(${this.generalRule.name})`)
-
       if (this.generalRule.id && !isNaN(this.generalRule.id)) {
         getRuleDefinition({id: this.generalRule.id}).then(res => {
           this.generalRule = res.data.data;
