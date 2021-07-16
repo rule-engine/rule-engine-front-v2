@@ -21,7 +21,7 @@ const options = {
             component: () => import('@/pages/exception/403'),
         }, {
             path: '/subError',
-            name: 'error',
+            name: 'subError',
             component: () => import('@/pages/result/Error'),
         },
         {
