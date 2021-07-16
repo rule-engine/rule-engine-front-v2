@@ -68,6 +68,10 @@ export async function generalRulePublish(query) {
     return request(generalRule.PUBLISH, METHOD.POST, query)
 }
 
+export async function generalRuleDownloadList(query) {
+    return request(generalRule.DOWNLOAD_LIST, METHOD.POST, query)
+}
+
 export default {
     list,
 }

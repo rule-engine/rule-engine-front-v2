@@ -52,6 +52,7 @@ module.exports = {
         SAVE_DEFAULT_ACTION: `${WEB_BASE_URL}/ruleEngine/generalRule/saveDefaultAction`,
         DEFAULT_ACTION_SWITCH: `${WEB_BASE_URL}/ruleEngine/generalRule/defaultActionSwitch`,
         PUBLISH: `${WEB_BASE_URL}/ruleEngine/generalRule/publish`,
+        DOWNLOAD_LIST: `${WEB_BASE_URL}/ruleEngine/generalRule/downloadList`,
     },
     importExport: {
         EXPORT: `${WEB_BASE_URL}/ruleEngine/importExport/export`,
