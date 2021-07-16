@@ -524,8 +524,7 @@
 
 
     <footer-tool-bar>
-      <a-button type="primary" @click="previous()" :loading="footer.loading">上一步</a-button>&nbsp;&nbsp;&nbsp;&nbsp;
-      <a-button type="primary" @click="nextStep()" :loading="footer.nextStepLoading">下一步</a-button>
+      <a-button type="primary" @click="nextStep()" :loading="footer.nextStepLoading">预览发布</a-button>
     </footer-tool-bar>
 
     <a-drawer
@@ -1037,9 +1036,6 @@ export default {
         // 并且 只有左值为CONTAIN/NOT_CONTAIN 返回所有的类型
         return this.selectCondition.from.config.symbol === 'CONTAIN' || this.selectCondition.from.config.symbol === 'NOT_CONTAIN';
       }
-    },
-    previous() {
-      this.$emit("choicePage", {pageIndex: 1, id: this.generalRule.id})
     },
     nextStep() {
       this.$refs['generalRuleForm'].validate(valid => {

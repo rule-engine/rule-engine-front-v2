@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Definition @choicePage="choicePage" :id="id" v-if="currentPage===1"></Definition>
     <Config @choicePage="choicePage" :id="id" v-if="currentPage===2"></Config>
     <Publish @choicePage="choicePage" :id="id" v-if="currentPage===3"></Publish>
   </div>
@@ -8,14 +7,13 @@
 
 <script>
 
-import Definition from '../definition/Definition'
 import Config from '../config/Config'
 import Publish from '../publish/Publish'
 
 
 export default {
   name: "Router",
-  components: {Definition, Config, Publish},
+  components: {Config, Publish},
   data() {
     return {
       currentPage: null,

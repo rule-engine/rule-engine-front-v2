@@ -96,6 +96,10 @@
               <a-icon type="down"/>
             </a>
             <a-menu slot="overlay">
+              <a-menu-item>
+                <a-icon type="info"/>
+                基本信息
+              </a-menu-item>
               <a-menu-item @click="downloadGeneralRule(record)">
                 <a-icon type="download"/>
                 下载
@@ -219,6 +223,33 @@
       </standard-table>
     </a-modal>
 
+
+    <a-modal
+        title="新建规则"
+        :visible="newGeneralRule.visible"
+        :confirm-loading="newGeneralRule.confirmLoading"
+        :width="700"
+        ok-text="下一步"
+        @ok="newGeneralRuleHandleOk('generalRule')"
+        @cancel="newGeneralRuleHandleCancel('generalRule')"
+    >
+      <a-form-model ref="generalRule" :rules="newGeneralRule.rules" :model="newGeneralRule.form" :label-col="{span: 4}"
+                    :wrapper-col="{span: 14}">
+        <a-form-model-item label="名称" has-feedback prop="name">
+          <a-input v-model="newGeneralRule.form.name" placeholder="请输入规则名称">
+          </a-input>
+        </a-form-model-item>
+        <a-form-model-item label="编码" has-feedback prop="code">
+          <a-input v-model="newGeneralRule.form.code" type="code"
+                   placeholder="请输入规则编码">
+          </a-input>
+        </a-form-model-item>
+        <a-form-model-item label="说明" has-feedback prop="description">
+          <a-input v-model="newGeneralRule.form.description" type="textarea" placeholder="请输入规则说明"/>
+        </a-form-model-item>
+      </a-form-model>
+    </a-modal>
+
   </page-layout>
 </template>
 
@@ -226,7 +257,7 @@
 import PageLayout from '@/layouts/PageLayout'
 import StandardTable from '@/components/table/StandardTable'
 
-import {list, deleteGeneralRule, verifyRuleCode} from '@/services/generalRule'
+import {list, deleteGeneralRule, verifyRuleCode, addGeneralRule} from '@/services/generalRule'
 import {dataPermissionList, update} from '@/services/dataPermission'
 import {exportData} from '@/services/importExport'
 
@@ -370,7 +401,21 @@ export default {
           }
         ]
       },
-      dataSource: []
+      dataSource: [],
+      newGeneralRule: {
+        form: {
+          id: null,
+          name: null,
+          code: null,
+          description: null,
+        },
+        visible: false,
+        confirmLoading: false,
+        rules: {
+          name: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入规则名称",},
+          code: {trigger: ['blur'], asyncValidator: this.ruleCodeValidator, required: true},
+        }
+      }
     }
   },
   created() {
@@ -434,10 +479,35 @@ export default {
       console.log(current, pageSize);
     },
     addNew() {
-      this.$openPage({
-        path: '/generalRuleRouter/new',
-        query: {pageIndex: 1}
-      }, "新建规则");
+      this.newGeneralRule.visible = true;
+      this.newGeneralRule.form = {
+        id: null,
+        name: null,
+        code: null,
+        description: null,
+      }
+    },
+    newGeneralRuleHandleOk(formName) {
+      this.newGeneralRule.confirmLoading = true;
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          addGeneralRule(this.newGeneralRule.form).then(res => {
+            if (res.data.code === 200) {
+              this.$openPage({
+                path: '/generalRuleRouter/' + res.data.data,
+                query: {pageIndex: 2}
+              }, `规则(${this.newGeneralRule.form.name})`);
+              this.newGeneralRule.visible = false;
+            }
+          }).finally(() => this.newGeneralRule.confirmLoading = false)
+        } else {
+          this.newGeneralRule.confirmLoading = false;
+        }
+      })
+    },
+    newGeneralRuleHandleCancel(formName) {
+      this.newGeneralRule.visible = false;
+      this.$refs[formName].resetFields();
     },
     handleMenuClick() {
 
