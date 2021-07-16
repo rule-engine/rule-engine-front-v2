@@ -124,10 +124,9 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex'
+    import {mapGetters, mapState} from 'vuex'
     import PageLayout from "@/layouts/PageLayout";
-    import {getUserInfo, uploadAvatar, updateUserInfo} from '@/services/user'
-    import {mapState} from "vuex";
+    import {getUserInfo, updateUserInfo, uploadAvatar} from '@/services/user'
 
     export default {
         name: "Personal",
@@ -176,6 +175,7 @@
                     sex: null,
                     email: null,
                     phone: null,
+                    description: null,
                 },
                 rules: {
                     email: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入邮箱",},
@@ -196,6 +196,7 @@
                             "avatar": this.form.avatar,
                             "phone": this.form.phone,
                             "email": this.form.email,
+                            "description": this.form.description,
                         }).then(res => {
                             if (res.data.data) {
                                 this.$message.success('保存成功')
