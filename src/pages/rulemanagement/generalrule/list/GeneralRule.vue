@@ -585,24 +585,26 @@ export default {
       })
     },
     onChangeAuthority(record, type) {
+      let wa = record.writeAuthority;
+      let pa = record.publishAuthority;
       if (type === 1) {
-        record.writeAuthority = record.writeAuthority === 1 ? 0 : 1;
+        wa = record.writeAuthority === 1 ? 0 : 1;
       } else if (type === 2) {
-        record.publishAuthority = record.publishAuthority === 1 ? 0 : 1;
+        pa = record.publishAuthority === 1 ? 0 : 1;
       }
-      var _this = this
+      var _this = this;
       this.authority.loading = true;
       update({
         userId: record.userId,
-        publishAuthority: record.publishAuthority,
-        writeAuthority: record.writeAuthority,
+        publishAuthority: pa,
+        writeAuthority: wa,
         dataId: _this.authority.query.query.dataId,
         dataType: _this.authority.query.query.dataType,
       }).then(resp => {
-        if (resp.data.state === "SUCCESS") {
-          this.$message.success('操作成功！！！')
-        } else {
-          this.$message.warning(resp.data.message)
+        if (resp.data.data) {
+          record.writeAuthority = wa;
+          record.publishAuthority = pa;
+          this.$message.success('操作成功')
         }
       }).finally(() => {
         this.authority.loading = false;
