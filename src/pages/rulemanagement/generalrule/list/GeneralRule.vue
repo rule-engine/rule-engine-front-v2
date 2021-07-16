@@ -403,6 +403,7 @@ export default {
           // 重新加载列表
           this.loadDataList();
         }
+        this.loading = false;
       })
     },
     loadDataList() {
