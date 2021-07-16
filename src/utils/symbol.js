@@ -1,6 +1,3 @@
-import {symbol} from "@/utils/symbol";
-
-export default symbol
 
 export function getSymbolExplanation(name) {
     switch (name) {

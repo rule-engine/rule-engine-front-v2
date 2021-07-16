@@ -147,6 +147,7 @@
       <standard-table
           rowKey="id"
           style="clear: both"
+          :scroll="{ x: 500 }"
           :columns="historyVersion.columns"
           :loading="historyVersion.loading"
           :dataSource="historyVersion.dataSource"
@@ -205,6 +206,7 @@
       <standard-table
           rowKey="userId"
           style="clear: both"
+          :scroll="{ x: 500 }"
           :columns="authority.columns"
           :loading="authority.loading"
           :dataSource="authority.dataSource"
@@ -351,11 +353,11 @@ export default {
             dataIndex: 'email',
           },
           {
-            title: '编辑权限',
+            title: '编辑权限',fixed: 'right',
             scopedSlots: {customRender: 'edit'}
           },
           {
-            title: '发布权限',
+            title: '发布权限',fixed: 'right',
             scopedSlots: {customRender: 'publish'}
           },
         ]
@@ -675,5 +677,14 @@ export default {
   .ant-tag-orange {
     background: white;
   }
+}
+// 滚动条位置
+.__bar-is-vertical {
+  right: -1px !important;
+}
+
+// 隐藏横向滚动条
+.__bar-is-horizontal {
+  display: none !important;
 }
 </style>
