@@ -76,7 +76,7 @@ const respServiceError = {
             setTimeout(() => location.reload(), 1500)
         } else if (code === 9999404) {
             //数据没查到
-            vueMain.$router.push('/subError')
+            vueMain.$router.replace('/subError')
         } else if (code !== 200
             && code //mock不拦截 @todo 开发完毕要去掉
         ) {
