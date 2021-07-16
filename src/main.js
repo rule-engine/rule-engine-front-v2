@@ -22,9 +22,11 @@ Vue.use(Plugins)
 
 bootstrap({router, store, i18n, message: Vue.prototype.$message})
 
-new Vue({
+let vueMain = new Vue({
   router,
   store,
   i18n,
   render: h => h(App),
 }).$mount('#app')
+
+export default vueMain

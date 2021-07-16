@@ -1,5 +1,7 @@
 import Cookie from 'js-cookie'
 import {setAuthorization, removeAuthorization} from "@/utils/request";
+import vueMain from '@/main.js'
+
 // 401拦截
 const resp401 = {
     /**
@@ -72,6 +74,9 @@ const respServiceError = {
             message.warn(errMsg)
             removeAuthorization()
             setTimeout(() => location.reload(), 1500)
+        } else if (code === 9999404) {
+            //数据没查到
+            vueMain.$router.push('/subError')
         } else if (code !== 200
             && code //mock不拦截 @todo 开发完毕要去掉
         ) {
