@@ -41,7 +41,7 @@
 
 
                             <a-form-model-item label="个人描述">
-                                <a-textarea rows="4" placeholder="太懒了，表示一句话都不想说"/>
+                                <a-textarea rows="4" v-model="form.description" placeholder="太懒了，表示一句话都不想说" />
                             </a-form-model-item>
 
 
@@ -214,6 +214,7 @@
             afterGetUserInfo(res) {
                 if (res.data.code === 200) {
                     this.form = res.data.data
+                    console.log(res.data.data);
                     if (res.data.data.avatar == null) {
                         this.form.avatar = require("@/assets/img/avatar.jpg")
                     }
