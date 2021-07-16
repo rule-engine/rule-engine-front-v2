@@ -39,6 +39,7 @@
                               </a-form-model>
                               <a-form-model v-else-if="!runTest.run&&!runTest.resultView">
                                   <a-form-model-item :label="param.name+'('+param.code+')'"
+                                                     style="margin-bottom: 8px;"
                                                      v-for="param in request.param" :key="param.code">
                                     <a-input-number v-if="param.valueType==='NUMBER'"
                                                     v-model="param.value" style="width: 100%"/>
@@ -124,7 +125,7 @@
     </page-layout>
 
     <footer-tool-bar>
-      <a-button type="primary" @click="previous()" :loading="footer.loading">上一步</a-button>&nbsp;&nbsp;&nbsp;&nbsp;
+      <a-button type="primary" @click="previous()" :loading="footer.loading">进入编辑</a-button>&nbsp;&nbsp;&nbsp;&nbsp;
       <a-button type="primary" @click="publish()" :loading="footer.loading">发布</a-button>
     </footer-tool-bar>
 
