@@ -1,6 +1,6 @@
 <template>
   <div>
-    <page-layout style="min-width: 600px">
+    <page-layout>
 
       <contextmenu :itemList="menuItemList" :visible.sync="menuVisible" @select="onMenuSelect"/>
 

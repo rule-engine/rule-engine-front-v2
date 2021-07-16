@@ -1,6 +1,6 @@
 <template>
   <div>
-    <page-layout style="min-width: 600px">
+    <page-layout>
       <a-card title="规则预览发布" :bordered="false">
         <span slot="extra" style="margin-left: 16px;">
               <a-popover trigger="click" arrow-point-at-center overlayClassName="runTest">
@@ -73,6 +73,7 @@
 
         <vue-scroll :ops="ops" style="width:100%;height:100%">
           <div :style="isMobile?'width:1000px;margin: 0 auto':''">
+            <br>
             <a-timeline>
               <a-timeline-item v-for="(cg,cgi) in generalRule.conditionGroup" :key="cg.id">
                 <span style="color: #606266;font-size: 14px;" v-if="0===cgi">如果</span>
