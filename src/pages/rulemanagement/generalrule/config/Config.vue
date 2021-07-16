@@ -47,7 +47,7 @@
                   <a-skeleton v-if="cg.conditionGroupCondition.length===0" :paragraph="{ rows: 2 }"/>
 
                   <a-alert closable
-                           style="background-color: #f4f4f5;border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"
+                           style="border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"
                            v-for="cgc in cg.conditionGroupCondition"
                            :key="cgc.id"
                            @dblclick.native="editCondition(cg,cgc)"

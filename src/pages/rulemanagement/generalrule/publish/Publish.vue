@@ -79,7 +79,7 @@
                 <span style="color: #606266;font-size: 14px;" v-if="0===cgi">如果</span>
                 <span style="color: #606266;font-size: 14px;" v-else>或者</span>
                 <div v-for="(cgc) in cg.conditionGroupCondition" style="margin-left: 20px;" :key="cgc.id">
-                  <a-alert style="background-color: #f4f4f5;border:none;padding: 6px 6px 6px 6px;margin-bottom: 10px"
+                  <a-alert style="border:none;padding: 6px 6px 6px 6px;margin-bottom: 10px"
                            class="conditionItem">
                     <p slot="description" style="margin-bottom: 0;">
                       <a-tag color="blue" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">

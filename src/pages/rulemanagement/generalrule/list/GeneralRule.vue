@@ -70,7 +70,7 @@
           <a-tag v-if="record.publishVersion!==null" style="cursor: pointer;padding: 0 6px" color="blue">
             线上({{ record.publishVersion }})
           </a-tag>
-          <a-tag v-if="record.status===0" color="pink"
+          <a-tag v-if="record.status===0"  color="pink"
                  style="cursor: pointer;padding: 0 6px">
             开发<!--开发中没有版本-->
           </a-tag>
@@ -665,19 +665,6 @@ export default {
 
 </style>
 <style lang="less">
-.data-status {
-  .ant-tag-pink {
-    background: white;
-  }
-
-  .ant-tag-blue {
-    background: white;
-  }
-
-  .ant-tag-orange {
-    background: white;
-  }
-}
 // 滚动条位置
 .__bar-is-vertical {
   right: -1px !important;
