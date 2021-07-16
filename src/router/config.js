@@ -137,7 +137,7 @@ const options = {
                         // },
                         {
                             path: '/generalRuleRouter/:ruleId',
-                            name: '规则',
+                            name: '规则(...)',
                             meta: {
                                 invisible: true
                             },

@@ -73,7 +73,7 @@
 
                 <br>
 
-                <a-popover :title="selectCondition.from.id==null?'添加条件':'编辑条件'" trigger="click"
+                <a-popover :title="selectCondition.from.id===undefined?'添加条件':'编辑条件'" trigger="click"
                            :getPopupContainer="triggerNode=>{return triggerNode.parentNode}"
                            arrow-point-at-center v-model="cg.popoverVisible">
                   <template slot="content">
@@ -296,7 +296,7 @@
 
                     <a-button type="primary" size="small" style="display:block;float: right;"
                               @click="addConditionOk(cg,`addConditionForm${cgi}`)">
-                      {{ selectCondition.from.id === null ? '确认添加' : '确认更新' }}
+                      {{ selectCondition.from.id === undefined ? '确认添加' : '确认更新' }}
                     </a-button>
                     <br>
                   </template>
@@ -1074,7 +1074,7 @@ export default {
       this.$refs[formName][0].validate(valid => {
         if (valid) {
           // 更新条件
-          if (this.selectCondition.from.id !== null) {
+          if (this.selectCondition.from.id !== undefined) {
             updateCondition(this.selectCondition.from).then(res => {
               if (res.data.data) {
                 // 刷新页面条件数据

@@ -23,6 +23,5 @@ export function setDefaultValue(obj, defaultValue) {
             }
         }
     }
-    console.log(newObj)
     return newObj;
 }
