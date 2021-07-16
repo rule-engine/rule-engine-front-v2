@@ -60,7 +60,7 @@ export default {
     }
   },
   mounted() {
-    this.generalRule.id = this.ruleId
+    this.generalRule.id = this.id
     this.getRuleDefinition();
   },
   methods: {
