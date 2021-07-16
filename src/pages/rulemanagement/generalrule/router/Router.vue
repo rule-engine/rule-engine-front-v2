@@ -35,6 +35,14 @@ export default {
     }
     window.addEventListener('popstate', this.cancel, false)
   },
+  watch: {
+    // 修改路由参数
+    currentPage(val) {
+      this.$router.push({
+        query: {pageIndex: val}
+      })
+    },
+  },
   destroyed() {
     window.removeEventListener('popstate', this.cancel, false);
   },

@@ -31,263 +31,265 @@
                                   style="font-size: 18px"></a-icon>
                     </a-popover>
         </span>
-        <a-row>
-          <a-col :span="1"></a-col>
-          <a-col :span="22">
-            <a-card title="条件集" class="condition_set">
+        <vue-scroll :ops="ops" style="width:100%;height:100%">
+          <a-row :style="isMobile?'width:1000px;margin: 0 auto':''">
+            <a-col :span="1"></a-col>
+            <a-col :span="22">
+              <a-card title="条件集" class="condition_set">
 
-              <a-skeleton v-if="generalRule.conditionGroup.length===0" :paragraph="{ rows: 3 }"/>
+                <a-skeleton v-if="generalRule.conditionGroup.length===0" :paragraph="{ rows: 3 }"/>
 
-              <a-card :title="cg.name" :bordered="false" v-for="(cg,cgi) in generalRule.conditionGroup" :key="cg.id">
+                <a-card :title="cg.name" :bordered="false" v-for="(cg,cgi) in generalRule.conditionGroup" :key="cg.id">
 
-                <a-icon type="delete" class="dynamic-delete-button" style="font-size: 18px" slot="extra"
-                        @click="deleteConditionGroup(cg)"></a-icon>
+                  <a-icon type="delete" class="dynamic-delete-button" style="font-size: 18px" slot="extra"
+                          @click="deleteConditionGroup(cg)"></a-icon>
 
-                <a-skeleton v-if="cg.conditionGroupCondition.length===0" :paragraph="{ rows: 2 }"/>
+                  <a-skeleton v-if="cg.conditionGroupCondition.length===0" :paragraph="{ rows: 2 }"/>
 
-                <a-alert closable
-                         style="background-color: #f4f4f5;border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"
-                         v-for="cgc in cg.conditionGroupCondition"
-                         :key="cgc.id"
-                         @dblclick.native="editCondition(cg,cgc)"
-                         @close="deleteCondition(cg.conditionGroupCondition,cgc.id,cgc.id)"
-                         class="conditionItem">
-                  <p slot="description" style="margin-bottom: 0;">
-                    <a-tag color="blue" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                      （{{ cgc.condition.name }}）
-                    </a-tag>
-                    <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                      {{ getConditionNamePrefix(cgc.condition.config.leftValue.type) }}
-                    </a-tag>
-                    {{ getViewValue(cgc.condition.config.leftValue) }}
-                    &nbsp;
-                    <a-tag color="orange" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                      {{ getSymbolExplanation(cgc.condition.config.symbol) }}
-                    </a-tag>
-                    <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                      {{ getConditionNamePrefix(cgc.condition.config.rightValue.type) }}
-                    </a-tag>
-                    {{ getViewValue(cgc.condition.config.rightValue) }}
-                  </p>
-                </a-alert>
+                  <a-alert closable
+                           style="background-color: #f4f4f5;border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"
+                           v-for="cgc in cg.conditionGroupCondition"
+                           :key="cgc.id"
+                           @dblclick.native="editCondition(cg,cgc)"
+                           @close="deleteCondition(cg.conditionGroupCondition,cgc.id,cgc.id)"
+                           class="conditionItem">
+                    <p slot="description" style="margin-bottom: 0;">
+                      <a-tag color="blue" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                        （{{ cgc.condition.name }}）
+                      </a-tag>
+                      <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                        {{ getConditionNamePrefix(cgc.condition.config.leftValue.type) }}
+                      </a-tag>
+                      {{ getViewValue(cgc.condition.config.leftValue) }}
+                      &nbsp;
+                      <a-tag color="orange" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                        {{ getSymbolExplanation(cgc.condition.config.symbol) }}
+                      </a-tag>
+                      <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                        {{ getConditionNamePrefix(cgc.condition.config.rightValue.type) }}
+                      </a-tag>
+                      {{ getViewValue(cgc.condition.config.rightValue) }}
+                    </p>
+                  </a-alert>
+
+                  <br>
+
+                  <a-button type="dashed" style="width: 50%;display:block;margin:0 auto"
+                            @click="addCondition(cg,`addConditionForm${cgi}`)">
+                    <a-icon type="plus" style="color: #777;"/>
+                    添加条件
+                  </a-button>
+                </a-card>
+                <a-button type="dashed" style="width: 100%" @click="addConditionGroup()">
+                  <a-icon type="plus" style="color: #777;"/>
+                  添加条件组
+                </a-button>
+              </a-card>
+              <br>
+              <br>
+
+
+              <a-form-model ref="generalRuleForm" :model="generalRule">
+                <a-card title="结果">
+                <span slot="extra">
+                          <a-popover title="温馨提示">
+                              <template slot="content">
+                                  <p>普通规则结果类型确认后，及规则发布后，则不支持修改！</p>
+                                  <p>（具体原因可参考链接：T320523）</p>
+                              </template>
+                              <a-icon type="info-circle" class="dynamic-delete-button" style="font-size: 18px"></a-icon>
+                          </a-popover>
+                      </span>
+                  <a-row>
+                    <a-col :span="5">
+                      <a-form-model-item prop="action.type"
+                                         :rules="{
+                                          required: true,
+                                          message: '请选择结果类型',
+                                          trigger: ['change', 'blur'],
+                                        }">
+                        <a-select style="width:100%"
+                                  placeholder="请选择结果类型"
+                                  :value="generalRule.action.type===0?'PARAMETER':(generalRule.action.type===1?'VARIABLE':generalRule.action.valueType===null?undefined:generalRule.action.valueType)"
+                                  @change="actionValueTypeChange">
+                          <a-select-option value="PARAMETER">参数</a-select-option>
+                          <a-select-option value="VARIABLE">变量</a-select-option>
+                          <a-select-option value="BOOLEAN">布尔</a-select-option>
+                          <a-select-option value="COLLECTION">集合</a-select-option>
+                          <a-select-option value="STRING">字符串</a-select-option>
+                          <a-select-option value="NUMBER">数值</a-select-option>
+                          <a-select-option value="DATE">日期</a-select-option>
+                        </a-select>
+                      </a-form-model-item>
+                    </a-col>
+                    <a-col :span="1"></a-col>
+                    <a-col :span="18">
+                      <a-form-model-item prop="action.value"
+                                         :rules="{
+                                          required: true,
+                                          message: '请输入结果值',
+                                          trigger: ['change', 'blur'],
+                                        }">
+                        <a-select
+                            v-if="generalRule.action.type===0||generalRule.action.type===1"
+                            show-search
+                            :disabled="generalRule.action.type==null"
+                            :value="generalRule.action.valueName"
+                            placeholder="请输入关键字进行搜索"
+                            :default-active-first-option="false"
+                            :show-arrow="false"
+                            :filter-option="false"
+                            :not-found-content="null"
+                            @search="actionSearch"
+                        >
+                          <a-select-option v-for="d in actionSearchSelect.data" :value="d.id"
+                                           :key="d.id"
+                                           @click.native="actionSearchOptionClick(d)">
+                            {{ d.name }}
+                          </a-select-option>
+                        </a-select>
+
+                        <a-select
+                            :disabled="!generalRule.action.type"
+                            v-else-if="generalRule.action.valueType==='BOOLEAN'"
+                            defaultValue="true"
+                            @blur="saveAction"
+                            style="width: 100%"
+                            v-model="generalRule.action.value" placeholder="请选择数据">
+                          <a-select-option value="true">true</a-select-option>
+                          <a-select-option value="false">false</a-select-option>
+                        </a-select>
+                        <a-input-number
+                            :disabled="!generalRule.action.type"
+                            @blur="saveAction"
+                            v-else-if="generalRule.action.valueType==='NUMBER'"
+                            v-model="generalRule.action.value" style="width: 100%"/>
+                        <a-date-picker
+                            :disabled="!generalRule.action.type"
+                            @openChange="actionValueDatePickerOpenChange"
+                            v-else-if="generalRule.action.valueType==='DATE'"
+                            show-time
+                            @change="(date,dateString)=>(datePickerChange(generalRule.action,date,dateString))"
+                            format="YYYY-MM-DD hh:mm:ss"
+                            v-model="generalRule.action.value"
+                            style="width: 100%"></a-date-picker>
+                        <a-input v-else
+                                 :disabled="!generalRule.action.type"
+                                 @blur="saveAction"
+                                 v-model="generalRule.action.value"></a-input>
+                      </a-form-model-item>
+                    </a-col>
+                  </a-row>
+
+                </a-card>
 
                 <br>
 
-                <a-button type="dashed" style="width: 50%;display:block;margin:0 auto"
-                          @click="addCondition(cg,`addConditionForm${cgi}`)">
-                  <a-icon type="plus" style="color: #777;"/>
-                  添加条件
-                </a-button>
-              </a-card>
-              <a-button type="dashed" style="width: 100%" @click="addConditionGroup()">
-                <a-icon type="plus" style="color: #777;"/>
-                添加条件组
-              </a-button>
-            </a-card>
-            <br>
-            <br>
+                <a-card title="默认结果">
+                  <a-switch
+                      :disabled="generalRule.action.valueType==null"
+                      @change="enableDefaultActionChange"
+                      :checked="generalRule.defaultAction.enableDefaultAction===0"/>
+                  <br> <br>
+                  <a-row>
+                    <a-col :span="6">
+                      <a-form-model-item prop="defaultAction.type"
+                                         :rules="generalRule.defaultAction.enableDefaultAction===0?{
+                                          required: true,
+                                          message: '请选择默认结果类型',
+                                          trigger: ['change', 'blur'],
+                                        }:{required:false}">
+                        <a-select style="width:100%"
+                                  :disabled="generalRule.action.valueType==null"
+                                  placeholder="请选择类型"
+                                  :value="generalRule.defaultAction.type===0?'PARAMETER':(generalRule.defaultAction.type===1?'VARIABLE':generalRule.defaultAction.valueType===null?undefined:generalRule.defaultAction.valueType)"
+                                  @change="defaultActionValueTypeChange"
+                        >
+                          <a-select-option value="PARAMETER">参数</a-select-option>
+                          <a-select-option value="VARIABLE">变量</a-select-option>
+                          <a-select-option value="BOOLEAN"
+                                           v-if="generalRule.action.valueType==='BOOLEAN'">布尔
+                          </a-select-option>
+                          <a-select-option value="COLLECTION"
+                                           v-if="generalRule.action.valueType==='COLLECTION'">集合
+                          </a-select-option>
+                          <a-select-option value="STRING"
+                                           v-if="generalRule.action.valueType==='STRING'">字符串
+                          </a-select-option>
+                          <a-select-option value="NUMBER"
+                                           v-if="generalRule.action.valueType==='NUMBER'">数值
+                          </a-select-option>
+                          <a-select-option value="DATE"
+                                           v-if="generalRule.action.valueType==='DATE'">日期
+                          </a-select-option>
+                        </a-select>
+                      </a-form-model-item>
+                    </a-col>
+                    <a-col :span="1"></a-col>
+                    <a-col :span="17">
+                      <a-form-model-item prop="defaultAction.value"
+                                         :rules="generalRule.defaultAction.enableDefaultAction===0?{
+                                          required: true,
+                                          message: '请输入默认结果值',
+                                          trigger: ['change', 'blur'],
+                                        }:{required:false}">
+                        <a-select
+                            v-if="generalRule.defaultAction.type===0||generalRule.defaultAction.type===1"
+                            show-search
+                            style="width: 100%"
+                            :disabled="generalRule.defaultAction.type==null"
+                            :value="generalRule.defaultAction.valueName"
+                            placeholder="请输入关键字进行搜索"
+                            :default-active-first-option="false"
+                            :show-arrow="false"
+                            :filter-option="false"
+                            :not-found-content="null"
+                            @search="defaultActionSearch"
+                        >
+                          <a-select-option v-for="d in actionSearchSelect.data" :value="d.id"
+                                           :key="d.id"
+                                           @click.native="defaultActionSearchOptionClick(d)">
+                            {{ d.name }}
+                          </a-select-option>
+                        </a-select>
 
-
-            <a-form-model ref="generalRuleForm" :model="generalRule">
-              <a-card title="结果">
-              <span slot="extra">
-                        <a-popover title="温馨提示">
-                            <template slot="content">
-                                <p>普通规则结果类型确认后，及规则发布后，则不支持修改！</p>
-                                <p>（具体原因可参考链接：T320523）</p>
-                            </template>
-                            <a-icon type="info-circle" class="dynamic-delete-button" style="font-size: 18px"></a-icon>
-                        </a-popover>
-                    </span>
-                <a-row>
-                  <a-col :span="5">
-                    <a-form-model-item prop="action.type"
-                                       :rules="{
-                                        required: true,
-                                        message: '请选择结果类型',
-                                        trigger: ['change', 'blur'],
-                                      }">
-                      <a-select style="width:100%"
-                                placeholder="请选择结果类型"
-                                :value="generalRule.action.type===0?'PARAMETER':(generalRule.action.type===1?'VARIABLE':generalRule.action.valueType===null?undefined:generalRule.action.valueType)"
-                                @change="actionValueTypeChange">
-                        <a-select-option value="PARAMETER">参数</a-select-option>
-                        <a-select-option value="VARIABLE">变量</a-select-option>
-                        <a-select-option value="BOOLEAN">布尔</a-select-option>
-                        <a-select-option value="COLLECTION">集合</a-select-option>
-                        <a-select-option value="STRING">字符串</a-select-option>
-                        <a-select-option value="NUMBER">数值</a-select-option>
-                        <a-select-option value="DATE">日期</a-select-option>
-                      </a-select>
-                    </a-form-model-item>
-                  </a-col>
-                  <a-col :span="1"></a-col>
-                  <a-col :span="18">
-                    <a-form-model-item prop="action.value"
-                                       :rules="{
-                                        required: true,
-                                        message: '请输入结果值',
-                                        trigger: ['change', 'blur'],
-                                      }">
-                      <a-select
-                          v-if="generalRule.action.type===0||generalRule.action.type===1"
-                          show-search
-                          :disabled="generalRule.action.type==null"
-                          :value="generalRule.action.valueName"
-                          placeholder="请输入关键字进行搜索"
-                          :default-active-first-option="false"
-                          :show-arrow="false"
-                          :filter-option="false"
-                          :not-found-content="null"
-                          @search="actionSearch"
-                      >
-                        <a-select-option v-for="d in actionSearchSelect.data" :value="d.id"
-                                         :key="d.id"
-                                         @click.native="actionSearchOptionClick(d)">
-                          {{ d.name }}
-                        </a-select-option>
-                      </a-select>
-
-                      <a-select
-                          :disabled="!generalRule.action.type"
-                          v-else-if="generalRule.action.valueType==='BOOLEAN'"
-                          defaultValue="true"
-                          @blur="saveAction"
-                          style="width: 100%"
-                          v-model="generalRule.action.value" placeholder="请选择数据">
-                        <a-select-option value="true">true</a-select-option>
-                        <a-select-option value="false">false</a-select-option>
-                      </a-select>
-                      <a-input-number
-                          :disabled="!generalRule.action.type"
-                          @blur="saveAction"
-                          v-else-if="generalRule.action.valueType==='NUMBER'"
-                          v-model="generalRule.action.value" style="width: 100%"/>
-                      <a-date-picker
-                          :disabled="!generalRule.action.type"
-                          @openChange="actionValueDatePickerOpenChange"
-                          v-else-if="generalRule.action.valueType==='DATE'"
-                          show-time
-                          @change="(date,dateString)=>(datePickerChange(generalRule.action,date,dateString))"
-                          format="YYYY-MM-DD hh:mm:ss"
-                          v-model="generalRule.action.value"
-                          style="width: 100%"></a-date-picker>
-                      <a-input v-else
-                               :disabled="!generalRule.action.type"
-                               @blur="saveAction"
-                               v-model="generalRule.action.value"></a-input>
-                    </a-form-model-item>
-                  </a-col>
-                </a-row>
-
-              </a-card>
-
-              <br>
-
-              <a-card title="默认结果">
-                <a-switch
-                    :disabled="generalRule.action.valueType==null"
-                    @change="enableDefaultActionChange"
-                    :checked="generalRule.defaultAction.enableDefaultAction===0"/>
-                <br> <br>
-                <a-row>
-                  <a-col :span="6">
-                    <a-form-model-item prop="defaultAction.type"
-                                       :rules="generalRule.defaultAction.enableDefaultAction===0?{
-                                        required: true,
-                                        message: '请选择默认结果类型',
-                                        trigger: ['change', 'blur'],
-                                      }:{required:false}">
-                      <a-select style="width:100%"
-                                :disabled="generalRule.action.valueType==null"
-                                placeholder="请选择类型"
-                                :value="generalRule.defaultAction.type===0?'PARAMETER':(generalRule.defaultAction.type===1?'VARIABLE':generalRule.defaultAction.valueType===null?undefined:generalRule.defaultAction.valueType)"
-                                @change="defaultActionValueTypeChange"
-                      >
-                        <a-select-option value="PARAMETER">参数</a-select-option>
-                        <a-select-option value="VARIABLE">变量</a-select-option>
-                        <a-select-option value="BOOLEAN"
-                                         v-if="generalRule.action.valueType==='BOOLEAN'">布尔
-                        </a-select-option>
-                        <a-select-option value="COLLECTION"
-                                         v-if="generalRule.action.valueType==='COLLECTION'">集合
-                        </a-select-option>
-                        <a-select-option value="STRING"
-                                         v-if="generalRule.action.valueType==='STRING'">字符串
-                        </a-select-option>
-                        <a-select-option value="NUMBER"
-                                         v-if="generalRule.action.valueType==='NUMBER'">数值
-                        </a-select-option>
-                        <a-select-option value="DATE"
-                                         v-if="generalRule.action.valueType==='DATE'">日期
-                        </a-select-option>
-                      </a-select>
-                    </a-form-model-item>
-                  </a-col>
-                  <a-col :span="1"></a-col>
-                  <a-col :span="17">
-                    <a-form-model-item prop="defaultAction.value"
-                                       :rules="generalRule.defaultAction.enableDefaultAction===0?{
-                                        required: true,
-                                        message: '请输入默认结果值',
-                                        trigger: ['change', 'blur'],
-                                      }:{required:false}">
-                      <a-select
-                          v-if="generalRule.defaultAction.type===0||generalRule.defaultAction.type===1"
-                          show-search
-                          style="width: 100%"
-                          :disabled="generalRule.defaultAction.type==null"
-                          :value="generalRule.defaultAction.valueName"
-                          placeholder="请输入关键字进行搜索"
-                          :default-active-first-option="false"
-                          :show-arrow="false"
-                          :filter-option="false"
-                          :not-found-content="null"
-                          @search="defaultActionSearch"
-                      >
-                        <a-select-option v-for="d in actionSearchSelect.data" :value="d.id"
-                                         :key="d.id"
-                                         @click.native="defaultActionSearchOptionClick(d)">
-                          {{ d.name }}
-                        </a-select-option>
-                      </a-select>
-
-                      <a-select
-                          :disabled="!generalRule.defaultAction.type"
-                          v-else-if="generalRule.defaultAction.valueType==='BOOLEAN'"
-                          defaultValue="true"
-                          @blur="saveDefaultAction"
-                          style="width: 100%"
-                          v-model="generalRule.defaultAction.value" placeholder="请选择数据">
-                        <a-select-option value="true">true</a-select-option>
-                        <a-select-option value="false">false</a-select-option>
-                      </a-select>
-                      <a-input-number
-                          @blur="saveDefaultAction"
-                          :disabled="!generalRule.defaultAction.type"
-                          v-else-if="generalRule.defaultAction.valueType==='NUMBER'"
-                          v-model="generalRule.defaultAction.value" style="width: 100%"/>
-                      <a-date-picker
-                          :disabled="!generalRule.defaultAction.type"
-                          v-else-if="generalRule.defaultAction.valueType==='DATE'"
-                          show-time
-                          @openChange="defaultActionValueDatePickerOpenChange"
-                          @change="(date,dateString)=>(datePickerChange(generalRule.defaultAction,date,dateString))"
-                          format="YYYY-MM-DD hh:mm:ss"
-                          v-model="generalRule.defaultAction.value"
-                          style="width: 100%"></a-date-picker>
-                      <a-input v-else
-                               @blur="saveDefaultAction"
-                               :disabled="!generalRule.defaultAction.type"
-                               v-model="generalRule.defaultAction.value"></a-input>
-                    </a-form-model-item>
-                  </a-col>
-                </a-row>
-              </a-card>
-            </a-form-model>
-          </a-col>
-          <a-col :span="1"></a-col>
-        </a-row>
+                        <a-select
+                            :disabled="!generalRule.defaultAction.type"
+                            v-else-if="generalRule.defaultAction.valueType==='BOOLEAN'"
+                            defaultValue="true"
+                            @blur="saveDefaultAction"
+                            style="width: 100%"
+                            v-model="generalRule.defaultAction.value" placeholder="请选择数据">
+                          <a-select-option value="true">true</a-select-option>
+                          <a-select-option value="false">false</a-select-option>
+                        </a-select>
+                        <a-input-number
+                            @blur="saveDefaultAction"
+                            :disabled="!generalRule.defaultAction.type"
+                            v-else-if="generalRule.defaultAction.valueType==='NUMBER'"
+                            v-model="generalRule.defaultAction.value" style="width: 100%"/>
+                        <a-date-picker
+                            :disabled="!generalRule.defaultAction.type"
+                            v-else-if="generalRule.defaultAction.valueType==='DATE'"
+                            show-time
+                            @openChange="defaultActionValueDatePickerOpenChange"
+                            @change="(date,dateString)=>(datePickerChange(generalRule.defaultAction,date,dateString))"
+                            format="YYYY-MM-DD hh:mm:ss"
+                            v-model="generalRule.defaultAction.value"
+                            style="width: 100%"></a-date-picker>
+                        <a-input v-else
+                                 @blur="saveDefaultAction"
+                                 :disabled="!generalRule.defaultAction.type"
+                                 v-model="generalRule.defaultAction.value"></a-input>
+                      </a-form-model-item>
+                    </a-col>
+                  </a-row>
+                </a-card>
+              </a-form-model>
+            </a-col>
+            <a-col :span="1"></a-col>
+          </a-row>
+        </vue-scroll>
         <br>
         <br>
         <br>
@@ -528,7 +530,7 @@
     <a-drawer
         placement="left"
         :closable="false"
-        width="450px"
+        width="430px"
         :visible="drawer.visible"
         @close="onClose"
         :mask="true"
@@ -573,6 +575,7 @@ import {selectSearch} from '@/utils/selectSearch'
 import {getSymbolByValueType, getSymbolExplanation} from '@/utils/symbol'
 import moment from 'moment';
 import {setDefaultValue} from "@/utils/json";
+import {mapState} from "vuex";
 
 
 export default {
@@ -586,6 +589,20 @@ export default {
   },
   data() {
     return {
+      ops: {
+        vuescroll: {},
+        scrollPanel: {},
+        rail: {
+          keepShow: true
+        },
+        bar: {
+          hoverStyle: true,
+          onlyShowBarOnScroll: false, //是否只有滚动的时候才显示滚动条
+          background: "#F5F5F5",//滚动条颜色
+          opacity: 0.5,//滚动条透明度
+          "overflow-x": "hidden"
+        }
+      },
       menuVisible: false,
       loading: true,
       dataType: 0,
@@ -663,6 +680,7 @@ export default {
     this.getRuleConfig();
   },
   computed: {
+    ...mapState('setting', ['isMobile']),
     menuItemList() {
       return [
         {key: '1', icon: 'appstore', text: "组件"},
@@ -1233,5 +1251,15 @@ export default {
 .dynamic-delete-button[disabled] {
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+// 滚动条位置
+/deep/ .__bar-is-vertical {
+  right: -1px !important;
+}
+
+// 隐藏横向滚动条
+/deep/ .__bar-is-horizontal {
+  display: none !important;
 }
 </style>

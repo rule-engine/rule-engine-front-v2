@@ -12,6 +12,9 @@ import {initI18n} from '@/utils/i18n'
 import bootstrap from '@/bootstrap'
 import 'moment/locale/zh-cn'
 import VueCropper from 'vue-cropper'
+import vueScroll from "vuescroll";//引入vuescroll
+import "vuescroll/dist/vuescroll.css";//引入vuescroll样式
+
 
 const router = initRouter(store.state.setting.asyncRoutes)
 const i18n = initI18n('CN', 'US')
@@ -21,12 +24,16 @@ Vue.config.productionTip = false
 Vue.use(Viser)
 Vue.use(Plugins)
 Vue.use(VueCropper)
+Vue.use(vueScroll, {
+    ops: {}, // 在这里设置全局默认配置
+    name: 'vue-scroll' // 在这里自定义组件名字，默认是vueScroll
+});//使用
 
 bootstrap({router, store, i18n, message: Vue.prototype.$message})
 
 new Vue({
-  router,
-  store,
-  i18n,
-  render: h => h(App),
+    router,
+    store,
+    i18n,
+    render: h => h(App),
 }).$mount('#app')

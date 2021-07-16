@@ -71,44 +71,46 @@
               </a-popover>
         </span>
 
-        <a-timeline>
-          <a-timeline-item v-for="(cg,cgi) in generalRule.conditionGroup" :key="cg.id">
-            <span style="color: #606266;font-size: 14px;" v-if="0===cgi">如果</span>
-            <span style="color: #606266;font-size: 14px;" v-else>或者</span>
-            <div v-for="(cgc) in cg.conditionGroupCondition" style="margin-left: 20px;" :key="cgc.id">
-              <a-alert style="background-color: #f4f4f5;border:none;padding: 6px 6px 6px 6px;margin-bottom: 10px"
-                       class="conditionItem">
+        <vue-scroll :ops="ops" style="width:100%;height:100%">
+          <div :style="isMobile?'width:1000px;margin: 0 auto':''">
+            <a-timeline>
+              <a-timeline-item v-for="(cg,cgi) in generalRule.conditionGroup" :key="cg.id">
+                <span style="color: #606266;font-size: 14px;" v-if="0===cgi">如果</span>
+                <span style="color: #606266;font-size: 14px;" v-else>或者</span>
+                <div v-for="(cgc) in cg.conditionGroupCondition" style="margin-left: 20px;" :key="cgc.id">
+                  <a-alert style="background-color: #f4f4f5;border:none;padding: 6px 6px 6px 6px;margin-bottom: 10px"
+                           class="conditionItem">
+                    <p slot="description" style="margin-bottom: 0;">
+                      <a-tag color="blue" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                        （{{ cgc.condition.name }}）
+                      </a-tag>
+                      <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                        {{ getConditionNamePrefix(cgc.condition.config.leftValue.type) }}
+                      </a-tag>
+                      {{ getViewValue(cgc.condition.config.leftValue) }}
+                      &nbsp;
+                      <a-tag color="orange" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                        {{ cgc.condition.config.symbol }}
+                      </a-tag>
+                      <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                        {{ getConditionNamePrefix(cgc.condition.config.rightValue.type) }}
+                      </a-tag>
+                      {{ getViewValue(cgc.condition.config.rightValue) }}
+                    </p>
+                  </a-alert>
+                </div>
+              </a-timeline-item>
+            </a-timeline>
+            <span style="color: #606266;font-size: 14px;">返回</span>
+            <div style="margin-left: 20px;margin-top: 3px;">
+              <a-alert :closable="false" type="success"
+                       style="border:none;padding: 6px 6px 6px 6px;margin-bottom: 10px">
                 <p slot="description" style="margin-bottom: 0;">
-                  <a-tag color="blue" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                    （{{ cgc.condition.name }}）
-                  </a-tag>
-                  <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                    {{ getConditionNamePrefix(cgc.condition.config.leftValue.type) }}
-                  </a-tag>
-                  {{ getViewValue(cgc.condition.config.leftValue) }}
-                  &nbsp;
-                  <a-tag color="orange" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                    {{ cgc.condition.config.symbol }}
-                  </a-tag>
-                  <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                    {{ getConditionNamePrefix(cgc.condition.config.rightValue.type) }}
-                  </a-tag>
-                  {{ getViewValue(cgc.condition.config.rightValue) }}
+                  {{ getActionView(generalRule.action) }}
                 </p>
               </a-alert>
             </div>
-          </a-timeline-item>
-        </a-timeline>
-
-        <span style="color: #606266;font-size: 14px;">返回</span>
-        <div style="margin-left: 20px;margin-top: 3px;">
-          <a-alert :closable="false" type="success" style="border:none;padding: 6px 6px 6px 6px;margin-bottom: 10px">
-            <p slot="description" style="margin-bottom: 0;">
-              {{ getActionView(generalRule.action) }}
-            </p>
-          </a-alert>
-        </div>
-        <span v-if="generalRule.conditionGroup.length!==0">
+            <span v-if="generalRule.conditionGroup.length!==0">
                     <span style="color: #606266;font-size: 14px;">否则返回</span>
                     <br>
                     <div style="margin-left: 20px;margin-top: 3px;">
@@ -120,7 +122,8 @@
                       </a-alert>
                     </div>
        </span>
-
+          </div>
+        </vue-scroll>
       </a-card>
     </page-layout>
 
@@ -139,6 +142,7 @@ import PageLayout from "@/layouts/PageLayout";
 
 import {runTest, viewGeneralRule} from '@/services/generalRule'
 import moment from "moment";
+import {mapState} from "vuex";
 
 export default {
   name: "Publish.vue",
@@ -151,6 +155,20 @@ export default {
   },
   data() {
     return {
+      ops: {
+        vuescroll: {},
+        scrollPanel: {},
+        rail: {
+          keepShow: true
+        },
+        bar: {
+          hoverStyle: true,
+          onlyShowBarOnScroll: false, //是否只有滚动的时候才显示滚动条
+          background: "#F5F5F5",//滚动条颜色
+          opacity: 0.5,//滚动条透明度
+          "overflow-x": "hidden"
+        }
+      },
       generalRule: {
         id: 226,
         name: null,
@@ -322,7 +340,10 @@ export default {
       }
       return v.value;
     },
-  }
+  },
+  computed: {
+    ...mapState('setting', ['isMobile'])
+  },
 }
 </script>
 
@@ -333,4 +354,13 @@ export default {
   }
 }
 
+// 滚动条位置
+/deep/ .__bar-is-vertical {
+  right: -1px !important;
+}
+
+// 隐藏横向滚动条
+/deep/ .__bar-is-horizontal {
+  display: none !important;
+}
 </style>
