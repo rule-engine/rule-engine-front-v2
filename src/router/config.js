@@ -19,6 +19,10 @@ const options = {
             path: '/403',
             name: '403',
             component: () => import('@/pages/exception/403'),
+        }, {
+            path: '/subError',
+            name: 'error',
+            component: () => import('@/pages/result/Error'),
         },
         {
             path: '/',

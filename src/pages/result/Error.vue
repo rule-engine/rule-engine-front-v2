@@ -2,21 +2,21 @@
     <a-card class="result-error" :bordered="false">
       <result style="margin-bottom: 16px; margin-top: 48px" :is-success="false" :title="title" :description="description">
         <template slot="action">
-          <a-button type="primary" >返回修改</a-button>
+          <a-button type="primary" @click="$router.go(-1)" >返回修改</a-button>
         </template>
         <div>
           <div style="fontSize: 16px; fontWeight: 500; marginBottom: 16px">
-            您提交的内容有如下错误：
+            您访问的规则不存在：
           </div>
           <div style="margin-bottom: 16px">
             <a-icon class="error-icon" type="close-circle-o"/>
-            您的账户已被冻结
-            <a style="margin-left: 16px">立即解冻 <a-icon type="right" /></a>
+            该规则可能已经被删除
+            <a style="margin-left: 16px">返回规则列表 <a-icon type="right" /></a>
           </div>
           <div>
             <a-icon class="error-icon" type="close-circle-o"/>
-            您的账户还不具备申请资格
-            <a style="margin-left: 16px">立即升级 <a-icon type="right" /></a>
+            该规则可能已经被删除
+            <a style="margin-left: 16px">去主页 <a-icon type="right" /></a>
           </div>
         </div>
       </result>
