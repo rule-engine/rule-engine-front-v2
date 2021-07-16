@@ -524,7 +524,7 @@
 
 
     <footer-tool-bar>
-      <!--      <a-button type="primary" @click="previous()" :loading="footer.loading">上一步</a-button>&nbsp;&nbsp;&nbsp;&nbsp;-->
+      <a-button type="primary" @click="previous()" :loading="footer.loading">上一步</a-button>&nbsp;&nbsp;&nbsp;&nbsp;
       <a-button type="primary" @click="nextStep()" :loading="footer.nextStepLoading">下一步</a-button>
     </footer-tool-bar>
 

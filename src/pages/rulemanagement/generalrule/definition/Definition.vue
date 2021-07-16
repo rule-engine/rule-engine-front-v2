@@ -2,30 +2,18 @@
   <div>
     <page-layout>
       <a-card title="规则定义" :bordered="false">
-        <!--        <a-steps :current="0">-->
-        <!--          <a-step>-->
-        <!--            &lt;!&ndash; <span slot="title">Finished</span> &ndash;&gt;-->
-        <!--            <template slot="title">-->
-        <!--              规则定义-->
-        <!--            </template>-->
-        <!--            <span slot="description">This is a description.</span>-->
-        <!--          </a-step>-->
-        <!--          <a-step title="In Progress" sub-title="Left 00:00:08" description="This is a description."/>-->
-        <!--          <a-step title="Waiting" description="This is a description."/>-->
-        <!--        </a-steps>-->
-
-        <a-form-model ref="generalRule" :rules="rules" :model="generalRule" :label-col="{span: 4}"
+        <a-form-model ref="generalRuleForm" :rules="rules" :model="generalRule" :label-col="{span: 4}"
                       :wrapper-col="{span: 14}">
-          <a-form-model-item label="名称" prop="name">
+          <a-form-model-item label="名称" has-feedback prop="name">
             <a-input v-model="generalRule.name" placeholder="请输入规则名称">
             </a-input>
           </a-form-model-item>
-          <a-form-model-item label="编码" prop="code">
+          <a-form-model-item label="编码" has-feedback prop="code">
             <a-input :disabled="!isNaN(generalRule.id)" v-model="generalRule.code" type="code"
                      placeholder="请输入规则编码">
             </a-input>
           </a-form-model-item>
-          <a-form-model-item label="说明" prop="description">
+          <a-form-model-item label="说明" has-feedback prop="description">
             <a-input v-model="generalRule.description" type="textarea" placeholder="请输入规则说明"/>
           </a-form-model-item>
         </a-form-model>
@@ -43,7 +31,7 @@
 import FooterToolBar from '@/components/tool/FooterToolBar'
 import PageLayout from "@/layouts/PageLayout";
 
-import {addGeneralRule, updateGeneralRule, getRuleDefinition} from '@/services/generalRule'
+import {addGeneralRule, updateGeneralRule, getRuleDefinition, verifyRuleCode} from '@/services/generalRule'
 
 export default {
   name: "Definition",
@@ -67,7 +55,7 @@ export default {
       },
       rules: {
         name: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入规则名称",},
-        code: {min: 1, trigger: ['change', 'blur'], message: "请输入规则编码", required: true},
+        code: {trigger: ['blur'], asyncValidator: this.ruleCodeValidator, required: true},
       }
     }
   },
@@ -76,8 +64,33 @@ export default {
     this.getRuleDefinition();
   },
   methods: {
+    ruleCodeValidator(rule, value, callback) {
+      if (!value) {
+        callback(new Error('请输入规则编码'));
+      } else {
+        // 如果是编辑，不校验是否存在这个规则code 放行  接口有最终校验
+        if (this.generalRule.id != null && !isNaN(this.generalRule.id)) {
+          callback()
+          return;
+        }
+        verifyRuleCode({param: value}).then(resp => {
+          if (resp.data.code === 200) {
+            if (!resp.data.data) {
+              callback()
+            } else {
+              callback(new Error('该规则编码已经存在！'));
+            }
+          } else {
+            callback(new Error(resp.data.message));
+          }
+        })
+      }
+
+    },
     getRuleDefinition() {
-      if (this.generalRule.id) {
+      //          this.$setPageTitle(this.$router.history.current.path, `规则(${this.generalRule.name})`)
+
+      if (this.generalRule.id && !isNaN(this.generalRule.id)) {
         getRuleDefinition({id: this.generalRule.id}).then(res => {
           this.generalRule = res.data.data;
         })
@@ -85,20 +98,35 @@ export default {
     },
     //保存规则定义
     saveRuleDefinition() {
-      this.loading = true;
-      if (!isNaN(this.generalRule.id)) {
-        updateGeneralRule(this.generalRule).then(res => {
-          if (res.data.code === 200) {
-            this.$emit("choicePage", {pageIndex: 2, id: this.generalRule.id})
+      this.footer.loading = true;
+      this.$refs['generalRuleForm'].validate(valid => {
+        if (valid) {
+          if (!isNaN(this.generalRule.id)) {
+            updateGeneralRule(this.generalRule).then(res => {
+              if (res.data.code === 200) {
+                this.$emit("choicePage", {pageIndex: 2, id: this.generalRule.id})
+              }
+              this.footer.loading = false;
+            })
+          } else {
+            addGeneralRule(this.generalRule).then(res => {
+              if (res.data.code === 200) {
+                //this.$emit("choicePage", {pageIndex: 2, id: res.data.data})
+                // 设置这个页面的标题
+                this.$setPageTitle('/generalRuleRouter/' + res.data.data, `规则(${this.generalRule.name})`)
+                // 当前标签页切换路由
+                this.$closePage(this.$router.history.current.path, {
+                  path: '/generalRuleRouter/' + res.data.data,
+                  query: {pageIndex: 2}
+                })
+              }
+              this.footer.loading = false;
+            })
           }
-        })
-      } else {
-        addGeneralRule(this.generalRule).then(res => {
-          if (res.data.code === 200) {
-            this.$emit("choicePage", {pageIndex: 2, id: res.data.data})
-          }
-        })
-      }
+        } else {
+          this.footer.loading = false;
+        }
+      });
     }
   }
 }
