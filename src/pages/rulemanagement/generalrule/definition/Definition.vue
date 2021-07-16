@@ -37,7 +37,7 @@ export default {
   name: "Definition",
   components: {PageLayout, FooterToolBar},
   props: {
-    ruleId: {
+    id: {
       type: Number,
       required: false
     }
@@ -112,13 +112,11 @@ export default {
             addGeneralRule(this.generalRule).then(res => {
               if (res.data.code === 200) {
                 //this.$emit("choicePage", {pageIndex: 2, id: res.data.data})
-                // 设置这个页面的标题
-                this.$setPageTitle('/generalRuleRouter/' + res.data.data, `规则(${this.generalRule.name})`)
-                // 当前标签页切换路由
-                this.$closePage(this.$router.history.current.path, {
+                this.$closePage("/generalRuleRouter/new")
+                this.$openPage({
                   path: '/generalRuleRouter/' + res.data.data,
                   query: {pageIndex: 2}
-                })
+                }, `规则(${this.generalRule.name})`);
               }
               this.footer.loading = false;
             })

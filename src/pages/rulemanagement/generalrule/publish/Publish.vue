@@ -143,7 +143,7 @@ export default {
   name: "Publish.vue",
   components: {PageLayout, FooterToolBar},
   props: {
-    ruleId: {
+    id: {
       type: Number,
       required: true
     }
@@ -206,7 +206,7 @@ export default {
     }
   },
   mounted() {
-    this.generalRule.id = this.ruleId
+    this.generalRule.id = this.id
     this.getRuleConfig();
   },
   methods: {

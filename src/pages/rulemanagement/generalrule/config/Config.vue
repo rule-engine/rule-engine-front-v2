@@ -582,7 +582,7 @@ export default {
   name: "Config",
   components: {PageLayout, FooterToolBar, InputParameter, Variable, Contextmenu},
   props: {
-    ruleId: {
+    id: {
       type: Number,
       required: true
     }
@@ -661,7 +661,7 @@ export default {
     }
   },
   mounted() {
-    this.generalRule.id = this.ruleId
+    this.generalRule.id = this.id
     this.getRuleConfig();
   },
   computed: {

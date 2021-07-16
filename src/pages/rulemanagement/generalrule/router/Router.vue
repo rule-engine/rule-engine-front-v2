@@ -1,8 +1,8 @@
 <template>
   <div>
-    <Definition @choicePage="choicePage" :ruleId="ruleId" v-if="currentPage===1"></Definition>
-    <Config @choicePage="choicePage" :ruleId="ruleId" v-if="currentPage===2"></Config>
-    <Publish @choicePage="choicePage" :ruleId="ruleId" v-if="currentPage===3"></Publish>
+    <Definition @choicePage="choicePage" :id="id" v-if="currentPage===1"></Definition>
+    <Config @choicePage="choicePage" :id="id" v-if="currentPage===2"></Config>
+    <Publish @choicePage="choicePage" :id="id" v-if="currentPage===3"></Publish>
   </div>
 </template>
 
@@ -19,7 +19,7 @@ export default {
   data() {
     return {
       currentPage: null,
-      ruleId: undefined,
+      id: undefined,
     }
   },
   mounted() {
@@ -28,9 +28,9 @@ export default {
     if (query.pageIndex) {
       this.currentPage = parseInt(query.pageIndex)
     }
-    if (params.ruleId) {
+    if (params.id) {
       try {
-        this.ruleId = parseInt(params.ruleId);
+        this.id = parseInt(params.id);
       } catch (e) {
         console.debug(e)
       }
@@ -40,25 +40,19 @@ export default {
   destroyed() {
     window.removeEventListener('popstate', this.cancel, false);
   },
-  watch: {
-    // 修改路由参数
-    currentPage(val) {
-      let path = this.$router.history.current.path;
-      this.$router.push({
-        path: path,
-        query: {pageIndex: val}
-      })
-    },
-  },
   methods: {
     cancel(data) {
-      var pageIndex = this.$route.query.pageIndex
-      if (data && pageIndex && !isNaN(pageIndex))
+      const pageIndex = this.$route.query.pageIndex;
+      if (pageIndex === undefined) {
+        window.removeEventListener('popstate', this.cancel, false);
+      }
+      if (data && pageIndex && !isNaN(pageIndex)) {
         this.currentPage = parseInt(pageIndex)
+      }
     },
     choicePage(params) {
       this.currentPage = params.pageIndex
-      this.ruleId = params.id
+      this.id = params.id
     }
   }
 }
