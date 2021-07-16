@@ -39,11 +39,6 @@ const routerMap = {
         name: 'generalRuleList',
         component: () => import('@/pages/rulemanagement/generalrule/list'),
     },
-    generalRuleDefinition: {
-        path: '/generalRuleDefinition',
-        name: 'generalRuleDefinition',
-        component: () => import('@/pages/rulemanagement/generalrule/definition'),
-    },
     form: {
         name: '表单页',
         icon: 'form',
