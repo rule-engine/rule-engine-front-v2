@@ -710,7 +710,12 @@ export default {
         toConditionGroupId: args.toConditionGroupId
       }).then(res => {
         console.log(res.data)
-      }).finally(() => this.conditionMoveLoading = false)
+      }).finally(() => {
+        this.conditionMoveLoading = false;
+        this.generalRule.conditionGroup.forEach(e => {
+          e.conditionGroupCondition.sort((a, b) => a.orderNo - b.orderNo)
+        })
+      })
     },
     defaultActionValueTypeChange(valueType) {
       this.generalRule.defaultAction.value = undefined;
