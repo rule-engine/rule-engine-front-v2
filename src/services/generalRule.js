@@ -71,6 +71,9 @@ export async function generalRulePublish(query) {
 export async function generalRuleDownloadList(query) {
     return request(generalRule.DOWNLOAD_LIST, METHOD.POST, query)
 }
+export async function showHistoryVersionList(query) {
+    return request(generalRule.SHOWHISTORYVERSIONLIST, METHOD.POST, query)
+}
 
 export default {
     list,

@@ -306,7 +306,8 @@
         deleteGeneralRule,
         verifyRuleCode,
         addGeneralRule,
-        generalRuleDownloadList
+        generalRuleDownloadList,
+        showHistoryVersionList
     } from '@/services/generalRule'
     import {dataPermissionList, update} from '@/services/dataPermission'
     import {exportData} from '@/services/importExport'
@@ -455,6 +456,16 @@
                     selectedRows: [],
                     loading: false,
                     dataSource: [],
+                    query: {
+                        page: {
+                            pageIndex: 1,
+                            pageSize: 10,
+                            total: 0
+                        },
+                        query: {
+                            id: null,
+                        }
+                    },
                     columns: [
                         {
                             title: '名称',
@@ -467,7 +478,7 @@
                         {
                             title: '规则版本',
                             dataIndex: 'version',
-                            sorter: true
+                            sorter: true,
                         },
                         {
                             title: '创建时间',
@@ -634,8 +645,19 @@
                 });
             },
             showHistoryVersion(record) {
-                this.historyVersion.visible = true;
-                console.log(record)
+                this.historyVersion.query.query.id = record.id;
+                showHistoryVersionList(
+                    this.historyVersion.query
+                ).then(res => {
+                    const resp = res.data;
+                    if (resp.data) {
+                        this.historyVersion.dataSource = resp.data.rows;
+                        this.historyVersion.query.page = resp.data.page
+                    } else {
+                        this.historyVersion.dataSource = []
+                    }
+                    this.historyVersion.visible = true;
+                });
             },
             historyVersionHandleOk() {
                 this.historyVersion.visible = false;
