@@ -22,3 +22,6 @@ export async function switchOrder(param) {
     return request(conditionGroupCondition.SWITCH_ORDER, METHOD.POST, param)
 }
 
+export async function rearrange(param) {
+    return request(conditionGroupCondition.REARRANGE, METHOD.POST, param)
+}
