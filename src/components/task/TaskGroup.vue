@@ -42,7 +42,7 @@ export default {
     update(e) {
       console.log('update_e', e)
       console.log('update_e', e.from)
-      let dataList =  this.getConditionGroupById(e.from.id).conditionGroupCondition
+      let dataList = this.getConditionGroupById(e.from.id).conditionGroupCondition
       this.$emit("update", {
         from: dataList[e.oldIndex]
         , to: dataList[e.newIndex]
@@ -50,9 +50,14 @@ export default {
         , toConditionGroupId: e.from.id
       })
     }, add(e) {
+      let fromList = this.getConditionGroupById(e.from.id).conditionGroupCondition
+      let toList = this.getConditionGroupById(e.to.id).conditionGroupCondition;
+      let from = fromList[e.oldIndex]
+      toList.push(from)
+      fromList.splice(e.oldIndex,1)
       this.$emit("update", {
-        from: this.getConditionGroupById(e.from.id).conditionGroupCondition[e.oldIndex],
-        to: this.getConditionGroupById(e.to.id).conditionGroupCondition[e.newIndex],
+        from: from,
+        to: toList[e.newIndex],
         fromConditionGroupId: e.from.id,
         toConditionGroupId: e.to.id
       })
