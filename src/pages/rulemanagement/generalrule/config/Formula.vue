@@ -65,7 +65,7 @@
 
 
         <a-modal
-                title="新建表达式"
+                :title="add.form.id===undefined?'新建表达式':'编辑表达式'"
                 :visible="add.visible"
                 :zIndex="1000"
                 :confirm-loading="add.confirmLoading"
@@ -79,7 +79,9 @@
                         <a-input v-model="add.form.name" placeholder="请输入表达式名称"/>
                     </a-form-model-item>
                     <a-form-model-item label="返回类型" prop="valueType">
-                        <a-select v-model="add.form.valueType" placeholder="请输入返回值类型">
+                        <a-select v-model="add.form.valueType"
+                                  :disabled="add.form.id!==undefined"
+                                  placeholder="请输入返回值类型">
                             <a-select-option value="BOOLEAN">布尔</a-select-option>
                             <a-select-option value="COLLECTION">集合</a-select-option>
                             <a-select-option value="STRING">字符串</a-select-option>
