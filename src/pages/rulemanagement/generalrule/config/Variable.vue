@@ -431,7 +431,7 @@
                         name: value,
                         dataId: this.dataId,
                         dataType: this.dataType,
-                        valueType: null // 查询所有类型
+                        valueType: [this.add.form.valueType]
                     }, data => (pv.searchSelect.data = data)
                     , pv.type)
             },

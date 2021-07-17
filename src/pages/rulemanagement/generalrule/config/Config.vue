@@ -850,7 +850,7 @@ export default {
             name: value,
             dataId: this.generalRule.id,
             dataType: this.dataType,
-            valueType: null // 查询所有类型
+            valueType: [this.action.valueType]
           }, data => (this.actionSearchSelect.data = data)
           , this.generalRule.defaultAction.type)
     },
