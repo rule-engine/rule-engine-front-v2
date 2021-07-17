@@ -70,7 +70,7 @@
         @cancel="handleAddCancel('addInputParameter')">
       <template>
         <a-form-model ref="addInputParameter" :model="add.form" :rules="rules" :label-col="{span: 4}"
-                      :wrapper-col="{span: 14}">
+                      :wrapper-col="{span: 16}">
           <a-form-model-item label="参数名称" has-feedback prop="name">
             <a-input v-model="add.form.name" placeholder="请输入参数名称"/>
           </a-form-model-item>
@@ -103,7 +103,7 @@
         @cancel="handleUpdateCancel('updateInputParameter')">
       <template>
         <a-form-model ref="updateInputParameter" :model="update.form" :rules="rules" :label-col="{span: 4}"
-                      :wrapper-col="{span: 14}">
+                      :wrapper-col="{span: 16}">
           <a-form-model-item label="参数名称" has-feedback prop="name">
             <a-input v-model="update.form.name" placeholder="请输入参数名称"/>
           </a-form-model-item>

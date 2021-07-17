@@ -79,7 +79,7 @@
         @cancel="handleAddCancel('addVariableForm')">
       <template>
         <a-form-model ref="addVariableForm" :model="add.form" :label-col="{span: 4}"
-                      :wrapper-col="{span: 14}">
+                      :wrapper-col="{span: 16}">
           <a-form-model-item label="变量名称" prop="name" has-feedback :rules="{
                                         required: true,
                                         asyncValidator:this.variableNameValidator,
@@ -246,10 +246,10 @@
 <script>
 import StandardTable from "@/components/table/StandardTable";
 import {addVariable, listVariable, updateVariable, get, deleteById, verifyVariableName} from "@/services/variable";
-import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
 import {getValueTypeName} from '@/utils/value-type'
 import {selectSearch} from '@/utils/selectSearch'
 import moment from "moment";
+import {setDefaultValue} from '@/utils/json'
 
 export default {
   name: "Variable",
@@ -266,7 +266,6 @@ export default {
   },
   data() {
     return {
-      locale,
       add: {
         id: null,
         visible: false,
@@ -301,13 +300,13 @@ export default {
           dataIndex: 'name'
         },
         {
+          title: '值',
+          scopedSlots: {customRender: 'value'},
+        },
+        {
           title: '值类型',
           dataIndex: 'valueType',
           scopedSlots: {customRender: 'valueType'},
-        },
-        {
-          title: '值',
-          scopedSlots: {customRender: 'value'},
         },
         {
           title: '操作', fixed: 'right',
@@ -342,7 +341,7 @@ export default {
   methods: {
     variableNameValidator(rule, value, callback) {
       if (this.add.form.id && this.add.form.orgName === this.add.form.name) {
-        callback()
+        callback();
         return false
       }
       if (value.length < 1 || value.length > 25) {
@@ -368,25 +367,7 @@ export default {
     createVariable() {
       this.add.visible = true;
       // 重置表单数据
-      this.add.form = {
-        id: null,
-        value: undefined,
-        name: undefined,
-        type: undefined,
-        description: undefined,
-        valueType: undefined,
-        dataId: this.dataId,
-        dataType: this.dataType,
-        function: {
-          returnValueType: null,
-          name: '',
-          paramValues: []
-        },
-        searchSelect: {
-          data: [],
-          value: undefined,
-        }
-      }
+      this.add.form = setDefaultValue(this.add.form);
     },
     functionParamValueTypeChange(valueType, pv) {
       pv.valueType = valueType;

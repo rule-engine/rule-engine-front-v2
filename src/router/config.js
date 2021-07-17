@@ -82,21 +82,6 @@ const options = {
                             },
                             component: () => import('@/pages/components/function'),
                         },
-                        // {
-                        //     path: 'taskCard',
-                        //     name: '任务卡片',
-                        //     component: () => import('@/pages/components/TaskCard')
-                        // },
-                        // {
-                        //     path: 'palette',
-                        //     name: '颜色复选框',
-                        //     component: () => import('@/pages/components/Palette')
-                        // },
-                        // {
-                        //     path: 'table',
-                        //     name: '高级表格',
-                        //     component: () => import('@/pages/components/table')
-                        // }
                     ]
                 },
                 {
@@ -198,6 +183,6 @@ const options = {
             ]
         },
     ]
-}
+};
 
 export default options

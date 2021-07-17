@@ -544,7 +544,7 @@
           <Variable :data-id="parseInt(generalRule.id)" :data-type="dataType"/>
         </a-tab-pane>
         <a-tab-pane key="3" tab="表达式">
-          我是表达式列表
+          <Formula :data-id="parseInt(generalRule.id)" :data-type="dataType"></Formula>
         </a-tab-pane>
       </a-tabs>
     </a-drawer>
@@ -556,6 +556,7 @@ import FooterToolBar from '@/components/tool/FooterToolBar'
 import PageLayout from "@/layouts/PageLayout";
 import InputParameter from "./InputParameter";
 import Variable from "./Variable";
+import Formula from "./Formula";
 import Contextmenu from '@/components/menu/Contextmenu'
 // api
 import {saveOrUpdate, deleteConditionGroup} from '@/services/conditionGroup'
@@ -580,7 +581,7 @@ import {mapState} from "vuex";
 
 export default {
   name: "Config",
-  components: {PageLayout, FooterToolBar, InputParameter, Variable, Contextmenu},
+  components: {PageLayout, FooterToolBar, InputParameter, Variable, Contextmenu,Formula},
   props: {
     id: {
       type: Number,
