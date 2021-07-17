@@ -106,7 +106,7 @@
 
     import {setDefaultValue} from '@/utils/json'
 
-    import {formulaList,saveFormula,getFormula,updateFormula} from '@/services/formula'
+    import {formulaList, saveFormula, getFormula, updateFormula} from '@/services/formula'
 
     export default {
         name: "Formula.vue",
@@ -197,7 +197,7 @@
         methods: {
             handleAddOk() {
                 this.add.confirmLoading = true;
-                if (this.add.form.id){
+                if (this.add.form.id) {
                     updateFormula(this.add.form).then(res => {
                         if (res.data.data) {
                             this.$message.success("修改成功！");
@@ -205,7 +205,7 @@
                             this.loadFormulaList();
                         }
                     });
-                }else {
+                } else {
                     saveFormula(this.add.form).then(res => {
                         if (res.data.data) {
                             this.$message.success("创建成功！");
@@ -227,15 +227,13 @@
                 this.add.form.dataType = this.dataType;
                 this.add.form.dataId = this.dataId;
             },
-            getFormula(record){
-                this.add.form.id = record.id
-                getFormula(this.add.form).then(res => {
-                    console.log(res.data.data);
+            getFormula(record) {
+                getFormula({
+                    id: record.id
+                }).then(res => {
                     if (res.data.data) {
                         this.add.form = res.data.data
                         this.add.visible = true;
-                        this.add.form.dataType = this.dataType;
-                        this.add.form.dataId = this.dataId;
                     }
                 });
             },
