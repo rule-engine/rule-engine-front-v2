@@ -38,49 +38,54 @@
               <a-card title="条件集" class="condition_set">
 
                 <a-skeleton v-if="generalRule.conditionGroup.length===0" :paragraph="{ rows: 3 }"/>
+                <a-spin :spinning="conditionMoveLoading">
+                  <a-card :title="cg.name" :bordered="false" v-for="(cg,cgi) in generalRule.conditionGroup"
+                          :key="cg.id">
 
-                <a-card :title="cg.name" :bordered="false" v-for="(cg,cgi) in generalRule.conditionGroup" :key="cg.id">
+                    <a-icon type="delete" class="dynamic-delete-button" style="font-size: 18px" slot="extra"
+                            @click="deleteConditionGroup(cg)"></a-icon>
 
-                  <a-icon type="delete" class="dynamic-delete-button" style="font-size: 18px" slot="extra"
-                          @click="deleteConditionGroup(cg)"></a-icon>
+                    <a-skeleton v-if="cg.conditionGroupCondition.length===0" :paragraph="{ rows: 2 }"/>
+                    <task-group :title="cg.name" group="task" :data-list="generalRule.conditionGroup"
+                                :condition-group-id="cg.id"
+                                @update="moveCondition">
+                      <a-alert closable
+                               style="border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"
+                               v-for="cgc in cg.conditionGroupCondition"
+                               :key="cgc.id"
+                               @dblclick.native="editCondition(cg,cgc)"
+                               @close="deleteCondition(cg.conditionGroupCondition,cgc.id,cgc.id)"
+                               class="conditionItem task-item">
+                        <p slot="description" style="margin-bottom: 0;">
+                          <a-tag color="blue" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                            （{{ cgc.condition.name }}）
+                          </a-tag>
+                          <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                            {{ getConditionNamePrefix(cgc.condition.config.leftValue.type) }}
+                          </a-tag>
+                          {{ getViewValue(cgc.condition.config.leftValue) }}
+                          &nbsp;
+                          <a-tag color="orange" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                            {{ getSymbolExplanation(cgc.condition.config.symbol) }}
+                          </a-tag>
+                          <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                            {{ getConditionNamePrefix(cgc.condition.config.rightValue.type) }}
+                          </a-tag>
+                          {{ getViewValue(cgc.condition.config.rightValue) }}
+                        </p>
+                      </a-alert>
+                    </task-group>
 
-                  <a-skeleton v-if="cg.conditionGroupCondition.length===0" :paragraph="{ rows: 2 }"/>
-                  <task-group :title="cg.name" group="task" :data-list="cg.conditionGroupCondition"
-                              @update="moveCondition">
-                    <a-alert closable
-                             style="border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"
-                             v-for="cgc in cg.conditionGroupCondition"
-                             :key="cgc.id"
-                             @dblclick.native="editCondition(cg,cgc)"
-                             @close="deleteCondition(cg.conditionGroupCondition,cgc.id,cgc.id)"
-                             class="conditionItem task-item">
-                      <p slot="description" style="margin-bottom: 0;">
-                        <a-tag color="blue" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                          （{{ cgc.condition.name }}）
-                        </a-tag>
-                        <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                          {{ getConditionNamePrefix(cgc.condition.config.leftValue.type) }}
-                        </a-tag>
-                        {{ getViewValue(cgc.condition.config.leftValue) }}
-                        &nbsp;
-                        <a-tag color="orange" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                          {{ getSymbolExplanation(cgc.condition.config.symbol) }}
-                        </a-tag>
-                        <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                          {{ getConditionNamePrefix(cgc.condition.config.rightValue.type) }}
-                        </a-tag>
-                        {{ getViewValue(cgc.condition.config.rightValue) }}
-                      </p>
-                    </a-alert>
-                  </task-group>
-                  <br>
 
-                  <a-button type="dashed" style="width: 50%;display:block;margin:0 auto"
-                            @click="addCondition(cg,`addConditionForm${cgi}`)">
-                    <a-icon type="plus" style="color: #777;"/>
-                    添加条件
-                  </a-button>
-                </a-card>
+                    <br>
+
+                    <a-button type="dashed" style="width: 50%;display:block;margin:0 auto"
+                              @click="addCondition(cg,`addConditionForm${cgi}`)">
+                      <a-icon type="plus" style="color: #777;"/>
+                      添加条件
+                    </a-button>
+                  </a-card>
+                </a-spin>
                 <a-button type="dashed" style="width: 100%" @click="addConditionGroup()">
                   <a-icon type="plus" style="color: #777;"/>
                   添加条件组
@@ -584,7 +589,7 @@ import TaskGroup from '@/components/task/TaskGroup'
 
 export default {
   name: "Config",
-  components: {PageLayout, FooterToolBar, InputParameter, Variable, Contextmenu,Formula,TaskGroup},
+  components: {PageLayout, FooterToolBar, InputParameter, Variable, Contextmenu, Formula, TaskGroup},
   props: {
     id: {
       type: Number,
@@ -593,6 +598,8 @@ export default {
   },
   data() {
     return {
+      //条件组loading
+      conditionMoveLoading: false,
       ops: {
         vuescroll: {},
         scrollPanel: {},
@@ -694,10 +701,16 @@ export default {
   },
   methods: {
     // 移动条件
-    moveCondition(from, to) {
-      switchOrder({fromId: from.condition.id, toId: to.condition.id}).then(res => {
-        console.log(res)
-      })
+    moveCondition(args) {
+      this.conditionMoveLoading = true
+      switchOrder({
+        fromId: args.from.condition.id,
+        toId: args.to.condition.id,
+        fromConditionGroupId: args.fromConditionGroupId,
+        toConditionGroupId: args.toConditionGroupId
+      }).then(res => {
+        console.log(res.data)
+      }).finally(() => this.conditionMoveLoading = false)
     },
     defaultActionValueTypeChange(valueType) {
       this.generalRule.defaultAction.value = undefined;

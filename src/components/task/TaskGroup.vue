@@ -8,7 +8,7 @@
     <!--      </div>-->
     <!--    </div>-->
     <div class="task-content">
-      <draggable :options="dragOptions"  @update="update">
+      <draggable :options="dragOptions" @add="add" @update="update" :id="conditionGroupId">
         <slot></slot>
       </draggable>
     </div>
@@ -32,7 +32,7 @@ const dragOptions = {
 export default {
   name: 'TaskGroup',
   components: {Draggable},
-  props: ['title', 'group','dataList'],
+  props: ['title', 'group', 'dataList', 'conditionGroupId'],
   data() {
     return {
       dragOptions: {...dragOptions, group: this.group}
@@ -40,8 +40,26 @@ export default {
   },
   methods: {
     update(e) {
-      this.$emit("update", this.dataList[e.oldIndex],this.dataList[e.newIndex])
+      console.log('update_e', e)
+      console.log('update_e', e.from)
+      let dataList =  this.getConditionGroupById(e.from.id).conditionGroupCondition
+      this.$emit("update", {
+        from: dataList[e.oldIndex]
+        , to: dataList[e.newIndex]
+        , fromConditionGroupId: e.from.id
+        , toConditionGroupId: e.from.id
+      })
+    }, add(e) {
+      this.$emit("update", {
+        from: this.getConditionGroupById(e.from.id).conditionGroupCondition[e.oldIndex],
+        to: this.getConditionGroupById(e.to.id).conditionGroupCondition[e.newIndex],
+        fromConditionGroupId: e.from.id,
+        toConditionGroupId: e.to.id
+      })
+    }, getConditionGroupById(id) {
+      return this.dataList.find(e => e.id === parseInt(id))
     }
+
   },
   computed: {
     count() {
