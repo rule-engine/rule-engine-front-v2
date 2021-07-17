@@ -97,6 +97,7 @@ module.exports = {
     },
     formula: {
         LIST: `${WEB_BASE_URL}/ruleEngine/formula/list`,
+        SAVE_FORMULA: `${WEB_BASE_URL}/ruleEngine/formula/saveFormula`,
     },
     ROUTES: `${WEB_BASE_URL}/routes`,
     GOODS: `${WEB_BASE_URL}/goods`,

@@ -70,7 +70,7 @@
                 :zIndex="1000"
                 :confirm-loading="add.confirmLoading"
                 :width="700"
-                @ok="handleAddOk('addForm')"
+                @ok="handleAddOk()"
                 @cancel="handleAddCancel('addForm')">
             <template>
                 <a-form-model ref="addForm" :model="add.form" :rules="add.rules" :label-col="{span: 4}"
@@ -106,7 +106,7 @@
 
     import {setDefaultValue} from '@/utils/json'
 
-    import {formulaList} from '@/services/formula'
+    import {formulaList,saveFormula} from '@/services/formula'
 
     export default {
         name: "Formula.vue",
@@ -175,11 +175,13 @@
                     visible: false,
                     confirmLoading: false,
                     form: {
-                        id: undefined,
+                        // id: undefined,
                         name: undefined,
                         value: undefined,
                         valueType: undefined,
                         description: undefined,
+                        dataId: this.dataId,
+                        dataType: this.dataType
                     },
                     rules: {
                         name: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入名称"},
@@ -193,8 +195,17 @@
             this.loadFormulaList();
         },
         methods: {
-            handleAddOk(formName) {
-                console.log(formName)
+            handleAddOk() {
+                this.add.confirmLoading = true;
+                console.log("111",this.add.form);
+                saveFormula(this.add.form).then(res => {
+                            if (res.data.data) {
+                                console.log(res);
+                                this.$message.success("创建成功！");
+                                this.add.visible = false;
+                            }
+                        })
+                this.add.confirmLoading = false
             },
             handleAddCancel() {
                 //this.$refs[formName].resetFields();
