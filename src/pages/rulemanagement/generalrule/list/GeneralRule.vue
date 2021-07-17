@@ -119,10 +119,8 @@
                                         cancel-text="不了"
                                         @confirm="deleteRow(record)"
                                 >
-                                    <a>
                                         <a-icon type="delete"/>
                                         删除
-                                    </a>
                                 </a-popconfirm>
                             </a-menu-item>
                         </a-menu>
