@@ -431,10 +431,10 @@
                             title: '名称',
                             dataIndex: 'name'
                         },
-                        {
-                            title: '编码',
-                            dataIndex: 'code',
-                        },
+                        // {
+                        //     title: '编码',
+                        //     dataIndex: 'code',
+                        // },
                         {
                             title: '规则版本状态',
                             scopedSlots: {customRender: 'versionStatus'}
@@ -471,10 +471,10 @@
                             title: '名称',
                             dataIndex: 'name'
                         },
-                        {
-                            title: '编码',
-                            dataIndex: 'code',
-                        },
+                        // {
+                        //     title: '编码',
+                        //     dataIndex: 'code',
+                        // },
                         {
                             title: '规则版本',
                             dataIndex: 'version',
