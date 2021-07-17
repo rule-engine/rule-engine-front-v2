@@ -2,7 +2,7 @@
   <a-card class="result-error" :bordered="false">
     <result style="margin-bottom: 16px; margin-top: 48px" :is-success="false" :title="title" :description="description">
       <template slot="action">
-        <a-button type="primary" @click="$router.go(-1)">返回</a-button>
+        <a-button type="primary" @click="$router.go(-2)">返回</a-button>
       </template>
       <div>
         <div style="fontSize: 16px; fontWeight: 500; marginBottom: 16px;color: #f33535">
@@ -11,7 +11,7 @@
         <div style="margin-bottom: 16px">
           <a-icon class="error-icon" type="close-circle-o"/>
           该条数据可能已经被删除
-          <a style="margin-left: 16px" @click="$router.go(-1)">返回上一级查看
+          <a style="margin-left: 16px" @click="$router.go(-2)">返回上一级查看
             <a-icon type="right"/>
           </a>
         </div>
