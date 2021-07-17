@@ -52,6 +52,7 @@
                 let toList = this.getConditionGroupById(e.to.id).conditionGroupCondition;
                 let from = fromList[e.oldIndex]
                 toList.push(from)
+                // 调用接口 移动到新的 条件组中，然后重排序
                 fromList.splice(e.oldIndex, 1)
                 this.$emit("update", {
                     from: from,
