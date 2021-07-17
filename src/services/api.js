@@ -69,6 +69,7 @@ module.exports = {
     },
     condition: {
         UPDATE_CONDITION: `${WEB_BASE_URL}/ruleEngine/condition/update`,
+        ADD: `${WEB_BASE_URL}/ruleEngine/condition/add`,
     },
     conditionGroup: {
         SAVE_OR_UPDATE: `${WEB_BASE_URL}/ruleEngine/conditionGroup/saveOrUpdate`,

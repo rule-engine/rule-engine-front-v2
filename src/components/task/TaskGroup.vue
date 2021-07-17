@@ -49,7 +49,8 @@ export default {
         , fromConditionGroupId: e.from.id
         , toConditionGroupId: e.from.id
       })
-    }, add(e) {
+    },
+    add(e) {
       let fromList = this.getConditionGroupById(e.from.id).conditionGroupCondition
       let toList = this.getConditionGroupById(e.to.id).conditionGroupCondition;
       let from = fromList[e.oldIndex]
@@ -77,13 +78,13 @@ export default {
 <style lang="less">
 .task-group {
   width: 100%;
-  padding: 8px 8px;
-  background-color: @background-color-light;
-  border-radius: 6px;
-  border: 1px solid @shadow-color;
+  //padding: 8px 8px;
+  //background-color: @background-color-light;
+  //border-radius: 6px;
+  //border: 1px solid @shadow-color;
 
   .task-head {
-    margin-bottom: 8px;
+    //margin-bottom: 8px;
 
     .title {
       display: inline-block;
