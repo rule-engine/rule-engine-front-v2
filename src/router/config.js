@@ -19,10 +19,6 @@ const options = {
             path: '/403',
             name: '403',
             component: () => import('@/pages/exception/403'),
-        }, {
-            path: '/subError',
-            name: 'subError',
-            component: () => import('@/pages/result/Error'),
         },
         {
             path: '/',
@@ -30,6 +26,14 @@ const options = {
             component: TabsView,
             redirect: '/dashboard/workplace',
             children: [
+                {
+                    path: '/subError',
+                    name: '操作失败',
+                    meta: {
+                        invisible: false
+                    },
+                    component: () => import('@/pages/result/Error'),
+                },
                 {
                     path: 'dashboard',
                     name: '控制台',

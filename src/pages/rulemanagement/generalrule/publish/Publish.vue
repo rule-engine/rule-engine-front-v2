@@ -230,8 +230,7 @@ export default {
     this.getRuleConfig();
   },
   methods: {
-    datePickerChange(v, date, dateString) {
-      console.log(dateString)
+    datePickerChange(v, date) {
       v.value = moment(date).format('YYYY-MM-DD HH:mm:ss');
     },
     getActionView(action) {
