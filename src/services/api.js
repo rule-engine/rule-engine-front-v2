@@ -95,6 +95,9 @@ module.exports = {
         DELETE: `${WEB_BASE_URL}/ruleEngine/variable/delete`,
         VERIFY_VARIABLE_NAME: `${WEB_BASE_URL}/ruleEngine/variable/nameIsExists`,
     },
+    formula: {
+        LIST: `${WEB_BASE_URL}/ruleEngine/formula/list`,
+    },
     ROUTES: `${WEB_BASE_URL}/routes`,
     GOODS: `${WEB_BASE_URL}/goods`,
     GOODS_COLUMNS: `${WEB_BASE_URL}/columns`,

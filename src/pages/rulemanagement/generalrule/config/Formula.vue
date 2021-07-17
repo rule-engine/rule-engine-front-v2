@@ -5,10 +5,7 @@
                 <a-input
                         v-model="query.query.name"/>
             </a-form-model-item>
-            <a-form-model-item label="编码">
-                <a-input
-                        v-model="query.query.code"/>
-            </a-form-model-item>
+
             <a-form-model-item>
                 <a-button type="primary" @click="submitSearch()">
                     搜索
@@ -109,6 +106,8 @@
 
     import {setDefaultValue} from '@/utils/json'
 
+    import {formulaList} from '@/services/formula'
+
     export default {
         name: "Formula.vue",
         components: {StandardTable},
@@ -167,7 +166,7 @@
                         total: 0
                     },
                     query: {
-                        nameOrCode: null,
+                        name: null,
                         dataId: this.dataId,
                         dataType: this.dataType
                     }
@@ -210,7 +209,18 @@
                 console.log(id)
             },
             loadFormulaList() {
-
+                this.loading = true;
+                const _this = this;
+                formulaList(this.query).then(res => {
+                    const resp = res.data;
+                    if (resp.data) {
+                        _this.dataSource = resp.data.rows;
+                        _this.query.page = resp.data.page;
+                    } else {
+                        _this.dataSource = []
+                    }
+                    this.loading = false
+                })
             },
             getValueTypeName(valueType) {
                 return getValueTypeName(valueType)
