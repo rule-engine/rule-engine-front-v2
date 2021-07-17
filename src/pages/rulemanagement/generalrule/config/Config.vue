@@ -45,14 +45,14 @@
                           @click="deleteConditionGroup(cg)"></a-icon>
 
                   <a-skeleton v-if="cg.conditionGroupCondition.length===0" :paragraph="{ rows: 2 }"/>
-                  <task-group :title="cg.name" group="task" @update="moveCondition">
+                  <a-spin :spinning="cg.loading">
+                  <task-group :title="cg.name" group="task" :data-list="cg.conditionGroupCondition" @update="moveCondition">
                     <a-alert closable
                              style="border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"
                              v-for="cgc in cg.conditionGroupCondition"
                              :key="cgc.id"
                              @dblclick.native="editCondition(cg,cgc)"
                              @close="deleteCondition(cg.conditionGroupCondition,cgc.id,cgc.id)"
-                             :cid="cgc.id"
                              class="conditionItem task-item">
                       <p slot="description" style="margin-bottom: 0;">
                         <a-tag color="blue" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
@@ -73,9 +73,7 @@
                       </p>
                     </a-alert>
                   </task-group>
-
-
-
+                  </a-spin>
                   <br>
 
                   <a-button type="dashed" style="width: 50%;display:block;margin:0 auto"
@@ -570,7 +568,7 @@ import {
   saveDefaultAction,
   defaultActionSwitch
 } from '@/services/generalRule'
-import {saveConditionAndBindGroup, deleteCondition} from '@/services/conditionGroupCondition'
+import {saveConditionAndBindGroup, deleteCondition, switchOrder} from '@/services/conditionGroupCondition'
 import {updateCondition} from '@/services/condition'
 
 
@@ -586,7 +584,7 @@ import TaskGroup from '@/components/task/TaskGroup'
 
 export default {
   name: "Config",
-  components: {PageLayout, FooterToolBar, InputParameter, Variable, Contextmenu,TaskGroup ,},
+  components: {PageLayout, FooterToolBar, InputParameter, Variable, Contextmenu, TaskGroup,},
   props: {
     id: {
       type: Number,
@@ -696,9 +694,10 @@ export default {
   },
   methods: {
     // 移动条件
-    moveCondition(e){
-      console.log(e)
-    console.log(e.from)
+    moveCondition(from,to) {
+      switchOrder({fromId: from.condition.id, toId: to.condition.id}).then(res => {
+        console.log(res)
+      })
     },
     defaultActionValueTypeChange(valueType) {
       this.generalRule.defaultAction.value = undefined;

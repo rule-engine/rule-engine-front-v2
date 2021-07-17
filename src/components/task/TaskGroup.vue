@@ -8,7 +8,7 @@
     <!--      </div>-->
     <!--    </div>-->
     <div class="task-content">
-      <draggable :options="dragOptions" @update="update">
+      <draggable :options="dragOptions"  @update="update">
         <slot></slot>
       </draggable>
     </div>
@@ -32,7 +32,7 @@ const dragOptions = {
 export default {
   name: 'TaskGroup',
   components: {Draggable},
-  props: ['title', 'group'],
+  props: ['title', 'group','dataList'],
   data() {
     return {
       dragOptions: {...dragOptions, group: this.group}
@@ -40,8 +40,8 @@ export default {
   },
   methods: {
     update(e) {
-      this.$emit("update", e)
-    },
+      this.$emit("update", this.dataList[e.oldIndex],this.dataList[e.newIndex])
+    }
   },
   computed: {
     count() {
