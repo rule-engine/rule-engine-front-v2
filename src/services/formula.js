@@ -7,4 +7,7 @@ export async function formulaList(param) {
 export async function saveFormula(param) {
     return request(formula.SAVE_FORMULA, METHOD.POST, param)
 }
+export async function getFormula(param) {
+    return request(formula.GET_FORMULA, METHOD.POST, param)
+}
 
