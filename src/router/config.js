@@ -30,7 +30,7 @@ const options = {
                     path: '/subError',
                     name: '操作失败',
                     meta: {
-                        invisible: false
+                        invisible: true
                     },
                     component: () => import('@/pages/result/Error'),
                 },
