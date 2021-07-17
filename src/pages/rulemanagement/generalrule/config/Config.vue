@@ -45,32 +45,36 @@
                           @click="deleteConditionGroup(cg)"></a-icon>
 
                   <a-skeleton v-if="cg.conditionGroupCondition.length===0" :paragraph="{ rows: 2 }"/>
+                  <task-group :title="cg.name" group="task" @update="moveCondition">
+                    <a-alert closable
+                             style="border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"
+                             v-for="cgc in cg.conditionGroupCondition"
+                             :key="cgc.id"
+                             @dblclick.native="editCondition(cg,cgc)"
+                             @close="deleteCondition(cg.conditionGroupCondition,cgc.id,cgc.id)"
+                             :cid="cgc.id"
+                             class="conditionItem task-item">
+                      <p slot="description" style="margin-bottom: 0;">
+                        <a-tag color="blue" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                          （{{ cgc.condition.name }}）
+                        </a-tag>
+                        <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                          {{ getConditionNamePrefix(cgc.condition.config.leftValue.type) }}
+                        </a-tag>
+                        {{ getViewValue(cgc.condition.config.leftValue) }}
+                        &nbsp;
+                        <a-tag color="orange" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                          {{ getSymbolExplanation(cgc.condition.config.symbol) }}
+                        </a-tag>
+                        <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                          {{ getConditionNamePrefix(cgc.condition.config.rightValue.type) }}
+                        </a-tag>
+                        {{ getViewValue(cgc.condition.config.rightValue) }}
+                      </p>
+                    </a-alert>
+                  </task-group>
 
-                  <a-alert closable
-                           style="border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"
-                           v-for="cgc in cg.conditionGroupCondition"
-                           :key="cgc.id"
-                           @dblclick.native="editCondition(cg,cgc)"
-                           @close="deleteCondition(cg.conditionGroupCondition,cgc.id,cgc.id)"
-                           class="conditionItem">
-                    <p slot="description" style="margin-bottom: 0;">
-                      <a-tag color="blue" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                        （{{ cgc.condition.name }}）
-                      </a-tag>
-                      <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                        {{ getConditionNamePrefix(cgc.condition.config.leftValue.type) }}
-                      </a-tag>
-                      {{ getViewValue(cgc.condition.config.leftValue) }}
-                      &nbsp;
-                      <a-tag color="orange" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                        {{ getSymbolExplanation(cgc.condition.config.symbol) }}
-                      </a-tag>
-                      <a-tag color="cyan" style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                        {{ getConditionNamePrefix(cgc.condition.config.rightValue.type) }}
-                      </a-tag>
-                      {{ getViewValue(cgc.condition.config.rightValue) }}
-                    </p>
-                  </a-alert>
+
 
                   <br>
 
@@ -576,11 +580,13 @@ import {getSymbolByValueType, getSymbolExplanation} from '@/utils/symbol'
 import moment from 'moment';
 import {setDefaultValue} from "@/utils/json";
 import {mapState} from "vuex";
-
+// import ConditionItem from './ConditionItem'
+import TaskGroup from '@/components/task/TaskGroup'
+// import TaskItem from '@/components/task/TaskItem'
 
 export default {
   name: "Config",
-  components: {PageLayout, FooterToolBar, InputParameter, Variable, Contextmenu},
+  components: {PageLayout, FooterToolBar, InputParameter, Variable, Contextmenu,TaskGroup ,},
   props: {
     id: {
       type: Number,
@@ -689,6 +695,11 @@ export default {
     },
   },
   methods: {
+    // 移动条件
+    moveCondition(e){
+      console.log(e)
+    console.log(e.from)
+    },
     defaultActionValueTypeChange(valueType) {
       this.generalRule.defaultAction.value = undefined;
       this.generalRule.defaultAction.valueName = undefined;

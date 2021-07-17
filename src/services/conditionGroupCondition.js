@@ -13,3 +13,12 @@ export async function saveConditionAndBindGroup(param) {
 export async function deleteCondition(param) {
     return request(conditionGroupCondition.DELETE_CONDITION, METHOD.POST, param)
 }
+/**
+ * 交换顺序
+ * @param param
+ * @returns {Promise<AxiosResponse<any>>}
+ */
+export async function switchOrder(param) {
+    return request(conditionGroupCondition.SWITCH_ORDER, METHOD.POST, param)
+}
+
