@@ -334,7 +334,7 @@
         addGeneralRule,
         generalRuleDownloadList,
         showHistoryVersionList,
-        updateGeneralRule
+        updateGeneralRuleDefinition
     } from '@/services/generalRule'
     import {dataPermissionList, update} from '@/services/dataPermission'
     import {exportData} from '@/services/importExport'
@@ -631,14 +631,16 @@
               this.basicInfo.confirmLoading = true;
               this.$refs[formName].validate(valid => {
                 if (valid) {
-                  updateGeneralRule(this.basicInfo.form).then(res => {
-                    if (res.data.code === 200) {
+                    updateGeneralRuleDefinition(this.basicInfo.form).then(res => {
+                    if (res.data.data) {
                       this.$message.success("更新成功！");
                       this.basicInfo.visible = false;
                       this.basicInfo.confirmLoading = false;
                       this.loadDataList();
                     }
                   })
+                }else{
+                    this.basicInfo.confirmLoading = false;
                 }
               })
             },

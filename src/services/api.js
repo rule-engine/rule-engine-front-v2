@@ -41,7 +41,7 @@ module.exports = {
         LIST: `${WEB_BASE_URL}/ruleEngine/generalRule/list`,
         DELETE: `${WEB_BASE_URL}/ruleEngine/generalRule/delete`,
         ADD: `${WEB_BASE_URL}/ruleEngine/generalRule/saveRuleDefinition`,
-        UPDATE: `${WEB_BASE_URL}/ruleEngine/generalRule/updateRuleDefinition`,
+        UPDATE_DEFINITION: `${WEB_BASE_URL}/ruleEngine/generalRule/updateRuleDefinition`,
         GET_RULE_CONFIG: `${WEB_BASE_URL}/ruleEngine/generalRule/getRuleConfig`,
         GET_RULE_DEFINITION: `${WEB_BASE_URL}/ruleEngine/generalRule/getRuleDefinition`,
         SAVE_ACTION: `${WEB_BASE_URL}/ruleEngine/generalRule/saveAction`,
@@ -53,7 +53,7 @@ module.exports = {
         DEFAULT_ACTION_SWITCH: `${WEB_BASE_URL}/ruleEngine/generalRule/defaultActionSwitch`,
         PUBLISH: `${WEB_BASE_URL}/ruleEngine/generalRule/publish`,
         DOWNLOAD_LIST: `${WEB_BASE_URL}/ruleEngine/generalRule/downloadList`,
-        SHOWHISTORYVERSIONLIST: `${WEB_BASE_URL}/ruleEngine/generalRule/historylist`,
+        SHOW_HISTORY_VERSION_LIST: `${WEB_BASE_URL}/ruleEngine/generalRule/historyList`,
     },
     importExport: {
         EXPORT: `${WEB_BASE_URL}/ruleEngine/importExport/export`,
