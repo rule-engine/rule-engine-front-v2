@@ -52,7 +52,7 @@
                         title="你确定要删除这个变量吗"
                         ok-text="是"
                         cancel-text="不了"
-                        @confirm="deleteById(record.id)"
+                        @confirm="deleteById(record)"
                 >
                     <a>
                         <a-icon type="delete"/>
@@ -106,7 +106,7 @@
 
     import {setDefaultValue} from '@/utils/json'
 
-    import {formulaList, saveFormula, getFormula, updateFormula} from '@/services/formula'
+    import {deleteFormula, formulaList, getFormula, saveFormula, updateFormula} from '@/services/formula'
 
     export default {
         name: "Formula.vue",
@@ -234,11 +234,20 @@
                     if (res.data.data) {
                         this.add.form = res.data.data
                         this.add.visible = true;
+                        this.add.form.dataType = this.dataType;
+                        this.add.form.dataId = this.dataId;
                     }
                 });
             },
-            deleteById(id) {
-                console.log(id)
+            deleteById(record) {
+                deleteFormula({
+                    id: record.id
+                }).then(res => {
+                    if (res.data.data) {
+                        this.$message.success("删除成功！");
+                        this.loadFormulaList();
+                    }
+                });
             },
             loadFormulaList() {
                 this.loading = true;

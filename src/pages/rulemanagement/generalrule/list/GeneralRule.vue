@@ -309,7 +309,7 @@
                     </a-input>
                 </a-form-model-item>
                 <a-form-model-item label="编码" has-feedback prop="code">
-                    <a-input readOnly :value="basicInfo.form.code" type="code" placeholder="请输入规则编码">
+                    <a-input readOnly :value="basicInfo.form.code"  disabled = "disabled" type="code" placeholder="请输入规则编码">
                     </a-input>
                 </a-form-model-item>
                 <a-form-model-item label="说明" has-feedback prop="description">
@@ -332,7 +332,8 @@
         addGeneralRule,
         generalRuleDownloadList,
         showHistoryVersionList,
-        updateGeneralRuleDefinition
+        updateGeneralRuleDefinition,
+        getRuleDefinition
     } from '@/services/generalRule'
     import {dataPermissionList, update} from '@/services/dataPermission'
     import {exportData} from '@/services/importExport'
@@ -616,32 +617,37 @@
                     description: null,
                 }
             },
-            queryBasicInfo(record) {
-                this.basicInfo.visible = true;
+          queryBasicInfo(record) {
+            this.basicInfo.visible = true;
+            getRuleDefinition({id: record.id}).then(res => {
+              const resp = res.data;
+              if (resp.data) {
                 this.basicInfo.form = {
-                    id: record.id,
-                    name: record.name,
-                    code: record.code,
-                    description: record.description,
+                  id: resp.data.id,
+                  name: resp.data.name,
+                  code: resp.data.code,
+                  description: resp.data.description,
                 }
-            },
-            updateGeneralRuleHandle(formName) {
-                this.basicInfo.confirmLoading = true;
-                this.$refs[formName].validate(valid => {
-                    if (valid) {
-                        updateGeneralRuleDefinition(this.basicInfo.form).then(res => {
-                            if (res.data.data) {
-                                this.$message.success("更新成功！");
-                                this.basicInfo.visible = false;
-                                this.basicInfo.confirmLoading = false;
-                                this.loadDataList();
-                            }
-                        })
-                    } else {
-                        this.basicInfo.confirmLoading = false;
-                    }
+              }
+            })
+          },
+          updateGeneralRuleHandle(formName) {
+            this.basicInfo.confirmLoading = true;
+            this.$refs[formName].validate(valid => {
+              if (valid) {
+                updateGeneralRuleDefinition(this.basicInfo.form).then(res => {
+                  if (res.data.data) {
+                    this.$message.success("更新成功！");
+                    this.basicInfo.visible = false;
+                    this.basicInfo.confirmLoading = false;
+                    this.loadDataList();
+                  }
                 })
-            },
+              } else {
+                this.basicInfo.confirmLoading = false;
+              }
+            })
+          },
             newGeneralRuleHandleOk(formName) {
                 this.newGeneralRule.confirmLoading = true;
                 this.$refs[formName].validate(valid => {
