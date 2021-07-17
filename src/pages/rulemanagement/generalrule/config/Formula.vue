@@ -106,7 +106,7 @@
 
     import {setDefaultValue} from '@/utils/json'
 
-    import {formulaList,saveFormula} from '@/services/formula'
+    import {formulaList, saveFormula} from '@/services/formula'
 
     export default {
         name: "Formula.vue",
@@ -197,14 +197,13 @@
         methods: {
             handleAddOk() {
                 this.add.confirmLoading = true;
-                console.log("111",this.add.form);
                 saveFormula(this.add.form).then(res => {
-                            if (res.data.data) {
-                                console.log(res);
-                                this.$message.success("创建成功！");
-                                this.add.visible = false;
-                            }
-                        })
+                    if (res.data.data) {
+                        this.$message.success("创建成功！");
+                        this.add.visible = false;
+                        this.loadFormulaList();
+                    }
+                });
                 this.add.confirmLoading = false
             },
             handleAddCancel() {
@@ -215,6 +214,8 @@
                 this.add.visible = true;
                 // 重置表单数据
                 this.add.form = setDefaultValue(this.add.form);
+                this.add.form.dataType = this.dataType;
+                this.add.form.dataId = this.dataId;
             },
             deleteById(id) {
                 console.log(id)
