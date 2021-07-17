@@ -45,8 +45,8 @@
                           @click="deleteConditionGroup(cg)"></a-icon>
 
                   <a-skeleton v-if="cg.conditionGroupCondition.length===0" :paragraph="{ rows: 2 }"/>
-                  <a-spin :spinning="cg.loading">
-                  <task-group :title="cg.name" group="task" :data-list="cg.conditionGroupCondition" @update="moveCondition">
+                  <task-group :title="cg.name" group="task" :data-list="cg.conditionGroupCondition"
+                              @update="moveCondition">
                     <a-alert closable
                              style="border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"
                              v-for="cgc in cg.conditionGroupCondition"
@@ -73,7 +73,6 @@
                       </p>
                     </a-alert>
                   </task-group>
-                  </a-spin>
                   <br>
 
                   <a-button type="dashed" style="width: 50%;display:block;margin:0 auto"
@@ -694,7 +693,7 @@ export default {
   },
   methods: {
     // 移动条件
-    moveCondition(from,to) {
+    moveCondition(from, to) {
       switchOrder({fromId: from.condition.id, toId: to.condition.id}).then(res => {
         console.log(res)
       })
