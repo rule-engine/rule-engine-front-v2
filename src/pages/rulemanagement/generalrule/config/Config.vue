@@ -192,7 +192,7 @@
                       :checked="generalRule.defaultAction.enableDefaultAction===0"/>
                   <br> <br>
                   <a-row>
-                    <a-col :span="6">
+                    <a-col :span="5">
                       <a-form-model-item prop="defaultAction.type"
                                          :rules="generalRule.defaultAction.enableDefaultAction===0?{
                                           required: true,
@@ -226,7 +226,7 @@
                       </a-form-model-item>
                     </a-col>
                     <a-col :span="1"></a-col>
-                    <a-col :span="17">
+                    <a-col :span="18">
                       <a-form-model-item prop="defaultAction.value"
                                          :rules="generalRule.defaultAction.enableDefaultAction===0?{
                                           required: true,
