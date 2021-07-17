@@ -11,7 +11,7 @@
     import PageLayout from '@/layouts/PageLayout'
 
     export default {
-        name: "RuleSet",
+        name: "DecisionTable",
         data() {
             return {}
         },

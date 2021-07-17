@@ -119,8 +119,8 @@
                                         cancel-text="不了"
                                         @confirm="deleteRow(record)"
                                 >
-                                        <a-icon type="delete"/>
-                                        删除
+                                    <a-icon type="delete"/>
+                                    删除
                                 </a-popconfirm>
                             </a-menu-item>
                         </a-menu>
@@ -292,31 +292,31 @@
             </a-form-model>
         </a-modal>
 
-      <a-modal
-          title="基本信息"
-          :visible="basicInfo.visible"
-          :confirm-loading="basicInfo.confirmLoading"
-          :width="700"
-          ok-text="更新"
-          @ok="updateGeneralRuleHandle('updateGeneralRule')"
-          @cancel="updateGeneralRuleHandleCancel('updateGeneralRule')"
-      >
-        <a-form-model ref="updateGeneralRule" :rules="basicInfo.rules" :model="basicInfo.form"
-                      :label-col="{span: 4}"
-                      :wrapper-col="{span: 14}">
-          <a-form-model-item label="名称" has-feedback prop="name">
-            <a-input v-model="basicInfo.form.name" placeholder="请输入规则名称">
-            </a-input>
-          </a-form-model-item>
-          <a-form-model-item label="编码" has-feedback prop="code">
-            <a-input readOnly :value="basicInfo.form.code"   type="code" placeholder="请输入规则编码">
-            </a-input>
-          </a-form-model-item>
-          <a-form-model-item label="说明" has-feedback prop="description">
-            <a-input v-model="basicInfo.form.description" type="textarea" placeholder="请输入规则说明"/>
-          </a-form-model-item>
-        </a-form-model>
-      </a-modal>
+        <a-modal
+                title="基本信息"
+                :visible="basicInfo.visible"
+                :confirm-loading="basicInfo.confirmLoading"
+                :width="700"
+                ok-text="更新"
+                @ok="updateGeneralRuleHandle('updateGeneralRule')"
+                @cancel="updateGeneralRuleHandleCancel('updateGeneralRule')"
+        >
+            <a-form-model ref="updateGeneralRule" :rules="basicInfo.rules" :model="basicInfo.form"
+                          :label-col="{span: 4}"
+                          :wrapper-col="{span: 14}">
+                <a-form-model-item label="名称" has-feedback prop="name">
+                    <a-input v-model="basicInfo.form.name" placeholder="请输入规则名称">
+                    </a-input>
+                </a-form-model-item>
+                <a-form-model-item label="编码" has-feedback prop="code">
+                    <a-input readOnly :value="basicInfo.form.code" type="code" placeholder="请输入规则编码">
+                    </a-input>
+                </a-form-model-item>
+                <a-form-model-item label="说明" has-feedback prop="description">
+                    <a-input v-model="basicInfo.form.description" type="textarea" placeholder="请输入规则说明"/>
+                </a-form-model-item>
+            </a-form-model>
+        </a-modal>
 
     </page-layout>
 </template>
@@ -461,7 +461,7 @@
                         //     dataIndex: 'code',
                         // },
                         {
-                            title: '规则版本状态',
+                            title: '版本状态',
                             scopedSlots: {customRender: 'versionStatus'}
                         },
                         {
@@ -531,19 +531,19 @@
                         code: {trigger: ['blur'], asyncValidator: this.ruleCodeValidator, required: true},
                     }
                 },
-              basicInfo: {
-                form: {
-                  id: null,
-                  name: null,
-                  code: null,
-                  description: null,
-                },
-                visible: false,
-                confirmLoading: false,
-                rules: {
-                  name: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入规则名称",},
+                basicInfo: {
+                    form: {
+                        id: null,
+                        name: null,
+                        code: null,
+                        description: null,
+                    },
+                    visible: false,
+                    confirmLoading: false,
+                    rules: {
+                        name: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入规则名称",},
+                    }
                 }
-              }
 
             }
         },
@@ -617,30 +617,30 @@
                 }
             },
             queryBasicInfo(record) {
-              this.basicInfo.visible = true;
-              this.basicInfo.form = {
-                id: record.id,
-                name: record.name,
-                code: record.code,
-                description: record.description,
-              }
+                this.basicInfo.visible = true;
+                this.basicInfo.form = {
+                    id: record.id,
+                    name: record.name,
+                    code: record.code,
+                    description: record.description,
+                }
             },
             updateGeneralRuleHandle(formName) {
-              this.basicInfo.confirmLoading = true;
-              this.$refs[formName].validate(valid => {
-                if (valid) {
-                    updateGeneralRuleDefinition(this.basicInfo.form).then(res => {
-                    if (res.data.data) {
-                      this.$message.success("更新成功！");
-                      this.basicInfo.visible = false;
-                      this.basicInfo.confirmLoading = false;
-                      this.loadDataList();
+                this.basicInfo.confirmLoading = true;
+                this.$refs[formName].validate(valid => {
+                    if (valid) {
+                        updateGeneralRuleDefinition(this.basicInfo.form).then(res => {
+                            if (res.data.data) {
+                                this.$message.success("更新成功！");
+                                this.basicInfo.visible = false;
+                                this.basicInfo.confirmLoading = false;
+                                this.loadDataList();
+                            }
+                        })
+                    } else {
+                        this.basicInfo.confirmLoading = false;
                     }
-                  })
-                }else{
-                    this.basicInfo.confirmLoading = false;
-                }
-              })
+                })
             },
             newGeneralRuleHandleOk(formName) {
                 this.newGeneralRule.confirmLoading = true;
@@ -664,10 +664,10 @@
                 this.newGeneralRule.visible = false;
                 this.$refs[formName].resetFields();
             },
-          updateGeneralRuleHandleCancel(formName) {
-            this.basicInfo.visible = false;
-            this.$refs[formName].resetFields();
-          },
+            updateGeneralRuleHandleCancel(formName) {
+                this.basicInfo.visible = false;
+                this.$refs[formName].resetFields();
+            },
             handleMenuClick() {
 
             },
