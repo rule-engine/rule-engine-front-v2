@@ -77,6 +77,7 @@ module.exports = {
     conditionGroupCondition: {
         SAVE_CONDITION_AND_BIND_GROUP: `${WEB_BASE_URL}/ruleEngine/conditionGroupCondition/saveConditionAndBindGroup`,
         DELETE_CONDITION: `${WEB_BASE_URL}/ruleEngine/conditionGroupCondition/deleteCondition`,
+        SWITCH_ORDER: `${WEB_BASE_URL}/ruleEngine/conditionGroupCondition/switchOrder`,
     },
     inputParameter: {
         ADD: `${WEB_BASE_URL}/ruleEngine/inputParameter/add`,

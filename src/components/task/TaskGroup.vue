@@ -1,14 +1,14 @@
 <template>
   <div class="task-group">
-    <div class="task-head">
-      <h3 class="title"><span v-if="count">{{count}}</span>{{title}}</h3>
-      <div class="actions" style="float: right">
-        <a-icon class="add" type="plus" draggable="true"/>
-        <a-icon class="more" style="margin-left: 8px" type="ellipsis" />
-      </div>
-    </div>
+    <!--    <div class="task-head">-->
+    <!--      <h3 class="title"><span v-if="count">{{count}}</span>{{title}}</h3>-->
+    <!--      <div class="actions" style="float: right">-->
+    <!--        <a-icon class="add" type="plus" draggable="true"/>-->
+    <!--        <a-icon class="more" style="margin-left: 8px" type="ellipsis" />-->
+    <!--      </div>-->
+    <!--    </div>-->
     <div class="task-content">
-      <draggable :options="dragOptions">
+      <draggable :options="dragOptions"  @update="update">
         <slot></slot>
       </draggable>
     </div>
@@ -25,20 +25,26 @@ const dragOptions = {
   animation: 150,
   ghostClass: 'dragable-ghost',
   chosenClass: 'dragable-chose',
-  dragClass: 'dragable-drag'
+  dragClass: 'dragable-drag',
+  // onUpdate:
 }
 
 export default {
   name: 'TaskGroup',
   components: {Draggable},
-  props: ['title', 'group'],
-  data () {
+  props: ['title', 'group','dataList'],
+  data() {
     return {
       dragOptions: {...dragOptions, group: this.group}
     }
   },
+  methods: {
+    update(e) {
+      this.$emit("update", this.dataList[e.oldIndex],this.dataList[e.newIndex])
+    }
+  },
   computed: {
-    count () {
+    count() {
       return this.$slots.default.length
     }
   }
@@ -46,34 +52,54 @@ export default {
 </script>
 
 <style lang="less">
-  .task-group{
-    width: 33.33%;
-    padding: 8px 8px;
-    background-color: @background-color-light;
-    border-radius: 6px;
-    border: 1px solid @shadow-color;
-    .task-head{
-      margin-bottom: 8px;
-      .title{
+.task-group {
+  width: 100%;
+  padding: 8px 8px;
+  background-color: @background-color-light;
+  border-radius: 6px;
+  border: 1px solid @shadow-color;
+
+  .task-head {
+    margin-bottom: 8px;
+
+    .title {
+      display: inline-block;
+
+      span {
         display: inline-block;
-        span{
-          display: inline-block;
-          border-radius: 10px;
-          margin: 0 8px;
-          font-size: 12px;
-          padding: 2px 6px;
-          background-color: @base-bg-color;
-        }
+        border-radius: 10px;
+        margin: 0 8px;
+        font-size: 12px;
+        padding: 2px 6px;
+        background-color: @base-bg-color;
       }
-      .actions{
-        display: inline-block;
-        float: right;
-        font-size: 18px;
-        font-weight: bold;
-        i{
-          cursor: pointer;
-        }
+    }
+
+    .actions {
+      display: inline-block;
+      float: right;
+      font-size: 18px;
+      font-weight: bold;
+
+      i {
+        cursor: pointer;
       }
     }
   }
+}
+
+.dragable-ghost {
+  border: 1px dashed red;
+  opacity: 1;
+}
+
+.dragable-chose {
+  border: 1px dashed red;
+  opacity: 0.8;
+}
+
+.dragable-drag {
+  border: 1px dashed red;
+  opacity: 1;
+}
 </style>
