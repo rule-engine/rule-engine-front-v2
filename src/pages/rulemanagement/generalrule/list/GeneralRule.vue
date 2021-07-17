@@ -96,7 +96,7 @@
                             <a-icon type="down"/>
                         </a>
                         <a-menu slot="overlay">
-                            <a-menu-item>
+                            <a-menu-item @click="queryBasicInfo(record)">
                                 <a-icon type="info"/>
                                 基本信息
                             </a-menu-item>
@@ -293,6 +293,32 @@
                 </a-form-model-item>
             </a-form-model>
         </a-modal>
+
+      <a-modal
+          title="基本信息"
+          :visible="basicInfo.visible"
+          :confirm-loading="basicInfo.confirmLoading"
+          :width="700"
+          ok-text="更新"
+          @ok="newGeneralRuleHandleOk('generalRule')"
+          @cancel="newGeneralRuleHandleCancel('generalRule')"
+      >
+        <a-form-model ref="generalRule" :rules="basicInfo.rules" :model="basicInfo.form"
+                      :label-col="{span: 4}"
+                      :wrapper-col="{span: 14}">
+          <a-form-model-item label="名称" has-feedback prop="name">
+            <a-input v-model="basicInfo.form.name" placeholder="请输入规则名称">
+            </a-input>
+          </a-form-model-item>
+          <a-form-model-item label="编码" has-feedback prop="code">
+            <a-input readOnly :value="basicInfo.form.code"   type="code" placeholder="请输入规则编码">
+            </a-input>
+          </a-form-model-item>
+          <a-form-model-item label="说明" has-feedback prop="description">
+            <a-input v-model="basicInfo.form.description" type="textarea" placeholder="请输入规则说明"/>
+          </a-form-model-item>
+        </a-form-model>
+      </a-modal>
 
     </page-layout>
 </template>
@@ -505,7 +531,21 @@
                         name: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入规则名称",},
                         code: {trigger: ['blur'], asyncValidator: this.ruleCodeValidator, required: true},
                     }
+                },
+              basicInfo: {
+                form: {
+                  id: null,
+                  name: null,
+                  code: null,
+                  description: null,
+                },
+                visible: false,
+                confirmLoading: false,
+                rules: {
+                  name: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入规则名称",},
                 }
+              }
+
             }
         },
         created() {
@@ -576,6 +616,15 @@
                     code: null,
                     description: null,
                 }
+            },
+            queryBasicInfo(record) {
+              this.basicInfo.visible = true;
+              this.basicInfo.form = {
+                id: record.id,
+                name: record.name,
+                code: record.code,
+                description: record.description,
+              }
             },
             newGeneralRuleHandleOk(formName) {
                 this.newGeneralRule.confirmLoading = true;
