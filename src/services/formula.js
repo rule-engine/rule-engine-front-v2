@@ -10,4 +10,12 @@ export async function saveFormula(param) {
 export async function getFormula(param) {
     return request(formula.GET_FORMULA, METHOD.POST, param)
 }
+export async function updateFormula(param) {
+    return request(formula.UPDATE_FORMULA, METHOD.POST, param)
+}
+export async function deleteFormula(param) {
+    return request(formula.DELETE_FORMULA, METHOD.POST, param)
+}
+
+
 

@@ -99,6 +99,8 @@ module.exports = {
         LIST: `${WEB_BASE_URL}/ruleEngine/formula/list`,
         SAVE_FORMULA: `${WEB_BASE_URL}/ruleEngine/formula/saveFormula`,
         GET_FORMULA: `${WEB_BASE_URL}/ruleEngine/formula/getFormula`,
+        UPDATE_FORMULA: `${WEB_BASE_URL}/ruleEngine/formula/updateFormula`,
+        DELETE_FORMULA: `${WEB_BASE_URL}/ruleEngine/formula/deleteFormula`,
     },
     ROUTES: `${WEB_BASE_URL}/routes`,
     GOODS: `${WEB_BASE_URL}/goods`,
