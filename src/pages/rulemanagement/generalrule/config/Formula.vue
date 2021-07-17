@@ -44,7 +44,7 @@
             </div>
 
             <div slot="action" slot-scope="{record}">
-                <a style="margin-right: 8px">
+                <a style="margin-right: 8px" @click="getFormula(record)">
                     <a-icon type="edit"/>
                     编辑
                 </a>
@@ -106,7 +106,7 @@
 
     import {setDefaultValue} from '@/utils/json'
 
-    import {formulaList, saveFormula} from '@/services/formula'
+    import {formulaList,saveFormula,getFormula,updateFormula} from '@/services/formula'
 
     export default {
         name: "Formula.vue",
@@ -175,7 +175,7 @@
                     visible: false,
                     confirmLoading: false,
                     form: {
-                        // id: undefined,
+                        id: undefined,
                         name: undefined,
                         value: undefined,
                         valueType: undefined,
@@ -197,13 +197,23 @@
         methods: {
             handleAddOk() {
                 this.add.confirmLoading = true;
-                saveFormula(this.add.form).then(res => {
-                    if (res.data.data) {
-                        this.$message.success("创建成功！");
-                        this.add.visible = false;
-                        this.loadFormulaList();
-                    }
-                });
+                if (this.add.form.id){
+                    updateFormula(this.add.form).then(res => {
+                        if (res.data.data) {
+                            this.$message.success("修改成功！");
+                            this.add.visible = false;
+                            this.loadFormulaList();
+                        }
+                    });
+                }else {
+                    saveFormula(this.add.form).then(res => {
+                        if (res.data.data) {
+                            this.$message.success("创建成功！");
+                            this.add.visible = false;
+                            this.loadFormulaList();
+                        }
+                    });
+                }
                 this.add.confirmLoading = false
             },
             handleAddCancel() {
@@ -216,6 +226,18 @@
                 this.add.form = setDefaultValue(this.add.form);
                 this.add.form.dataType = this.dataType;
                 this.add.form.dataId = this.dataId;
+            },
+            getFormula(record){
+                this.add.form.id = record.id
+                getFormula(this.add.form).then(res => {
+                    console.log(res.data.data);
+                    if (res.data.data) {
+                        this.add.form = res.data.data
+                        this.add.visible = true;
+                        this.add.form.dataType = this.dataType;
+                        this.add.form.dataId = this.dataId;
+                    }
+                });
             },
             deleteById(id) {
                 console.log(id)
