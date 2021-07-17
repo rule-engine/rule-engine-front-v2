@@ -300,10 +300,10 @@
           :confirm-loading="basicInfo.confirmLoading"
           :width="700"
           ok-text="更新"
-          @ok="newGeneralRuleHandleOk('generalRule')"
-          @cancel="newGeneralRuleHandleCancel('generalRule')"
+          @ok="updateGeneralRuleHandle('updateGeneralRule')"
+          @cancel="updateGeneralRuleHandleCancel('updateGeneralRule')"
       >
-        <a-form-model ref="generalRule" :rules="basicInfo.rules" :model="basicInfo.form"
+        <a-form-model ref="updateGeneralRule" :rules="basicInfo.rules" :model="basicInfo.form"
                       :label-col="{span: 4}"
                       :wrapper-col="{span: 14}">
           <a-form-model-item label="名称" has-feedback prop="name">
@@ -333,7 +333,8 @@
         verifyRuleCode,
         addGeneralRule,
         generalRuleDownloadList,
-        showHistoryVersionList
+        showHistoryVersionList,
+        updateGeneralRule
     } from '@/services/generalRule'
     import {dataPermissionList, update} from '@/services/dataPermission'
     import {exportData} from '@/services/importExport'
@@ -626,6 +627,21 @@
                 description: record.description,
               }
             },
+            updateGeneralRuleHandle(formName) {
+              this.basicInfo.confirmLoading = true;
+              this.$refs[formName].validate(valid => {
+                if (valid) {
+                  updateGeneralRule(this.basicInfo.form).then(res => {
+                    if (res.data.code === 200) {
+                      this.$message.success("更新成功！");
+                      this.basicInfo.visible = false;
+                      this.basicInfo.confirmLoading = false;
+                      this.loadDataList();
+                    }
+                  })
+                }
+              })
+            },
             newGeneralRuleHandleOk(formName) {
                 this.newGeneralRule.confirmLoading = true;
                 this.$refs[formName].validate(valid => {
@@ -648,6 +664,10 @@
                 this.newGeneralRule.visible = false;
                 this.$refs[formName].resetFields();
             },
+          updateGeneralRuleHandleCancel(formName) {
+            this.basicInfo.visible = false;
+            this.$refs[formName].resetFields();
+          },
             handleMenuClick() {
 
             },
