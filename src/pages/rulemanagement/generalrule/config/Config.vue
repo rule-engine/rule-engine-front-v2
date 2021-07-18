@@ -63,7 +63,7 @@
                                                 <p slot="description" style="margin-bottom: 0;">
                                                     <a-tag color="blue"
                                                            style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                                                       （{{ cgc.condition.name }}）
+                                                        （{{ cgc.condition.name }}）
                                                     </a-tag>
                                                     <a-tag color="cyan"
                                                            style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
@@ -219,11 +219,12 @@
                                                 <a-select style="width:100%"
                                                           :disabled="generalRule.action.valueType==null"
                                                           placeholder="请选择类型"
-                                                          :value="generalRule.defaultAction.type===0?'PARAMETER':(generalRule.defaultAction.type===1?'VARIABLE':generalRule.defaultAction.valueType===null?undefined:generalRule.defaultAction.valueType)"
+                                                          :value="generalRule.defaultAction.type===0?'PARAMETER':(generalRule.defaultAction.type===1?'VARIABLE':generalRule.defaultAction.type===4?'FORMULA':generalRule.defaultAction.valueType===null?undefined:generalRule.defaultAction.valueType)"
                                                           @change="defaultActionValueTypeChange"
                                                 >
                                                     <a-select-option value="PARAMETER">参数</a-select-option>
                                                     <a-select-option value="VARIABLE">变量</a-select-option>
+                                                    <a-select-option value="FORMULA">表达式</a-select-option>
                                                     <a-select-option value="BOOLEAN"
                                                                      v-if="generalRule.action.valueType==='BOOLEAN'">布尔
                                                     </a-select-option>
@@ -252,7 +253,7 @@
                                           trigger: ['change', 'blur'],
                                         }:{required:false}">
                                                 <a-select
-                                                        v-if="generalRule.defaultAction.type===0||generalRule.defaultAction.type===1"
+                                                        v-if="generalRule.defaultAction.type===0||generalRule.defaultAction.type===1||generalRule.defaultAction.type===4"
                                                         show-search
                                                         style="width: 100%"
                                                         :disabled="generalRule.defaultAction.type==null"
@@ -641,6 +642,7 @@
                         value: undefined,
                         valueName: undefined,
                         valueType: undefined,
+                        variableValue: undefined,
                         type: undefined,
                     },
                     defaultAction: {
@@ -648,6 +650,7 @@
                         value: undefined,
                         valueName: undefined,
                         valueType: undefined,
+                        variableValue: undefined,
                         type: undefined,
                     },
                 },
@@ -736,19 +739,26 @@
                 });
             },
             defaultActionValueTypeChange(valueType) {
-                this.generalRule.defaultAction.value = undefined;
-                this.generalRule.defaultAction.valueName = undefined;
-                this.generalRule.defaultAction.variableValue = null;
-                this.generalRule.defaultAction.valueType = valueType;
+                this.generalRule.defaultAction = {
+                    enableDefaultAction: this.generalRule.defaultAction.enableDefaultAction,
+                    value: undefined,
+                    valueName: undefined,
+                    valueType: valueType,
+                    variableValue: null,
+                };
                 // 如果是变量或者元素
                 if (valueType === 'PARAMETER') {
                     this.generalRule.defaultAction.type = 0;
                     // 参数的类型
-                    this.generalRule.defaultAction.valueType = '';
+                    this.generalRule.defaultAction.valueType = null;
                 } else if (valueType === 'VARIABLE') {
                     this.generalRule.defaultAction.type = 1;
                     // 变量的类型
-                    this.generalRule.defaultAction.valueType = '';
+                    this.generalRule.defaultAction.valueType = null;
+                } else if (valueType === 'FORMULA') {
+                    this.generalRule.defaultAction.type = 4;
+                    // 变量的类型
+                    this.generalRule.defaultAction.valueType = null;
                 } else {
                     this.generalRule.defaultAction.type = 2;
                 }
@@ -868,7 +878,7 @@
                         name: value,
                         dataId: this.generalRule.id,
                         dataType: this.dataType,
-                        valueType: [this.action.valueType]
+                        valueType: [this.generalRule.action.valueType]
                     }, data => (this.actionSearchSelect.data = data)
                     , this.generalRule.defaultAction.type)
             },
@@ -961,10 +971,12 @@
                 return v.value;
             },
             actionValueTypeChange(valueType) {
-                this.generalRule.action.value = undefined;
-                this.generalRule.action.valueName = undefined;
-                this.generalRule.action.variableValue = null;
-                this.generalRule.action.valueType = valueType;
+                this.generalRule.action = {
+                    value: undefined,
+                    valueName: undefined,
+                    valueType: valueType,
+                    variableValue: null,
+                };
                 // 如果是变量或者元素
                 if (valueType === 'PARAMETER') {
                     this.generalRule.action.type = 0;
