@@ -49,7 +49,7 @@
 
                                         <a-skeleton v-if="cg.conditionGroupCondition.length===0"
                                                     :paragraph="{ rows: 2 }"/>
-                                        <task-group :title="cg.name" group="task"
+                                        <task-group :title="cg.name" :group="cg.id"
                                                     :data-list="generalRule.conditionGroup"
                                                     :condition-group-id="cg.id"
                                                     @update="moveCondition">
