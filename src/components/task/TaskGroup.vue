@@ -1,14 +1,7 @@
 <template>
     <div class="task-group">
-        <!--    <div class="task-head">-->
-        <!--      <h3 class="title"><span v-if="count">{{count}}</span>{{title}}</h3>-->
-        <!--      <div class="actions" style="float: right">-->
-        <!--        <a-icon class="add" type="plus" draggable="true"/>-->
-        <!--        <a-icon class="more" style="margin-left: 8px" type="ellipsis" />-->
-        <!--      </div>-->
-        <!--    </div>-->
         <div class="task-content">
-            <draggable :options="dragOptions" @add="add" @update="update" :id="conditionGroupId">
+            <draggable :options="dragOptions" @update="update" :id="conditionGroupId">
                 <slot></slot>
             </draggable>
         </div>
@@ -26,8 +19,7 @@
         ghostClass: 'dragable-ghost',
         chosenClass: 'dragable-chose',
         dragClass: 'dragable-drag',
-        // onUpdate:
-    }
+    };
 
     export default {
         name: 'TaskGroup',
@@ -47,24 +39,9 @@
                     cgc: cgc
                 })
             },
-            add(e) {
-                let fromList = this.getConditionGroupById(e.from.id).conditionGroupCondition
-                let toList = this.getConditionGroupById(e.to.id).conditionGroupCondition;
-                let from = fromList[e.oldIndex]
-                toList.push(from)
-                // 调用接口 移动到新的 条件组中，然后重排序
-                fromList.splice(e.oldIndex, 1)
-                this.$emit("update", {
-                    from: from,
-                    to: toList[e.newIndex],
-                    fromConditionGroupId: e.from.id,
-                    toConditionGroupId: e.to.id
-                })
-            },
             getConditionGroupById(id) {
                 return this.dataList.find(e => e.id === parseInt(id))
             }
-
         },
         computed: {
             count() {
@@ -84,7 +61,6 @@
 
         .task-head {
             //margin-bottom: 8px;
-
             .title {
                 display: inline-block;
 
