@@ -353,11 +353,12 @@
                                         trigger: ['change', 'blur'],
                                       }">
                                 <a-select
-                                        :value="selectCondition.from.config.leftValue.type===0?'PARAMETER':(selectCondition.from.config.leftValue.type===1?'VARIABLE':selectCondition.from.config.leftValue.valueType)"
+                                        :value="selectCondition.from.config.leftValue.type===0?'PARAMETER':(selectCondition.from.config.leftValue.type===1?'VARIABLE':selectCondition.from.config.leftValue.type===4?'FORMULA':selectCondition.from.config.leftValue.valueType)"
                                         placeholder="请选择"
                                         @change="leftValueTypeChange">
                                     <a-select-option value="PARAMETER">参数</a-select-option>
                                     <a-select-option value="VARIABLE">变量</a-select-option>
+                                    <a-select-option value="FORMULA">表达式</a-select-option>
                                     <a-select-option value="BOOLEAN">布尔</a-select-option>
                                     <a-select-option value="COLLECTION">集合</a-select-option>
                                     <a-select-option value="STRING">字符串</a-select-option>
@@ -376,7 +377,7 @@
                                         trigger: ['change', 'blur'],
                                       }">
                                 <a-select
-                                        v-if="selectCondition.from.config.leftValue.type===0||selectCondition.from.config.leftValue.type===1"
+                                        v-if="selectCondition.from.config.leftValue.type===0||selectCondition.from.config.leftValue.type===1||selectCondition.from.config.leftValue.type===4"
                                         show-search
                                         :disabled="selectCondition.from.config.leftValue.type==null"
                                         :value="selectCondition.from.config.leftValue.valueName"
@@ -461,7 +462,7 @@
                                       }">
                                 <a-select
                                         :disabled="(selectCondition.from.config.leftValue.value==null&&selectCondition.from.config.leftValue.type!==2&&selectCondition.from.config.rightValue.value==null)"
-                                        :value="selectCondition.from.config.rightValue.type===0?'PARAMETER':(selectCondition.from.config.rightValue.type===1?'VARIABLE':selectCondition.from.config.rightValue.valueType)"
+                                        :value="selectCondition.from.config.rightValue.type===0?'PARAMETER':(selectCondition.from.config.rightValue.type===1?'VARIABLE':selectCondition.from.config.rightValue.type===4?'FORMULA':selectCondition.from.config.rightValue.valueType)"
                                         placeholder="请选择"
                                         @change="rightValueTypeChange"
                                 >
@@ -470,6 +471,9 @@
                                     </a-select-option>
                                     <a-select-option v-if="selectCondition.from.config.leftValue.valueType!=null"
                                                      value="VARIABLE">变量
+                                    </a-select-option>
+                                    <a-select-option v-if="selectCondition.from.config.leftValue.valueType!=null"
+                                                     value="FORMULA">表达式
                                     </a-select-option>
                                     <a-select-option v-if="isRightTypeSelectView('BOOLEAN')" value="BOOLEAN">布尔
                                     </a-select-option>
@@ -495,7 +499,7 @@
                                       }">
                                 <a-select
                                         :disabled="selectCondition.from.config.rightValue.type==null"
-                                        v-if="selectCondition.from.config.rightValue.type===0||selectCondition.from.config.rightValue.type===1"
+                                        v-if="selectCondition.from.config.rightValue.type===0||selectCondition.from.config.rightValue.type===1||selectCondition.from.config.rightValue.type===4"
                                         show-search
                                         :value="selectCondition.from.config.rightValue.valueName"
                                         placeholder="请输入关键字进行搜索"
@@ -944,7 +948,7 @@
                 this.selectCondition.from.config.leftValue.valueType = d.valueType;
                 this.selectCondition.from.config.leftValue.valueName = d.name;
                 // 变量  d.type 如果是固定值 则直接显示变量的值
-                if (this.selectCondition.from.config.leftValue.type === 1 && d.type === 2) {
+                if ((this.selectCondition.from.config.leftValue.type === 1 && d.type === 2) || this.selectCondition.from.config.leftValue.type === 4) {
                     this.selectCondition.from.config.leftValue.variableValue = d.value;
                 }
                 // 判断查询的变量或者元素 类型是否与右值相同，不相同则清空右值的
@@ -955,6 +959,7 @@
                     // 删除运算符
                     this.selectCondition.from.config.symbol = undefined;
                 }
+                console.log(this.selectCondition.from.config.leftValue)
             },
             getViewValue(v) {
                 // 如果是固定值
@@ -962,10 +967,10 @@
                     return v.value;
                 }
                 // 如果是固定值变量的 变量值
-                if (v.variableValue !== null) {
+                if (v.variableValue) {
                     return v.variableValue;
                 }
-                if (v.valueName !== null) {
+                if (v.valueName) {
                     return v.valueName;
                 }
                 return v.value;
@@ -1006,14 +1011,17 @@
                 this.selectCondition.from.config.leftValue.value = undefined;
                 this.selectCondition.from.config.leftValue.valueName = undefined;
                 this.selectCondition.from.config.leftValue.variableValue = undefined;
-                this.selectCondition.from.config.leftValue.valueType = valueType;
+                this.selectCondition.from.config.leftValue.valueType = null;
                 // 如果是变量或者元素
                 if (valueType === 'PARAMETER') {
                     this.selectCondition.from.config.leftValue.type = 0;
                 } else if (valueType === 'VARIABLE') {
                     this.selectCondition.from.config.leftValue.type = 1;
+                } else if (valueType === 'FORMULA') {
+                    this.selectCondition.from.config.leftValue.type = 4;
                 } else {
                     this.selectCondition.from.config.leftValue.type = 2;
+                    this.selectCondition.from.config.leftValue.valueType = valueType;
                     // 固定值场景清空右值，如果变量或者参数，等搜索到选中时再去判断清空
                     // 左面发生改变，右边也改变  如果值类型相同，则不需要更改
                     if (valueType !== this.selectCondition.from.config.rightValue.valueType) {
@@ -1026,7 +1034,7 @@
                     this.selectCondition.operators = this.getSymbolByValueType(valueType)
                 }
                 // 清空远程搜索缓存
-                this.selectConditionLeftSearchSelect.data = []
+                this.selectConditionLeftSearchSelect.data = [];
                 this.selectConditionLeftSearchSelect.value = undefined
             },
             conditionRightSearch(value) {
@@ -1059,30 +1067,29 @@
                 this.selectCondition.from.config.rightValue.valueType = d.valueType;
                 this.selectCondition.from.config.rightValue.valueName = d.name;
                 // 变量  d.type 如果是固定值
-                if (this.selectCondition.from.config.rightValue.type === 1 && d.type === 2) {
+                if ((this.selectCondition.from.config.rightValue.type === 1 && d.type === 2) || this.selectCondition.from.config.rightValue.type === 4) {
                     this.selectCondition.from.config.rightValue.variableValue = d.value;
                 }
             },
             rightValueTypeChange(valueType) {
-                this.selectCondition.from.config.rightValue.value = '';
-                this.selectCondition.from.config.rightValue.valueName = null;
-                this.selectCondition.from.config.rightValue.variableValue = null;
-                this.selectCondition.from.config.rightValue.valueType = valueType;
+                this.selectCondition.from.config.rightValue.value = undefined;
+                this.selectCondition.from.config.rightValue.valueName = undefined;
+                this.selectCondition.from.config.rightValue.variableValue = undefined;
+                this.selectCondition.from.config.rightValue.valueType = null;
                 // 如果是变量或者元素
                 if (valueType === 'PARAMETER') {
                     this.selectCondition.from.config.rightValue.type = 0;
-                    // 参数的类型
-                    this.selectCondition.from.config.rightValue.valueType = '';
                 } else if (valueType === 'VARIABLE') {
                     this.selectCondition.from.config.rightValue.type = 1;
                     // 变量的类型
-                    this.selectCondition.from.config.rightValue.valueType = '';
+                } else if (valueType === 'FORMULA') {
+                    this.selectCondition.from.config.rightValue.type = 4;
                 } else {
                     this.selectCondition.from.config.rightValue.type = 2;
-                    // 根据左值更改运算符
+                    this.selectCondition.from.config.rightValue.valueType = valueType;
                 }
                 // 清空远程搜索缓存
-                this.selectConditionRightSearchSelect.data = []
+                this.selectConditionRightSearchSelect.data = [];
                 this.selectConditionRightSearchSelect.value = undefined
             },
             getConditionNamePrefix(type) {
@@ -1094,6 +1101,9 @@
                 }
                 if (type === 2) {
                     return "固定值";
+                }
+                if (type === 4) {
+                    return "表达式";
                 }
             },
             isRightTypeSelectView(valueType) {
