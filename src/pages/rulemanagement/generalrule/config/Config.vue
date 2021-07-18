@@ -126,10 +126,11 @@
                                         }">
                                                 <a-select style="width:100%"
                                                           placeholder="请选择结果类型"
-                                                          :value="generalRule.action.type===0?'PARAMETER':(generalRule.action.type===1?'VARIABLE':generalRule.action.valueType===null?undefined:generalRule.action.valueType)"
+                                                          :value="generalRule.action.type===0?'PARAMETER':(generalRule.action.type===1?'VARIABLE':generalRule.action.type===4?'FORMULA':generalRule.action.valueType===null?undefined:generalRule.action.valueType)"
                                                           @change="actionValueTypeChange">
                                                     <a-select-option value="PARAMETER">参数</a-select-option>
                                                     <a-select-option value="VARIABLE">变量</a-select-option>
+                                                    <a-select-option value="FORMULA">表达式</a-select-option>
                                                     <a-select-option value="BOOLEAN">布尔</a-select-option>
                                                     <a-select-option value="COLLECTION">集合</a-select-option>
                                                     <a-select-option value="STRING">字符串</a-select-option>
@@ -147,7 +148,7 @@
                                           trigger: ['change', 'blur'],
                                         }">
                                                 <a-select
-                                                        v-if="generalRule.action.type===0||generalRule.action.type===1"
+                                                        v-if="generalRule.action.type===0||generalRule.action.type===1||generalRule.action.type===4"
                                                         show-search
                                                         :disabled="generalRule.action.type==null"
                                                         :value="generalRule.action.valueName"
@@ -971,6 +972,10 @@
                     this.generalRule.action.valueType = null;
                 } else if (valueType === 'VARIABLE') {
                     this.generalRule.action.type = 1;
+                    // 变量的类型
+                    this.generalRule.action.valueType = null;
+                } else if (valueType === 'FORMULA') {
+                    this.generalRule.action.type = 4;
                     // 变量的类型
                     this.generalRule.action.valueType = null;
                 } else {
