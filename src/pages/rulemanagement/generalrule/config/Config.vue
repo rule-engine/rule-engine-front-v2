@@ -959,7 +959,6 @@
                     // 删除运算符
                     this.selectCondition.from.config.symbol = undefined;
                 }
-                console.log(this.selectCondition.from.config.leftValue)
             },
             getViewValue(v) {
                 // 如果是固定值
