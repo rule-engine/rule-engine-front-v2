@@ -63,7 +63,7 @@
                                                 <p slot="description" style="margin-bottom: 0;">
                                                     <a-tag color="blue"
                                                            style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                                                        {{ cgc.id }}（{{ cgc.condition.name }}）
+                                                       （{{ cgc.condition.name }}）
                                                     </a-tag>
                                                     <a-tag color="cyan"
                                                            style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
