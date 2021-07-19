@@ -19,10 +19,6 @@ const options = {
             path: '/403',
             name: '403',
             component: () => import('@/pages/exception/403'),
-        }, {
-            path: '/subError',
-            name: 'subError',
-            component: () => import('@/pages/result/Error'),
         },
         {
             path: '/',
@@ -30,6 +26,14 @@ const options = {
             component: TabsView,
             redirect: '/dashboard/workplace',
             children: [
+                {
+                    path: '/subError',
+                    name: '操作失败',
+                    meta: {
+                        invisible: true
+                    },
+                    component: () => import('@/pages/result/Error'),
+                },
                 {
                     path: 'dashboard',
                     name: '控制台',
@@ -78,21 +82,6 @@ const options = {
                             },
                             component: () => import('@/pages/components/function'),
                         },
-                        // {
-                        //     path: 'taskCard',
-                        //     name: '任务卡片',
-                        //     component: () => import('@/pages/components/TaskCard')
-                        // },
-                        // {
-                        //     path: 'palette',
-                        //     name: '颜色复选框',
-                        //     component: () => import('@/pages/components/Palette')
-                        // },
-                        // {
-                        //     path: 'table',
-                        //     name: '高级表格',
-                        //     component: () => import('@/pages/components/table')
-                        // }
                     ]
                 },
                 {
@@ -113,32 +102,6 @@ const options = {
                             },
                             component: () => import('@/pages/rulemanagement/generalrule/list'),
                         },
-                        // {
-                        //     path: '/generalRuleDefinition',
-                        //     name: '规则定义',
-                        //     meta: {
-                        //         invisible: true
-                        //     },
-                        //     component: () => import('@/pages/rulemanagement/generalrule/definition'),
-                        // },
-                        // {
-                        //     path: '/generalRuleConfig',
-                        //     name: '规则配置',
-                        //     meta: {
-                        //         invisible: true,
-                        //         keepAlive:false
-                        //
-                        //     },
-                        //     component: () => import('@/pages/rulemanagement/generalrule/config'),
-                        // },
-                        // {
-                        //     path: '/generalRulePublish',
-                        //     name: '规则发布',
-                        //     meta: {
-                        //         invisible: true
-                        //     },
-                        //     component: () => import('@/pages/rulemanagement/generalrule/publish'),
-                        // },
                         {
                             path: '/generalRuleRouter/:id',
                             name: '规则(...)',
@@ -147,26 +110,26 @@ const options = {
                             },
                             component: () => import('@/pages/rulemanagement/generalrule/router'),
                         },
-                        // {
-                        //     path: 'ruleSet',
-                        //     name: '规则集',
-                        //     meta: {
-                        //         page: {
-                        //             closable: true
-                        //         }
-                        //     },
-                        //     component: () => import('@/pages/rulemanagement/ruleset/list'),
-                        // },
-                        // {
-                        //     path: 'decisionTable',
-                        //     name: '决策表',
-                        //     meta: {
-                        //         page: {
-                        //             closable: true
-                        //         }
-                        //     },
-                        //     component: () => import('@/pages/rulemanagement/generalrule/list'),
-                        // }
+                        {
+                            path: 'ruleSet',
+                            name: '规则集',
+                            meta: {
+                                page: {
+                                    closable: true
+                                }
+                            },
+                            component: () => import('@/pages/rulemanagement/ruleset/list'),
+                        },
+                        {
+                            path: 'decisionTable',
+                            name: '决策表',
+                            meta: {
+                                page: {
+                                    closable: true
+                                }
+                            },
+                            component: () => import('@/pages/rulemanagement/decisiontable/list'),
+                        }
                     ]
                 },
                 {
@@ -220,6 +183,6 @@ const options = {
             ]
         },
     ]
-}
+};
 
 export default options

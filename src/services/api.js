@@ -41,7 +41,7 @@ module.exports = {
         LIST: `${WEB_BASE_URL}/ruleEngine/generalRule/list`,
         DELETE: `${WEB_BASE_URL}/ruleEngine/generalRule/delete`,
         ADD: `${WEB_BASE_URL}/ruleEngine/generalRule/saveRuleDefinition`,
-        UPDATE: `${WEB_BASE_URL}/ruleEngine/generalRule/updateRuleDefinition`,
+        UPDATE_DEFINITION: `${WEB_BASE_URL}/ruleEngine/generalRule/updateRuleDefinition`,
         GET_RULE_CONFIG: `${WEB_BASE_URL}/ruleEngine/generalRule/getRuleConfig`,
         GET_RULE_DEFINITION: `${WEB_BASE_URL}/ruleEngine/generalRule/getRuleDefinition`,
         SAVE_ACTION: `${WEB_BASE_URL}/ruleEngine/generalRule/saveAction`,
@@ -52,6 +52,8 @@ module.exports = {
         SAVE_DEFAULT_ACTION: `${WEB_BASE_URL}/ruleEngine/generalRule/saveDefaultAction`,
         DEFAULT_ACTION_SWITCH: `${WEB_BASE_URL}/ruleEngine/generalRule/defaultActionSwitch`,
         PUBLISH: `${WEB_BASE_URL}/ruleEngine/generalRule/publish`,
+        DOWNLOAD_LIST: `${WEB_BASE_URL}/ruleEngine/generalRule/downloadList`,
+        SHOW_HISTORY_VERSION_LIST: `${WEB_BASE_URL}/ruleEngine/generalRule/historyList`,
     },
     importExport: {
         EXPORT: `${WEB_BASE_URL}/ruleEngine/importExport/export`,
@@ -67,6 +69,7 @@ module.exports = {
     },
     condition: {
         UPDATE_CONDITION: `${WEB_BASE_URL}/ruleEngine/condition/update`,
+        ADD: `${WEB_BASE_URL}/ruleEngine/condition/add`,
     },
     conditionGroup: {
         SAVE_OR_UPDATE: `${WEB_BASE_URL}/ruleEngine/conditionGroup/saveOrUpdate`,
@@ -75,6 +78,8 @@ module.exports = {
     conditionGroupCondition: {
         SAVE_CONDITION_AND_BIND_GROUP: `${WEB_BASE_URL}/ruleEngine/conditionGroupCondition/saveConditionAndBindGroup`,
         DELETE_CONDITION: `${WEB_BASE_URL}/ruleEngine/conditionGroupCondition/deleteCondition`,
+        SWITCH_ORDER: `${WEB_BASE_URL}/ruleEngine/conditionGroupCondition/switchOrder`,
+        REARRANGE: `${WEB_BASE_URL}/ruleEngine/conditionGroupCondition/rearrange`,
     },
     inputParameter: {
         ADD: `${WEB_BASE_URL}/ruleEngine/inputParameter/add`,
@@ -91,6 +96,13 @@ module.exports = {
         UPDATE: `${WEB_BASE_URL}/ruleEngine/variable/update`,
         DELETE: `${WEB_BASE_URL}/ruleEngine/variable/delete`,
         VERIFY_VARIABLE_NAME: `${WEB_BASE_URL}/ruleEngine/variable/nameIsExists`,
+    },
+    formula: {
+        LIST: `${WEB_BASE_URL}/ruleEngine/formula/list`,
+        SAVE_FORMULA: `${WEB_BASE_URL}/ruleEngine/formula/saveFormula`,
+        GET_FORMULA: `${WEB_BASE_URL}/ruleEngine/formula/getFormula`,
+        UPDATE_FORMULA: `${WEB_BASE_URL}/ruleEngine/formula/updateFormula`,
+        DELETE_FORMULA: `${WEB_BASE_URL}/ruleEngine/formula/deleteFormula`,
     },
     ROUTES: `${WEB_BASE_URL}/routes`,
     GOODS: `${WEB_BASE_URL}/goods`,

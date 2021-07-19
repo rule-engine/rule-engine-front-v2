@@ -25,6 +25,8 @@ export default {
     let params = this.$route.params
     if (query.pageIndex) {
       this.currentPage = parseInt(query.pageIndex)
+    }else{
+      this.currentPage=2;
     }
     if (params.id) {
       try {

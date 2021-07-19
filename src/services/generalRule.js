@@ -24,8 +24,8 @@ export async function addGeneralRule(param) {
 }
 
 //更新规则定义
-export async function updateGeneralRule(param) {
-    return request(generalRule.UPDATE, METHOD.POST, param)
+export async function updateGeneralRuleDefinition(param) {
+    return request(generalRule.UPDATE_DEFINITION, METHOD.POST, param)
 }
 
 
@@ -66,6 +66,13 @@ export async function defaultActionSwitch(query) {
 
 export async function generalRulePublish(query) {
     return request(generalRule.PUBLISH, METHOD.POST, query)
+}
+
+export async function generalRuleDownloadList(query) {
+    return request(generalRule.DOWNLOAD_LIST, METHOD.POST, query)
+}
+export async function showHistoryVersionList(query) {
+    return request(generalRule.SHOW_HISTORY_VERSION_LIST, METHOD.POST, query)
 }
 
 export default {

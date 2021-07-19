@@ -1,6 +1,3 @@
-import {json} from "@/utils/json";
-
-export default json
 
 /**
  * 设置默认值

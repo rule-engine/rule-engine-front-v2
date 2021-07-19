@@ -54,7 +54,7 @@
           total: this.query.page.total}"
       >
         <div slot="workspaceAdminList" slot-scope="{text, record}">
-          <div class="admin-avatar" :style="'margin-left:'+((index*20+10)-20)+'px;z-index:'+index" :key="user.id"
+          <div class="admin-avatar" :style="'margin-left:'+((index*15+1)-20)+'px;z-index:'+index" :key="user.id"
                v-for="(user,index) in record.workspaceAdminList">
             <a-avatar v-if="index<4" size="small" icon="user" :src="user.avatar"/>
             <a-avatar size="small" :src="user.avatar" style="margin-left:-2px;
@@ -928,7 +928,6 @@ export default {
 }
 
 .admin-avatar {
-  position: absolute;
   float: left;
   margin-top: -10px;
 }
