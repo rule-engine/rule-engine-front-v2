@@ -14,7 +14,44 @@ function getValueTypeName(valueType) {
             return '函数'
         case 'UNKNOWN':
             return '未知' //返回值不确定
+        default:
+            return valueType;
     }
 }
 
-export {getValueTypeName}
+function getTypeName(type) {
+    switch (type) {
+        case 0:
+            return "参数";
+        case 1:
+            return "变量";
+        case 2:
+            return "固定值";
+        case 3:
+            return "函数";
+        case 4:
+            return "表达式";
+        default:
+            return type;
+    }
+}
+
+
+function valueType(v) {
+    if (v.type === 0) {
+        return 'PARAMETER';
+    }
+    if (v.type === 1) {
+        return 'VARIABLE';
+    }
+    if (v.type === 4) {
+        return 'FORMULA';
+    }
+    if (v.valueType) {
+        return v.valueType;
+    }
+    return undefined;
+}
+
+
+export {getValueTypeName, getTypeName, valueType}

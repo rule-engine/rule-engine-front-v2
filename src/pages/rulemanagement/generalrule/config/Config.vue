@@ -68,7 +68,7 @@
                           <a-tag color="cyan"
                                  style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
                             {{
-                              getConditionNamePrefix(cgc.condition.config.leftValue.type)
+                              getTypeName(cgc.condition.config.leftValue.type)
                             }}
                           </a-tag>
                           {{ getViewValue(cgc.condition.config.leftValue) }}
@@ -80,7 +80,7 @@
                           <a-tag color="cyan"
                                  style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
                             {{
-                              getConditionNamePrefix(cgc.condition.config.rightValue.type)
+                              getTypeName(cgc.condition.config.rightValue.type)
                             }}
                           </a-tag>
                           {{ getViewValue(cgc.condition.config.rightValue) }}
@@ -128,7 +128,7 @@
                                         }">
                         <a-select style="width:100%"
                                   placeholder="请选择结果类型"
-                                  :value="generalRule.action.type===0?'PARAMETER':(generalRule.action.type===1?'VARIABLE':generalRule.action.type===4?'FORMULA':generalRule.action.valueType===null?undefined:generalRule.action.valueType)"
+                                  :value="valueType(generalRule.action)"
                                   @change="actionValueTypeChange">
                           <a-select-option value="PARAMETER">参数</a-select-option>
                           <a-select-option value="VARIABLE">变量</a-select-option>
@@ -221,7 +221,7 @@
                         <a-select style="width:100%"
                                   :disabled="generalRule.action.valueType==null"
                                   placeholder="请选择类型"
-                                  :value="generalRule.defaultAction.type===0?'PARAMETER':(generalRule.defaultAction.type===1?'VARIABLE':generalRule.defaultAction.type===4?'FORMULA':generalRule.defaultAction.valueType===null?undefined:generalRule.defaultAction.valueType)"
+                                  :value="valueType(generalRule.defaultAction)"
                                   @change="defaultActionValueTypeChange"
                         >
                           <a-select-option value="PARAMETER">参数</a-select-option>
@@ -355,7 +355,7 @@
                                         trigger: ['change', 'blur'],
                                       }">
                 <a-select
-                    :value="selectCondition.from.config.leftValue.type===0?'PARAMETER':(selectCondition.from.config.leftValue.type===1?'VARIABLE':selectCondition.from.config.leftValue.type===4?'FORMULA':selectCondition.from.config.leftValue.valueType)"
+                    :value="valueType(selectCondition.from.config.leftValue)"
                     placeholder="请选择"
                     @change="leftValueTypeChange">
                   <a-select-option value="PARAMETER">参数</a-select-option>
@@ -464,7 +464,7 @@
                                       }">
                 <a-select
                     :disabled="(selectCondition.from.config.leftValue.value==null&&selectCondition.from.config.leftValue.type!==2&&selectCondition.from.config.rightValue.value==null)"
-                    :value="selectCondition.from.config.rightValue.type===0?'PARAMETER':(selectCondition.from.config.rightValue.type===1?'VARIABLE':selectCondition.from.config.rightValue.type===4?'FORMULA':selectCondition.from.config.rightValue.valueType)"
+                    :value="valueType(selectCondition.from.config.rightValue)"
                     placeholder="请选择"
                     @change="rightValueTypeChange"
                 >
@@ -606,6 +606,7 @@ import {mapState} from "vuex";
 // import ConditionItem from './ConditionItem'
 import TaskGroup from '@/components/task/TaskGroup'
 // import TaskItem from '@/components/task/TaskItem'
+import {getTypeName, valueType} from '@/utils/value-type'
 
 export default {
   name: "Config",
@@ -722,6 +723,9 @@ export default {
     },
   },
   methods: {
+    valueType(v) {
+      return valueType(v);
+    },
     // 移动条件
     moveCondition(args) {
       this.conditionMoveLoading = true;
@@ -759,23 +763,18 @@ export default {
         enableDefaultAction: this.generalRule.defaultAction.enableDefaultAction,
         value: undefined,
         valueName: undefined,
-        valueType: valueType,
-        variableValue: null,
+        valueType: undefined,
+        variableValue: undefined,
       };
       // 如果是变量或者元素
       if (valueType === 'PARAMETER') {
         this.generalRule.defaultAction.type = 0;
-        // 参数的类型
-        this.generalRule.defaultAction.valueType = null;
       } else if (valueType === 'VARIABLE') {
         this.generalRule.defaultAction.type = 1;
-        // 变量的类型
-        this.generalRule.defaultAction.valueType = null;
       } else if (valueType === 'FORMULA') {
         this.generalRule.defaultAction.type = 4;
-        // 变量的类型
-        this.generalRule.defaultAction.valueType = null;
       } else {
+        this.generalRule.defaultAction.valueType = valueType;
         this.generalRule.defaultAction.type = 2;
       }
       // 清空远程搜索缓存
@@ -899,22 +898,24 @@ export default {
           , this.generalRule.defaultAction.type)
     },
     actionSearchOptionClick(d) {
-      this.generalRule.action.value = d.id;
-      this.generalRule.action.valueType = d.valueType;
-      this.generalRule.action.valueName = d.name;
+      let action = this.generalRule.action;
+      action.value = d.id;
+      action.valueType = d.valueType;
+      action.valueName = d.name;
       // 变量  d.type 如果是固定值 则直接显示变量的值
-      if (this.generalRule.action.type === 1 && d.type === 2) {
-        this.generalRule.action.variableValue = d.value;
+      if (action.type === 1 && d.type === 2) {
+        action.variableValue = d.value;
       }
       this.saveAction();
     },
     defaultActionSearchOptionClick(d) {
-      this.generalRule.defaultAction.value = d.id;
-      this.generalRule.defaultAction.valueType = d.valueType;
-      this.generalRule.defaultAction.valueName = d.name;
+      let defaultAction = this.generalRule.defaultAction;
+      defaultAction.value = d.id;
+      defaultAction.valueType = d.valueType;
+      defaultAction.valueName = d.name;
       // 变量  d.type 如果是固定值 则直接显示变量的值
-      if (this.generalRule.defaultAction.type === 1 && d.type === 2) {
-        this.generalRule.defaultAction.variableValue = d.value;
+      if (defaultAction.type === 1 && d.type === 2) {
+        defaultAction.variableValue = d.value;
       }
       this.saveDefaultAction();
     },
@@ -956,12 +957,13 @@ export default {
       this.selectConditionLeftSearchSelect.value = value;
     },
     conditionLeftSearchOptionClick(d) {
-      this.selectCondition.from.config.leftValue.value = d.id;
-      this.selectCondition.from.config.leftValue.valueType = d.valueType;
-      this.selectCondition.from.config.leftValue.valueName = d.name;
+      let leftValue = this.selectCondition.from.config.leftValue;
+      leftValue.value = d.id;
+      leftValue.valueType = d.valueType;
+      leftValue.valueName = d.name;
       // 变量  d.type 如果是固定值 则直接显示变量的值
-      if ((this.selectCondition.from.config.leftValue.type === 1 && d.type === 2) || this.selectCondition.from.config.leftValue.type === 4) {
-        this.selectCondition.from.config.leftValue.variableValue = d.value;
+      if ((leftValue.type === 1 && d.type === 2) || leftValue.type === 4) {
+        leftValue.variableValue = d.value;
       }
       // 判断查询的变量或者元素 类型是否与右值相同，不相同则清空右值的
       if (d.valueType !== this.selectCondition.from.config.rightValue.valueType) {
@@ -990,23 +992,18 @@ export default {
       this.generalRule.action = {
         value: undefined,
         valueName: undefined,
-        valueType: valueType,
-        variableValue: null,
+        valueType: undefined,
+        variableValue: undefined,
       };
       // 如果是变量或者元素
       if (valueType === 'PARAMETER') {
         this.generalRule.action.type = 0;
-        // 参数的类型
-        this.generalRule.action.valueType = null;
       } else if (valueType === 'VARIABLE') {
         this.generalRule.action.type = 1;
-        // 变量的类型
-        this.generalRule.action.valueType = null;
       } else if (valueType === 'FORMULA') {
         this.generalRule.action.type = 4;
-        // 变量的类型
-        this.generalRule.action.valueType = null;
       } else {
+        this.generalRule.action.valueType = valueType;
         this.generalRule.action.type = 2;
       }
       // 清空远程搜索缓存
@@ -1019,10 +1016,12 @@ export default {
      * 条件左值类型修改
      */
     leftValueTypeChange(valueType) {
-      this.selectCondition.from.config.leftValue.value = undefined;
-      this.selectCondition.from.config.leftValue.valueName = undefined;
-      this.selectCondition.from.config.leftValue.variableValue = undefined;
-      this.selectCondition.from.config.leftValue.valueType = null;
+      this.selectCondition.from.config.leftValue = {
+        value: undefined,
+        valueName: undefined,
+        variableValue: undefined,
+        valueType: undefined,
+      }
       // 如果是变量或者元素
       if (valueType === 'PARAMETER') {
         this.selectCondition.from.config.leftValue.type = 0;
@@ -1074,19 +1073,22 @@ export default {
       this.selectConditionRightSearchSelect.value = value;
     },
     conditionRightSearchOptionClick(d) {
-      this.selectCondition.from.config.rightValue.value = d.id;
-      this.selectCondition.from.config.rightValue.valueType = d.valueType;
-      this.selectCondition.from.config.rightValue.valueName = d.name;
+      let rightValue = this.selectCondition.from.config.rightValue;
+      rightValue = d.id;
+      rightValue = d.valueType;
+      rightValue = d.name;
       // 变量  d.type 如果是固定值
-      if ((this.selectCondition.from.config.rightValue.type === 1 && d.type === 2) || this.selectCondition.from.config.rightValue.type === 4) {
-        this.selectCondition.from.config.rightValue.variableValue = d.value;
+      if ((rightValue.type === 1 && d.type === 2) || rightValue.type === 4) {
+        rightValue.variableValue = d.value;
       }
     },
     rightValueTypeChange(valueType) {
-      this.selectCondition.from.config.rightValue.value = undefined;
-      this.selectCondition.from.config.rightValue.valueName = undefined;
-      this.selectCondition.from.config.rightValue.variableValue = undefined;
-      this.selectCondition.from.config.rightValue.valueType = null;
+      this.selectCondition.from.config.rightValue = {
+        value: undefined,
+        valueName: undefined,
+        variableValue: undefined,
+        valueType: undefined,
+      }
       // 如果是变量或者元素
       if (valueType === 'PARAMETER') {
         this.selectCondition.from.config.rightValue.type = 0;
@@ -1103,19 +1105,8 @@ export default {
       this.selectConditionRightSearchSelect.data = [];
       this.selectConditionRightSearchSelect.value = undefined
     },
-    getConditionNamePrefix(type) {
-      if (type === 0) {
-        return "参数";
-      }
-      if (type === 1) {
-        return "变量";
-      }
-      if (type === 2) {
-        return "固定值";
-      }
-      if (type === 4) {
-        return "表达式";
-      }
+    getTypeName(type) {
+      return getTypeName(type);
     },
     isRightTypeSelectView(valueType) {
       // 保留一个与目前右边值类型相等的
