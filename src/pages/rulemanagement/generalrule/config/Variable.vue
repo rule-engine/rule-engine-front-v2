@@ -78,6 +78,14 @@
                 @ok="handleAddOk('addVariableForm')"
                 @cancel="handleAddCancel('addVariableForm')">
             <template>
+
+              <div v-if="add.form.id!==undefined">
+                <a-alert type="info" show-icon
+                    message="变量修改会影响线上规则运行，规则内所有版本共享同一个变量"
+                />
+                <br>
+              </div>
+
                 <a-form-model ref="addVariableForm" :model="add.form" :label-col="{span: 4}"
                               :wrapper-col="{span: 16}">
                     <a-form-model-item label="变量名称" prop="name" has-feedback :rules="{
