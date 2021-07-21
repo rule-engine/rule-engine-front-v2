@@ -32,10 +32,10 @@
 
                             <a-card slot="content" title="模拟运行" style="width: 380px">
                               <a-icon slot="extra" type="right" @click="runTestMethod"
-                                      v-if="!runTest.resultView"
+                                      v-if="!runTest.resultView&&this.runTest.status!=='exception'"
                                       style="font-size: 16px;"></a-icon>
                               <a-icon slot="extra" type="arrow-left" @click="backToTest"
-                                      v-if="runTest.resultView"
+                                      v-if="runTest.resultView||this.runTest.status==='exception'"
                                       style="font-size: 16px;"></a-icon>
                               <a-icon v-if="runTest.resultView" slot="extra" type="reload"
                                       @click="runTestMethod"
@@ -280,7 +280,9 @@ export default {
       return getTypeName(type);
     },
     backToTest() {
+      this.runTest.status = 'normal'
       this.runTest.resultView = false;
+      this.runTest.run = false;
     },
     runTestMethod() {
       this.runTest.status = 'normal'
@@ -310,7 +312,7 @@ export default {
             this.runTest.resultView = true;
           }, 1000);
         } else {
-          this.runTest.percent = 0;
+          this.runTest.percent = 100;
           this.runTest.status = 'exception'
         }
       })
