@@ -612,11 +612,10 @@
             },
             addNew() {
                 this.newGeneralRule.visible = true;
-                this.newGeneralRule.form = {
-                    id: null,
-                    name: null,
-                    code: null,
-                    description: null,
+                // 如果有这个表单，则重置数据
+                let generalRule = this.$refs.generalRule;
+                if(generalRule){
+                  generalRule.resetFields();
                 }
             },
             queryBasicInfo(record) {
