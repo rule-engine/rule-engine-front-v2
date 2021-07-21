@@ -498,10 +498,6 @@
                             title: '名称',
                             dataIndex: 'name'
                         },
-                        // {
-                        //     title: '编码',
-                        //     dataIndex: 'code',
-                        // },
                         {
                             title: '规则版本',
                             dataIndex: 'version',
@@ -576,6 +572,11 @@
                 deleteGeneralRule({id: record.id}).then(res => {
                     if (res.data.data) {
                         this.$message.success("删除成功！");
+                        // 删除规则时并删除这个规则标签页面
+                        // 存在bug
+                        // this.$closePage({
+                        //   path: '/generalRuleRouter/' + record.id
+                        // })
                         // 重新加载列表
                         this.loadDataList();
                     }
