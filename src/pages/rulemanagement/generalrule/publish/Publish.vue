@@ -235,14 +235,9 @@ export default {
         resultView: false,
       },
       request: {
-        url: "http://ruleserver.cn/ruleEngine/generalRule/execute",
+        url: process.env.VUE_APP_COMPUTE_BASE_URL + "/ruleEngine/generalRule/execute",
         requestJson: null,
-        param: [{
-          name: "年龄",
-          value: null,
-          code: "age",
-          valueType: 'STRING',
-        }],
+        param: [],
       },
     }
   },
