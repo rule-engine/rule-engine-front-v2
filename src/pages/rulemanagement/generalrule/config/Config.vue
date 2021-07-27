@@ -39,64 +39,75 @@
 
                 <a-skeleton v-if="generalRule.conditionGroup.length===0" :paragraph="{ rows: 3 }"/>
                 <a-spin :spinning="conditionMoveLoading">
-                  <a-card :title="cg.name" :bordered="false"
-                          v-for="(cg,cgi) in generalRule.conditionGroup"
-                          :key="cg.id">
 
-                    <a-icon type="delete" class="dynamic-delete-button" style="font-size: 18px"
-                            slot="extra"
-                            @click="deleteConditionGroup(cg)"></a-icon>
+                  <task-group title="条件集" :group="generalRule.ruleId"
+                              handle=".mover"
+                              :rule-id="generalRule.ruleId"
+                              :loading.sync="conditionMoveLoading"
+                              :data-list="generalRule.conditionGroup">
+                    <a-card :title="cg.name" :bordered="false"
+                            v-for="(cg,cgi) in generalRule.conditionGroup"
+                            :key="cg.id">
 
-                    <a-skeleton v-if="cg.conditionGroupCondition.length===0"
-                                :paragraph="{ rows: 2 }"/>
-                    <task-group :title="cg.name" :group="cg.id"
-                                :data-list="generalRule.conditionGroup"
-                                :condition-group-id="cg.id"
-                                @update="moveCondition">
-                      <a-alert closable
-                               style="border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"
-                               v-for="cgc in cg.conditionGroupCondition"
-                               :key="cgc.id"
-                               @dblclick.native="editCondition(cg,cgc)"
-                               @close="deleteCondition(cg.conditionGroupCondition,cgc.id,cgc.id)"
-                               class="conditionItem task-item">
-                        <p slot="description" style="margin-bottom: 0;">
-                          <a-tag color="blue"
-                                 style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                            （{{ cgc.condition.name }}）
-                          </a-tag>
-                          <a-tag color="cyan"
-                                 style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                            {{
-                              getTypeName(cgc.condition.config.leftValue.type)
-                            }}
-                          </a-tag>
-                          {{ getViewValue(cgc.condition.config.leftValue) }}
-                          &nbsp;
-                          <a-tag color="orange"
-                                 style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                            {{ getSymbolExplanation(cgc.condition.config.symbol) }}
-                          </a-tag>
-                          <a-tag color="cyan"
-                                 style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                            {{
-                              getTypeName(cgc.condition.config.rightValue.type)
-                            }}
-                          </a-tag>
-                          {{ getViewValue(cgc.condition.config.rightValue) }}
-                        </p>
-                      </a-alert>
-                    </task-group>
+                      <a-icon type="drag" class="dynamic-delete-button mover"
+                              style="font-size: 18px;margin-right: 10px;"
+                              slot="extra"/>
+
+                      <a-icon type="delete" class="dynamic-delete-button" style="font-size: 18px"
+                              slot="extra"
+                              @click="deleteConditionGroup(cg)"></a-icon>
+
+                      <a-skeleton v-if="cg.conditionGroupCondition.length===0"
+                                  :paragraph="{ rows: 2 }"/>
+                      <task-group :title="cg.name" :group="cg.id"
+                                  :data-list="generalRule.conditionGroup"
+                                  :condition-group-id="cg.id"
+                                  :loading.sync="conditionMoveLoading">
+                        <a-alert closable
+                                 style="border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"
+                                 v-for="cgc in cg.conditionGroupCondition"
+                                 :key="cgc.id"
+                                 @dblclick.native="editCondition(cg,cgc)"
+                                 @close="deleteCondition(cg.conditionGroupCondition,cgc.id,cgc.id)"
+                                 class="conditionItem task-item">
+                          <p slot="description" style="margin-bottom: 0;">
+                            <a-tag color="blue"
+                                   style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                              （{{ cgc.condition.name }}）
+                            </a-tag>
+                            <a-tag color="cyan"
+                                   style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                              {{
+                                getTypeName(cgc.condition.config.leftValue.type)
+                              }}
+                            </a-tag>
+                            {{ getViewValue(cgc.condition.config.leftValue) }}
+                            &nbsp;
+                            <a-tag color="orange"
+                                   style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                              {{ getSymbolExplanation(cgc.condition.config.symbol) }}
+                            </a-tag>
+                            <a-tag color="cyan"
+                                   style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                              {{
+                                getTypeName(cgc.condition.config.rightValue.type)
+                              }}
+                            </a-tag>
+                            {{ getViewValue(cgc.condition.config.rightValue) }}
+                          </p>
+                        </a-alert>
+                      </task-group>
 
 
-                    <br>
+                      <br>
 
-                    <a-button type="dashed" style="width: 50%;display:block;margin:0 auto"
-                              @click="addCondition(cg,`addConditionForm${cgi}`)">
-                      <a-icon type="plus" style="color: #777;"/>
-                      添加条件
-                    </a-button>
-                  </a-card>
+                      <a-button type="dashed" style="width: 50%;display:block;margin:0 auto"
+                                @click="addCondition(cg,`addConditionForm${cgi}`)">
+                        <a-icon type="plus" style="color: #777;"/>
+                        添加条件
+                      </a-button>
+                    </a-card>
+                  </task-group>
                 </a-spin>
                 <a-button type="dashed" style="width: 100%" @click="addConditionGroup()">
                   <a-icon type="plus" style="color: #777;"/>
@@ -593,7 +604,7 @@ import {
   saveDefaultAction,
   defaultActionSwitch
 } from '@/services/generalRule'
-import {saveConditionAndBindGroup, deleteCondition, rearrange} from '@/services/conditionGroupCondition'
+import {saveConditionAndBindGroup, deleteCondition} from '@/services/conditionGroupCondition'
 import {updateCondition} from '@/services/condition'
 
 
@@ -725,38 +736,6 @@ export default {
   methods: {
     valueType(v) {
       return valueType(v);
-    },
-    // 移动条件
-    moveCondition(args) {
-      this.conditionMoveLoading = true;
-      // 重新排序
-      let toOrderNo = args.to.orderNo;
-      let formOrderNo = args.from.orderNo;
-      if (toOrderNo <= args.from.orderNo) {
-        args.cgc.forEach(f => {
-          if (f.orderNo !== formOrderNo && f.orderNo >= args.to.orderNo) {
-            f.orderNo = f.orderNo + 1;
-          }
-        });
-        args.from.orderNo = toOrderNo;
-      } else {
-        args.cgc.forEach(f => {
-          if (f.orderNo !== formOrderNo && f.orderNo <= toOrderNo) {
-            f.orderNo = f.orderNo - 1;
-          }
-        });
-        args.from.orderNo = toOrderNo;
-      }
-      args.cgc.sort((a, b) => a.orderNo - b.orderNo);
-      // 调用后端重新排序
-      rearrange(Array.from(args.cgc).map(m => ({
-        id: m.id,
-        orderNo: m.orderNo
-      }))).then(res => {
-        if (res.data.data) {
-          this.conditionMoveLoading = false;
-        }
-      });
     },
     defaultActionValueTypeChange(valueType) {
       this.generalRule.defaultAction = {

@@ -74,6 +74,7 @@ module.exports = {
     conditionGroup: {
         SAVE_OR_UPDATE: `${WEB_BASE_URL}/ruleEngine/conditionGroup/saveOrUpdate`,
         DELETE_CONDITION_GROUP: `${WEB_BASE_URL}/ruleEngine/conditionGroup/delete`,
+        REARRANGE: `${WEB_BASE_URL}/ruleEngine/conditionGroup/rearrange`,
     },
     conditionGroupCondition: {
         SAVE_CONDITION_AND_BIND_GROUP: `${WEB_BASE_URL}/ruleEngine/conditionGroupCondition/saveConditionAndBindGroup`,
