@@ -54,6 +54,7 @@ module.exports = {
         PUBLISH: `${WEB_BASE_URL}/ruleEngine/generalRule/publish`,
         DOWNLOAD_LIST: `${WEB_BASE_URL}/ruleEngine/generalRule/downloadList`,
         SHOW_HISTORY_VERSION_LIST: `${WEB_BASE_URL}/ruleEngine/generalRule/historyList`,
+        GO_BACK: `${WEB_BASE_URL}/ruleEngine/generalRule/goBack`,
     },
     importExport: {
         EXPORT: `${WEB_BASE_URL}/ruleEngine/importExport/export`,
