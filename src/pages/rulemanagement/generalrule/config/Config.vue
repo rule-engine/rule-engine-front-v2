@@ -45,9 +45,16 @@
                               :rule-id="generalRule.ruleId"
                               :loading.sync="conditionMoveLoading"
                               :data-list="generalRule.conditionGroup">
-                    <a-card :title="cg.name" :bordered="false"
+                    <a-card :bordered="false"
                             v-for="(cg,cgi) in generalRule.conditionGroup"
                             :key="cg.id">
+
+                      <div slot="title" style="margin-right: 16px;padding-left: 2px;">
+                        <a-input class="conditionGroupNameInput"
+                                 style="font-size: 16px;color: rgba(0, 0, 0, 0.85);padding: 0;border: none;background: none;"
+                                 @blur="updateConditionGroupName(cg)"
+                                 :placeholder="`条件组${cgi}`" v-model="cg.name"/>
+                      </div>
 
                       <a-icon type="drag" class="dynamic-delete-button mover"
                               style="font-size: 18px;margin-right: 10px;"
@@ -1220,6 +1227,13 @@ export default {
           this.generalRule.conditionGroup.push(newConditionGroup);
           this.$message.success("添加条件组成功");
         }
+      });
+    },
+    updateConditionGroupName(cg) {
+      saveOrUpdate({
+        id: cg.id,
+        ruleId: this.generalRule.ruleId,
+        name: cg.name
       });
     },
     deleteConditionGroup(cg) {
