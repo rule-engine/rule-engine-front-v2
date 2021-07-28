@@ -639,7 +639,12 @@ import {
   // getRuleConfig,
   generationRelease,
   saveDefaultRule,
+<<<<<<< HEAD
   defaultActionSwitch
+=======
+  defaultRuleSetSwitch,
+  deleteRuleSetRule
+>>>>>>> 2882deeb14cbc8721ea02fd6bdc860bd71a5db06
 } from '@/services/ruleSet'
 import {deleteRuleSetRule} from '@/services/rule'
 import {getRuleSetConfig, updateStrategyType} from '@/services/ruleSet'
@@ -848,10 +853,11 @@ export default {
         }
         defaultAction.enableDefaultAction = 0;
       }
-      defaultActionSwitch({
+      defaultRuleSetSwitch({
         ruleSetId: this.ruleSet.id,
         enableDefaultAction: defaultAction.enableDefaultAction
       }).then(res => {
+        console.log(res);
         if (res.data.data) {
           this.$message.success(defaultAction.enableDefaultAction === 0 ? '默认结果已开启' : '默认结果已关闭');
         }
