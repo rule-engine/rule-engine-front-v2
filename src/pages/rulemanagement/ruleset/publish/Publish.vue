@@ -1,7 +1,7 @@
 <template>
   <div>
     <page-layout>
-      <a-card title="规则预览发布" :bordered="false">
+      <a-card title="规则集预览发布" :bordered="false">
         <span slot="extra" style="margin-left: 16px;">
               <a-popover trigger="click" arrow-point-at-center
                          overlayClassName="runTest">
@@ -86,60 +86,67 @@
         <vue-scroll :ops="ops" style="width:100%;height:100%">
           <div :style="isMobile?'width:1000px;margin: 0 auto':''">
             <br>
-            <a-timeline>
-              <a-timeline-item v-for="(cg,cgi) in generalRule.conditionGroup" :key="cg.id">
-                <span style="color: #606266;font-size: 14px;" v-if="0===cgi">如果</span>
-                <span style="color: #606266;font-size: 14px;" v-else>或者</span>
-                <div v-for="(cgc) in cg.conditionGroupCondition" style="margin-left: 20px;"
-                     :key="cgc.id">
-                  <a-alert style="border:none;padding: 6px 6px 6px 6px;margin-bottom: 10px"
-                           class="conditionItem">
-                    <p slot="description" style="margin-bottom: 0;">
-                      <a-tag color="blue"
-                             style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                        （{{ cgc.condition.name }}）
-                      </a-tag>
-                      <a-tag color="cyan"
-                             style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                        {{ getTypeName(cgc.condition.config.leftValue.type) }}
-                      </a-tag>
-                      {{ getViewValue(cgc.condition.config.leftValue) }}
-                      &nbsp;
-                      <a-tag color="orange"
-                             style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                        {{ cgc.condition.config.symbol }}
-                      </a-tag>
-                      <a-tag color="cyan"
-                             style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                        {{ getTypeName(cgc.condition.config.rightValue.type) }}
-                      </a-tag>
-                      {{ getViewValue(cgc.condition.config.rightValue) }}
-                    </p>
-                  </a-alert>
-                </div>
-              </a-timeline-item>
-            </a-timeline>
-            <span style="color: #606266;font-size: 14px;">返回</span>
+
+            <a-card :title="rs.name" class="rule_set" v-for="rs in ruleSet.ruleSet" :key="rs.id"
+                    style="margin-bottom: 10px">
+              <a-timeline>
+                <a-timeline-item v-for="(cg,cgi) in rs.conditionGroup" :key="cg.id">
+                  <span style="color: #606266;font-size: 14px;" v-if="0===cgi">如果</span>
+                  <span style="color: #606266;font-size: 14px;" v-else>或者</span>
+                  <div v-for="(cgc) in cg.conditionGroupCondition" style="margin-left: 20px;"
+                       :key="cgc.id">
+                    <a-alert style="border:none;padding: 6px 6px 6px 6px;margin-bottom: 10px"
+                             class="conditionItem">
+                      <p slot="description" style="margin-bottom: 0;">
+                        <a-tag color="blue"
+                               style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                          （{{ cgc.condition.name }}）
+                        </a-tag>
+                        <a-tag color="cyan"
+                               style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                          {{ getTypeName(cgc.condition.config.leftValue.type) }}
+                        </a-tag>
+                        {{ getViewValue(cgc.condition.config.leftValue) }}
+                        &nbsp;
+                        <a-tag color="orange"
+                               style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                          {{ cgc.condition.config.symbol }}
+                        </a-tag>
+                        <a-tag color="cyan"
+                               style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                          {{ getTypeName(cgc.condition.config.rightValue.type) }}
+                        </a-tag>
+                        {{ getViewValue(cgc.condition.config.rightValue) }}
+                      </p>
+                    </a-alert>
+                  </div>
+                </a-timeline-item>
+              </a-timeline>
+              <span style="color: #606266;font-size: 14px;">返回</span>
+              <div style="margin-left: 20px;margin-top: 3px;">
+                <a-alert :closable="false" type="success"
+                         style="border:none;padding: 6px 6px 6px 6px;margin-bottom: 10px">
+                  <p slot="description" style="margin-bottom: 0;">
+                    {{ getActionView(rs.action) }}
+                  </p>
+                </a-alert>
+              </div>
+            </a-card>
+
+            <span v-if="ruleSet.ruleSet.length===0" style="color: #606266;font-size: 14px;">返回</span>
+            <span v-else>
+                  <br>
+                  <span style="color: #606266;font-size: 14px;">否则返回</span>
+                </span>
+            <br>
             <div style="margin-left: 20px;margin-top: 3px;">
-              <a-alert :closable="false" type="success"
+              <a-alert :closable="false" type="warning"
                        style="border:none;padding: 6px 6px 6px 6px;margin-bottom: 10px">
                 <p slot="description" style="margin-bottom: 0;">
-                  {{ getActionView(generalRule.action) }}
+                  {{ getDefaultRuleView(ruleSet.defaultRule) }}
                 </p>
               </a-alert>
             </div>
-            <span v-if="generalRule.conditionGroup.length!==0">
-                    <span style="color: #606266;font-size: 14px;">否则返回</span>
-                    <br>
-                    <div style="margin-left: 20px;margin-top: 3px;">
-                      <a-alert :closable="false" type="warning"
-                               style="border:none;padding: 6px 6px 6px 6px;margin-bottom: 10px">
-                        <p slot="description" style="margin-bottom: 0;">
-                        {{ getDefaultActionView(generalRule.defaultAction) }}
-                        </p>
-                      </a-alert>
-                    </div>
-       </span>
           </div>
         </vue-scroll>
       </a-card>
@@ -160,7 +167,7 @@
 import FooterToolBar from '@/components/tool/FooterToolBar'
 import PageLayout from "@/layouts/PageLayout";
 
-import {runTest, viewGeneralRule, generalRulePublish} from '@/services/generalRule'
+import {runTest, viewRuleSet, ruleSetPublish} from '@/services/ruleSet'
 import moment from "moment";
 import {mapState} from "vuex";
 import {copy} from '@/utils/clipboardUtil'
@@ -191,37 +198,27 @@ export default {
           "overflow-x": "hidden"
         }
       },
-      generalRule: {
-        id: 226,
-        name: null,
-        code: 'ccc2222',
-        description: null,
-        workspaceCode: 'test',
-        ruleId: null,
-        conditionGroup: [],
-        action: {
-          value: undefined,
-          valueName: null,
-          valueType: 'NUMBER',
-          type: null,
-          loading: false,
-          searchSelect: {
-            data: [],
+      ruleSet: {
+        "id": null,
+        "name": null,
+        "code": null,
+        "description": null,
+        "workspaceId": null,
+        "workspaceCode": "test",
+        "ruleSet": [],
+        "strategyType": 1,
+        "enableDefaultRule": null,
+        defaultRule: {
+          id: null,
+          name: "默认规则",
+          conditionGroup: [], //扩展
+          action: {
             value: undefined,
+            valueName: null,
+            valueType: null,
+            type: null,
           }
-        },
-        defaultAction: {
-          enableDefaultAction: 1,
-          value: undefined,
-          valueName: null,
-          valueType: 'NUMBER',
-          type: null,
-          loading: false,
-          searchSelect: {
-            data: [],
-            value: undefined,
-          }
-        },
+        }
       },
       footer: {
         loading: false,
@@ -235,14 +232,14 @@ export default {
         resultView: false,
       },
       request: {
-        url: process.env.VUE_APP_COMPUTE_BASE_URL + "/ruleEngine/generalRule/execute",
+        url: process.env.VUE_APP_COMPUTE_BASE_URL + "/ruleEngine/ruleSet/execute",
         requestJson: null,
         param: [],
       },
     }
   },
   mounted() {
-    this.generalRule.id = this.id;
+    this.ruleSet.id = this.id;
     this.getRuleConfig();
   },
   methods: {
@@ -269,9 +266,9 @@ export default {
       }
       return action.valueName;
     },
-    getDefaultActionView(defaultAction) {
-      if (defaultAction.enableDefaultAction === 0) {
-        return this.getActionView(defaultAction);
+    getDefaultRuleView(defaultRule) {
+      if (defaultRule != null && defaultRule.enableDefaultRule === 0) {
+        return this.getActionView(defaultRule.action);
       } else {
         return 'null';
       }
@@ -293,10 +290,10 @@ export default {
         params[e.code] = e.value === undefined ? '' : e.value;
       });
       let requestJson = {
-        "id": this.generalRule.id,
+        "id": this.ruleSet.id,
         "status": 1,
-        "code": this.generalRule.code,
-        "workspaceCode": this.generalRule.workspaceCode,
+        "code": this.ruleSet.code,
+        "workspaceCode": this.ruleSet.workspaceCode,
         "param": params
       };
       this.runTest.percent = 40;
@@ -318,12 +315,12 @@ export default {
       })
     },
     getRuleConfig() {
-      viewGeneralRule({
-        "id": this.generalRule.id,
+      viewRuleSet({
+        "id": this.ruleSet.id,
         "status": 1
       }).then(res => {
         let da = res.data.data;
-        this.generalRule = da;
+        this.ruleSet = da;
         let param = {};
         if (da.parameters != null && da.parameters.length !== 0) {
           da.parameters.forEach((e) => {
@@ -341,17 +338,17 @@ export default {
       })
     },
     previous() {
-      this.$emit("choicePage", {pageIndex: 2, id: this.generalRule.id})
+      this.$emit("choicePage", {pageIndex: 2, id: this.ruleSet.id})
     },
     publish() {
-      let id = this.generalRule.id;
+      let id = this.ruleSet.id;
       let _this = this;
       this.$confirm({
         title: '发布规则',
         content: '你确定发布吗，将会导致已发布规则变更！',
         onOk() {
           return new Promise((resolve) => {
-            generalRulePublish({
+            ruleSetPublish({
               id: id
             }).then(res => {
               if (res.data.data) {
