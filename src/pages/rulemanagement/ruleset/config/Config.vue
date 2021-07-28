@@ -45,14 +45,14 @@
                                 :rule-set-id="ruleSet.id"
                                 :loading.sync="ruleMoveLoading"
                                 :data-list="ruleSet.ruleSet">
-                      <a-card :bordered="false" title="规则" v-for="(rs,rsi) in ruleSet.ruleSet" :key="rs.id"
+                      <a-card :bordered="false" v-for="(rs,rsi) in ruleSet.ruleSet" :key="rs.id"
                               style="margin-bottom: 10px">
 
                         <div slot="title" style="margin-right: 16px;padding-left: 2px;">
                           <a-input class="conditionGroupNameInput"
                                    style="font-size: 16px;color: rgba(0, 0, 0, 0.85);padding: 0;border: none;background: none;"
                                    @blur="updateRuleName(rs)"
-                                   :placeholder="`条件组${rsi}`" v-model="rs.name"/>
+                                   :placeholder="`规则${rsi}`" v-model="rs.name"/>
                         </div>
 
                         <a-icon type="drag" class="dynamic-delete-button ruleMover"
@@ -415,7 +415,7 @@ import {
   defaultRuleSetSwitch
 } from '@/services/ruleSet'
 import {deleteCondition} from '@/services/conditionGroupCondition'
-import {deleteRuleSetRule, saveRuleAndBindRuleSet, saveAction} from '@/services/rule'
+import {deleteRuleSetRule, saveRuleAndBindRuleSet, saveAction, saveOrUpdateRule} from '@/services/rule'
 
 
 //import {listInputParameter} from '@/services/inputParameter'
@@ -518,8 +518,11 @@ export default {
     valueType(v) {
       return valueType(v);
     },
-    updateRuleName() {
-
+    updateRuleName(rs) {
+      saveOrUpdateRule({
+        id: rs.id,
+        name: rs.name
+      })
     },
     updateStrategyType(type) {
       updateStrategyType({

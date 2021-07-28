@@ -81,6 +81,7 @@ module.exports = {
         SAVE_ACTION: `${WEB_BASE_URL}/ruleEngine/rule/saveAction`,
         REARRANGE: `${WEB_BASE_URL}/ruleEngine/rule/rearrange`,
         DELETE_RULE_SET_RULE: `${WEB_BASE_URL}/ruleEngine/rule/deleteRuleSetRule`,
+        SAVE_OR_ACTION: `${WEB_BASE_URL}/ruleEngine/rule/saveOrUpdateRule`,
     },
     importExport: {
         EXPORT: `${WEB_BASE_URL}/ruleEngine/importExport/export`,
