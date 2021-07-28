@@ -104,7 +104,7 @@
                 <a-icon type="download"/>
                 下载
               </a-menu-item>
-              <a-menu-item @click="showHistoryVersion(record)">
+              <a-menu-item @click="showHistoryVersion(record.id)">
                 <a-icon type="history"/>
                 历史版本
               </a-menu-item>
@@ -552,13 +552,12 @@ export default {
   },
   methods: {
     deleteHistorical(record){
-      this.loading = true;
+      this.historyVersion.loading = true;
       deleteHistoricalRules({id: record.id}).then(res => {
         if (res.data.data) {
           this.$message.success("删除成功！");
           this.showHistoryVersion(this.historyVersion.query.query.id);
         }
-        this.loading = false;
       })
     },
     ruleCodeValidator(rule, value, callback) {
@@ -742,8 +741,9 @@ export default {
         }
       })
     },
-    showHistoryVersion(record) {
-      this.historyVersion.query.query.id = record.id;
+    showHistoryVersion(id) {
+      this.historyVersion.loading = true;
+      this.historyVersion.query.query.id = id;
       showHistoryVersionList(
           this.historyVersion.query
       ).then(res => {
@@ -755,6 +755,7 @@ export default {
           this.historyVersion.dataSource = []
         }
         this.historyVersion.visible = true;
+        this.historyVersion.loading = false;
       });
     },
     historyVersionHandleOk() {
