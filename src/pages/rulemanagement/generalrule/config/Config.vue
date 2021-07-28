@@ -145,7 +145,7 @@
                                           trigger: ['change', 'blur'],
                                         }">
                         <a-select style="width:100%"
-                                  :disabled="generalRule.publishVersion"
+                                  :disabled="generalRule.publishVersion!==null"
                                   placeholder="请选择结果类型"
                                   :value="valueType(generalRule.action)"
                                   @change="actionValueTypeChange">
@@ -238,7 +238,7 @@
                                           trigger: ['change', 'blur'],
                                         }:{required:false}">
                         <a-select style="width:100%"
-                                  :disabled="generalRule.action.valueType==null||generalRule.publishVersion"
+                                  :disabled="generalRule.action.valueType==null||generalRule.publishVersion!==null"
                                   placeholder="请选择类型"
                                   :value="valueType(generalRule.defaultAction)"
                                   @change="defaultActionValueTypeChange"
