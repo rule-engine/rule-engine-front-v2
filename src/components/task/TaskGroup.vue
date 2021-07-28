@@ -1,7 +1,7 @@
 <template>
   <div class="task-group">
     <div class="task-content">
-      <draggable :options="dragOptions" :handle="handle" @update="update" :id="id">
+      <draggable :v-bind="dragOptions" :handle="handle" @update="update" :id="id">
         <slot></slot>
       </draggable>
     </div>
