@@ -638,7 +638,6 @@ import {
   // getRuleConfig,
   generationRelease,
   saveDefaultRule,
-  defaultActionSwitch,
   defaultRuleSetSwitch
 } from '@/services/ruleSet'
 import {deleteRuleSetRule} from '@/services/rule'
