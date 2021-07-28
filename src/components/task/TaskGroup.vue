@@ -12,6 +12,7 @@
 import Draggable from 'vuedraggable'
 import {conditionGroupRearrange} from "@/services/conditionGroup";
 import {rearrange} from "@/services/conditionGroupCondition";
+import {ruleSetRuleRearrange} from '@/services/ruleSet'
 
 const dragOptions = {
   sort: true,
@@ -37,6 +38,20 @@ export default {
       this.$emit("update:loading", true);
       if (this.ruleSetId) {
         // 移动规则集中规则
+        this.rearrangeOrder({
+          from: this.dataList[e.oldIndex],
+          to: this.dataList[e.newIndex],
+          data: this.dataList
+        });
+        // 调用后端重新排序
+        ruleSetRuleRearrange(Array.from(this.dataList).map(m => ({
+          id: m.id,
+          orderNo: m.orderNo
+        }))).then(res => {
+          if (res.data.data) {
+            this.$emit("update:loading", false);
+          }
+        });
 
       } else if (this.ruleId) {
         this.rearrangeOrder({
