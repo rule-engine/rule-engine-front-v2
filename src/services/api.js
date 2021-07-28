@@ -55,6 +55,7 @@ module.exports = {
         DOWNLOAD_LIST: `${WEB_BASE_URL}/ruleEngine/generalRule/downloadList`,
         SHOW_HISTORY_VERSION_LIST: `${WEB_BASE_URL}/ruleEngine/generalRule/historyList`,
         GO_BACK: `${WEB_BASE_URL}/ruleEngine/generalRule/goBack`,
+        DELETE_HISTORICAL_RULES: `${WEB_BASE_URL}/ruleEngine/generalRule/deleteHistoricalRules`,
     },
     importExport: {
         EXPORT: `${WEB_BASE_URL}/ruleEngine/importExport/export`,

@@ -75,6 +75,10 @@ export async function showHistoryVersionList(query) {
     return request(generalRule.SHOW_HISTORY_VERSION_LIST, METHOD.POST, query)
 }
 
+export async function deleteHistoricalRules(query) {
+    return request(generalRule.DELETE_HISTORICAL_RULES, METHOD.POST, query)
+}
+
 export async function goBack(query) {
     return request(generalRule.GO_BACK, METHOD.POST, query)
 }
