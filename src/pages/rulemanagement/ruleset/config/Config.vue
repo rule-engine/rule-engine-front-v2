@@ -39,11 +39,11 @@
                 <a-card title="规则集" class="rule_set">
 
                   <a-skeleton v-if="ruleSet.ruleSet.length===0" :paragraph="{ rows: 3 }"/>
-                  <a-spin :spinning="conditionMoveLoading">
+                  <a-spin :spinning="ruleMoveLoading">
                     <task-group title="规则" :group="ruleSet.id"
                                 handle=".ruleMover"
                                 :rule-set-id="ruleSet.id"
-                                :loading.sync="conditionMoveLoading"
+                                :loading.sync="ruleMoveLoading"
                                 :data-list="ruleSet.ruleSet">
                       <a-card :bordered="false" title="规则" v-for="(rs,rsi) in ruleSet.ruleSet" :key="rs.id"
                               style="margin-bottom: 10px">
@@ -64,7 +64,7 @@
                                 @click="deleteRule(rs,ruleSet.ruleSet)"></a-icon>
 
                         <a-skeleton v-if="ruleSet.ruleSet.length===0" :paragraph="{ rows: 3 }"/>
-                        <a-spin :spinning="conditionMoveLoading">
+
 
                           <a-card title="条件集" class="condition_set">
                             <a-skeleton v-if="rs.conditionGroup.length===0" :paragraph="{ rows: 3 }"/>
@@ -239,7 +239,7 @@
                             </a-row>
 
                           </a-card>
-                        </a-spin>
+
                       </a-card>
                     </task-group>
                   </a-spin>
@@ -670,6 +670,7 @@ export default {
     return {
       //条件组loading
       conditionMoveLoading: false,
+      ruleMoveLoading: false,
       ops: {
         vuescroll: {},
         scrollPanel: {},
