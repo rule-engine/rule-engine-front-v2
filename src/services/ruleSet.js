@@ -88,6 +88,11 @@ export async function goBack(query) {
 export async function ruleSetRuleRearrange(param) {
     return request(ruleSet.REARRANGE, METHOD.POST, param)
 }
+
+export async function updateStrategyType(query) {
+    return request(ruleSet.UPDATE_STRATEGY_TYPE, METHOD.POST, query)
+}
+
 export default {
     list,
 }
