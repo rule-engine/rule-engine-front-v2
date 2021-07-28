@@ -796,9 +796,7 @@ export default {
               ruleSetList.splice(index, 1);
             }
           });
-          _this.$message.success("删除条件成功");
-        } else {
-          _this.$message.warning("删除条件失败");
+          _this.$message.success("删除规则成功");
         }
       })
 

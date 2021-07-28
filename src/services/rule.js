@@ -1,15 +1,15 @@
 import {METHOD, request} from "@/utils/request";
-import {rule, ruleSet} from "@/services/api";
+import {rule} from "@/services/api";
 
 
 export async function saveRuleAndBindRuleSet(query) {
     return request(rule.SAVE_RULE_AND_BIND_RULE_SET, METHOD.POST, query)
 }
 export async function ruleSetRuleRearrange(param) {
-    return request(ruleSet.REARRANGE, METHOD.POST, param)
+    return request(rule.REARRANGE, METHOD.POST, param)
 }
-export async function deleteRuleSetRule(query) {
-    return request(ruleSet.DELETE_RILE_SET_RULE, METHOD.POST, query)
+export async function deleteRuleSetRule(param) {
+    return request(rule.DELETE_RULE_SET_RULE, METHOD.POST, param)
 }
 
 export async function saveAction(query) {
