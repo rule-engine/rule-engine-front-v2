@@ -44,7 +44,6 @@ module.exports = {
         UPDATE_DEFINITION: `${WEB_BASE_URL}/ruleEngine/generalRule/updateRuleDefinition`,
         GET_RULE_CONFIG: `${WEB_BASE_URL}/ruleEngine/generalRule/getRuleConfig`,
         GET_RULE_DEFINITION: `${WEB_BASE_URL}/ruleEngine/generalRule/getRuleDefinition`,
-        SAVE_ACTION: `${WEB_BASE_URL}/ruleEngine/generalRule/saveAction`,
         GENERATION_RELEASE: `${WEB_BASE_URL}/ruleEngine/generalRule/generationRelease`,
         RUN_TEST: `${COMPUTE_WEB_BASE_URL}/ruleEngine/generalRuleTest/run`,
         VIEW: `${WEB_BASE_URL}/ruleEngine/generalRule/view`,
@@ -64,7 +63,6 @@ module.exports = {
         UPDATE_DEFINITION: `${WEB_BASE_URL}/ruleEngine/ruleSet/updateRuleSetDefinition`,
         GET_RULE_SET_CONFIG: `${WEB_BASE_URL}/ruleEngine/ruleSet/getRuleSetConfig`,
         GET_RULE_SET_DEFINITION: `${WEB_BASE_URL}/ruleEngine/ruleSet/getRuleSetDefinition`,
-        SAVE_ACTION: `${WEB_BASE_URL}/ruleEngine/ruleSet/saveAction`,
         GENERATION_RELEASE: `${WEB_BASE_URL}/ruleEngine/ruleSet/generationRelease`,
         RUN_TEST: `${COMPUTE_WEB_BASE_URL}/ruleEngine/ruleSetTest/run`,
         VIEW: `${WEB_BASE_URL}/ruleEngine/ruleSet/view`,
@@ -79,6 +77,7 @@ module.exports = {
     },
     rule: {
         SAVE_RULE_AND_BIND_RULE_SET: `${WEB_BASE_URL}/ruleEngine/rule/saveRuleAndBindRuleSet`,
+        SAVE_ACTION: `${WEB_BASE_URL}/ruleEngine/rule/saveAction`,
     },
     importExport: {
         EXPORT: `${WEB_BASE_URL}/ruleEngine/importExport/export`,

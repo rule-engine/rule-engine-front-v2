@@ -606,14 +606,13 @@ import Contextmenu from '@/components/menu/Contextmenu'
 import {saveOrUpdate, deleteConditionGroup} from '@/services/conditionGroup'
 import {
   getRuleConfig,
-  saveAction,
   generationRelease,
   saveDefaultAction,
   defaultActionSwitch
 } from '@/services/generalRule'
 import {saveConditionAndBindGroup, deleteCondition} from '@/services/conditionGroupCondition'
 import {updateCondition} from '@/services/condition'
-
+import {saveAction} from '@/services/rule'
 
 //import {listInputParameter} from '@/services/inputParameter'
 import {selectSearch} from '@/utils/selectSearch'

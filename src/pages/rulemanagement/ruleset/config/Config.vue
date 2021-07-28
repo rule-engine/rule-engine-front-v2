@@ -624,7 +624,6 @@ import Contextmenu from '@/components/menu/Contextmenu'
 import {saveOrUpdate, deleteConditionGroup} from '@/services/conditionGroup'
 import {
   // getRuleConfig,
-  saveAction,
   generationRelease,
   saveDefaultAction,
   defaultActionSwitch
@@ -632,7 +631,7 @@ import {
 import {getRuleSetConfig} from '@/services/ruleSet'
 import {saveConditionAndBindGroup, deleteCondition} from '@/services/conditionGroupCondition'
 import {updateCondition} from '@/services/condition'
-import {saveRuleAndBindRuleSet} from '@/services/rule'
+import {saveRuleAndBindRuleSet,saveAction} from '@/services/rule'
 
 
 //import {listInputParameter} from '@/services/inputParameter'

@@ -39,10 +39,6 @@ export async function getRuleDefinition(query) {
 }
 
 
-export async function saveAction(query) {
-    return request(generalRule.SAVE_ACTION, METHOD.POST, query)
-}
-
 export async function generationRelease(query) {
     return request(generalRule.GENERATION_RELEASE, METHOD.POST, query)
 }
