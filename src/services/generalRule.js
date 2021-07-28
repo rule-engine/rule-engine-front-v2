@@ -67,6 +67,7 @@ export async function generalRulePublish(query) {
 export async function generalRuleDownloadList(query) {
     return request(generalRule.DOWNLOAD_LIST, METHOD.POST, query)
 }
+
 export async function showHistoryVersionList(query) {
     return request(generalRule.SHOW_HISTORY_VERSION_LIST, METHOD.POST, query)
 }
@@ -77,6 +78,11 @@ export async function deleteHistoricalRules(query) {
 
 export async function goBack(query) {
     return request(generalRule.GO_BACK, METHOD.POST, query)
+}
+
+
+export async function publishedList(query) {
+    return request(generalRule.PUBLISHED_LIST, METHOD.POST, query)
 }
 
 export default {
