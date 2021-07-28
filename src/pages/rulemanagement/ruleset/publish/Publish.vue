@@ -279,7 +279,6 @@ export default {
       return action.valueName;
     },
     getDefaultRuleView(defaultRule) {
-      console.log(defaultRule)
       if (defaultRule != null && this.ruleSet.enableDefaultRule === 0) {
         return this.getActionView(defaultRule.action);
       } else {
