@@ -314,14 +314,14 @@
                             :disabled="!ruleSet.defaultRule.action.type"
                             v-else-if="ruleSet.defaultRule.action.valueType==='BOOLEAN'"
                             defaultValue="true"
-                            @blur="saveDefaultAction"
+                            @blur="saveDefaultRule"
                             style="width: 100%"
                             v-model="ruleSet.defaultRule.action.value" placeholder="请选择数据">
                           <a-select-option value="true">true</a-select-option>
                           <a-select-option value="false">false</a-select-option>
                         </a-select>
                         <a-input-number
-                            @blur="saveDefaultAction"
+                            @blur="saveDefaultRule"
                             :disabled="!ruleSet.defaultRule.action.type"
                             v-else-if="ruleSet.defaultRule.action.valueType==='NUMBER'"
                             v-model="ruleSet.defaultRule.action.value" style="width: 100%"/>
@@ -329,13 +329,13 @@
                             :disabled="!ruleSet.defaultRule.action.type"
                             v-else-if="ruleSet.defaultRule.action.valueType==='DATE'"
                             show-time
-                            @openChange="defaultActionValueDatePickerOpenChange"
+                            @openChange="defaultRuleValueDatePickerOpenChange"
                             @change="(date,dateString)=>(datePickerChange(ruleSet.defaultRule.action,date,dateString))"
                             format="YYYY-MM-DD hh:mm:ss"
                             v-model="ruleSet.defaultRule.action.value"
                             style="width: 100%"></a-date-picker>
                         <a-input v-else
-                                 @blur="saveDefaultAction"
+                                 @blur="saveDefaultRule"
                                  :disabled="!ruleSet.defaultRule.action.type"
                                  v-model="ruleSet.defaultRule.action.value"></a-input>
                       </a-form-model-item>
@@ -874,7 +874,7 @@ export default {
         }
       })
     },
-    saveDefaultAction() {
+    saveDefaultRule() {
       if (this.ruleSet.defaultRule.action.type == null) {
         return;
       }
@@ -902,9 +902,9 @@ export default {
         this.saveAction(rs);
       }
     },
-    defaultActionValueDatePickerOpenChange(s) {
+    defaultRuleValueDatePickerOpenChange(s) {
       if (!s) {
-        this.saveDefaultAction();
+        this.saveDefaultRule();
       }
     },
     actionSearch(value, rs) {
@@ -945,7 +945,7 @@ export default {
       if (defaultAction.type === 1 && d.type === 2) {
         defaultAction.variableValue = d.value;
       }
-      this.saveDefaultAction();
+      this.saveDefaultRule();
     },
     editCondition(cg, cgc) {
       // 当前条件组
