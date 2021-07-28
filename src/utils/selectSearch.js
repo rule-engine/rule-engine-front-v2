@@ -2,7 +2,7 @@ import {listInputParameter} from '@/services/inputParameter'
 import {listVariable} from '@/services/variable'
 import {functionList} from '@/services/function'
 import {formulaList} from '@/services/formula'
-import {generalRule} from '@/services/generalRule'
+import {referenceableList} from '@/services/generalRule'
 
 let timeout;
 let currentValue;
@@ -64,7 +64,7 @@ export function selectSearch(param, callback, type) {
                 }
             });
         } else if (type === 10) {
-            generalRule(requestData).then(res => {
+            referenceableList(requestData).then(res => {
                 if (currentValue === param.value) {
                     if (res.data.data) {
                         callback(res.data.data.rows);

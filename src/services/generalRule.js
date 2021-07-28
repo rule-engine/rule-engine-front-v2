@@ -81,8 +81,8 @@ export async function goBack(query) {
 }
 
 
-export async function publishedList(query) {
-    return request(generalRule.PUBLISHED_LIST, METHOD.POST, query)
+export async function referenceableList(query) {
+    return request(generalRule.REFERENCEABLE_LIST, METHOD.POST, query)
 }
 
 export default {

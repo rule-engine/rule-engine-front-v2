@@ -273,6 +273,7 @@
                           <a-select-option value="PARAMETER">参数</a-select-option>
                           <a-select-option value="VARIABLE">变量</a-select-option>
                           <a-select-option value="FORMULA">表达式</a-select-option>
+                          <a-select-option value="GENERAL_RULE">普通规则</a-select-option>
                           <a-select-option value="BOOLEAN">布尔</a-select-option>
                           <a-select-option value="COLLECTION">集合</a-select-option>
                           <a-select-option value="STRING">字符串</a-select-option>
@@ -290,7 +291,7 @@
                                                         trigger: ['change', 'blur'],
                                                       }:{required:false}">
                         <a-select
-                            v-if="ruleSet.defaultRule.action.type===0||ruleSet.defaultRule.action.type===1||ruleSet.defaultRule.action.type===4"
+                            v-if="ruleSet.defaultRule.action.type===0||ruleSet.defaultRule.action.type===1||ruleSet.defaultRule.action.type===4||ruleSet.defaultRule.action.type===10"
                             show-search
                             style="width: 100%"
                             :disabled="ruleSet.defaultRule.action.type==null"
@@ -562,6 +563,8 @@ export default {
         this.ruleSet.defaultRule.action.type = 1;
       } else if (valueType === 'FORMULA') {
         this.ruleSet.defaultRule.action.type = 4;
+      } else if (valueType === 'GENERAL_RULE') {
+        this.ruleSet.defaultRule.action.type = 10;
       } else {
         this.ruleSet.defaultRule.action.valueType = valueType;
         this.ruleSet.defaultRule.action.type = 2;
@@ -686,8 +689,7 @@ export default {
       selectSearch({
             name: value,
             dataId: this.ruleSet.id,
-            dataType: this.dataType,
-            valueType: [this.ruleSet.action.valueType]
+            dataType: this.dataType
           }, data => (this.actionSearchSelect.data = data)
           , this.ruleSet.defaultRule.action.type)
     },

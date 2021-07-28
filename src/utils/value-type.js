@@ -31,6 +31,8 @@ function getTypeName(type) {
             return "函数";
         case 4:
             return "表达式";
+        case 10:
+            return "普通规则";
         default:
             return type;
     }
@@ -46,6 +48,9 @@ function valueType(v) {
     }
     if (v.type === 4) {
         return 'FORMULA';
+    }
+    if (v.type === 10) {
+        return 'GENERAL_RULE';
     }
     if (v.valueType) {
         return v.valueType;
