@@ -342,6 +342,19 @@
                     </a-col>
                   </a-row>
                 </a-card>
+
+                <br>
+                <br>
+                <a-card title="设置">
+                  <a-form-model-item prop="strategyType" required>
+                    <a-select v-model="ruleSet.strategyType">
+                      <a-select-option :value="1">顺序执行所有规则</a-select-option>
+                      <a-select-option :value="2">当有规则被命中时终止</a-select-option>
+                      <a-select-option :value="3">只执行第一个规则</a-select-option>
+                      <a-select-option :value="4">当有规则不成立时终止</a-select-option>
+                    </a-select>
+                  </a-form-model-item>
+                </a-card>
               </a-col>
               <a-col :span="1"></a-col>
             </a-row>
