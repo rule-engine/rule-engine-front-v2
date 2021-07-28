@@ -254,14 +254,13 @@
 
                 <a-card title="默认规则">
                   <a-switch
-                      :disabled="ruleSet.defaultRule.action.valueType==null"
                       @change="enableDefaultActionChange"
-                      :checked="ruleSet.defaultRule.enableDefaultAction===0"/>
+                      :checked="ruleSet.enableDefaultRule===0"/>
                   <br> <br>
                   <a-row>
                     <a-col :span="5">
                       <a-form-model-item prop="defaultRule.action.type"
-                                         :rules="ruleSet.defaultRule.enableDefaultAction===0?{
+                                         :rules="ruleSet.enableDefaultRule===0?{
                                                         required: true,
                                                         message: '请选择默认结果类型',
                                                         trigger: ['change', 'blur'],
@@ -285,7 +284,7 @@
                     <a-col :span="1"></a-col>
                     <a-col :span="18">
                       <a-form-model-item prop="defaultRule.action.value"
-                                         :rules="ruleSet.defaultRule.enableDefaultAction===0?{
+                                         :rules="ruleSet.enableDefaultRule===0?{
                                                         required: true,
                                                         message: '请输入默认结果值',
                                                         trigger: ['change', 'blur'],
@@ -639,7 +638,10 @@ import {
   // getRuleConfig,
   generationRelease,
   saveDefaultRule,
+<<<<<<< HEAD
   defaultActionSwitch,
+=======
+>>>>>>> 090b54bc58d5719e6c0bfd898e0574e8e6167e6f
   defaultRuleSetSwitch
 } from '@/services/ruleSet'
 import {deleteRuleSetRule} from '@/services/rule'
@@ -808,7 +810,6 @@ export default {
     },
     defaultActionValueTypeChange(valueType) {
       this.ruleSet.defaultRule.action = {
-        enableDefaultAction: this.ruleSet.defaultRule.action.enableDefaultAction,
         value: undefined,
         valueName: undefined,
         valueType: undefined,
@@ -833,8 +834,8 @@ export default {
     },
     enableDefaultActionChange() {
       let defaultAction = this.ruleSet.defaultRule.action;
-      if (defaultAction.enableDefaultAction === 0) {
-        defaultAction.enableDefaultAction = 1;
+      if (this.ruleSet.enableDefaultRule === 0) {
+        this.ruleSet.enableDefaultRule = 1;
       } else {
         // 如果开启默认规则，判断是否填写，如果没有填写，手动触发提示错误
         if (defaultAction.type == null) {
@@ -847,15 +848,15 @@ export default {
           this.$refs['ruleSetForm'].fields[3].validateState = 'error'
           return;
         }
-        defaultAction.enableDefaultAction = 0;
+        this.ruleSet.enableDefaultRule = 0;
       }
       defaultRuleSetSwitch({
         ruleSetId: this.ruleSet.id,
-        enableDefaultAction: defaultAction.enableDefaultAction
+        enableDefaultRule: this.ruleSet.enableDefaultRule
       }).then(res => {
         console.log(res);
         if (res.data.data) {
-          this.$message.success(defaultAction.enableDefaultAction === 0 ? '默认结果已开启' : '默认结果已关闭');
+          this.$message.success(this.ruleSet.enableDefaultRule === 0 ? '默认结果已开启' : '默认结果已关闭');
         }
       })
     },
