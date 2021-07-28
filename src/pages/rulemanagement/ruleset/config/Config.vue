@@ -628,9 +628,9 @@
 <script>
 import FooterToolBar from '@/components/tool/FooterToolBar'
 import PageLayout from "@/layouts/PageLayout";
-import InputParameter from "./InputParameter";
-import Variable from "./Variable";
-import Formula from "./Formula";
+import  Formula from "@/pages/rulemanagement/builtIncomponents/Formula";
+import  InputParameter from "@/pages/rulemanagement/builtIncomponents/InputParameter";
+import  Variable from "@/pages/rulemanagement/builtIncomponents/Variable";
 import Contextmenu from '@/components/menu/Contextmenu'
 // api
 import {saveOrUpdate, deleteConditionGroup} from '@/services/conditionGroup'
