@@ -579,13 +579,13 @@ export default {
       } else {
         // 如果开启默认规则，判断是否填写，如果没有填写，手动触发提示错误
         if (defaultAction.type == null) {
-          this.$refs['ruleSetForm'].fields[2].validateMessage = '请选择默认结果类型'
-          this.$refs['ruleSetForm'].fields[2].validateState = 'error'
+          this.$refs['ruleSetForm'].fields[0].validateMessage = '请选择默认结果类型'
+          this.$refs['ruleSetForm'].fields[0].validateState = 'error'
           return;
         }
         if (defaultAction.value == null) {
-          this.$refs['ruleSetForm'].fields[3].validateMessage = '请输入默认结果值'
-          this.$refs['ruleSetForm'].fields[3].validateState = 'error'
+          this.$refs['ruleSetForm'].fields[1].validateMessage = '请输入默认结果值'
+          this.$refs['ruleSetForm'].fields[1].validateState = 'error'
           return;
         }
         this.ruleSet.enableDefaultRule = 0;
