@@ -75,6 +75,8 @@ module.exports = {
         SHOW_HISTORY_VERSION_LIST: `${WEB_BASE_URL}/ruleEngine/ruleSet/historyList`,
         GO_BACK: `${WEB_BASE_URL}/ruleEngine/ruleSet/goBack`,
         DELETE_HISTORICAL_RULES: `${WEB_BASE_URL}/ruleEngine/ruleSet/deleteHistoricalRules`,
+        REARRANGE: `${WEB_BASE_URL}/ruleEngine/ruleSet/rearrange`,
+        UPDATE_STRATEGY_TYPE: `${WEB_BASE_URL}/ruleEngine/ruleSet/updateStrategyType`,
     },
     rule: {
         SAVE_RULE_AND_BIND_RULE_SET: `${WEB_BASE_URL}/ruleEngine/rule/saveRuleAndBindRuleSet`,

@@ -347,7 +347,7 @@
                 <br>
                 <a-card title="设置">
                   <a-form-model-item prop="strategyType" required>
-                    <a-select v-model="ruleSet.strategyType">
+                    <a-select v-model="ruleSet.strategyType" @change="updateStrategyType">
                       <a-select-option :value="1">顺序执行所有规则</a-select-option>
                       <a-select-option :value="2">当有规则被命中时终止</a-select-option>
                       <a-select-option :value="3">只执行第一个规则</a-select-option>
@@ -642,7 +642,7 @@ import {
   defaultRuleSetSwitch,
   deleteRuleSetRule
 } from '@/services/ruleSet'
-import {getRuleSetConfig} from '@/services/ruleSet'
+import {getRuleSetConfig, updateStrategyType} from '@/services/ruleSet'
 import {saveConditionAndBindGroup, deleteCondition} from '@/services/conditionGroupCondition'
 import {updateCondition} from '@/services/condition'
 import {saveRuleAndBindRuleSet, saveAction} from '@/services/rule'
@@ -697,7 +697,7 @@ export default {
         "workspaceId": null,
         "workspaceCode": "test",
         "ruleSet": [],
-        "strategyType": 1,
+        "strategyType": null,
         "enableDefaultRule": null,
         defaultRule: {
           id: null,
@@ -779,17 +779,27 @@ export default {
     updateRuleName() {
 
     },
-    deleteRule(rs,ruleSetList) {
+    updateStrategyType(type) {
+      updateStrategyType({
+        id: this.ruleSet.id,
+        strategyType: type
+      }).then(res => {
+        if (res.data.data) {
+          this.$message.success("更新执行策略成功");
+        }
+      })
+    },
+    deleteRule(rs, ruleSetList) {
       let _this = this
-      deleteRuleSetRule({id:rs.id}).then(res=>{
-        if (res.data.data){
+      deleteRuleSetRule({id: rs.id}).then(res => {
+        if (res.data.data) {
           ruleSetList.forEach((value, index) => {
             if (value.id === rs.id) {
               ruleSetList.splice(index, 1);
             }
           });
           _this.$message.success("删除条件成功");
-        }else {
+        } else {
           _this.$message.warning("删除条件失败");
         }
       })
