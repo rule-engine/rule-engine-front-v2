@@ -1,3 +1,2 @@
-import RuleSet from './RuleSet'
-
-export default RuleSet
+import GeneralRule from './GeneralRule'
+export default GeneralRule
