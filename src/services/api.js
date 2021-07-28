@@ -59,6 +59,7 @@ module.exports = {
     ruleSet: {
         LIST: `${WEB_BASE_URL}/ruleEngine/ruleSet/list`,
         DELETE: `${WEB_BASE_URL}/ruleEngine/ruleSet/delete`,
+        DELETE_RILE_SET_RULE: `${WEB_BASE_URL}/ruleEngine/ruleSet/deleteRuleSetRule`,
         ADD: `${WEB_BASE_URL}/ruleEngine/ruleSet/saveRuleSetDefinition`,
         UPDATE_DEFINITION: `${WEB_BASE_URL}/ruleEngine/ruleSet/updateRuleSetDefinition`,
         GET_RULE_SET_CONFIG: `${WEB_BASE_URL}/ruleEngine/ruleSet/getRuleSetConfig`,

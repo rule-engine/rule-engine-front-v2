@@ -61,7 +61,7 @@
 
                         <a-icon type="delete" class="dynamic-delete-button" style="font-size: 18px"
                                 slot="extra"
-                                @click="deleteRule(rs)"></a-icon>
+                                @click="deleteRule(rs,ruleSet.ruleSet)"></a-icon>
 
                         <a-skeleton v-if="ruleSet.ruleSet.length===0" :paragraph="{ rows: 3 }"/>
                         <a-spin :spinning="conditionMoveLoading">
@@ -639,7 +639,8 @@ import {
   // getRuleConfig,
   generationRelease,
   saveDefaultRule,
-  defaultActionSwitch
+  defaultActionSwitch,
+  deleteRuleSetRule
 } from '@/services/ruleSet'
 import {getRuleSetConfig} from '@/services/ruleSet'
 import {saveConditionAndBindGroup, deleteCondition} from '@/services/conditionGroupCondition'
@@ -778,7 +779,20 @@ export default {
     updateRuleName() {
 
     },
-    deleteRule() {
+    deleteRule(rs,ruleSetList) {
+      let _this = this
+      deleteRuleSetRule({id:rs.id}).then(res=>{
+        if (res.data.data){
+          ruleSetList.forEach((value, index) => {
+            if (value.id === rs.id) {
+              ruleSetList.splice(index, 1);
+            }
+          });
+          _this.$message.success("删除条件成功");
+        }else {
+          _this.$message.warning("删除条件失败");
+        }
+      })
 
     },
     defaultActionValueTypeChange(valueType) {
