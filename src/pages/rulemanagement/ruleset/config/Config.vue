@@ -625,13 +625,13 @@ import {saveOrUpdate, deleteConditionGroup} from '@/services/conditionGroup'
 import {
   // getRuleConfig,
   generationRelease,
-  saveDefaultAction,
+  saveDefaultRule,
   defaultActionSwitch
 } from '@/services/ruleSet'
 import {getRuleSetConfig} from '@/services/ruleSet'
 import {saveConditionAndBindGroup, deleteCondition} from '@/services/conditionGroupCondition'
 import {updateCondition} from '@/services/condition'
-import {saveRuleAndBindRuleSet,saveAction} from '@/services/rule'
+import {saveRuleAndBindRuleSet, saveAction} from '@/services/rule'
 
 
 //import {listInputParameter} from '@/services/inputParameter'
@@ -870,12 +870,16 @@ export default {
       if (!this.ruleSet.defaultRule.action.valueType) {
         return;
       }
-      saveDefaultAction({
-        ruleSetId: this.ruleSet.defaultRule.id,
-        configValue: this.ruleSet.defaultRule.action
+      saveDefaultRule({
+        ruleSetId: this.ruleSet.id,
+        // 绑定的默认规则id 如果没有，则执行更新并绑定
+        ruleId: this.ruleSet.defaultRule.id,
+        ruleBody: this.ruleSet.defaultRule
       }).then(res => {
         if (res.data.data) {
-          this.$message.success("默认结果保存成功");
+          // 绑定的默认规则
+          this.ruleSet.defaultRule.id = res.data.data;
+          this.$message.success("默认规则保存成功");
         }
       })
     },

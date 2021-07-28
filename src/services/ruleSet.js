@@ -56,8 +56,8 @@ export async function viewRuleSet(query) {
     return request(ruleSet.VIEW, METHOD.POST, query)
 }
 
-export async function saveDefaultAction(query) {
-    return request(ruleSet.SAVE_DEFAULT_ACTION, METHOD.POST, query)
+export async function saveDefaultRule(query) {
+    return request(ruleSet.SAVE_DEFAULT_RULE, METHOD.POST, query)
 }
 
 export async function defaultActionSwitch(query) {

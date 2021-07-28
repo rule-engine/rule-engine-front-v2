@@ -67,7 +67,7 @@ module.exports = {
         RUN_TEST: `${COMPUTE_WEB_BASE_URL}/ruleEngine/ruleSetTest/run`,
         VIEW: `${WEB_BASE_URL}/ruleEngine/ruleSet/view`,
         VERIFY_RULE_CODE: `${WEB_BASE_URL}/ruleEngine/ruleSet/codeIsExists`,
-        SAVE_DEFAULT_ACTION: `${WEB_BASE_URL}/ruleEngine/ruleSet/saveDefaultAction`,
+        SAVE_DEFAULT_RULE: `${WEB_BASE_URL}/ruleEngine/ruleSet/saveDefaultRule`,
         DEFAULT_ACTION_SWITCH: `${WEB_BASE_URL}/ruleEngine/ruleSet/defaultActionSwitch`,
         PUBLISH: `${WEB_BASE_URL}/ruleEngine/ruleSet/publish`,
         DOWNLOAD_LIST: `${WEB_BASE_URL}/ruleEngine/ruleSet/downloadList`,
