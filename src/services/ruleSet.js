@@ -85,7 +85,9 @@ export async function deleteHistoricalRules(query) {
 export async function goBack(query) {
     return request(ruleSet.GO_BACK, METHOD.POST, query)
 }
-
+export async function ruleSetRuleRearrange(param) {
+    return request(ruleSet.REARRANGE, METHOD.POST, param)
+}
 export default {
     list,
 }
