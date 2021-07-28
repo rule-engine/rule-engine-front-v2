@@ -86,6 +86,10 @@ export async function goBack(query) {
     return request(ruleSet.GO_BACK, METHOD.POST, query)
 }
 
+export async function updateStrategyType(query) {
+    return request(ruleSet.UPDATE_STRATEGY_TYPE, METHOD.POST, query)
+}
+
 export default {
     list,
 }
