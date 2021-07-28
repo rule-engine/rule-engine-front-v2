@@ -638,9 +638,14 @@ import {
   // getRuleConfig,
   generationRelease,
   saveDefaultRule,
+<<<<<<< HEAD
+  defaultActionSwitch
+=======
   defaultRuleSetSwitch,
   deleteRuleSetRule
+>>>>>>> 2882deeb14cbc8721ea02fd6bdc860bd71a5db06
 } from '@/services/ruleSet'
+import {deleteRuleSetRule} from '@/services/rule'
 import {getRuleSetConfig, updateStrategyType} from '@/services/ruleSet'
 import {saveConditionAndBindGroup, deleteCondition} from '@/services/conditionGroupCondition'
 import {updateCondition} from '@/services/condition'

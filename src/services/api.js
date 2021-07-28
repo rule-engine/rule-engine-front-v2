@@ -59,7 +59,6 @@ module.exports = {
     ruleSet: {
         LIST: `${WEB_BASE_URL}/ruleEngine/ruleSet/list`,
         DELETE: `${WEB_BASE_URL}/ruleEngine/ruleSet/delete`,
-        DELETE_RILE_SET_RULE: `${WEB_BASE_URL}/ruleEngine/ruleSet/deleteRuleSetRule`,
         ADD: `${WEB_BASE_URL}/ruleEngine/ruleSet/saveRuleSetDefinition`,
         UPDATE_DEFINITION: `${WEB_BASE_URL}/ruleEngine/ruleSet/updateRuleSetDefinition`,
         GET_RULE_SET_CONFIG: `${WEB_BASE_URL}/ruleEngine/ruleSet/getRuleSetConfig`,
@@ -75,12 +74,14 @@ module.exports = {
         SHOW_HISTORY_VERSION_LIST: `${WEB_BASE_URL}/ruleEngine/ruleSet/historyList`,
         GO_BACK: `${WEB_BASE_URL}/ruleEngine/ruleSet/goBack`,
         DELETE_HISTORICAL_RULES: `${WEB_BASE_URL}/ruleEngine/ruleSet/deleteHistoricalRules`,
-        REARRANGE: `${WEB_BASE_URL}/ruleEngine/ruleSet/rearrange`,
         UPDATE_STRATEGY_TYPE: `${WEB_BASE_URL}/ruleEngine/ruleSet/updateStrategyType`,
     },
     rule: {
         SAVE_RULE_AND_BIND_RULE_SET: `${WEB_BASE_URL}/ruleEngine/rule/saveRuleAndBindRuleSet`,
         SAVE_ACTION: `${WEB_BASE_URL}/ruleEngine/rule/saveAction`,
+        REARRANGE: `${WEB_BASE_URL}/ruleEngine/rule/rearrange`,
+        DELETE_RILE_SET_RULE: `${WEB_BASE_URL}/ruleEngine/rule/deleteRuleSetRule`,
+
     },
     importExport: {
         EXPORT: `${WEB_BASE_URL}/ruleEngine/importExport/export`,

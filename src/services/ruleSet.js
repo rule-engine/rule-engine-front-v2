@@ -17,9 +17,6 @@ export async function list(query) {
 export async function deleteRuleSet(query) {
     return request(ruleSet.DELETE, METHOD.POST, query)
 }
-export async function deleteRuleSetRule(query) {
-    return request(ruleSet.DELETE_RILE_SET_RULE, METHOD.POST, query)
-}
 
 //保存规则集定义
 export async function addRuleSet(param) {
@@ -85,9 +82,7 @@ export async function deleteHistoricalRules(query) {
 export async function goBack(query) {
     return request(ruleSet.GO_BACK, METHOD.POST, query)
 }
-export async function ruleSetRuleRearrange(param) {
-    return request(ruleSet.REARRANGE, METHOD.POST, param)
-}
+
 
 export async function updateStrategyType(query) {
     return request(ruleSet.UPDATE_STRATEGY_TYPE, METHOD.POST, query)

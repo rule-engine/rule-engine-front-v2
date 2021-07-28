@@ -12,7 +12,7 @@
 import Draggable from 'vuedraggable'
 import {conditionGroupRearrange} from "@/services/conditionGroup";
 import {rearrange} from "@/services/conditionGroupCondition";
-import {ruleSetRuleRearrange} from '@/services/ruleSet'
+import {ruleSetRuleRearrange} from '@/services/rule'
 
 const dragOptions = {
   sort: true,
