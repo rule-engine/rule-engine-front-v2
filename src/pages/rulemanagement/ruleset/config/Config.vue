@@ -4,7 +4,7 @@
 
       <contextmenu :itemList="menuItemList" :visible.sync="menuVisible" @select="onMenuSelect"/>
 
-      <a-card title="规则配置" :bordered="false" @contextmenu="onContextmenu">
+      <a-card title="规则集配置" :bordered="false" @contextmenu="onContextmenu">
         <span slot="extra" style="margin-left: 16px;">
                     <a-popover title="当前编辑人员" trigger="click" arrow-point-at-center>
                         <template slot="content">
@@ -605,12 +605,13 @@ import Contextmenu from '@/components/menu/Contextmenu'
 // api
 import {saveOrUpdate, deleteConditionGroup} from '@/services/conditionGroup'
 import {
-  getRuleConfig,
+  // getRuleConfig,
   saveAction,
   generationRelease,
   saveDefaultAction,
   defaultActionSwitch
 } from '@/services/generalRule'
+import {getRuleSetConfig} from '@/services/ruleSet'
 import {saveConditionAndBindGroup, deleteCondition} from '@/services/conditionGroupCondition'
 import {updateCondition} from '@/services/condition'
 
@@ -729,7 +730,7 @@ export default {
   },
   mounted() {
     this.generalRule.id = this.id
-    this.getRuleConfig();
+    this.getRuleSetConfig();
   },
   computed: {
     ...mapState('setting', ['isMobile']),
@@ -1249,8 +1250,8 @@ export default {
         }
       });
     },
-    getRuleConfig() {
-      getRuleConfig({
+    getRuleSetConfig() {
+      getRuleSetConfig({
         "id": this.generalRule.id
       }).then(res => {
         let da = res.data.data;

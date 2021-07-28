@@ -29,13 +29,13 @@ export async function updateRuleSetDefinition(param) {
 }
 
 
-export async function getRuleConfig(query) {
-    return request(ruleSet.GET_RULE_CONFIG, METHOD.POST, query)
+export async function getRuleSetConfig(query) {
+    return request(ruleSet.GET_RULE_SET_CONFIG, METHOD.POST, query)
 }
 
 
 export async function getRuleDefinition(query) {
-    return request(ruleSet.GET_RULE_DEFINITION, METHOD.POST, query)
+    return request(ruleSet.GET_RULE_SET_DEFINITION, METHOD.POST, query)
 }
 
 

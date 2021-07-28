@@ -670,7 +670,7 @@ export default {
           addRuleSet(this.newRuleSet.form).then(res => {
             if (res.data.code === 200) {
               this.$openPage({
-                path: '/generalRuleRouter/' + res.data.data,
+                path: '/ruleSetRouter/' + res.data.data,
                 query: {pageIndex: 2}
               }, `规则集(${this.newRuleSet.form.name})`);
               this.newRuleSet.visible = false;
@@ -715,7 +715,7 @@ export default {
     },
     edit(record) {
       this.$openPage({
-        path: '/generalRuleRouter/' + record.id,
+        path: '/ruleSetRouter/' + record.id,
         query: {pageIndex: 2}
       }, `规则集(${record.name})`);
     },
