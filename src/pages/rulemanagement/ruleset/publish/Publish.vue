@@ -85,57 +85,57 @@
 
         <vue-scroll :ops="ops" style="width:100%;height:100%">
           <div :style="isMobile?'width:1000px;margin: 0 auto':''">
-            <br>
-
-            <a-card :title="rs.name" class="rule_set" v-for="rs in ruleSet.ruleSet" :key="rs.id"
-                    style="margin-bottom: 10px">
-              <a-timeline>
-                <a-timeline-item v-for="(cg,cgi) in rs.conditionGroup" :key="cg.id">
-                  <span style="color: #606266;font-size: 14px;" v-if="0===cgi">如果</span>
-                  <span style="color: #606266;font-size: 14px;" v-else>或者</span>
-                  <div v-for="(cgc) in cg.conditionGroupCondition" style="margin-left: 20px;"
-                       :key="cgc.id">
-                    <a-alert style="border:none;padding: 6px 6px 6px 6px;margin-bottom: 10px"
-                             class="conditionItem">
-                      <p slot="description" style="margin-bottom: 0;">
-                        <a-tag color="blue"
-                               style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                          （{{ cgc.condition.name }}）
-                        </a-tag>
-                        <a-tag color="cyan"
-                               style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                          {{ getTypeName(cgc.condition.config.leftValue.type) }}
-                        </a-tag>
-                        {{ getViewValue(cgc.condition.config.leftValue) }}
-                        &nbsp;
-                        <a-tag color="orange"
-                               style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                          {{ cgc.condition.config.symbol }}
-                        </a-tag>
-                        <a-tag color="cyan"
-                               style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                          {{ getTypeName(cgc.condition.config.rightValue.type) }}
-                        </a-tag>
-                        {{ getViewValue(cgc.condition.config.rightValue) }}
-                      </p>
-                    </a-alert>
-                  </div>
-                </a-timeline-item>
-              </a-timeline>
-              <span style="color: #606266;font-size: 14px;">返回</span>
-              <div style="margin-left: 20px;margin-top: 3px;">
-                <a-alert :closable="false" type="success"
-                         style="border:none;padding: 6px 6px 6px 6px;margin-bottom: 10px">
-                  <p slot="description" style="margin-bottom: 0;">
-                    {{ getActionView(rs.action) }}
-                  </p>
-                </a-alert>
-              </div>
+            <a-card :title="`规则集(${getStrategyName(ruleSet.strategyType)})`" v-if="ruleSet.ruleSet.length!==0">
+              <a-card :bordered="false" :title="rs.name" class="rule_set" v-for="rs in ruleSet.ruleSet" :key="rs.id"
+                      style="margin-bottom: 10px">
+                <a-timeline>
+                  <a-timeline-item v-for="(cg,cgi) in rs.conditionGroup" :key="cg.id">
+                    <span style="color: #606266;font-size: 14px;" v-if="0===cgi">如果</span>
+                    <span style="color: #606266;font-size: 14px;" v-else>或者</span>
+                    <div v-for="(cgc) in cg.conditionGroupCondition" style="margin-left: 20px;"
+                         :key="cgc.id">
+                      <a-alert style="border:none;padding: 6px 6px 6px 6px;margin-bottom: 10px"
+                               class="conditionItem">
+                        <p slot="description" style="margin-bottom: 0;">
+                          <a-tag color="blue"
+                                 style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                            （{{ cgc.condition.name }}）
+                          </a-tag>
+                          <a-tag color="cyan"
+                                 style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                            {{ getTypeName(cgc.condition.config.leftValue.type) }}
+                          </a-tag>
+                          {{ getViewValue(cgc.condition.config.leftValue) }}
+                          &nbsp;
+                          <a-tag color="orange"
+                                 style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                            {{ cgc.condition.config.symbol }}
+                          </a-tag>
+                          <a-tag color="cyan"
+                                 style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                            {{ getTypeName(cgc.condition.config.rightValue.type) }}
+                          </a-tag>
+                          {{ getViewValue(cgc.condition.config.rightValue) }}
+                        </p>
+                      </a-alert>
+                    </div>
+                  </a-timeline-item>
+                </a-timeline>
+                <span style="color: #606266;font-size: 14px;">返回</span>
+                <div style="margin-left: 20px;margin-top: 3px;">
+                  <a-alert :closable="false" type="success"
+                           style="border:none;padding: 6px 6px 6px 6px;margin-bottom: 10px">
+                    <p slot="description" style="margin-bottom: 0;">
+                      {{ getActionView(rs.action) }}
+                    </p>
+                  </a-alert>
+                </div>
+              </a-card>
             </a-card>
 
+            <br>
             <span v-if="ruleSet.ruleSet.length===0" style="color: #606266;font-size: 14px;">返回</span>
             <span v-else>
-                  <br>
                   <span style="color: #606266;font-size: 14px;">否则返回</span>
                 </span>
             <br>
@@ -243,6 +243,18 @@ export default {
     this.getRuleConfig();
   },
   methods: {
+    getStrategyName(type) {
+      switch (type) {
+        case 1:
+          return '顺序执行所有规则'
+        case 2:
+          return '当有规则被命中时终止'
+        case 3:
+          return '只执行第一个规则'
+        case 4:
+          return '当有规则不成立时终止'
+      }
+    },
     copyParamInfo() {
       // 解决 a-popover  a-card  悬浮 无法复制的问题
       document.getElementById('copyParamInfo').click();
