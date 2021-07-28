@@ -553,7 +553,6 @@ export default {
   methods: {
     deleteHistorical(record){
       this.loading = true;
-      console.log(record.id);
       deleteHistoricalRules({id: record.id}).then(res => {
         if (res.data.data) {
           this.$message.success("删除成功！");
