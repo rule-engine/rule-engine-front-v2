@@ -720,7 +720,6 @@ export default {
       }).then(res => {
         if (res.data.data) {
           // 删除掉前端数组中的数据
-          // cg.conditionGroupCondition
           cgc.forEach((value, index) => {
             if (value.condition.id === conditionId) {
               cgc.splice(index, 1);

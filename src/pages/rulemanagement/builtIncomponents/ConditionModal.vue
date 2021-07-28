@@ -486,9 +486,9 @@ export default {
     },
     conditionRightSearchOptionClick(d) {
       let rightValue = this.selectCondition.from.config.rightValue;
-      rightValue = d.id;
-      rightValue = d.valueType;
-      rightValue = d.name;
+      rightValue.value = d.id;
+      rightValue.valueType = d.valueType;
+      rightValue.valueName = d.name;
       // 变量  d.type 如果是固定值
       if ((rightValue.type === 1 && d.type === 2) || rightValue.type === 4) {
         rightValue.variableValue = d.value;
