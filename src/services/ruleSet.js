@@ -17,6 +17,9 @@ export async function list(query) {
 export async function deleteRuleSet(query) {
     return request(ruleSet.DELETE, METHOD.POST, query)
 }
+export async function deleteRuleSetRule(query) {
+    return request(ruleSet.DELETE_RILE_SET_RULE, METHOD.POST, query)
+}
 
 //保存规则集定义
 export async function addRuleSet(param) {
