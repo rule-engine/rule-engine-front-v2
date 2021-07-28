@@ -145,6 +145,7 @@
                                           trigger: ['change', 'blur'],
                                         }">
                         <a-select style="width:100%"
+                                  :disabled="generalRule.currentVersion"
                                   placeholder="请选择结果类型"
                                   :value="valueType(generalRule.action)"
                                   @change="actionValueTypeChange">
@@ -237,7 +238,7 @@
                                           trigger: ['change', 'blur'],
                                         }:{required:false}">
                         <a-select style="width:100%"
-                                  :disabled="generalRule.action.valueType==null"
+                                  :disabled="generalRule.action.valueType==null||generalRule.currentVersion"
                                   placeholder="请选择类型"
                                   :value="valueType(generalRule.defaultAction)"
                                   @change="defaultActionValueTypeChange"
@@ -427,6 +428,7 @@ export default {
         id: null,
         name: null,
         code: null,
+        currentVersion: null,// 如果规则有版本了，则不支持修改返回值
         description: null,
         ruleId: null,
         conditionGroup: [],
