@@ -63,8 +63,8 @@ export async function saveDefaultRule(query) {
     return request(ruleSet.SAVE_DEFAULT_RULE, METHOD.POST, query)
 }
 
-export async function defaultActionSwitch(query) {
-    return request(ruleSet.DEFAULT_ACTION_SWITCH, METHOD.POST, query)
+export async function defaultRuleSetSwitch(query) {
+    return request(ruleSet.DEFAULT_RULE_SET_SWITCH, METHOD.POST, query)
 }
 
 export async function ruleSetPublish(query) {
