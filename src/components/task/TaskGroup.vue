@@ -1,7 +1,7 @@
 <template>
   <div class="task-group">
     <div class="task-content">
-      <draggable :options="dragOptions" :handle="handle" @update="update" :id="conditionGroupId">
+      <draggable :options="dragOptions" :handle="handle" @update="update" :id="id">
         <slot></slot>
       </draggable>
     </div>
@@ -26,7 +26,7 @@ const dragOptions = {
 export default {
   name: 'TaskGroup',
   components: {Draggable},
-  props: ['title', 'group', 'dataList', 'conditionGroupId', 'handle', "ruleId"],
+  props: ['title', 'group', 'dataList', 'id', 'handle', "ruleId", "ruleSetId"],
   data() {
     return {
       dragOptions: {...dragOptions, group: this.group}
@@ -35,7 +35,10 @@ export default {
   methods: {
     update(e) {
       this.$emit("update:loading", true);
-      if (this.ruleId) {
+      if (this.ruleSetId) {
+        // 移动规则集中规则
+
+      } else if (this.ruleId) {
         this.rearrangeOrder({
           ruleId: this.ruleId,
           from: this.dataList[e.oldIndex],

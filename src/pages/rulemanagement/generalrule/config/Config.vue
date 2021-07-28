@@ -68,7 +68,7 @@
                                   :paragraph="{ rows: 2 }"/>
                       <task-group :title="cg.name" :group="cg.id"
                                   :data-list="generalRule.conditionGroup"
-                                  :condition-group-id="cg.id"
+                                  :id="cg.id"
                                   :loading.sync="conditionMoveLoading">
                         <a-alert closable
                                  style="border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"

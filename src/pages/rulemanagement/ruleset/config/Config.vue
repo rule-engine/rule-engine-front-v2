@@ -32,122 +32,245 @@
                     </a-popover>
         </span>
         <vue-scroll :ops="ops" style="width:100%;height:100%">
-          <a-row :style="isMobile?'width:1000px;margin: 0 auto':''">
-            <a-col :span="1"></a-col>
-            <a-col :span="22">
-              <a-card title="条件集" class="condition_set">
+          <a-form-model ref="ruleSetForm" :model="ruleSet">
+            <a-row :style="isMobile?'width:1000px;margin: 0 auto':''">
+              <a-col :span="1"></a-col>
+              <a-col :span="22">
+                <a-card title="规则集" class="rule_set">
 
-                <a-skeleton v-if="generalRule.conditionGroup.length===0" :paragraph="{ rows: 3 }"/>
-                <a-spin :spinning="conditionMoveLoading">
+                  <a-skeleton v-if="ruleSet.ruleSet.length===0" :paragraph="{ rows: 3 }"/>
+                  <a-spin :spinning="conditionMoveLoading">
+                    <task-group title="规则" :group="ruleSet.id"
+                                handle=".ruleMover"
+                                :rule-set-id="ruleSet.id"
+                                :loading.sync="conditionMoveLoading"
+                                :data-list="ruleSet.ruleSet">
+                      <a-card :bordered="false" title="规则" v-for="(rs,rsi) in ruleSet.ruleSet" :key="rs.id"
+                              style="margin-bottom: 10px">
 
-                  <task-group title="条件集" :group="generalRule.ruleId"
-                              handle=".mover"
-                              :rule-id="generalRule.ruleId"
-                              :loading.sync="conditionMoveLoading"
-                              :data-list="generalRule.conditionGroup">
-                    <a-card :bordered="false"
-                            v-for="(cg,cgi) in generalRule.conditionGroup"
-                            :key="cg.id">
+                        <div slot="title" style="margin-right: 16px;padding-left: 2px;">
+                          <a-input class="conditionGroupNameInput"
+                                   style="font-size: 16px;color: rgba(0, 0, 0, 0.85);padding: 0;border: none;background: none;"
+                                   @blur="updateRuleName(rs)"
+                                   :placeholder="`条件组${rsi}`" v-model="rs.name"/>
+                        </div>
 
-                      <div slot="title" style="margin-right: 16px;padding-left: 2px;">
-                        <a-input class="conditionGroupNameInput"
-                                 style="font-size: 16px;color: rgba(0, 0, 0, 0.85);padding: 0;border: none;background: none;"
-                                 @blur="updateConditionGroupName(cg)"
-                                 :placeholder="`条件组${cgi}`" v-model="cg.name"/>
-                      </div>
+                        <a-icon type="drag" class="dynamic-delete-button ruleMover"
+                                style="font-size: 18px;margin-right: 10px;"
+                                slot="extra"/>
 
-                      <a-icon type="drag" class="dynamic-delete-button mover"
-                              style="font-size: 18px;margin-right: 10px;"
-                              slot="extra"/>
+                        <a-icon type="delete" class="dynamic-delete-button" style="font-size: 18px"
+                                slot="extra"
+                                @click="deleteRule(rs)"></a-icon>
 
-                      <a-icon type="delete" class="dynamic-delete-button" style="font-size: 18px"
-                              slot="extra"
-                              @click="deleteConditionGroup(cg)"></a-icon>
+                        <a-skeleton v-if="ruleSet.ruleSet.length===0" :paragraph="{ rows: 3 }"/>
+                        <a-spin :spinning="conditionMoveLoading">
 
-                      <a-skeleton v-if="cg.conditionGroupCondition.length===0"
-                                  :paragraph="{ rows: 2 }"/>
-                      <task-group :title="cg.name" :group="cg.id"
-                                  :data-list="generalRule.conditionGroup"
-                                  :condition-group-id="cg.id"
-                                  :loading.sync="conditionMoveLoading">
-                        <a-alert closable
-                                 style="border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"
-                                 v-for="cgc in cg.conditionGroupCondition"
-                                 :key="cgc.id"
-                                 @dblclick.native="editCondition(cg,cgc)"
-                                 @close="deleteCondition(cg.conditionGroupCondition,cgc.id,cgc.id)"
-                                 class="conditionItem task-item">
-                          <p slot="description" style="margin-bottom: 0;">
-                            <a-tag color="blue"
-                                   style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                              （{{ cgc.condition.name }}）
-                            </a-tag>
-                            <a-tag color="cyan"
-                                   style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                              {{
-                                getTypeName(cgc.condition.config.leftValue.type)
-                              }}
-                            </a-tag>
-                            {{ getViewValue(cgc.condition.config.leftValue) }}
-                            &nbsp;
-                            <a-tag color="orange"
-                                   style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                              {{ getSymbolExplanation(cgc.condition.config.symbol) }}
-                            </a-tag>
-                            <a-tag color="cyan"
-                                   style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                              {{
-                                getTypeName(cgc.condition.config.rightValue.type)
-                              }}
-                            </a-tag>
-                            {{ getViewValue(cgc.condition.config.rightValue) }}
-                          </p>
-                        </a-alert>
-                      </task-group>
+                          <a-card title="条件集" class="condition_set">
+                            <a-skeleton v-if="rs.conditionGroup.length===0" :paragraph="{ rows: 3 }"/>
+                            <a-spin :spinning="conditionMoveLoading">
+
+                              <task-group title="条件集" :group="rs.id"
+                                          handle=".mover"
+                                          :rule-id="rs.id"
+                                          :loading.sync="conditionMoveLoading"
+                                          :data-list="rs.conditionGroup">
+                                <a-card :bordered="false"
+                                        v-for="(cg,cgi) in rs.conditionGroup"
+                                        :key="cg.id">
+
+                                  <div slot="title" style="margin-right: 16px;padding-left: 2px;">
+                                    <a-input class="conditionGroupNameInput"
+                                             style="font-size: 16px;color: rgba(0, 0, 0, 0.85);padding: 0;border: none;background: none;"
+                                             @blur="updateConditionGroupName(cg)"
+                                             :placeholder="`条件组${cgi}`" v-model="cg.name"/>
+                                  </div>
+
+                                  <a-icon type="drag" class="dynamic-delete-button mover"
+                                          style="font-size: 18px;margin-right: 10px;"
+                                          slot="extra"/>
+
+                                  <a-icon type="delete" class="dynamic-delete-button" style="font-size: 18px"
+                                          slot="extra"
+                                          @click="deleteConditionGroup(rs,cg)"></a-icon>
+
+                                  <a-skeleton v-if="cg.conditionGroupCondition.length===0"
+                                              :paragraph="{ rows: 2 }"/>
+                                  <task-group :title="cg.name" :group="cg.id"
+                                              :data-list="rs.conditionGroup"
+                                              :id="cg.id"
+                                              :loading.sync="conditionMoveLoading">
+                                    <a-alert closable
+                                             style="border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"
+                                             v-for="cgc in cg.conditionGroupCondition"
+                                             :key="cgc.id"
+                                             @dblclick.native="editCondition(cg,cgc)"
+                                             @close="deleteCondition(cg.conditionGroupCondition,cgc.id,cgc.id)"
+                                             class="conditionItem task-item">
+                                      <p slot="description" style="margin-bottom: 0;">
+                                        <a-tag color="blue"
+                                               style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                                          （{{ cgc.condition.name }}）
+                                        </a-tag>
+                                        <a-tag color="cyan"
+                                               style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                                          {{
+                                            getTypeName(cgc.condition.config.leftValue.type)
+                                          }}
+                                        </a-tag>
+                                        {{ getViewValue(cgc.condition.config.leftValue) }}
+                                        &nbsp;
+                                        <a-tag color="orange"
+                                               style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                                          {{ getSymbolExplanation(cgc.condition.config.symbol) }}
+                                        </a-tag>
+                                        <a-tag color="cyan"
+                                               style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                                          {{
+                                            getTypeName(cgc.condition.config.rightValue.type)
+                                          }}
+                                        </a-tag>
+                                        {{ getViewValue(cgc.condition.config.rightValue) }}
+                                      </p>
+                                    </a-alert>
+                                  </task-group>
 
 
-                      <br>
+                                  <br>
 
-                      <a-button type="dashed" style="width: 50%;display:block;margin:0 auto"
-                                @click="addCondition(cg,`addConditionForm${cgi}`)">
-                        <a-icon type="plus" style="color: #777;"/>
-                        添加条件
-                      </a-button>
-                    </a-card>
-                  </task-group>
-                </a-spin>
-                <a-button type="dashed" style="width: 100%" @click="addConditionGroup()">
-                  <a-icon type="plus" style="color: #777;"/>
-                  添加条件组
-                </a-button>
-              </a-card>
-              <br>
-              <br>
+                                  <a-button type="dashed" style="width: 50%;display:block;margin:0 auto"
+                                            @click="addCondition(cg,`addConditionForm${cgi}`)">
+                                    <a-icon type="plus" style="color: #777;"/>
+                                    添加条件
+                                  </a-button>
+                                </a-card>
+                              </task-group>
+                            </a-spin>
 
+                            <a-button type="dashed" style="width: 100%" @click="addConditionGroup(rs)">
+                              <a-icon type="plus" style="color: #777;"/>
+                              添加条件组
+                            </a-button>
+                          </a-card>
 
-              <a-form-model ref="generalRuleForm" :model="generalRule">
-                <a-card title="结果">
-                <span slot="extra">
-                          <a-popover title="温馨提示">
-                              <template slot="content">
-                                  <p>普通规则结果类型确认后，及规则发布后，则不支持修改！</p>
-                                  <p>（具体原因可参考链接：T320523）</p>
-                              </template>
-                              <a-icon type="info-circle" class="dynamic-delete-button" style="font-size: 18px"></a-icon>
-                          </a-popover>
-                      </span>
-                  <a-row>
-                    <a-col :span="5">
-                      <a-form-model-item prop="action.type"
-                                         :rules="{
+                          <br>
+
+                          <a-card title="结果">
+                            <a-row>
+                              <a-col :span="5">
+                                <a-form-model-item :prop="`ruleSet.${rsi}.action.type`"
+                                                   :rules="{
                                           required: true,
                                           message: '请选择结果类型',
                                           trigger: ['change', 'blur'],
                                         }">
+                                  <a-select style="width:100%"
+                                            placeholder="请选择结果类型"
+                                            :value="valueType(rs.action)"
+                                            @change="valueType=>{actionValueTypeChange(valueType,rs)}">
+                                    <a-select-option value="PARAMETER">参数</a-select-option>
+                                    <a-select-option value="VARIABLE">变量</a-select-option>
+                                    <a-select-option value="FORMULA">表达式</a-select-option>
+                                    <a-select-option value="BOOLEAN">布尔</a-select-option>
+                                    <a-select-option value="COLLECTION">集合</a-select-option>
+                                    <a-select-option value="STRING">字符串</a-select-option>
+                                    <a-select-option value="NUMBER">数值</a-select-option>
+                                    <a-select-option value="DATE">日期</a-select-option>
+                                  </a-select>
+                                </a-form-model-item>
+                              </a-col>
+                              <a-col :span="1"></a-col>
+                              <a-col :span="18">
+                                <a-form-model-item :prop="`ruleSet.${rsi}.action.value`"
+                                                   :rules="{
+                                          required: true,
+                                          message: '请输入结果值',
+                                          trigger: ['change', 'blur'],
+                                        }">
+                                  <a-select
+                                      v-if="rs.action.type===0||rs.action.type===1||rs.action.type===4"
+                                      show-search
+                                      :disabled="rs.action.type==null"
+                                      :value="rs.action.valueName"
+                                      placeholder="请输入关键字进行搜索"
+                                      :default-active-first-option="false"
+                                      :show-arrow="false"
+                                      :filter-option="false"
+                                      :not-found-content="null"
+                                      @search="(value)=>{actionSearch(value,rs)}"
+                                  >
+                                    <a-select-option v-for="d in actionSearchSelect.data" :value="d.id"
+                                                     :key="d.id"
+                                                     @click.native="actionSearchOptionClick(d,rs)">
+                                      {{ d.name }}
+                                    </a-select-option>
+                                  </a-select>
+
+                                  <a-select
+                                      :disabled="!rs.action.type"
+                                      v-else-if="rs.action.valueType==='BOOLEAN'"
+                                      defaultValue="true"
+                                      @blur="saveAction(rs)"
+                                      style="width: 100%"
+                                      v-model="rs.action.value" placeholder="请选择数据">
+                                    <a-select-option value="true">true</a-select-option>
+                                    <a-select-option value="false">false</a-select-option>
+                                  </a-select>
+                                  <a-input-number
+                                      :disabled="!rs.action.type"
+                                      @blur="saveAction(rs)"
+                                      v-else-if="rs.action.valueType==='NUMBER'"
+                                      v-model="rs.action.value" style="width: 100%"/>
+                                  <a-date-picker
+                                      :disabled="!rs.action.type"
+                                      @openChange="v=>{actionValueDatePickerOpenChange(v,rs)}"
+                                      v-else-if="rs.action.valueType==='DATE'"
+                                      show-time
+                                      @change="(date,dateString)=>(datePickerChange(rs.action,date,dateString))"
+                                      format="YYYY-MM-DD hh:mm:ss"
+                                      v-model="rs.action.value"
+                                      style="width: 100%"></a-date-picker>
+                                  <a-input v-else
+                                           :disabled="!rs.action.type"
+                                           @blur="saveAction(rs)"
+                                           v-model="rs.action.value"></a-input>
+                                </a-form-model-item>
+                              </a-col>
+                            </a-row>
+
+                          </a-card>
+                        </a-spin>
+                      </a-card>
+                    </task-group>
+                  </a-spin>
+                  <br>
+                  <a-button type="dashed" style="width: 100%" @click="addRule()">
+                    <a-icon type="plus" style="color: #777;"/>
+                    添加规则
+                  </a-button>
+                </a-card>
+                <br>
+                <br>
+
+                <a-card title="默认规则">
+                  <a-switch
+                      :disabled="ruleSet.defaultRule.action.valueType==null"
+                      @change="enableDefaultActionChange"
+                      :checked="ruleSet.defaultRule.enableDefaultAction===0"/>
+                  <br> <br>
+                  <a-row>
+                    <a-col :span="5">
+                      <a-form-model-item prop="defaultRule.action.type"
+                                         :rules="ruleSet.defaultRule.enableDefaultAction===0?{
+                                                        required: true,
+                                                        message: '请选择默认结果类型',
+                                                        trigger: ['change', 'blur'],
+                                                      }:{required:false}">
                         <a-select style="width:100%"
-                                  placeholder="请选择结果类型"
-                                  :value="valueType(generalRule.action)"
-                                  @change="actionValueTypeChange">
+                                  placeholder="请选择类型"
+                                  :value="valueType(ruleSet.defaultRule.action)"
+                                  @change="defaultActionValueTypeChange"
+                        >
                           <a-select-option value="PARAMETER">参数</a-select-option>
                           <a-select-option value="VARIABLE">变量</a-select-option>
                           <a-select-option value="FORMULA">表达式</a-select-option>
@@ -161,123 +284,18 @@
                     </a-col>
                     <a-col :span="1"></a-col>
                     <a-col :span="18">
-                      <a-form-model-item prop="action.value"
-                                         :rules="{
-                                          required: true,
-                                          message: '请输入结果值',
-                                          trigger: ['change', 'blur'],
-                                        }">
+                      <a-form-model-item prop="defaultRule.action.value"
+                                         :rules="ruleSet.defaultRule.enableDefaultAction===0?{
+                                                        required: true,
+                                                        message: '请输入默认结果值',
+                                                        trigger: ['change', 'blur'],
+                                                      }:{required:false}">
                         <a-select
-                            v-if="generalRule.action.type===0||generalRule.action.type===1||generalRule.action.type===4"
-                            show-search
-                            :disabled="generalRule.action.type==null"
-                            :value="generalRule.action.valueName"
-                            placeholder="请输入关键字进行搜索"
-                            :default-active-first-option="false"
-                            :show-arrow="false"
-                            :filter-option="false"
-                            :not-found-content="null"
-                            @search="actionSearch"
-                        >
-                          <a-select-option v-for="d in actionSearchSelect.data" :value="d.id"
-                                           :key="d.id"
-                                           @click.native="actionSearchOptionClick(d)">
-                            {{ d.name }}
-                          </a-select-option>
-                        </a-select>
-
-                        <a-select
-                            :disabled="!generalRule.action.type"
-                            v-else-if="generalRule.action.valueType==='BOOLEAN'"
-                            defaultValue="true"
-                            @blur="saveAction"
-                            style="width: 100%"
-                            v-model="generalRule.action.value" placeholder="请选择数据">
-                          <a-select-option value="true">true</a-select-option>
-                          <a-select-option value="false">false</a-select-option>
-                        </a-select>
-                        <a-input-number
-                            :disabled="!generalRule.action.type"
-                            @blur="saveAction"
-                            v-else-if="generalRule.action.valueType==='NUMBER'"
-                            v-model="generalRule.action.value" style="width: 100%"/>
-                        <a-date-picker
-                            :disabled="!generalRule.action.type"
-                            @openChange="actionValueDatePickerOpenChange"
-                            v-else-if="generalRule.action.valueType==='DATE'"
-                            show-time
-                            @change="(date,dateString)=>(datePickerChange(generalRule.action,date,dateString))"
-                            format="YYYY-MM-DD hh:mm:ss"
-                            v-model="generalRule.action.value"
-                            style="width: 100%"></a-date-picker>
-                        <a-input v-else
-                                 :disabled="!generalRule.action.type"
-                                 @blur="saveAction"
-                                 v-model="generalRule.action.value"></a-input>
-                      </a-form-model-item>
-                    </a-col>
-                  </a-row>
-
-                </a-card>
-
-                <br>
-
-                <a-card title="默认结果">
-                  <a-switch
-                      :disabled="generalRule.action.valueType==null"
-                      @change="enableDefaultActionChange"
-                      :checked="generalRule.defaultAction.enableDefaultAction===0"/>
-                  <br> <br>
-                  <a-row>
-                    <a-col :span="5">
-                      <a-form-model-item prop="defaultAction.type"
-                                         :rules="generalRule.defaultAction.enableDefaultAction===0?{
-                                          required: true,
-                                          message: '请选择默认结果类型',
-                                          trigger: ['change', 'blur'],
-                                        }:{required:false}">
-                        <a-select style="width:100%"
-                                  :disabled="generalRule.action.valueType==null"
-                                  placeholder="请选择类型"
-                                  :value="valueType(generalRule.defaultAction)"
-                                  @change="defaultActionValueTypeChange"
-                        >
-                          <a-select-option value="PARAMETER">参数</a-select-option>
-                          <a-select-option value="VARIABLE">变量</a-select-option>
-                          <a-select-option value="FORMULA">表达式</a-select-option>
-                          <a-select-option value="BOOLEAN"
-                                           v-if="generalRule.action.valueType==='BOOLEAN'">布尔
-                          </a-select-option>
-                          <a-select-option value="COLLECTION"
-                                           v-if="generalRule.action.valueType==='COLLECTION'">
-                            集合
-                          </a-select-option>
-                          <a-select-option value="STRING"
-                                           v-if="generalRule.action.valueType==='STRING'">字符串
-                          </a-select-option>
-                          <a-select-option value="NUMBER"
-                                           v-if="generalRule.action.valueType==='NUMBER'">数值
-                          </a-select-option>
-                          <a-select-option value="DATE"
-                                           v-if="generalRule.action.valueType==='DATE'">日期
-                          </a-select-option>
-                        </a-select>
-                      </a-form-model-item>
-                    </a-col>
-                    <a-col :span="1"></a-col>
-                    <a-col :span="18">
-                      <a-form-model-item prop="defaultAction.value"
-                                         :rules="generalRule.defaultAction.enableDefaultAction===0?{
-                                          required: true,
-                                          message: '请输入默认结果值',
-                                          trigger: ['change', 'blur'],
-                                        }:{required:false}">
-                        <a-select
-                            v-if="generalRule.defaultAction.type===0||generalRule.defaultAction.type===1||generalRule.defaultAction.type===4"
+                            v-if="ruleSet.defaultRule.action.type===0||ruleSet.defaultRule.action.type===1||ruleSet.defaultRule.action.type===4"
                             show-search
                             style="width: 100%"
-                            :disabled="generalRule.defaultAction.type==null"
-                            :value="generalRule.defaultAction.valueName"
+                            :disabled="ruleSet.defaultRule.action.type==null"
+                            :value="ruleSet.defaultRule.action.valueName"
                             placeholder="请输入关键字进行搜索"
                             :default-active-first-option="false"
                             :show-arrow="false"
@@ -293,41 +311,41 @@
                         </a-select>
 
                         <a-select
-                            :disabled="!generalRule.defaultAction.type"
-                            v-else-if="generalRule.defaultAction.valueType==='BOOLEAN'"
+                            :disabled="!ruleSet.defaultRule.action.type"
+                            v-else-if="ruleSet.defaultRule.action.valueType==='BOOLEAN'"
                             defaultValue="true"
                             @blur="saveDefaultAction"
                             style="width: 100%"
-                            v-model="generalRule.defaultAction.value" placeholder="请选择数据">
+                            v-model="ruleSet.defaultRule.action.value" placeholder="请选择数据">
                           <a-select-option value="true">true</a-select-option>
                           <a-select-option value="false">false</a-select-option>
                         </a-select>
                         <a-input-number
                             @blur="saveDefaultAction"
-                            :disabled="!generalRule.defaultAction.type"
-                            v-else-if="generalRule.defaultAction.valueType==='NUMBER'"
-                            v-model="generalRule.defaultAction.value" style="width: 100%"/>
+                            :disabled="!ruleSet.defaultRule.action.type"
+                            v-else-if="ruleSet.defaultRule.action.valueType==='NUMBER'"
+                            v-model="ruleSet.defaultRule.action.value" style="width: 100%"/>
                         <a-date-picker
-                            :disabled="!generalRule.defaultAction.type"
-                            v-else-if="generalRule.defaultAction.valueType==='DATE'"
+                            :disabled="!ruleSet.defaultRule.action.type"
+                            v-else-if="ruleSet.defaultRule.action.valueType==='DATE'"
                             show-time
                             @openChange="defaultActionValueDatePickerOpenChange"
-                            @change="(date,dateString)=>(datePickerChange(generalRule.defaultAction,date,dateString))"
+                            @change="(date,dateString)=>(datePickerChange(ruleSet.defaultRule.action,date,dateString))"
                             format="YYYY-MM-DD hh:mm:ss"
-                            v-model="generalRule.defaultAction.value"
+                            v-model="ruleSet.defaultRule.action.value"
                             style="width: 100%"></a-date-picker>
                         <a-input v-else
                                  @blur="saveDefaultAction"
-                                 :disabled="!generalRule.defaultAction.type"
-                                 v-model="generalRule.defaultAction.value"></a-input>
+                                 :disabled="!ruleSet.defaultRule.action.type"
+                                 v-model="ruleSet.defaultRule.action.value"></a-input>
                       </a-form-model-item>
                     </a-col>
                   </a-row>
                 </a-card>
-              </a-form-model>
-            </a-col>
-            <a-col :span="1"></a-col>
-          </a-row>
+              </a-col>
+              <a-col :span="1"></a-col>
+            </a-row>
+          </a-form-model>
         </vue-scroll>
         <br>
         <br>
@@ -582,13 +600,13 @@
     >
       <a-tabs default-active-key="1">
         <a-tab-pane key="1" tab="参数">
-          <input-parameter :data-id="parseInt(generalRule.id)" :data-type="dataType"/>
+          <input-parameter :data-id="parseInt(ruleSet.id)" :data-type="dataType"/>
         </a-tab-pane>
         <a-tab-pane key="2" tab="变量">
-          <Variable :data-id="parseInt(generalRule.id)" :data-type="dataType"/>
+          <Variable :data-id="parseInt(ruleSet.id)" :data-type="dataType"/>
         </a-tab-pane>
         <a-tab-pane key="3" tab="表达式">
-          <Formula :data-id="parseInt(generalRule.id)" :data-type="dataType"></Formula>
+          <Formula :data-id="parseInt(ruleSet.id)" :data-type="dataType"></Formula>
         </a-tab-pane>
       </a-tabs>
     </a-drawer>
@@ -610,10 +628,11 @@ import {
   generationRelease,
   saveDefaultAction,
   defaultActionSwitch
-} from '@/services/generalRule'
+} from '@/services/ruleSet'
 import {getRuleSetConfig} from '@/services/ruleSet'
 import {saveConditionAndBindGroup, deleteCondition} from '@/services/conditionGroupCondition'
 import {updateCondition} from '@/services/condition'
+import {saveRuleAndBindRuleSet} from '@/services/rule'
 
 
 //import {listInputParameter} from '@/services/inputParameter'
@@ -656,29 +675,28 @@ export default {
       },
       menuVisible: false,
       loading: true,
-      dataType: 0,
-      generalRule: {
-        id: null,
-        name: null,
-        code: null,
-        description: null,
-        ruleId: null,
-        conditionGroup: [],
-        action: {
-          value: undefined,
-          valueName: undefined,
-          valueType: undefined,
-          variableValue: undefined,
-          type: undefined,
-        },
-        defaultAction: {
-          enableDefaultAction: 1,
-          value: undefined,
-          valueName: undefined,
-          valueType: undefined,
-          variableValue: undefined,
-          type: undefined,
-        },
+      dataType: 1,
+      ruleSet: {
+        "id": null,
+        "name": null,
+        "code": null,
+        "description": null,
+        "workspaceId": null,
+        "workspaceCode": "test",
+        "ruleSet": [],
+        "strategyType": 1,
+        "enableDefaultRule": null,
+        defaultRule: {
+          id: null,
+          name: "默认规则",
+          conditionGroup: [], //扩展
+          action: {
+            value: undefined,
+            valueName: null,
+            valueType: null,
+            type: null,
+          }
+        }
       },
       actionSearchSelect: {
         data: [],
@@ -729,7 +747,7 @@ export default {
     }
   },
   mounted() {
-    this.generalRule.id = this.id
+    this.ruleSet.id = this.id
     this.getRuleSetConfig();
   },
   computed: {
@@ -745,9 +763,15 @@ export default {
     valueType(v) {
       return valueType(v);
     },
+    updateRuleName() {
+
+    },
+    deleteRule() {
+
+    },
     defaultActionValueTypeChange(valueType) {
-      this.generalRule.defaultAction = {
-        enableDefaultAction: this.generalRule.defaultAction.enableDefaultAction,
+      this.ruleSet.defaultRule.action = {
+        enableDefaultAction: this.ruleSet.defaultRule.action.enableDefaultAction,
         value: undefined,
         valueName: undefined,
         valueType: undefined,
@@ -755,14 +779,14 @@ export default {
       };
       // 如果是变量或者元素
       if (valueType === 'PARAMETER') {
-        this.generalRule.defaultAction.type = 0;
+        this.ruleSet.defaultRule.action.type = 0;
       } else if (valueType === 'VARIABLE') {
-        this.generalRule.defaultAction.type = 1;
+        this.ruleSet.defaultRule.action.type = 1;
       } else if (valueType === 'FORMULA') {
-        this.generalRule.defaultAction.type = 4;
+        this.ruleSet.defaultRule.action.type = 4;
       } else {
-        this.generalRule.defaultAction.valueType = valueType;
-        this.generalRule.defaultAction.type = 2;
+        this.ruleSet.defaultRule.action.valueType = valueType;
+        this.ruleSet.defaultRule.action.type = 2;
       }
       // 清空远程搜索缓存
       this.actionSearchSelect = {
@@ -771,25 +795,25 @@ export default {
       }
     },
     enableDefaultActionChange() {
-      let defaultAction = this.generalRule.defaultAction;
+      let defaultAction = this.ruleSet.defaultRule.action;
       if (defaultAction.enableDefaultAction === 0) {
         defaultAction.enableDefaultAction = 1;
       } else {
         // 如果开启默认规则，判断是否填写，如果没有填写，手动触发提示错误
         if (defaultAction.type == null) {
-          this.$refs['generalRuleForm'].fields[2].validateMessage = '请选择默认结果类型'
-          this.$refs['generalRuleForm'].fields[2].validateState = 'error'
+          this.$refs['ruleSetForm'].fields[2].validateMessage = '请选择默认结果类型'
+          this.$refs['ruleSetForm'].fields[2].validateState = 'error'
           return;
         }
         if (defaultAction.value == null) {
-          this.$refs['generalRuleForm'].fields[3].validateMessage = '请输入默认结果值'
-          this.$refs['generalRuleForm'].fields[3].validateState = 'error'
+          this.$refs['ruleSetForm'].fields[3].validateMessage = '请输入默认结果值'
+          this.$refs['ruleSetForm'].fields[3].validateState = 'error'
           return;
         }
         defaultAction.enableDefaultAction = 0;
       }
       defaultActionSwitch({
-        generalRuleId: this.generalRule.id,
+        ruleSetId: this.ruleSet.id,
         enableDefaultAction: defaultAction.enableDefaultAction
       }).then(res => {
         if (res.data.data) {
@@ -818,19 +842,19 @@ export default {
     datePickerChange(v, date) {
       v.value = moment(date).format('YYYY-MM-DD HH:mm:ss');
     },
-    saveAction() {
-      if (this.generalRule.action.type == null) {
+    saveAction(rs) {
+      if (rs.action.type == null) {
         return;
       }
-      if (!this.generalRule.action.value) {
+      if (!rs.action.value) {
         return;
       }
-      if (!this.generalRule.action.valueType) {
+      if (!rs.action.valueType) {
         return;
       }
       saveAction({
-        ruleId: this.generalRule.ruleId,
-        configValue: this.generalRule.action
+        ruleId: rs.id,
+        configValue: rs.action
       }).then(res => {
         if (res.data.data) {
           this.$message.success("结果保存成功");
@@ -838,27 +862,27 @@ export default {
       })
     },
     saveDefaultAction() {
-      if (this.generalRule.defaultAction.type == null) {
+      if (this.ruleSet.defaultRule.action.type == null) {
         return;
       }
-      if (!this.generalRule.defaultAction.value) {
+      if (!this.ruleSet.defaultRule.action.value) {
         return;
       }
-      if (!this.generalRule.defaultAction.valueType) {
+      if (!this.ruleSet.defaultRule.action.valueType) {
         return;
       }
       saveDefaultAction({
-        generalRuleId: this.generalRule.id,
-        configValue: this.generalRule.defaultAction
+        ruleSetId: this.ruleSet.defaultRule.id,
+        configValue: this.ruleSet.defaultRule.action
       }).then(res => {
         if (res.data.data) {
           this.$message.success("默认结果保存成功");
         }
       })
     },
-    actionValueDatePickerOpenChange(s) {
+    actionValueDatePickerOpenChange(s, rs) {
       if (!s) {
-        this.saveAction();
+        this.saveAction(rs);
       }
     },
     defaultActionValueDatePickerOpenChange(s) {
@@ -866,26 +890,26 @@ export default {
         this.saveDefaultAction();
       }
     },
-    actionSearch(value) {
+    actionSearch(value, rs) {
       selectSearch({
             name: value,
-            dataId: this.generalRule.id,
+            dataId: this.ruleSet.id,
             dataType: this.dataType,
             valueType: null // 查询所有类型
           }, data => (this.actionSearchSelect.data = data)
-          , this.generalRule.action.type)
+          , rs.action.type)
     },
     defaultActionSearch(value) {
       selectSearch({
             name: value,
-            dataId: this.generalRule.id,
+            dataId: this.ruleSet.id,
             dataType: this.dataType,
-            valueType: [this.generalRule.action.valueType]
+            valueType: [this.ruleSet.action.valueType]
           }, data => (this.actionSearchSelect.data = data)
-          , this.generalRule.defaultAction.type)
+          , this.ruleSet.defaultRule.action.type)
     },
-    actionSearchOptionClick(d) {
-      let action = this.generalRule.action;
+    actionSearchOptionClick(d, rs) {
+      let action = rs.action;
       action.value = d.id;
       action.valueType = d.valueType;
       action.valueName = d.name;
@@ -893,10 +917,10 @@ export default {
       if (action.type === 1 && d.type === 2) {
         action.variableValue = d.value;
       }
-      this.saveAction();
+      this.saveAction(rs);
     },
     defaultActionSearchOptionClick(d) {
-      let defaultAction = this.generalRule.defaultAction;
+      let defaultAction = this.ruleSet.defaultRule.action;
       defaultAction.value = d.id;
       defaultAction.valueType = d.valueType;
       defaultAction.valueName = d.name;
@@ -934,7 +958,7 @@ export default {
     conditionLeftSearch(value) {
       selectSearch({
             name: value,
-            dataId: this.generalRule.id,
+            dataId: this.ruleSet.id,
             dataType: this.dataType,
             valueType: null // 查询所有类型
           }, data => (this.selectConditionLeftSearchSelect.data = data)
@@ -975,8 +999,8 @@ export default {
       }
       return v.value;
     },
-    actionValueTypeChange(valueType) {
-      this.generalRule.action = {
+    actionValueTypeChange(valueType, rs) {
+      rs.action = {
         value: undefined,
         valueName: undefined,
         valueType: undefined,
@@ -984,20 +1008,21 @@ export default {
       };
       // 如果是变量或者元素
       if (valueType === 'PARAMETER') {
-        this.generalRule.action.type = 0;
+        rs.action.type = 0;
       } else if (valueType === 'VARIABLE') {
-        this.generalRule.action.type = 1;
+        rs.action.type = 1;
       } else if (valueType === 'FORMULA') {
-        this.generalRule.action.type = 4;
+        rs.action.type = 4;
       } else {
-        this.generalRule.action.valueType = valueType;
-        this.generalRule.action.type = 2;
+        rs.action.valueType = valueType;
+        rs.action.type = 2;
       }
       // 清空远程搜索缓存
       this.actionSearchSelect = {
         data: [],
         value: undefined,
       }
+      console.log(rs)
     },
     /**
      * 条件左值类型修改
@@ -1037,7 +1062,7 @@ export default {
     conditionRightSearch(value) {
       selectSearch({
         name: value,
-        dataId: this.generalRule.id,
+        dataId: this.ruleSet.id,
         dataType: this.dataType,
         // 查询指定类型右值
         valueType: this.getRValueType(this.selectCondition.from.config.leftValue.valueType, this.selectCondition.from.config.symbol)
@@ -1116,13 +1141,13 @@ export default {
       }
     },
     nextStep() {
-      this.$refs['generalRuleForm'].validate(valid => {
+      this.$refs['ruleSetForm'].validate(valid => {
         if (valid) {
           this.footer.nextStepLoading = true;
-          generationRelease(this.generalRule).then(res => {
+          generationRelease(this.ruleSet).then(res => {
             if (res.data.data) {
               this.footer.nextStepLoading = false;
-              this.$emit("choicePage", {pageIndex: 3, id: this.generalRule.id})
+              this.$emit("choicePage", {pageIndex: 3, id: this.ruleSet.id})
             }
           })
         } else {
@@ -1177,7 +1202,7 @@ export default {
           }
           // 插入一条记录
           saveConditionAndBindGroup({
-            generalRuleId: this.generalRule.id,
+            ruleSetId: this.ruleSet.id,
             // 传入条件组信息，条件信息 绑定关系
             conditionGroupId: this.selectCondition.currentConditionGroup.id,
             orderNo: orderNo,
@@ -1202,22 +1227,57 @@ export default {
         }
       });
     },
-    addConditionGroup() {
+    addRule() {
+      let newOrderNo = 1;
+      if (this.ruleSet.ruleSet != null) {
+        let length = this.ruleSet.ruleSet.length;
+        let ruleSetElement = this.ruleSet.ruleSet[length - 1];
+        if (ruleSetElement !== undefined) {
+          newOrderNo = ruleSetElement.orderNo + 1;
+        }
+      } else {
+        this.ruleSet.ruleSet = [];
+      }
+      let newRule = {
+        id: null,
+        name: "规则",
+        orderNo: newOrderNo,
+        conditionGroup: [],
+        action: {
+          value: undefined,
+          valueName: null,
+          valueType: null,
+          type: null,
+        }
+      };
+      // 调用接口..
+      saveRuleAndBindRuleSet({
+        ruleSetId: this.ruleSet.id,
+        ruleBody: newRule
+      }).then(res => {
+        if (res.data.data) {
+          newRule.id = res.data.data;
+          this.ruleSet.ruleSet.push(newRule);
+          this.$message.success("添加规则成功");
+        }
+      })
+    },
+    addConditionGroup(rs) {
       // 增加一个条件组
       let newOrderNo = 1;
-      if (this.generalRule.conditionGroup != null) {
-        let length = this.generalRule.conditionGroup.length;
-        let conditionGroupElement = this.generalRule.conditionGroup[length - 1];
+      if (rs.conditionGroup != null) {
+        let length = rs.conditionGroup.length;
+        let conditionGroupElement = rs.conditionGroup[length - 1];
         if (conditionGroupElement !== undefined) {
           newOrderNo = conditionGroupElement.orderNo + 1;
         }
       } else {
-        this.generalRule.conditionGroup = [];
+        rs.conditionGroup = [];
       }
       let newConditionGroup = {
         id: null,
         name: "条件组",
-        ruleId: this.generalRule.ruleId,
+        ruleId: rs.id,
         orderNo: newOrderNo,
         conditionGroupCondition: []
       };
@@ -1225,7 +1285,7 @@ export default {
         // 回显的id
         if (res.data.data) {
           newConditionGroup.id = res.data.data;
-          this.generalRule.conditionGroup.push(newConditionGroup);
+          rs.conditionGroup.push(newConditionGroup);
           this.$message.success("添加条件组成功");
         }
       });
@@ -1233,17 +1293,17 @@ export default {
     updateConditionGroupName(cg) {
       saveOrUpdate({
         id: cg.id,
-        ruleId: this.generalRule.ruleId,
+        ruleId: this.ruleSet.ruleId,
         name: cg.name
       });
     },
-    deleteConditionGroup(cg) {
+    deleteConditionGroup(rs, cg) {
       // 删除条件组
       deleteConditionGroup({id: cg.id}).then(res => {
         if (res.data.data) {
-          this.generalRule.conditionGroup.forEach((value, index) => {
+          rs.conditionGroup.forEach((value, index) => {
             if (value.id === cg.id) {
-              this.generalRule.conditionGroup.splice(index, 1);
+              rs.conditionGroup.splice(index, 1);
             }
           });
           this.$message.success("删除条件组成功");
@@ -1252,11 +1312,11 @@ export default {
     },
     getRuleSetConfig() {
       getRuleSetConfig({
-        "id": this.generalRule.id
+        "id": this.ruleSet.id
       }).then(res => {
         let da = res.data.data;
         if (da != null) {
-          this.generalRule = da;
+          this.ruleSet = da;
         }
       }).finally(() => {
         this.loading = false
@@ -1274,6 +1334,12 @@ export default {
 
 <style lang="less">
 .condition_set {
+  .ant-alert-close-icon {
+    margin-top: -5px;
+  }
+}
+
+.rule_set {
   .ant-alert-close-icon {
     margin-top: -5px;
   }
