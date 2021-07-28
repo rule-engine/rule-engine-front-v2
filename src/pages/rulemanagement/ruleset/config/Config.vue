@@ -635,16 +635,15 @@ import Contextmenu from '@/components/menu/Contextmenu'
 // api
 import {saveOrUpdate, deleteConditionGroup} from '@/services/conditionGroup'
 import {
-  // getRuleConfig,
+  getRuleSetConfig,
+  updateStrategyType,
   generationRelease,
   saveDefaultRule,
   defaultRuleSetSwitch
 } from '@/services/ruleSet'
-import {deleteRuleSetRule} from '@/services/rule'
-import {getRuleSetConfig, updateStrategyType} from '@/services/ruleSet'
 import {saveConditionAndBindGroup, deleteCondition} from '@/services/conditionGroupCondition'
 import {updateCondition} from '@/services/condition'
-import {saveRuleAndBindRuleSet, saveAction} from '@/services/rule'
+import {deleteRuleSetRule, saveRuleAndBindRuleSet, saveAction} from '@/services/rule'
 
 
 //import {listInputParameter} from '@/services/inputParameter'
