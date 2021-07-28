@@ -111,6 +111,14 @@ const options = {
                             component: () => import('@/pages/rulemanagement/generalrule/router'),
                         },
                         {
+                            path: '/ruleSetRouter/:id',
+                            name: '规则集(...)',
+                            meta: {
+                                invisible: true
+                            },
+                            component: () => import('@/pages/rulemanagement/ruleset/router'),
+                        },
+                        {
                             path: 'ruleSet',
                             name: '规则集',
                             meta: {

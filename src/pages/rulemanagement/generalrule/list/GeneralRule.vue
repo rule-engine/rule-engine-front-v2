@@ -170,7 +170,7 @@
                 <a-icon type="redo"/>
                 回退
               </a-menu-item>
-              <a-menu-item @click="showHistoryVersion(record)">
+              <a-menu-item @click="deleteHistorical(record)">
                 <a-icon type="delete"/>
                 删除
               </a-menu-item>
@@ -335,7 +335,8 @@ import {
   showHistoryVersionList,
   updateGeneralRuleDefinition,
   getRuleDefinition,
-  goBack
+  goBack,
+  deleteHistoricalRules
 } from '@/services/generalRule'
 import {dataPermissionList, update} from '@/services/dataPermission'
 import {exportData} from '@/services/importExport'
@@ -550,6 +551,16 @@ export default {
     this.loadDataList();
   },
   methods: {
+    deleteHistorical(record){
+      this.loading = true;
+      deleteHistoricalRules({id: record.id}).then(res => {
+        if (res.data.data) {
+          this.$message.success("删除成功！");
+          this.showHistoryVersion(this.historyVersion.query.query.id);
+        }
+        this.loading = false;
+      })
+    },
     ruleCodeValidator(rule, value, callback) {
       if (!value) {
         callback(new Error('请输入规则编码'));
