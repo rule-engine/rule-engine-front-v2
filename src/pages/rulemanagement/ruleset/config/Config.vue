@@ -373,36 +373,12 @@
       <a-button type="primary" @click="nextStep()" :loading="footer.nextStepLoading">预览发布</a-button>
     </footer-tool-bar>
 
-    <a-drawer
-        placement="left"
-        :closable="false"
-        width="430px"
-        :visible="drawer.visible"
-        @close="onClose"
-        :mask="true"
-        :zIndex="999"
-    >
-      <a-tabs default-active-key="1">
-        <a-tab-pane key="1" tab="参数">
-          <input-parameter :data-id="parseInt(ruleSet.id)" :data-type="dataType"/>
-        </a-tab-pane>
-        <a-tab-pane key="2" tab="变量">
-          <Variable :data-id="parseInt(ruleSet.id)" :data-type="dataType"/>
-        </a-tab-pane>
-        <a-tab-pane key="3" tab="表达式">
-          <Formula :data-id="parseInt(ruleSet.id)" :data-type="dataType"></Formula>
-        </a-tab-pane>
-      </a-tabs>
-    </a-drawer>
   </div>
 </template>
 
 <script>
 import FooterToolBar from '@/components/tool/FooterToolBar'
 import PageLayout from "@/layouts/PageLayout";
-import Formula from "@/pages/rulemanagement/builtIncomponents/Formula";
-import InputParameter from "@/pages/rulemanagement/builtIncomponents/InputParameter";
-import Variable from "@/pages/rulemanagement/builtIncomponents/Variable";
 import ConditionModal from "@/pages/rulemanagement/builtIncomponents/ConditionModal";
 
 import Contextmenu from '@/components/menu/Contextmenu'
@@ -419,19 +395,16 @@ import {deleteCondition} from '@/services/conditionGroupCondition'
 import {deleteRuleSetRule, saveRuleAndBindRuleSet, saveAction, saveOrUpdateRule} from '@/services/rule'
 
 
-//import {listInputParameter} from '@/services/inputParameter'
 import {selectSearch} from '@/utils/selectSearch'
 import {getSymbolByValueType, getSymbolExplanation} from '@/utils/symbol'
 import moment from 'moment';
 import {mapState} from "vuex";
-// import ConditionItem from './ConditionItem'
 import TaskGroup from '@/components/task/TaskGroup'
-// import TaskItem from '@/components/task/TaskItem'
 import {getTypeName, valueType} from '@/utils/value-type'
 
 export default {
   name: "Config",
-  components: {PageLayout, FooterToolBar, InputParameter, Variable, Contextmenu, Formula, TaskGroup, ConditionModal},
+  components: {PageLayout, FooterToolBar, Contextmenu, TaskGroup, ConditionModal},
   props: {
     id: {
       type: Number,
@@ -610,9 +583,10 @@ export default {
       }
     },
     onMenuSelect(key, target, pageKey) {
+      console.log(pageKey)
       switch (key) {
         case '1':
-          this.showDrawer(pageKey);
+          alert('暂不支持')
           break
         case '2':
           alert('暂不支持')
@@ -679,8 +653,6 @@ export default {
     actionSearch(value, rs) {
       selectSearch({
             name: value,
-            dataId: this.ruleSet.id,
-            dataType: this.dataType,
             valueType: null // 查询所有类型
           }, data => (this.actionSearchSelect.data = data)
           , rs.action.type)
@@ -688,8 +660,6 @@ export default {
     defaultActionSearch(value) {
       selectSearch({
             name: value,
-            dataId: this.ruleSet.id,
-            dataType: this.dataType
           }, data => (this.actionSearchSelect.data = data)
           , this.ruleSet.defaultRule.action.type)
     },

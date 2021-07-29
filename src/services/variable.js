@@ -12,7 +12,6 @@ export async function addVariable(param) {
 /**
  * 验证变量名字是否存在
  * @param param
- * @returns {Promise<AxiosResponse<any>>}
  */
 export async function verifyVariableName(param) {
     return request(variable.VERIFY_VARIABLE_NAME, METHOD.POST, param)

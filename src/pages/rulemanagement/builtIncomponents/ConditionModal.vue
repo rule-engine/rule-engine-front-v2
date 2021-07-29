@@ -389,8 +389,6 @@ export default {
     conditionLeftSearch(value) {
       selectSearch({
             name: value,
-            dataId: this.dataId,
-            dataType: this.dataType,
             valueType: null // 查询所有类型
           }, data => (this.selectConditionLeftSearchSelect.data = data)
           , this.selectCondition.from.config.leftValue.type)
@@ -462,8 +460,6 @@ export default {
     conditionRightSearch(value) {
       selectSearch({
         name: value,
-        dataId: this.dataId,
-        dataType: this.dataType,
         // 查询指定类型右值
         valueType: this.getRValueType(this.selectCondition.from.config.leftValue.valueType, this.selectCondition.from.config.symbol)
       }, data => (this.selectConditionRightSearchSelect.data = data), this.selectCondition.from.config.rightValue.type, null);
