@@ -385,20 +385,13 @@ export default {
       this.add.form.dataType = this.dataType;
     },
     functionParamValueTypeChange(valueType, pv) {
-      pv.valueType = valueType;
       // 如果是变量或者元素
       if (valueType === 'PARAMETER') {
         pv.type = 0;
-        // 参数的类型
-        pv.valueType = '';
       } else if (valueType === 'VARIABLE') {
         pv.type = 1;
-        // 变量的类型
-        pv.valueType = '';
       } else if (valueType === 'FORMULA') {
         pv.type = 4;
-        // 变量的类型
-        pv.valueType = '';
       } else {
         pv.type = 2;
       }
