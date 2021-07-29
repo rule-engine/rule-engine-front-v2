@@ -5,10 +5,6 @@
         <a-input
             v-model="query.query.name"/>
       </a-form-model-item>
-      <a-form-model-item label="编码">
-        <a-input
-            v-model="query.query.code"/>
-      </a-form-model-item>
       <a-form-model-item>
         <a-button type="primary" @click="submitSearch()">
           搜索
