@@ -73,6 +73,16 @@ const options = {
                     component: BlankView,
                     children: [
                         {
+                            path: '/Inputparameter',
+                            name: '参数',
+                            meta: {
+                                page: {
+                                    closable: true
+                                }
+                            },
+                            component: () => import('@/pages/components/Inputparameter'),
+                        },
+                        {
                             path: '/function',
                             name: '函数',
                             meta: {
