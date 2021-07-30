@@ -55,6 +55,10 @@
                                    :placeholder="`规则${rsi}`" v-model="rs.name"/>
                         </div>
 
+                        <a-icon :type="rs.fold?'left':'down'" class="dynamic-delete-button" @click.native="rs.fold=!rs.fold"
+                                style="font-size: 18px;margin-right: 10px;"
+                                slot="extra"/>
+
                         <a-icon type="drag" class="dynamic-delete-button ruleMover"
                                 style="font-size: 18px;margin-right: 10px;"
                                 slot="extra"/>
@@ -63,182 +67,180 @@
                                 slot="extra"
                                 @click="deleteRule(rs,ruleSet.ruleSet)"></a-icon>
 
-                        <a-skeleton v-if="ruleSet.ruleSet.length===0" :paragraph="{ rows: 3 }"/>
+                        <div v-if="!rs.fold">
+                          <a-skeleton v-if="ruleSet.ruleSet.length===0" :paragraph="{ rows: 3 }"/>
+                          <a-card title="条件集" class="condition_set" size="small">
+                            <a-skeleton v-if="rs.conditionGroup.length===0" :paragraph="{ rows: 3 }"/>
+                            <a-spin :spinning="conditionMoveLoading">
+
+                              <task-group title="条件集" :group="rs.id"
+                                          handle=".mover"
+                                          :rule-id="rs.id"
+                                          :loading.sync="conditionMoveLoading"
+                                          :data-list="rs.conditionGroup">
+                                <a-card :bordered="false" size="small"
+                                        v-for="(cg,cgi) in rs.conditionGroup"
+                                        :key="cg.id">
+
+                                  <div slot="title" style="margin-right: 16px;padding-left: 2px;">
+                                    <a-input class="conditionGroupNameInput"
+                                             style="padding: 0;border: none;background: none;"
+                                             @blur="updateConditionGroupName(cg,rs)"
+                                             :placeholder="`条件组${cgi}`" v-model="cg.name"/>
+                                  </div>
+
+                                  <a-icon type="drag" class="dynamic-delete-button mover"
+                                          style="font-size: 18px;margin-right: 10px;"
+                                          slot="extra"/>
+
+                                  <a-icon type="delete" class="dynamic-delete-button" style="font-size: 18px"
+                                          slot="extra"
+                                          @click="deleteConditionGroup(rs,cg)"></a-icon>
+
+                                  <a-skeleton v-if="cg.conditionGroupCondition.length===0"
+                                              :paragraph="{ rows: 2 }"/>
+                                  <task-group :title="cg.name" :group="cg.id"
+                                              :data-list="rs.conditionGroup"
+                                              :id="cg.id"
+                                              :loading.sync="conditionMoveLoading">
+                                    <a-alert closable
+                                             style="border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"
+                                             v-for="cgc in cg.conditionGroupCondition"
+                                             :key="cgc.id"
+                                             @dblclick.native="$refs.modal.editCondition(cg,cgc)"
+                                             @close="deleteCondition(cg.conditionGroupCondition,cgc.id,cgc.id)"
+                                             class="conditionItem task-item">
+                                      <p slot="description" style="margin-bottom: 0;">
+                                        <a-tag color="blue"
+                                               style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                                          （{{ cgc.condition.name }}）
+                                        </a-tag>
+                                        <a-tag color="cyan"
+                                               style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                                          {{
+                                            getTypeName(cgc.condition.config.leftValue.type)
+                                          }}
+                                        </a-tag>
+                                        {{ getViewValue(cgc.condition.config.leftValue) }}
+                                        &nbsp;
+                                        <a-tag color="orange"
+                                               style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                                          {{ getSymbolExplanation(cgc.condition.config.symbol) }}
+                                        </a-tag>
+                                        <a-tag color="cyan"
+                                               style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                                          {{
+                                            getTypeName(cgc.condition.config.rightValue.type)
+                                          }}
+                                        </a-tag>
+                                        {{ getViewValue(cgc.condition.config.rightValue) }}
+                                      </p>
+                                    </a-alert>
+                                  </task-group>
 
 
-                        <a-card title="条件集" class="condition_set" size="small">
-                          <a-skeleton v-if="rs.conditionGroup.length===0" :paragraph="{ rows: 3 }"/>
-                          <a-spin :spinning="conditionMoveLoading">
+                                  <br>
 
-                            <task-group title="条件集" :group="rs.id"
-                                        handle=".mover"
-                                        :rule-id="rs.id"
-                                        :loading.sync="conditionMoveLoading"
-                                        :data-list="rs.conditionGroup">
-                              <a-card :bordered="false" size="small"
-                                      v-for="(cg,cgi) in rs.conditionGroup"
-                                      :key="cg.id">
+                                  <a-button type="dashed" style="width: 50%;display:block;margin:0 auto"
+                                            @click="$refs.modal.addCondition(cg)">
+                                    <a-icon type="plus" style="color: #777;"/>
+                                    添加条件
+                                  </a-button>
+                                </a-card>
+                              </task-group>
+                            </a-spin>
 
-                                <div slot="title" style="margin-right: 16px;padding-left: 2px;">
-                                  <a-input class="conditionGroupNameInput"
-                                           style="padding: 0;border: none;background: none;"
-                                           @blur="updateConditionGroupName(cg,rs)"
-                                           :placeholder="`条件组${cgi}`" v-model="cg.name"/>
-                                </div>
-
-                                <a-icon type="drag" class="dynamic-delete-button mover"
-                                        style="font-size: 18px;margin-right: 10px;"
-                                        slot="extra"/>
-
-                                <a-icon type="delete" class="dynamic-delete-button" style="font-size: 18px"
-                                        slot="extra"
-                                        @click="deleteConditionGroup(rs,cg)"></a-icon>
-
-                                <a-skeleton v-if="cg.conditionGroupCondition.length===0"
-                                            :paragraph="{ rows: 2 }"/>
-                                <task-group :title="cg.name" :group="cg.id"
-                                            :data-list="rs.conditionGroup"
-                                            :id="cg.id"
-                                            :loading.sync="conditionMoveLoading">
-                                  <a-alert closable
-                                           style="border:none;padding: 6px 30px 6px 6px;margin-bottom: 10px"
-                                           v-for="cgc in cg.conditionGroupCondition"
-                                           :key="cgc.id"
-                                           @dblclick.native="$refs.modal.editCondition(cg,cgc)"
-                                           @close="deleteCondition(cg.conditionGroupCondition,cgc.id,cgc.id)"
-                                           class="conditionItem task-item">
-                                    <p slot="description" style="margin-bottom: 0;">
-                                      <a-tag color="blue"
-                                             style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                                        （{{ cgc.condition.name }}）
-                                      </a-tag>
-                                      <a-tag color="cyan"
-                                             style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                                        {{
-                                          getTypeName(cgc.condition.config.leftValue.type)
-                                        }}
-                                      </a-tag>
-                                      {{ getViewValue(cgc.condition.config.leftValue) }}
-                                      &nbsp;
-                                      <a-tag color="orange"
-                                             style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                                        {{ getSymbolExplanation(cgc.condition.config.symbol) }}
-                                      </a-tag>
-                                      <a-tag color="cyan"
-                                             style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                                        {{
-                                          getTypeName(cgc.condition.config.rightValue.type)
-                                        }}
-                                      </a-tag>
-                                      {{ getViewValue(cgc.condition.config.rightValue) }}
-                                    </p>
-                                  </a-alert>
-                                </task-group>
-
-
-                                <br>
-
-                                <a-button type="dashed" style="width: 50%;display:block;margin:0 auto"
-                                          @click="$refs.modal.addCondition(cg)">
-                                  <a-icon type="plus" style="color: #777;"/>
-                                  添加条件
-                                </a-button>
-                              </a-card>
-                            </task-group>
-                          </a-spin>
-
-                          <a-button type="dashed" style="width: 100%" @click="addConditionGroup(rs)">
-                            <a-icon type="plus" style="color: #777;"/>
-                            添加条件组
-                          </a-button>
-                        </a-card>
-
-                        <br>
-
-                        <a-card title="结果" size="small">
-                          <a-row>
-                            <a-col :span="5">
-                              <a-form-model-item :prop="`ruleSet.${rsi}.action.type`"
-                                                 :rules="{
+                            <a-button type="dashed" style="width: 100%" @click="addConditionGroup(rs)">
+                              <a-icon type="plus" style="color: #777;"/>
+                              添加条件组
+                            </a-button>
+                          </a-card>
+                          <br>
+                          <a-card title="结果" size="small">
+                            <a-row>
+                              <a-col :span="5">
+                                <a-form-model-item :prop="`ruleSet.${rsi}.action.type`"
+                                                   :rules="{
                                           required: true,
                                           message: '请选择结果类型',
                                           trigger: ['change', 'blur'],
                                         }">
-                                <a-select style="width:100%"
-                                          placeholder="请选择结果类型"
-                                          :value="valueType(rs.action)"
-                                          @change="valueType=>{actionValueTypeChange(valueType,rs)}">
-                                  <a-select-option value="PARAMETER">参数</a-select-option>
-                                  <a-select-option value="VARIABLE">变量</a-select-option>
-                                  <a-select-option value="FORMULA">表达式</a-select-option>
-                                  <a-select-option value="BOOLEAN">布尔</a-select-option>
-                                  <a-select-option value="COLLECTION">集合</a-select-option>
-                                  <a-select-option value="STRING">字符串</a-select-option>
-                                  <a-select-option value="NUMBER">数值</a-select-option>
-                                  <a-select-option value="DATE">日期</a-select-option>
-                                </a-select>
-                              </a-form-model-item>
-                            </a-col>
-                            <a-col :span="1"></a-col>
-                            <a-col :span="18">
-                              <a-form-model-item :prop="`ruleSet.${rsi}.action.value`"
-                                                 :rules="{
+                                  <a-select style="width:100%"
+                                            placeholder="请选择结果类型"
+                                            :value="valueType(rs.action)"
+                                            @change="valueType=>{actionValueTypeChange(valueType,rs)}">
+                                    <a-select-option value="PARAMETER">参数</a-select-option>
+                                    <a-select-option value="VARIABLE">变量</a-select-option>
+                                    <a-select-option value="FORMULA">表达式</a-select-option>
+                                    <a-select-option value="BOOLEAN">布尔</a-select-option>
+                                    <a-select-option value="COLLECTION">集合</a-select-option>
+                                    <a-select-option value="STRING">字符串</a-select-option>
+                                    <a-select-option value="NUMBER">数值</a-select-option>
+                                    <a-select-option value="DATE">日期</a-select-option>
+                                  </a-select>
+                                </a-form-model-item>
+                              </a-col>
+                              <a-col :span="1"></a-col>
+                              <a-col :span="18">
+                                <a-form-model-item :prop="`ruleSet.${rsi}.action.value`"
+                                                   :rules="{
                                           required: true,
                                           message: '请输入结果值',
                                           trigger: ['change', 'blur'],
                                         }">
-                                <a-select
-                                    v-if="rs.action.type===0||rs.action.type===1||rs.action.type===4"
-                                    show-search
-                                    :disabled="rs.action.type==null"
-                                    :value="rs.action.valueName"
-                                    placeholder="请输入关键字进行搜索"
-                                    :default-active-first-option="false"
-                                    :show-arrow="false"
-                                    :filter-option="false"
-                                    :not-found-content="null"
-                                    @search="(value)=>{actionSearch(value,rs)}"
-                                >
-                                  <a-select-option v-for="d in actionSearchSelect.data" :value="d.id"
-                                                   :key="d.id"
-                                                   @click.native="actionSearchOptionClick(d,rs)">
-                                    {{ d.name }}
-                                  </a-select-option>
-                                </a-select>
+                                  <a-select
+                                      v-if="rs.action.type===0||rs.action.type===1||rs.action.type===4"
+                                      show-search
+                                      :disabled="rs.action.type==null"
+                                      :value="rs.action.valueName"
+                                      placeholder="请输入关键字进行搜索"
+                                      :default-active-first-option="false"
+                                      :show-arrow="false"
+                                      :filter-option="false"
+                                      :not-found-content="null"
+                                      @search="(value)=>{actionSearch(value,rs)}"
+                                  >
+                                    <a-select-option v-for="d in actionSearchSelect.data" :value="d.id"
+                                                     :key="d.id"
+                                                     @click.native="actionSearchOptionClick(d,rs)">
+                                      {{ d.name }}
+                                    </a-select-option>
+                                  </a-select>
 
-                                <a-select
-                                    :disabled="!rs.action.type"
-                                    v-else-if="rs.action.valueType==='BOOLEAN'"
-                                    defaultValue="true"
-                                    @blur="saveAction(rs)"
-                                    style="width: 100%"
-                                    v-model="rs.action.value" placeholder="请选择数据">
-                                  <a-select-option value="true">true</a-select-option>
-                                  <a-select-option value="false">false</a-select-option>
-                                </a-select>
-                                <a-input-number
-                                    :disabled="!rs.action.type"
-                                    @blur="saveAction(rs)"
-                                    v-else-if="rs.action.valueType==='NUMBER'"
-                                    v-model="rs.action.value" style="width: 100%"/>
-                                <a-date-picker
-                                    :disabled="!rs.action.type"
-                                    @openChange="v=>{actionValueDatePickerOpenChange(v,rs)}"
-                                    v-else-if="rs.action.valueType==='DATE'"
-                                    show-time
-                                    @change="(date,dateString)=>(datePickerChange(rs.action,date,dateString))"
-                                    format="YYYY-MM-DD hh:mm:ss"
-                                    v-model="rs.action.value"
-                                    style="width: 100%"></a-date-picker>
-                                <a-input v-else
-                                         :disabled="!rs.action.type"
-                                         @blur="saveAction(rs)"
-                                         v-model="rs.action.value"></a-input>
-                              </a-form-model-item>
-                            </a-col>
-                          </a-row>
+                                  <a-select
+                                      :disabled="!rs.action.type"
+                                      v-else-if="rs.action.valueType==='BOOLEAN'"
+                                      defaultValue="true"
+                                      @blur="saveAction(rs)"
+                                      style="width: 100%"
+                                      v-model="rs.action.value" placeholder="请选择数据">
+                                    <a-select-option value="true">true</a-select-option>
+                                    <a-select-option value="false">false</a-select-option>
+                                  </a-select>
+                                  <a-input-number
+                                      :disabled="!rs.action.type"
+                                      @blur="saveAction(rs)"
+                                      v-else-if="rs.action.valueType==='NUMBER'"
+                                      v-model="rs.action.value" style="width: 100%"/>
+                                  <a-date-picker
+                                      :disabled="!rs.action.type"
+                                      @openChange="v=>{actionValueDatePickerOpenChange(v,rs)}"
+                                      v-else-if="rs.action.valueType==='DATE'"
+                                      show-time
+                                      @change="(date,dateString)=>(datePickerChange(rs.action,date,dateString))"
+                                      format="YYYY-MM-DD hh:mm:ss"
+                                      v-model="rs.action.value"
+                                      style="width: 100%"></a-date-picker>
+                                  <a-input v-else
+                                           :disabled="!rs.action.type"
+                                           @blur="saveAction(rs)"
+                                           v-model="rs.action.value"></a-input>
+                                </a-form-model-item>
+                              </a-col>
+                            </a-row>
 
-                        </a-card>
+                          </a-card>
+                        </div>
 
                       </a-card>
                     </task-group>
@@ -856,7 +858,12 @@ export default {
       }).then(res => {
         let da = res.data.data;
         if (da != null) {
+          da.ruleSet.forEach(f => {
+            // 折叠，默认不展开
+            f.fold = true;
+          })
           this.ruleSet = da;
+          console.log( this.ruleSet)
         }
       }).finally(() => {
         this.loading = false
