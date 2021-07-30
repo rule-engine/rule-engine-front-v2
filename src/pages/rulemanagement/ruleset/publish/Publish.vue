@@ -85,8 +85,9 @@
 
         <vue-scroll :ops="ops" style="width:100%;height:100%">
           <div :style="isMobile?'width:1000px;margin: 0 auto':''">
-            <a-card :title="`规则集(${getStrategyName(ruleSet.strategyType)})`" v-if="ruleSet.ruleSet.length!==0">
+            <a-card :title="`规则集(${getStrategyName(ruleSet.strategyType)})`" v-if="ruleSet.ruleSet.length!==0" size="small">
               <a-card :bordered="false" :title="rs.name" class="rule_set" v-for="rs in ruleSet.ruleSet" :key="rs.id"
+                      size="small"
                       style="margin-bottom: 10px">
                 <a-timeline>
                   <a-timeline-item v-for="(cg,cgi) in rs.conditionGroup" :key="cg.id">
