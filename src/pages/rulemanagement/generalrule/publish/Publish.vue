@@ -51,7 +51,7 @@
                               </a-form-model>
                               <a-form-model v-else-if="!runTest.run&&!runTest.resultView">
                                   <a-form-model-item :label="param.name+'('+param.code+')'"
-                                                     style="margin-bottom: 8px;"
+                                                     style="margin-bottom: 4px;"
                                                      v-for="param in request.param" :key="param.code">
                                     <a-input-number v-if="param.valueType==='NUMBER'"
                                                     v-model="param.value" style="width: 100%"/>
