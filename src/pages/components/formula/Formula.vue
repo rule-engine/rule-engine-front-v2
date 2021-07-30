@@ -7,6 +7,18 @@
               v-model="query.query.name"/>
         </a-form-model-item>
 
+
+        <a-form-item label="返回类型" placeholder="请选择">
+          <a-select v-model="query.query.valueType" style="width: 120px">
+            <a-select-option :value="null">全部</a-select-option>
+            <a-select-option value="BOOLEAN">布尔</a-select-option>
+            <a-select-option value="COLLECTION">集合</a-select-option>
+            <a-select-option value="STRING">字符串</a-select-option>
+            <a-select-option value="NUMBER">数值</a-select-option>
+            <a-select-option value="DATE">日期</a-select-option>
+          </a-select>
+        </a-form-item>
+
         <a-form-model-item>
           <a-button type="primary" @click="submitSearch()">
             搜索
@@ -129,16 +141,6 @@ import {deleteFormula, formulaList, getFormula, saveFormula, updateFormula} from
 export default {
   name: "Formula.vue",
   components: {StandardTable, PageLayout},
-  props: {
-    dataId: {
-      type: Number,
-      required: true
-    },
-    dataType: {
-      type: Number,
-      required: true
-    },
-  },
   data() {
     return {
       loading: false,
@@ -186,8 +188,7 @@ export default {
         },
         query: {
           name: null,
-          dataId: this.dataId,
-          dataType: this.dataType
+          valueType: null
         }
       },
       add: {
@@ -199,8 +200,6 @@ export default {
           value: undefined,
           valueType: undefined,
           description: undefined,
-          dataId: this.dataId,
-          dataType: this.dataType
         },
         rules: {
           name: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入名称"},
@@ -251,8 +250,6 @@ export default {
       this.add.visible = true;
       // 重置表单数据
       this.add.form = setDefaultValue(this.add.form);
-      this.add.form.dataType = this.dataType;
-      this.add.form.dataId = this.dataId;
     },
     getFormula(record) {
       getFormula({
@@ -261,8 +258,6 @@ export default {
         if (res.data.data) {
           this.add.form = res.data.data
           this.add.visible = true;
-          this.add.form.dataType = this.dataType;
-          this.add.form.dataId = this.dataId;
         }
       });
     },
@@ -279,6 +274,9 @@ export default {
     loadFormulaList() {
       this.loading = true;
       const _this = this;
+      if (this.query.query.valueType && this.query.query.valueType !== "") {
+        this.query.query.valueType = [this.query.query.valueType];
+      }
       formulaList(this.query).then(res => {
         const resp = res.data;
         if (resp.data) {
