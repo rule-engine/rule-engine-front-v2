@@ -50,7 +50,7 @@
 
                         <div slot="title" style="margin-right: 16px;padding-left: 2px;">
                           <a-input class="conditionGroupNameInput"
-                                   style="font-size: 16px;color: rgba(0, 0, 0, 0.85);padding: 0;border: none;background: none;"
+                                   style="color: rgba(0, 0, 0, 0.85);padding: 0;border: none;background: none;"
                                    @blur="updateRuleName(rs)"
                                    :placeholder="`规则${rsi}`" v-model="rs.name"/>
                         </div>
