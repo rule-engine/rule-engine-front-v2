@@ -45,17 +45,18 @@
                                 :rule-set-id="ruleSet.id"
                                 :loading.sync="ruleMoveLoading"
                                 :data-list="ruleSet.ruleSet">
-                      <a-card :bordered="false" v-for="(rs,rsi) in ruleSet.ruleSet" :key="rs.id" size="small"
+                      <a-card v-for="(rs,rsi) in ruleSet.ruleSet" :key="rs.id" size="small" hoverable
                               style="margin-bottom: 10px">
 
                         <div slot="title" style="margin-right: 16px;padding-left: 2px;">
                           <a-input class="conditionGroupNameInput"
-                                   style="color: rgba(0, 0, 0, 0.85);padding: 0;border: none;background: none;"
+                                   style="padding: 0;border: none;background: none;width: auto"
                                    @blur="updateRuleName(rs)"
                                    :placeholder="`规则${rsi}`" v-model="rs.name"/>
                         </div>
 
-                        <a-icon :type="rs.fold?'left':'down'" class="dynamic-delete-button" @click.native="rs.fold=!rs.fold"
+                        <a-icon :type="rs.fold?'right':'down'" class="dynamic-delete-button"
+                                @click.native="rs.fold=!rs.fold"
                                 style="font-size: 18px;margin-right: 10px;"
                                 slot="extra"/>
 
@@ -84,7 +85,7 @@
 
                                   <div slot="title" style="margin-right: 16px;padding-left: 2px;">
                                     <a-input class="conditionGroupNameInput"
-                                             style="padding: 0;border: none;background: none;"
+                                             style="padding: 0;border: none;background: none;width: auto"
                                              @blur="updateConditionGroupName(cg,rs)"
                                              :placeholder="`条件组${cgi}`" v-model="cg.name"/>
                                   </div>
@@ -785,6 +786,7 @@ export default {
         name: "规则",
         orderNo: newOrderNo,
         conditionGroup: [],
+        fold: false, //新增的默认展开
         action: {
           value: undefined,
           valueName: null,
@@ -858,12 +860,11 @@ export default {
       }).then(res => {
         let da = res.data.data;
         if (da != null) {
-          da.ruleSet.forEach(f => {
-            // 折叠，默认不展开
-            f.fold = true;
+          da.ruleSet.forEach((f, i) => {
+            // 折叠，默认只展开最后一个
+            f.fold = da.ruleSet.length - 1 !== i;
           })
           this.ruleSet = da;
-          console.log( this.ruleSet)
         }
       }).finally(() => {
         this.loading = false
