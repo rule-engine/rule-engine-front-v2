@@ -35,7 +35,7 @@
           <a-row :style="isMobile?'width:1000px;margin: 0 auto':''">
             <a-col :span="1"></a-col>
             <a-col :span="22">
-              <a-card title="条件集" class="condition_set">
+              <a-card title="条件集" class="condition_set" size="small">
 
                 <a-skeleton v-if="generalRule.conditionGroup.length===0" :paragraph="{ rows: 3 }"/>
                 <a-spin :spinning="conditionMoveLoading">
@@ -45,13 +45,13 @@
                               :rule-id="generalRule.ruleId"
                               :loading.sync="conditionMoveLoading"
                               :data-list="generalRule.conditionGroup">
-                    <a-card :bordered="false"
+                    <a-card :bordered="false" size="small"
                             v-for="(cg,cgi) in generalRule.conditionGroup"
                             :key="cg.id">
 
                       <div slot="title" style="margin-right: 16px;padding-left: 2px;">
                         <a-input class="conditionGroupNameInput"
-                                 style="font-size: 16px;color: rgba(0, 0, 0, 0.85);padding: 0;border: none;background: none;"
+                                 style="padding: 0;border: none;background: none;"
                                  @blur="updateConditionGroupName(cg)"
                                  :placeholder="`条件组${cgi}`" v-model="cg.name"/>
                       </div>
@@ -126,7 +126,7 @@
 
 
               <a-form-model ref="generalRuleForm" :model="generalRule">
-                <a-card title="结果">
+                <a-card title="结果" size="small">
                 <span slot="extra">
                           <a-popover title="温馨提示">
                               <template slot="content">
@@ -223,7 +223,7 @@
 
                 <br>
 
-                <a-card title="默认结果">
+                <a-card title="默认结果" size="small">
                   <a-switch
                       :disabled="generalRule.action.valueType==null"
                       @change="enableDefaultActionChange"

@@ -36,7 +36,7 @@
             <a-row :style="isMobile?'width:1000px;margin: 0 auto':''">
               <a-col :span="1"></a-col>
               <a-col :span="22">
-                <a-card title="规则集" class="rule_set">
+                <a-card title="规则集" class="rule_set" size="small">
 
                   <a-skeleton v-if="ruleSet.ruleSet.length===0" :paragraph="{ rows: 3 }"/>
                   <a-spin :spinning="ruleMoveLoading">
@@ -45,7 +45,7 @@
                                 :rule-set-id="ruleSet.id"
                                 :loading.sync="ruleMoveLoading"
                                 :data-list="ruleSet.ruleSet">
-                      <a-card :bordered="false" v-for="(rs,rsi) in ruleSet.ruleSet" :key="rs.id"
+                      <a-card :bordered="false" v-for="(rs,rsi) in ruleSet.ruleSet" :key="rs.id" size="small"
                               style="margin-bottom: 10px">
 
                         <div slot="title" style="margin-right: 16px;padding-left: 2px;">
@@ -66,7 +66,7 @@
                         <a-skeleton v-if="ruleSet.ruleSet.length===0" :paragraph="{ rows: 3 }"/>
 
 
-                        <a-card title="条件集" class="condition_set">
+                        <a-card title="条件集" class="condition_set" size="small">
                           <a-skeleton v-if="rs.conditionGroup.length===0" :paragraph="{ rows: 3 }"/>
                           <a-spin :spinning="conditionMoveLoading">
 
@@ -75,13 +75,13 @@
                                         :rule-id="rs.id"
                                         :loading.sync="conditionMoveLoading"
                                         :data-list="rs.conditionGroup">
-                              <a-card :bordered="false"
+                              <a-card :bordered="false" size="small"
                                       v-for="(cg,cgi) in rs.conditionGroup"
                                       :key="cg.id">
 
                                 <div slot="title" style="margin-right: 16px;padding-left: 2px;">
                                   <a-input class="conditionGroupNameInput"
-                                           style="font-size: 16px;color: rgba(0, 0, 0, 0.85);padding: 0;border: none;background: none;"
+                                           style="padding: 0;border: none;background: none;"
                                            @blur="updateConditionGroupName(cg,rs)"
                                            :placeholder="`条件组${cgi}`" v-model="cg.name"/>
                                 </div>
@@ -155,7 +155,7 @@
 
                         <br>
 
-                        <a-card title="结果">
+                        <a-card title="结果" size="small">
                           <a-row>
                             <a-col :span="5">
                               <a-form-model-item :prop="`ruleSet.${rsi}.action.type`"
@@ -252,7 +252,7 @@
                 <br>
                 <br>
 
-                <a-card title="默认规则">
+                <a-card title="默认规则" size="small">
                   <a-switch
                       @change="enableDefaultActionChange"
                       :checked="ruleSet.enableDefaultRule===0"/>
@@ -345,7 +345,7 @@
 
                 <br>
                 <br>
-                <a-card title="设置">
+                <a-card title="设置" size="small">
                   <a-form-model-item prop="strategyType" required>
                     <a-select v-model="ruleSet.strategyType" @change="updateStrategyType">
                       <a-select-option :value="1">顺序执行所有规则</a-select-option>
