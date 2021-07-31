@@ -73,7 +73,7 @@
         @ok="handleAddOk()"
         @cancel="handleAddCancel('addForm')">
       <template>
-        <a-form-model ref="addForm" :model="add.form" :rules="add.rules" :label-col="{span: 4}"
+        <a-form-model ref="addForm" :model="add.form" :rules="rules" :label-col="{span: 4}"
                       :wrapper-col="{span: 16}">
           <a-form-model-item label="名称" has-feedback prop="name">
             <a-input v-model="add.form.name" placeholder="请输入表达式名称"/>
@@ -108,7 +108,7 @@ import {getValueTypeName} from '@/utils/value-type'
 
 import {setDefaultValue} from '@/utils/json'
 
-import {deleteFormula, formulaList, getFormula, saveFormula, updateFormula} from '@/services/formula'
+import {deleteFormula, formulaList, getFormula, saveFormula, updateFormula ,validationExpressionName } from '@/services/formula'
 
 export default {
   name: "Formula.vue",
@@ -171,18 +171,17 @@ export default {
         confirmLoading: false,
         form: {
           id: undefined,
-          name: undefined,
+          name: "",
           value: undefined,
           valueType: undefined,
           description: undefined,
           dataId: this.dataId,
           dataType: this.dataType
-        },
-        rules: {
-          name: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入名称"},
-          value: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入表达式"},
-          valueType: {min: 1, trigger: ['change', 'blur'], required: true, message: "请选择返回值类型"},
         }
+      }, rules: {
+        name: {min: 1, trigger: ['blur'],asyncValidator: this.inputExpressionNameValidator, required: true},
+        value: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入表达式"},
+        valueType: {min: 1, trigger: ['change', 'blur'], required: true, message: "请选择返回值类型"},
       }
     }
   },
@@ -190,6 +189,21 @@ export default {
     this.loadFormulaList();
   },
   methods: {
+    inputExpressionNameValidator(rule, value, callback) {
+      console.log('.......')
+      validationExpressionName(this.add.form).then(resp => {
+        if (resp.data.code === 200) {
+          if (!resp.data.data) {
+            callback()
+          } else {
+            callback(new Error('该表达式名称已经存在！'));
+          }
+        } else {
+          callback(new Error(resp.data.message));
+        }
+      })
+
+    },
     handleAddOk() {
       this.add.confirmLoading = true;
       this.$refs['addForm'].validate(valid => {

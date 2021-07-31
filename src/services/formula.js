@@ -16,6 +16,9 @@ export async function updateFormula(param) {
 export async function deleteFormula(param) {
     return request(formula.DELETE_FORMULA, METHOD.POST, param)
 }
+export async function validationExpressionName(param) {
+    return request(formula.VALIDATION_EXPRESSION_NAME, METHOD.POST, param)
+}
 
 
 
