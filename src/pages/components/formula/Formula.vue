@@ -104,7 +104,7 @@
           <a-form-model-item label="名称" has-feedback prop="name">
             <a-input v-model="add.form.name" placeholder="请输入表达式名称"/>
           </a-form-model-item>
-          <a-form-model-item label="返回类型" prop="valueType">
+          <a-form-model-item label="返回类型" prop="valueType" has-feedback>
             <a-select v-model="add.form.valueType"
                       :disabled="add.form.id!==undefined"
                       placeholder="请输入返回值类型">
@@ -136,7 +136,14 @@ import {getValueTypeName} from '@/utils/value-type'
 
 import {setDefaultValue} from '@/utils/json'
 
-import {deleteFormula, formulaList, getFormula, saveFormula, updateFormula} from '@/services/formula'
+import {
+  deleteFormula,
+  formulaList,
+  getFormula,
+  saveFormula,
+  updateFormula,
+  validationExpressionName
+} from '@/services/formula'
 
 export default {
   name: "Formula.vue",
@@ -197,12 +204,19 @@ export default {
         form: {
           id: undefined,
           name: undefined,
+          orgName: undefined,
           value: undefined,
           valueType: undefined,
           description: undefined,
         },
         rules: {
-          name: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入名称"},
+          name: {
+            min: 1,
+            max: 25,
+            trigger: ['blur'],
+            asyncValidator: this.inputExpressionNameValidator,
+            required: true
+          },
           value: {min: 1, trigger: ['change', 'blur'], required: true, message: "请输入表达式"},
           valueType: {min: 1, trigger: ['change', 'blur'], required: true, message: "请选择返回值类型"},
         }
@@ -213,6 +227,29 @@ export default {
     this.loadFormulaList();
   },
   methods: {
+    inputExpressionNameValidator(rule, value, callback) {
+      if (this.add.form.id !== undefined && this.add.form.orgName === value) {
+        callback();
+        return false
+      }
+      if (value.length < 1 || value.length > 25) {
+        callback(new Error('函数名称长度在 1 到 25 个字符'));
+        return false
+      }
+      validationExpressionName({
+        name: value
+      }).then(resp => {
+        if (resp.data.code === 200) {
+          if (!resp.data.data) {
+            callback()
+          } else {
+            callback(new Error('该表达式名称已经存在！'));
+          }
+        } else {
+          callback(new Error(resp.data.message));
+        }
+      })
+    },
     handleAddOk() {
       this.add.confirmLoading = true;
       this.$refs['addForm'].validate(valid => {
@@ -257,6 +294,7 @@ export default {
       }).then(res => {
         if (res.data.data) {
           this.add.form = res.data.data
+          this.add.form.orgName = res.data.data.name
           this.add.visible = true;
         }
       });
