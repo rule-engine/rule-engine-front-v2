@@ -126,11 +126,11 @@
                 <div style="margin-left: 20px;margin-top: 3px;">
                   <a-alert :closable="false" type="success"
                            style="border:none;padding: 6px 6px 6px 6px;margin-bottom: 10px">
-                    <a-tag color="cyan"
-                           style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                      {{ getTypeName(rs.action) }}
-                    </a-tag>
                     <p slot="description" style="margin-bottom: 0;">
+                      <a-tag color="cyan"
+                             style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                        {{ getTypeName(rs.action) }}
+                      </a-tag>
                       {{ getActionView(rs.action) }}
                     </p>
                   </a-alert>
