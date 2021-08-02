@@ -66,7 +66,7 @@
 
         <div slot="value" slot-scope="{record}">
           <a-tag color="cyan" v-if="record.type === 3">
-            函数(函数名称)
+            函数({{ record.functionName }})
           </a-tag>
           <a-tag color="cyan" v-else-if="record.type === 4">
             表达式({{ record.value }})
