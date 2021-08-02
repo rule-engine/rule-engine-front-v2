@@ -233,7 +233,7 @@ export default {
         return false
       }
       if (value.length < 1 || value.length > 25) {
-        callback(new Error('函数名称长度在 1 到 25 个字符'));
+        callback(new Error('表达式名称长度在 1 到 25 个字符'));
         return false
       }
       validationExpressionName({
