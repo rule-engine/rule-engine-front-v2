@@ -57,6 +57,7 @@
           style="clear: both"
           :columns="columns"
           :dataSource="dataSource"
+          :selectedRows.sync="selectedRows"
           @change="onPageChange"
           :pagination="{showSizeChanger: true, showQuickJumper: true,
           pageSize: this.query.page.pageSize,
