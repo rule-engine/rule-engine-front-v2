@@ -43,7 +43,6 @@
                   @change="leftValueTypeChange">
                 <a-select-option value="PARAMETER">参数</a-select-option>
                 <a-select-option value="VARIABLE">变量</a-select-option>
-<!--                <a-select-option value="FORMULA">表达式</a-select-option>-->
                 <a-select-option value="BOOLEAN">布尔</a-select-option>
                 <a-select-option value="COLLECTION">集合</a-select-option>
                 <a-select-option value="STRING">字符串</a-select-option>
@@ -157,9 +156,6 @@
                 <a-select-option v-if="selectCondition.from.config.leftValue.valueType!=null"
                                  value="VARIABLE">变量
                 </a-select-option>
-<!--                <a-select-option v-if="selectCondition.from.config.leftValue.valueType!=null"-->
-<!--                                 value="FORMULA">表达式-->
-<!--                </a-select-option>-->
                 <a-select-option v-if="isRightTypeSelectView('BOOLEAN')" value="BOOLEAN">布尔
                 </a-select-option>
                 <a-select-option v-if="isRightTypeSelectView('COLLECTION')" value="COLLECTION">集合
@@ -366,8 +362,6 @@ export default {
         this.selectCondition.from.config.leftValue.type = 0;
       } else if (valueType === 'VARIABLE') {
         this.selectCondition.from.config.leftValue.type = 1;
-      } else if (valueType === 'FORMULA') {
-        this.selectCondition.from.config.leftValue.type = 4;
       } else {
         this.selectCondition.from.config.leftValue.type = 2;
         this.selectCondition.from.config.leftValue.valueType = valueType;
@@ -402,7 +396,7 @@ export default {
       leftValue.valueType = d.valueType;
       leftValue.valueName = d.name;
       // 变量  d.type 如果是固定值 则直接显示变量的值
-      if ((leftValue.type === 1 && d.type === 2) || leftValue.type === 4) {
+      if ((leftValue.type === 1 && d.type === 2)) {
         leftValue.variableValue = d.value;
       }
       // 判断查询的变量或者元素 类型是否与右值相同，不相同则清空右值的
@@ -447,8 +441,6 @@ export default {
       } else if (valueType === 'VARIABLE') {
         this.selectCondition.from.config.rightValue.type = 1;
         // 变量的类型
-      } else if (valueType === 'FORMULA') {
-        this.selectCondition.from.config.rightValue.type = 4;
       } else {
         this.selectCondition.from.config.rightValue.type = 2;
         this.selectCondition.from.config.rightValue.valueType = valueType;
@@ -486,7 +478,7 @@ export default {
       rightValue.valueType = d.valueType;
       rightValue.valueName = d.name;
       // 变量  d.type 如果是固定值
-      if ((rightValue.type === 1 && d.type === 2) || rightValue.type === 4) {
+      if ((rightValue.type === 1 && d.type === 2)) {
         rightValue.variableValue = d.value;
       }
     },

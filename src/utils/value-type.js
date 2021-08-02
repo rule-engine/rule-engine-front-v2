@@ -46,9 +46,6 @@ function valueType(v) {
     if (v.type === 1) {
         return 'VARIABLE';
     }
-    if (v.type === 4) {
-        return 'FORMULA';
-    }
     if (v.type === 10) {
         return 'GENERAL_RULE';
     }

@@ -151,7 +151,6 @@
                                   @change="actionValueTypeChange">
                           <a-select-option value="PARAMETER">参数</a-select-option>
                           <a-select-option value="VARIABLE">变量</a-select-option>
-<!--                          <a-select-option value="FORMULA">表达式</a-select-option>-->
                           <a-select-option value="BOOLEAN">布尔</a-select-option>
                           <a-select-option value="COLLECTION">集合</a-select-option>
                           <a-select-option value="STRING">字符串</a-select-option>
@@ -245,7 +244,6 @@
                         >
                           <a-select-option value="PARAMETER">参数</a-select-option>
                           <a-select-option value="VARIABLE">变量</a-select-option>
-<!--                          <a-select-option value="FORMULA">表达式</a-select-option>-->
                           <a-select-option value="BOOLEAN"
                                            v-if="generalRule.action.valueType==='BOOLEAN'">布尔
                           </a-select-option>
@@ -466,8 +464,6 @@ export default {
         this.generalRule.defaultAction.type = 0;
       } else if (valueType === 'VARIABLE') {
         this.generalRule.defaultAction.type = 1;
-      } else if (valueType === 'FORMULA') {
-        this.generalRule.defaultAction.type = 4;
       } else {
         this.generalRule.defaultAction.valueType = valueType;
         this.generalRule.defaultAction.type = 2;
@@ -654,8 +650,6 @@ export default {
         this.generalRule.action.type = 0;
       } else if (valueType === 'VARIABLE') {
         this.generalRule.action.type = 1;
-      } else if (valueType === 'FORMULA') {
-        this.generalRule.action.type = 4;
       } else {
         this.generalRule.action.valueType = valueType;
         this.generalRule.action.type = 2;

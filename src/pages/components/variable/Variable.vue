@@ -132,6 +132,7 @@
                                       }">
             <a-select :disabled="add.form.id!==undefined"
                       v-model="add.form.type"
+                      @change="variableChangeValueType"
                       placeholder="请输入变量类型">
               <a-select-option :value="3">函数</a-select-option>
               <a-select-option :value="4">表达式</a-select-option>
@@ -147,6 +148,7 @@
                                         trigger: ['change', 'blur'],
                                       }">
             <a-select :disabled="add.form.id!==undefined"
+                      @change="variableChangeValueType"
                       v-model="add.form.valueType"
                       placeholder="请选择类型">
               <a-select-option value="BOOLEAN">布尔</a-select-option>
@@ -442,26 +444,12 @@ export default {
         pv.type = 0;
       } else if (valueType === 'VARIABLE') {
         pv.type = 1;
-      } else if (valueType === 'FORMULA') {
-        pv.type = 4;
       } else {
         pv.type = 2;
       }
     },
-    variableChangeValueType(valueType) {
+    variableChangeValueType() {
       this.add.form.value = undefined;
-      if (valueType === 'FUNCTION') {
-        // 函数
-        this.add.form.type = 3;
-        this.add.form.valueType = undefined;
-      } else if (valueType === 'FORMULA') {
-        this.add.form.type = 4;
-        this.add.form.valueType = undefined;
-      } else {
-        // 固定值
-        this.add.form.type = 2;
-        this.add.form.valueType = valueType;
-      }
     },
     getValueTypeName(valueType) {
       return getValueTypeName(valueType)

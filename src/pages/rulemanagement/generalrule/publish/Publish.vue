@@ -257,10 +257,6 @@ export default {
       v.value = moment(date).format('YYYY-MM-DD HH:mm:ss');
     },
     getActionView(action) {
-      // 如果是表达式
-      if (action.type === 4) {
-        return action.value;
-      }
       if (action.variableValue != null) {
         return action.variableValue;
       }
@@ -368,10 +364,6 @@ export default {
     getViewValue(v) {
       // 如果是固定值
       if (v.type === 2) {
-        return v.value;
-      }
-      // 如果是表达式，返回配置的表达式信息
-      if (v.type === 4) {
         return v.value;
       }
       // 如果是固定值变量的 变量值

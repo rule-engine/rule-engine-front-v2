@@ -172,7 +172,6 @@
                                             @change="valueType=>{actionValueTypeChange(valueType,rs)}">
                                     <a-select-option value="PARAMETER">参数</a-select-option>
                                     <a-select-option value="VARIABLE">变量</a-select-option>
-<!--                                    <a-select-option value="FORMULA">表达式</a-select-option>-->
                                     <a-select-option value="BOOLEAN">布尔</a-select-option>
                                     <a-select-option value="COLLECTION">集合</a-select-option>
                                     <a-select-option value="STRING">字符串</a-select-option>
@@ -275,7 +274,6 @@
                         >
                           <a-select-option value="PARAMETER">参数</a-select-option>
                           <a-select-option value="VARIABLE">变量</a-select-option>
-<!--                          <a-select-option value="FORMULA">表达式</a-select-option>-->
                           <a-select-option value="GENERAL_RULE">普通规则</a-select-option>
                           <a-select-option value="BOOLEAN">布尔</a-select-option>
                           <a-select-option value="COLLECTION">集合</a-select-option>
@@ -537,8 +535,6 @@ export default {
         this.ruleSet.defaultRule.action.type = 0;
       } else if (valueType === 'VARIABLE') {
         this.ruleSet.defaultRule.action.type = 1;
-      } else if (valueType === 'FORMULA') {
-        this.ruleSet.defaultRule.action.type = 4;
       } else if (valueType === 'GENERAL_RULE') {
         this.ruleSet.defaultRule.action.type = 10;
       } else {
@@ -730,8 +726,6 @@ export default {
         rs.action.type = 0;
       } else if (valueType === 'VARIABLE') {
         rs.action.type = 1;
-      } else if (valueType === 'FORMULA') {
-        rs.action.type = 4;
       } else {
         rs.action.valueType = valueType;
         rs.action.type = 2;
