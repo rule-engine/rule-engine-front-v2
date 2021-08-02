@@ -151,7 +151,7 @@
                                   @change="actionValueTypeChange">
                           <a-select-option value="PARAMETER">参数</a-select-option>
                           <a-select-option value="VARIABLE">变量</a-select-option>
-                          <a-select-option value="FORMULA">表达式</a-select-option>
+<!--                          <a-select-option value="FORMULA">表达式</a-select-option>-->
                           <a-select-option value="BOOLEAN">布尔</a-select-option>
                           <a-select-option value="COLLECTION">集合</a-select-option>
                           <a-select-option value="STRING">字符串</a-select-option>
@@ -245,7 +245,7 @@
                         >
                           <a-select-option value="PARAMETER">参数</a-select-option>
                           <a-select-option value="VARIABLE">变量</a-select-option>
-                          <a-select-option value="FORMULA">表达式</a-select-option>
+<!--                          <a-select-option value="FORMULA">表达式</a-select-option>-->
                           <a-select-option value="BOOLEAN"
                                            v-if="generalRule.action.valueType==='BOOLEAN'">布尔
                           </a-select-option>

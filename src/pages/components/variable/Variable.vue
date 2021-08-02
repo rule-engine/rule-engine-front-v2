@@ -68,6 +68,9 @@
           <a-tag color="cyan" v-if="record.type === 3">
             函数(函数名称)
           </a-tag>
+          <a-tag color="cyan" v-else-if="record.type === 4">
+            表达式({{ record.value }})
+          </a-tag>
           <span v-else>{{ record.value }}</span>
         </div>
 
@@ -121,17 +124,31 @@
             <a-input v-model="add.form.name" placeholder="请输入变量名称"/>
           </a-form-model-item>
 
-          <a-form-model-item label="变量值类型" prop="type"
+          <a-form-model-item label="变量类型" prop="type"
                              :rules="{
                                         required: true,
                                         message: '请输入变量类型',
                                         trigger: ['change', 'blur'],
                                       }">
             <a-select :disabled="add.form.id!==undefined"
-                      :value="add.form.type===3?'FUNCTION':add.form.valueType"
-                      placeholder="请输入变量类型"
-                      @change="variableChangeValueType">
-              <a-select-option value="FUNCTION">函数</a-select-option>
+                      v-model="add.form.type"
+                      placeholder="请输入变量类型">
+              <a-select-option :value="3">函数</a-select-option>
+              <a-select-option :value="4">表达式</a-select-option>
+              <a-select-option :value="2">固定值</a-select-option>
+            </a-select>
+          </a-form-model-item>
+
+          <a-form-model-item label="值类型" prop="type"
+                             v-if="add.form.type===4||add.form.type===2"
+                             :rules="{
+                                        required: true,
+                                        message: '请输入变量类型',
+                                        trigger: ['change', 'blur'],
+                                      }">
+            <a-select :disabled="add.form.id!==undefined"
+                      v-model="add.form.valueType"
+                      placeholder="请选择类型">
               <a-select-option value="BOOLEAN">布尔</a-select-option>
               <a-select-option value="COLLECTION">集合</a-select-option>
               <a-select-option value="STRING">字符串</a-select-option>
@@ -187,7 +204,6 @@
                     >
                       <a-select-option value="PARAMETER">参数</a-select-option>
                       <a-select-option value="VARIABLE">变量</a-select-option>
-                      <a-select-option value="FORMULA">表达式</a-select-option>
                       <a-select-option value="BOOLEAN" v-if="pv.valueType==='BOOLEAN'">布尔
                       </a-select-option>
                       <a-select-option value="COLLECTION" v-if="pv.valueType==='COLLECTION'">集合
@@ -246,7 +262,15 @@
 
           </a-form-model-item>
 
-          <a-form-model-item label="变量值" v-if="add.form.type!==3" prop="value" :rules="{
+          <a-form-model-item label="表达式值" v-if="add.form.type===4" prop="value" :rules="{
+                                        required: true,
+                                        message: '请输入表达式值',
+                                        trigger: ['change', 'blur'],
+                                      }">
+            <a-input v-model="add.form.value" type="textarea" placeholder="表达式值"/>
+          </a-form-model-item>
+
+          <a-form-model-item label="变量值" v-else-if="add.form.type===2" prop="value" :rules="{
                                         required: true,
                                         message: '请输入变量值',
                                         trigger: ['change', 'blur'],
@@ -313,7 +337,7 @@ export default {
           dataType: this.dataType,
           function: {
             returnValueType: null,
-            name: '',
+            name: undefined,
             paramValues: []
           },
           searchSelect: {
@@ -406,7 +430,11 @@ export default {
     createVariable() {
       this.add.visible = true;
       // 重置表单数据
-      this.add.form = setDefaultValue(this.add.form);
+      let $ref = this.$refs['addVariableForm'];
+      if ($ref) {
+        $ref.resetFields();
+      }
+      this.add.form.function.paramValues = [];
     },
     functionParamValueTypeChange(valueType, pv) {
       // 如果是变量或者元素
@@ -425,7 +453,10 @@ export default {
       if (valueType === 'FUNCTION') {
         // 函数
         this.add.form.type = 3;
-        this.add.form.valueType = '';
+        this.add.form.valueType = undefined;
+      } else if (valueType === 'FORMULA') {
+        this.add.form.type = 4;
+        this.add.form.valueType = undefined;
       } else {
         // 固定值
         this.add.form.type = 2;

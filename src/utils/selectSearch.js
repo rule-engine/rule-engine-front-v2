@@ -1,7 +1,6 @@
 import {listInputParameter} from '@/services/inputParameter'
 import {listVariable} from '@/services/variable'
 import {functionList} from '@/services/function'
-import {formulaList} from '@/services/formula'
 import {referenceableList} from '@/services/generalRule'
 
 let timeout;
@@ -45,16 +44,6 @@ export function selectSearch(param, callback, type) {
             });
         } else if (type === 3) {
             functionList(requestData).then(res => {
-                if (currentValue === param.value) {
-                    if (res.data.data) {
-                        callback(res.data.data.rows);
-                    } else {
-                        callback([]);
-                    }
-                }
-            });
-        } else if (type === 4) {
-            formulaList(requestData).then(res => {
                 if (currentValue === param.value) {
                     if (res.data.data) {
                         callback(res.data.data.rows);
