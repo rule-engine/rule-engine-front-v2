@@ -133,6 +133,7 @@ module.exports = {
         GET_FORMULA: `${WEB_BASE_URL}/ruleEngine/formula/getFormula`,
         UPDATE_FORMULA: `${WEB_BASE_URL}/ruleEngine/formula/updateFormula`,
         DELETE_FORMULA: `${WEB_BASE_URL}/ruleEngine/formula/deleteFormula`,
+        VALIDATION_EXPRESSION_NAME: `${WEB_BASE_URL}/ruleEngine/formula/validationExpressionName`,
     },
     ROUTES: `${WEB_BASE_URL}/routes`,
     GOODS: `${WEB_BASE_URL}/goods`,
