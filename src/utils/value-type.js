@@ -19,12 +19,17 @@ function getValueTypeName(valueType) {
     }
 }
 
-function getTypeName(type) {
-    switch (type) {
+function getTypeName(v) {
+    switch (v.type) {
         case 0:
             return "参数";
         case 1:
-            return "变量";
+            if (v.variableType === 2) {
+                return "固定值变量";
+            } else if (v.variableType === 3) {
+                return "函数变量";
+            }
+            return "表达式变量";
         case 2:
             return "固定值";
         case 3:
@@ -34,7 +39,7 @@ function getTypeName(type) {
         case 10:
             return "普通规则";
         default:
-            return type;
+            return v.type;
     }
 }
 

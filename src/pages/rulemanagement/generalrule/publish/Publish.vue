@@ -101,7 +101,7 @@
                       </a-tag>
                       <a-tag color="cyan"
                              style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                        {{ getTypeName(cgc.condition.config.leftValue.type) }}
+                        {{ getTypeName(cgc.condition.config.leftValue) }}
                       </a-tag>
                       {{ getViewValue(cgc.condition.config.leftValue) }}
                       &nbsp;
@@ -111,7 +111,7 @@
                       </a-tag>
                       <a-tag color="cyan"
                              style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
-                        {{ getTypeName(cgc.condition.config.rightValue.type) }}
+                        {{ getTypeName(cgc.condition.config.rightValue) }}
                       </a-tag>
                       {{ getViewValue(cgc.condition.config.rightValue) }}
                     </p>
@@ -124,6 +124,10 @@
               <a-alert :closable="false" type="success"
                        style="border:none;padding: 6px 6px 6px 6px;margin-bottom: 10px">
                 <p slot="description" style="margin-bottom: 0;">
+                  <a-tag color="cyan"
+                         style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                    {{ getTypeName(generalRule.action) }}
+                  </a-tag>
                   {{ getActionView(generalRule.action) }}
                 </p>
               </a-alert>
@@ -135,6 +139,11 @@
                       <a-alert :closable="false" type="warning"
                                style="border:none;padding: 6px 6px 6px 6px;margin-bottom: 10px">
                         <p slot="description" style="margin-bottom: 0;">
+                                   <a-tag color="cyan"
+                                          v-if="getDefaultActionView(generalRule.defaultAction)!=='null'"
+                                          style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
+                          {{ getTypeName(generalRule.defaultAction) }}
+                        </a-tag>
                         {{ getDefaultActionView(generalRule.defaultAction) }}
                         </p>
                       </a-alert>

@@ -82,16 +82,6 @@ const options = {
                             },
                             component: () => import('@/pages/components/Inputparameter'),
                         },
-                        // {
-                        //     path: '/formula',
-                        //     name: '表达式',
-                        //     meta: {
-                        //         page: {
-                        //             closable: true
-                        //         }
-                        //     },
-                        //     component: () => import('@/pages/components/formula'),
-                        // },
                         {
                             path: '/variable',
                             name: '变量',

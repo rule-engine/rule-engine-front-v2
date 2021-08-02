@@ -85,7 +85,7 @@
                             <a-tag color="cyan"
                                    style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
                               {{
-                                getTypeName(cgc.condition.config.leftValue.type)
+                                getTypeName(cgc.condition.config.leftValue)
                               }}
                             </a-tag>
                             {{ getViewValue(cgc.condition.config.leftValue) }}
@@ -97,7 +97,7 @@
                             <a-tag color="cyan"
                                    style="padding: 0 2px 2px 2px;font-size: 13px;margin-bottom: 3px">
                               {{
-                                getTypeName(cgc.condition.config.rightValue.type)
+                                getTypeName(cgc.condition.config.rightValue)
                               }}
                             </a-tag>
                             {{ getViewValue(cgc.condition.config.rightValue) }}
