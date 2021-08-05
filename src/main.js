@@ -14,7 +14,9 @@ import 'moment/locale/zh-cn'
 import VueCropper from 'vue-cropper'
 import vueScroll from "vuescroll";//引入vuescroll
 import "vuescroll/dist/vuescroll.css";//引入vuescroll样式
-
+import 'xe-utils'
+import VXETable from 'vxe-table'
+import 'vxe-table/lib/style.css'
 
 const router = initRouter(store.state.setting.asyncRoutes)
 const i18n = initI18n('CN', 'US')
@@ -29,6 +31,7 @@ Vue.use(vueScroll, {
     name: 'vue-scroll' // 在这里自定义组件名字，默认是vueScroll
 });//使用
 
+Vue.use(VXETable)
 bootstrap({router, store, i18n, message: Vue.prototype.$message})
 
 let vueMain = new Vue({

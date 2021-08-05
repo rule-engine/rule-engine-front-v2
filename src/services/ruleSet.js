@@ -4,7 +4,6 @@ import {request, METHOD} from '@/utils/request'
 /**
  * 验证规则集code
  * @param query
- * @returns {Promise<AxiosResponse<any>>}
  */
 export async function verifyRuleCode(query) {
     return request(ruleSet.VERIFY_RULE_CODE, METHOD.POST, query)

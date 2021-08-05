@@ -37,7 +37,9 @@
     "vue-router": "^3.3.4",
     "vuedraggable": "^2.23.2",
     "vuescroll": "^4.17.3",
-    "vuex": "^3.4.0"
+    "vuex": "^3.4.0",
+    "vxe-table": "^3.3.10",
+    "xe-utils": "^3.3.1"
   },
   "devDependencies": {
     "@ant-design/colors": "^4.0.1",

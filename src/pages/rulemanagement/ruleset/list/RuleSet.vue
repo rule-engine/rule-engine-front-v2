@@ -332,7 +332,7 @@ import {
   addRuleSet,
   list,
   deleteRuleSet,
-  generalRuleDownloadList,
+  ruleSetDownloadList,
   showHistoryVersionList,
   updateRuleSetDefinition,
   getRuleDefinition,
@@ -721,7 +721,7 @@ export default {
     },
     downloadRuleSet(record) {
       this.download.query.query.id = record.id;
-      generalRuleDownloadList(
+      ruleSetDownloadList(
           this.download.query
       ).then(res => {
         const resp = res.data;
