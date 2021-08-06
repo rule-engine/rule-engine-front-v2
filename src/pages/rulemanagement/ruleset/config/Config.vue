@@ -39,6 +39,7 @@
                 <a-card title="规则集" class="rule_set" size="small">
 
                   <a-skeleton v-if="ruleSet.ruleSet.length===0" :paragraph="{ rows: 3 }"/>
+
                   <a-spin :spinning="ruleMoveLoading">
                     <task-group title="规则" :group="ruleSet.id"
                                 handle=".ruleMover"
@@ -245,7 +246,6 @@
                       </a-card>
                     </task-group>
                   </a-spin>
-                  <br>
                   <a-button type="dashed" style="width: 100%" @click="addRule()">
                     <a-icon type="plus" style="color: #777;"/>
                     添加规则
@@ -261,7 +261,7 @@
                   <br> <br>
                   <a-row>
                     <a-col :span="5">
-                      <a-form-model-item prop="defaultRule.action.type"
+                      <a-form-model-item style="margin-bottom: 0;" prop="defaultRule.action.type"
                                          :rules="ruleSet.enableDefaultRule===0?{
                                                         required: true,
                                                         message: '请选择默认结果类型',
@@ -285,7 +285,7 @@
                     </a-col>
                     <a-col :span="1"></a-col>
                     <a-col :span="18">
-                      <a-form-model-item prop="defaultRule.action.value"
+                      <a-form-model-item style="margin-bottom: 0;" prop="defaultRule.action.value"
                                          :rules="ruleSet.enableDefaultRule===0?{
                                                         required: true,
                                                         message: '请输入默认结果值',
@@ -347,7 +347,7 @@
                 <br>
                 <br>
                 <a-card title="设置" size="small">
-                  <a-form-model-item prop="strategyType" required>
+                  <a-form-model-item style="margin-bottom: 0;" prop="strategyType" required>
                     <a-select v-model="ruleSet.strategyType" @change="updateStrategyType">
                       <a-select-option :value="1">顺序执行所有规则</a-select-option>
                       <a-select-option :value="2">当有规则被命中时终止</a-select-option>
@@ -854,9 +854,11 @@ export default {
       }).then(res => {
         let da = res.data.data;
         if (da != null) {
-          da.ruleSet.forEach((f, i) => {
+          da.ruleSet.forEach((f) => {
             // 折叠，默认只展开最后一个
-            f.fold = da.ruleSet.length - 1 !== i;
+            //f.fold = da.ruleSet.length - 1 !== i;
+            // 如果只有一个的时候展开，其他情况默认全部折叠
+            f.fold = da.ruleSet.length !== 1;
           })
           this.ruleSet = da;
         }

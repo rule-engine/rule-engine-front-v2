@@ -139,6 +139,7 @@
                   <a-row>
                     <a-col :span="5">
                       <a-form-model-item prop="action.type"
+                                         style="margin-bottom: 0;"
                                          :rules="{
                                           required: true,
                                           message: '请选择结果类型',
@@ -162,6 +163,7 @@
                     <a-col :span="1"></a-col>
                     <a-col :span="18">
                       <a-form-model-item prop="action.value"
+                                         style="margin-bottom: 0;"
                                          :rules="{
                                           required: true,
                                           message: '请输入结果值',
@@ -231,6 +233,7 @@
                   <a-row>
                     <a-col :span="5">
                       <a-form-model-item prop="defaultAction.type"
+                                         style="margin-bottom: 0;"
                                          :rules="generalRule.defaultAction.enableDefaultAction===0?{
                                           required: true,
                                           message: '请选择默认结果类型',
@@ -266,6 +269,7 @@
                     <a-col :span="1"></a-col>
                     <a-col :span="18">
                       <a-form-model-item prop="defaultAction.value"
+                                         style="margin-bottom: 0;"
                                          :rules="generalRule.defaultAction.enableDefaultAction===0?{
                                           required: true,
                                           message: '请输入默认结果值',
