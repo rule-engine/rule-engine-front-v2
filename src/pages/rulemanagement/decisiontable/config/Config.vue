@@ -18,19 +18,40 @@
       <!--      </vxe-toolbar>-->
 
       <vxe-table
+          resizable
           border
+          row-key
           ref="xTable"
-          height="500"
+          class="sortable-row-demo"
+          style="width: 100%;"
+          height="600"
+          :scroll-y="{enabled: false}"
+          :edit-config="{trigger: 'click', mode: 'cell'}"
           :data="tableData">
         <vxe-table-column
-            v-for="config in tableColumn"
+            v-for="(config) in tableColumn"
             :key="config.key"
             :type="config.type"
             :field="config.field"
             :title="config.title"
             :fixed="config.fixed"
             :width="config.width"
+            class-name="drag-btn"
+            :edit-render="{name: 'input', attrs: {type: 'text'}}"
             :filters="config.filters">
+          <!--          <template v-slot:edit="{ row }">-->
+          <!--            <a-row>-->
+          <!--              <a-col :span="6">-->
+          <!--                <vxe-select v-model="row.type" placeholder="请选择">-->
+          <!--                  <vxe-option value="1">字符串</vxe-option>-->
+          <!--                  <vxe-option value="2">集合</vxe-option>-->
+          <!--                </vxe-select>-->
+          <!--              </a-col>-->
+          <!--              <a-col :span="18">-->
+          <!--                <vxe-input type="text" v-model="row.name" @blur="editAge(row)"></vxe-input>-->
+          <!--              </a-col>-->
+          <!--            </a-row>-->
+          <!--          </template>-->
         </vxe-table-column>
       </vxe-table>
 
@@ -39,6 +60,7 @@
 </template>
 
 <script>
+import Sortable from 'sortablejs'
 import PageLayout from "@/layouts/PageLayout";
 
 export default {
@@ -49,10 +71,10 @@ export default {
       tableColumn: [
         {key: 1, type: 'seq', width: 60, title: '序号', fixed: null},
         // {key: 2, type: 'checkbox', width: 50, fixed: null},
-        {key: 3, field: 'name', title: '条件1', width: 200},
-        {key: 4, field: 'nickname', title: '条件2', width: 300},
-        {key: 5, field: 'sex', title: '条件3', width: 200, filters: [{value: '1', label: '男'}]},
-        {key: 6, field: 'role', title: '结果', width: 200},
+        {key: 3, field: 'name', title: '条件1'},
+        {key: 4, field: 'nickname', title: '条件2',},
+        {key: 5, field: 'sex', title: '条件3', filters: [{value: '1', label: '男'}, {value: '0', label: '女'}]},
+        {key: 6, field: 'role', title: '结果',},
       ],
       tableData: [
         {id: 10001, name: 'Test1', nickname: 'T1', role: 'Develop', sex: '1', age: 28, address: 'vxe-table 从入门到放弃'},
@@ -98,6 +120,18 @@ export default {
         xTable.refreshColumn().then(() => xTable.refreshScroll())
       })
     },
+    rowDrop() {
+      this.$nextTick(() => {
+        const xTable = this.$refs.xTable
+        this.sortable1 = Sortable.create(xTable.$el.querySelector('.body--wrapper>.vxe-table--body tbody'), {
+          handle: '.drag-btn',
+          onEnd: ({newIndex, oldIndex}) => {
+            const currRow = this.tableData.splice(oldIndex, 1)[0]
+            this.tableData.splice(newIndex, 0, currRow)
+          }
+        })
+      })
+    },
     updateWidthColumn(index, value) {
       this.tableColumn[index].width = value
       // 更改了列属性，需要手动刷新列
@@ -106,9 +140,25 @@ export default {
       })
     }
   },
+  created() {
+    this.rowDrop()
+  },
+  beforeDestroy() {
+    if (this.sortable1) {
+      this.sortable1.destroy()
+    }
+  },
 }
 </script>
 
 <style scoped>
+.sortable-row-demo .drag-btn {
+  cursor: move;
+  font-size: 12px;
+}
 
+.sortable-row-demo .vxe-body--row.sortable-ghost,
+.sortable-row-demo .vxe-body--row.sortable-chosen {
+  background-color: #dfecfb;
+}
 </style>

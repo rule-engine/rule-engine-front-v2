@@ -30,6 +30,7 @@
     "js-cookie": "^2.2.1",
     "mockjs": "^1.1.0",
     "nprogress": "^0.2.0",
+    "sortablejs": "^1.14.0",
     "viser-vue": "^2.4.8",
     "vue": "^2.6.11",
     "vue-cropper": "^0.5.6",
