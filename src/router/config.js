@@ -148,24 +148,6 @@ const options = {
                             },
                             component: () => import('@/pages/rulemanagement/ruleset/list'),
                         },
-                        {
-                            path: 'decisionTable',
-                            name: '决策表',
-                            meta: {
-                                page: {
-                                    closable: true
-                                }
-                            },
-                            component: () => import('@/pages/rulemanagement/decisiontable/list'),
-                        },
-                        {
-                            path: '/decisionTableRouter/:id',
-                            name: '决策表(...)',
-                            meta: {
-                                invisible: true
-                            },
-                            component: () => import('@/pages/rulemanagement/decisiontable/router'),
-                        },
                     ]
                 },
                 {
