@@ -47,7 +47,7 @@
                                 :loading.sync="ruleMoveLoading"
                                 :data-list="ruleSet.ruleSet">
                       <a-card v-for="(rs,rsi) in ruleSet.ruleSet" :key="rs.id" size="small" hoverable
-                              style="margin-bottom: 10px">
+                              style="margin-bottom: 10px;">
 
                         <div slot="title" style="margin-right: 16px;padding-left: 2px;">
                           <a-input class="conditionGroupNameInput"
@@ -69,7 +69,7 @@
                                 slot="extra"
                                 @click="deleteRule(rs,ruleSet.ruleSet)"></a-icon>
 
-                        <div v-if="!rs.fold">
+                        <div v-show="!rs.fold">
                           <a-skeleton v-if="ruleSet.ruleSet.length===0" :paragraph="{ rows: 3 }"/>
                           <a-card title="条件集" class="condition_set" size="small">
                             <a-skeleton v-if="rs.conditionGroup.length===0" :paragraph="{ rows: 3 }"/>
@@ -741,7 +741,7 @@ export default {
       return getTypeName(type);
     },
     nextStep() {
-      this.$refs['ruleSetForm'].validate(valid => {
+      this.$refs['ruleSetForm'].validate((valid, t) => {
         if (valid) {
           this.footer.nextStepLoading = true;
           generationRelease(this.ruleSet).then(res => {
@@ -751,6 +751,13 @@ export default {
             }
           })
         } else {
+          // bug修复
+          Object.keys(t).forEach(key => {
+            if (key.startsWith("ruleSet.")) {
+              let substr = key.substr(8, key.lastIndexOf(".action") - 8);
+              this.ruleSet.ruleSet[substr].fold = false;
+            }
+          })
           return false;
         }
       });
