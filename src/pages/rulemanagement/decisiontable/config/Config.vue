@@ -1,90 +1,125 @@
 <template>
-  <page-layout>
-    <a-card title="决策表配置" :bordered="false">
+  <div>
+    <page-layout>
+      <a-card title="决策表配置" :bordered="false">
         <span slot="extra" style="margin-left: 16px;">
 
         </span>
 
-      <!--      <vxe-toolbar>-->
-      <!--        <template #buttons>-->
-      <!--          <vxe-button @click="addColumn()">最后增加一列</vxe-button>-->
-      <!--          <vxe-button @click="removeColumn()">删除最后一列</vxe-button>-->
-      <!--          <vxe-button @click="updateSexFilter()">修改sex列筛选条件</vxe-button>-->
-      <!--          <vxe-button @click="toggleFixedColumn(0, 'left')">切换第一列固定</vxe-button>-->
-      <!--          <vxe-button @click="toggleFixedColumn(1, 'left')">切换第二列固定</vxe-button>-->
-      <!--          <vxe-button @click="updateWidthColumn(2, 500)">修改第三列宽度</vxe-button>-->
-      <!--          <vxe-button @click="updateWidthColumn(3, 500)">修改第四列宽度</vxe-button>-->
-      <!--        </template>-->
-      <!--      </vxe-toolbar>-->
+        <!--      <vxe-toolbar>-->
+        <!--        <template #buttons>-->
+        <!--          <vxe-button @click="addColumn()">最后增加一列</vxe-button>-->
+        <!--          <vxe-button @click="removeColumn()">删除最后一列</vxe-button>-->
+        <!--          <vxe-button @click="updateSexFilter()">修改sex列筛选条件</vxe-button>-->
+        <!--          <vxe-button @click="toggleFixedColumn(0, 'left')">切换第一列固定</vxe-button>-->
+        <!--          <vxe-button @click="toggleFixedColumn(1, 'left')">切换第二列固定</vxe-button>-->
+        <!--          <vxe-button @click="updateWidthColumn(2, 500)">修改第三列宽度</vxe-button>-->
+        <!--          <vxe-button @click="updateWidthColumn(3, 500)">修改第四列宽度</vxe-button>-->
+        <!--        </template>-->
+        <!--      </vxe-toolbar>-->
 
-      <vxe-table
-          resizable
-          border
-          row-key
-          ref="xTable"
-          class="sortable-row-demo"
-          style="width: 100%;"
-          height="600"
-          :scroll-y="{enabled: false}"
-          :edit-config="{trigger: 'click', mode: 'cell'}"
-          :data="tableData">
-        <vxe-table-column
-            v-for="(config) in tableColumn"
-            :key="config.key"
-            :type="config.type"
-            :field="config.field"
-            :title="config.title"
-            :fixed="config.fixed"
-            :width="config.width"
-            class-name="drag-btn"
-            :edit-render="{name: 'input', attrs: {type: 'text'}}"
-            :filters="config.filters">
-          <!--          <template v-slot:edit="{ row }">-->
-          <!--            <a-row>-->
-          <!--              <a-col :span="6">-->
-          <!--                <vxe-select v-model="row.type" placeholder="请选择">-->
-          <!--                  <vxe-option value="1">字符串</vxe-option>-->
-          <!--                  <vxe-option value="2">集合</vxe-option>-->
-          <!--                </vxe-select>-->
-          <!--              </a-col>-->
-          <!--              <a-col :span="18">-->
-          <!--                <vxe-input type="text" v-model="row.name" @blur="editAge(row)"></vxe-input>-->
-          <!--              </a-col>-->
-          <!--            </a-row>-->
-          <!--          </template>-->
-        </vxe-table-column>
-      </vxe-table>
+        <vxe-table
+            :resizable="false"
+            border
+            row-key
+            ref="xTable"
+            class="sortable-row-demo"
+            height="600"
+            :scroll-y="{enabled: false}"
+            :edit-config="{trigger: 'click', mode: 'cell'}"
+            :data="tableData">
 
-    </a-card>
-  </page-layout>
+          <vxe-table-column
+              title="优先级"
+              field="priority"
+              width="80"
+              class-name="drag-btn"
+              :edit-render="{name: 'input', attrs: {type: 'text'}}">
+          </vxe-table-column>
+
+          <vxe-table-column
+              v-for="(config,ci) in conditionHeaders"
+              :key="ci.orderNo"
+              :title="config.name"
+              min-width="280"
+              :edit-render="{name: 'input', attrs: {type: 'text'}}"
+              :filters="config.filters">
+            <template v-slot:header="{ column }">
+              {{ column.title }}
+            </template>
+            <template v-slot:default="{ row }">
+              {{ row.conditions[ci].value }}
+            </template>
+            <template v-slot:edit="{ row }">
+              <a-row>
+                <a-col :span="7">
+                  <vxe-select v-model="row.conditions[ci].valueType" placeholder="请选择">
+                    <vxe-option value="STRING">字符串</vxe-option>
+                    <vxe-option value="COLLECTION">集合</vxe-option>
+                  </vxe-select>
+                </a-col>
+                <a-col :span="17">
+                  <vxe-input type="text" v-model="row.conditions[ci].value"></vxe-input>
+                </a-col>
+              </a-row>
+            </template>
+          </vxe-table-column>
+
+
+          <vxe-table-column
+              :title="actionHeader.name"
+              width="200"
+              field="action"
+              :edit-render="{name: 'input', attrs: {type: 'text'}}">
+          </vxe-table-column>
+        </vxe-table>
+
+      </a-card>
+
+    </page-layout>
+    <footer-tool-bar>
+      <a-button type="primary" @click="nextStep()" :loading="footer.nextStepLoading">预览发布</a-button>
+    </footer-tool-bar>
+  </div>
 </template>
 
 <script>
 import Sortable from 'sortablejs'
 import PageLayout from "@/layouts/PageLayout";
+import FooterToolBar from '@/components/tool/FooterToolBar'
 
 export default {
   name: "Config",
-  components: {PageLayout},
+  components: {PageLayout, FooterToolBar},
   data() {
     return {
-      tableColumn: [
-        {key: 1, type: 'seq', width: 60, title: '序号', fixed: null},
-        // {key: 2, type: 'checkbox', width: 50, fixed: null},
-        {key: 3, field: 'name', title: '条件1'},
-        {key: 4, field: 'nickname', title: '条件2',},
-        {key: 5, field: 'sex', title: '条件3', filters: [{value: '1', label: '男'}, {value: '0', label: '女'}]},
-        {key: 6, field: 'role', title: '结果',},
+      footer: {
+        nextStepLoading: false
+      },
+      conditionHeaders: [
+        {name: "条件11", type: 1, valueType: "STRING", operator: "EQ", orderNo: 10},
+        {name: "条件12", type: 1, valueType: "STRING", operator: "EQ", orderNo: 11},
+        // {key: 4, field: 'nickname', title: '条件2',},
+        // {key: 5, field: 'sex', title: '条件3', filters: [{value: '1', label: '男'}, {value: '0', label: '女'}]},
       ],
+      actionHeader: {
+        name: "结果", type: 1, valueType: "STRING",
+      },
       tableData: [
-        {id: 10001, name: 'Test1', nickname: 'T1', role: 'Develop', sex: '1', age: 28, address: 'vxe-table 从入门到放弃'},
-        {id: 10002, name: 'Test2', nickname: 'T2', role: 'Test', sex: '0', age: 22, address: 'Guangzhou'},
-        {id: 10003, name: 'Test3', nickname: 'T3', role: 'PM', sex: '1', age: 32, address: 'Shanghai'},
-        {id: 10004, name: 'Test4', nickname: 'T4', role: 'Designer', sex: '0', age: 23, address: 'vxe-table 从入门到放弃'},
-        {id: 10005, name: 'Test5', nickname: 'T5', role: 'Develop', sex: '0', age: 30, address: 'Shanghai'},
-        {id: 10006, name: 'Test6', nickname: 'T6', role: 'Designer', sex: '0', age: 21, address: 'vxe-table 从入门到放弃'},
-        {id: 10007, name: 'Test7', nickname: 'T7', role: 'Test', sex: '1', age: 29, address: 'vxe-table 从入门到放弃'},
-        {id: 10008, name: 'Test8', nickname: 'T8', role: 'Develop', sex: '1', age: 35, address: 'vxe-table 从入门到放弃'}
+        {
+          priority: 10001,
+          conditions: [
+            {type: 3, valueType: "STRING", value: "1"}, {type: 3, valueType: "STRING", value: "2"},
+          ],
+          action: '结果1'
+        },
+        {
+          priority: 10002,
+          conditions: [
+            {type: 3, valueType: "STRING", value: "11"}, {type: 3, valueType: "STRING", value: "22"},
+          ],
+          action: '结果2'
+        },
       ]
     }
   },
@@ -150,7 +185,11 @@ export default {
   },
 }
 </script>
-
+<style>
+.vxe-table--render-default .vxe-table--border-line {
+  z-index: 9;
+}
+</style>
 <style scoped>
 .sortable-row-demo .drag-btn {
   cursor: move;
