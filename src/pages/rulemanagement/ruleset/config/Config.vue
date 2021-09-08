@@ -110,7 +110,7 @@
                                              v-for="cgc in cg.conditionGroupCondition"
                                              :key="cgc.id"
                                              @dblclick.native="$refs.modal.editCondition(cg,cgc)"
-                                             @close="deleteCondition(cg.conditionGroupCondition,cgc.id,cgc.id)"
+                                             @close="deleteCondition(cg.conditionGroupCondition,cgc.id,cgc.condition.id)"
                                              class="conditionItem task-item">
                                       <p slot="description" style="margin-bottom: 0;">
                                         <a-tag color="blue"
