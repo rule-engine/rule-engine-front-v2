@@ -47,7 +47,7 @@
 
     <a-card>
       <standard-table
-          :scroll="{ x: 500 }"
+          :scroll="{ x: 1000 }"
           :loading="loading"
           rowKey="id"
           style="clear: both"
@@ -355,28 +355,32 @@ export default {
         {
           title: '编号',
           dataIndex: 'id'
+          , width: 80
         },
         {
           title: '名称',
           dataIndex: 'name'
+          , width: 180
         },
         {
           title: '值',
-          scopedSlots: {customRender: 'value'},
+          scopedSlots: {customRender: 'value'}
         },
         {
           title: '值类型',
           dataIndex: 'valueType',
-          scopedSlots: {customRender: 'valueType'},
+          scopedSlots: {customRender: 'valueType'}
+          , width: 120
         },
         {
           title: '创建时间',
-          dataIndex: 'createTime',
+          dataIndex: 'createTime'
+          , width: 180
         },
         {
           title: '操作', fixed: 'right',
           key: 'operation',
-          scopedSlots: {customRender: 'action'},
+          scopedSlots: {customRender: 'action'}
         },
       ],
       dataSource: [],
