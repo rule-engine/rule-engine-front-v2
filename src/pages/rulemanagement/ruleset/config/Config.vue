@@ -173,6 +173,7 @@
                                             @change="valueType=>{actionValueTypeChange(valueType,rs)}">
                                     <a-select-option value="PARAMETER">参数</a-select-option>
                                     <a-select-option value="VARIABLE">变量</a-select-option>
+                                    <a-select-option value="GENERAL_RULE">普通规则</a-select-option>
                                     <a-select-option value="BOOLEAN">布尔</a-select-option>
                                     <a-select-option value="COLLECTION">集合</a-select-option>
                                     <a-select-option value="STRING">字符串</a-select-option>
@@ -190,7 +191,7 @@
                                           trigger: ['change', 'blur'],
                                         }">
                                   <a-select
-                                      v-if="rs.action.type===0||rs.action.type===1||rs.action.type===4"
+                                      v-if="rs.action.type===0||rs.action.type===1||rs.action.type===4||rs.action.type===10"
                                       show-search
                                       :disabled="rs.action.type==null"
                                       :value="rs.action.valueName"
@@ -726,6 +727,8 @@ export default {
         rs.action.type = 0;
       } else if (valueType === 'VARIABLE') {
         rs.action.type = 1;
+      } else if (valueType === 'GENERAL_RULE') {
+        rs.action.type = 10;
       } else {
         rs.action.valueType = valueType;
         rs.action.type = 2;
