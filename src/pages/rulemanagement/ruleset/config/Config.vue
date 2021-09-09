@@ -827,6 +827,8 @@ export default {
         name: "条件组",
         ruleId: rs.id,
         orderNo: newOrderNo,
+        dataType: this.dataType,
+        dataId: this.ruleSet.id,
         conditionGroupCondition: []
       };
       saveOrUpdate(newConditionGroup).then(res => {
@@ -842,12 +844,18 @@ export default {
       saveOrUpdate({
         id: cg.id,
         ruleId: rs.id,
+        dataType: this.dataType,
+        dataId: this.ruleSet.id,
         name: cg.name
       });
     },
     deleteConditionGroup(rs, cg) {
       // 删除条件组
-      deleteConditionGroup({id: cg.id}).then(res => {
+      deleteConditionGroup({
+        id: cg.id,
+        dataType: this.dataType,
+        dataId: this.ruleSet.id
+      }).then(res => {
         if (res.data.data) {
           rs.conditionGroup.forEach((value, index) => {
             if (value.id === cg.id) {

@@ -614,7 +614,9 @@ export default {
     deleteCondition(cgc, conditionGroupRefId, conditionId) {
       deleteCondition({
         conditionId: conditionId,
-        conditionGroupRefId: conditionGroupRefId
+        conditionGroupRefId: conditionGroupRefId,
+        dataId: this.generalRule.id,
+        dataType: this.dataType
       }).then(res => {
         if (res.data.data) {
           // 删除掉前端数组中的数据
@@ -721,6 +723,8 @@ export default {
         name: "条件组",
         ruleId: this.generalRule.ruleId,
         orderNo: newOrderNo,
+        dataType: this.dataType,
+        dataId: this.generalRule.id,
         conditionGroupCondition: []
       };
       saveOrUpdate(newConditionGroup).then(res => {
@@ -736,12 +740,18 @@ export default {
       saveOrUpdate({
         id: cg.id,
         ruleId: this.generalRule.ruleId,
+        dataType: this.dataType,
+        dataId: this.generalRule.id,
         name: cg.name
       });
     },
     deleteConditionGroup(cg) {
       // 删除条件组
-      deleteConditionGroup({id: cg.id}).then(res => {
+      deleteConditionGroup({
+        id: cg.id,
+        dataType: this.dataType,
+        dataId: this.generalRule.id
+      }).then(res => {
         if (res.data.data) {
           this.generalRule.conditionGroup.forEach((value, index) => {
             if (value.id === cg.id) {

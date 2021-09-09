@@ -127,6 +127,14 @@ module.exports = {
         DELETE: `${WEB_BASE_URL}/ruleEngine/variable/delete`,
         VERIFY_VARIABLE_NAME: `${WEB_BASE_URL}/ruleEngine/variable/nameIsExists`,
     },
+    workplace: {
+        PROJECT_IN_PROGRESS: `${WEB_BASE_URL}/ruleEngine/workplace/projectInProgress`,
+        HEAD_INFO: `${WEB_BASE_URL}/ruleEngine/workplace/headInfo`,
+        NUMBER_OF_CREATIONS_RANKING: `${WEB_BASE_URL}/ruleEngine/workplace/numberOfCreationsRanking`,
+    },
+    operationRecord: {
+        OPERATION_RECORD: `${WEB_BASE_URL}/ruleEngine/operationRecord/list`,
+    },
     ROUTES: `${WEB_BASE_URL}/routes`,
     GOODS: `${WEB_BASE_URL}/goods`,
     GOODS_COLUMNS: `${WEB_BASE_URL}/columns`,

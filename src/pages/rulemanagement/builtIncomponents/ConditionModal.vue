@@ -157,7 +157,8 @@
                 <a-select-option v-if="selectCondition.from.config.leftValue.valueType!=null"
                                  value="VARIABLE">变量
                 </a-select-option>
-                <a-select-option v-if="selectCondition.from.config.leftValue.valueType!=null&&viewSelectGR" value="GENERAL_RULE">
+                <a-select-option v-if="selectCondition.from.config.leftValue.valueType!=null&&viewSelectGR"
+                                 value="GENERAL_RULE">
                   普通规则
                 </a-select-option>
                 <a-select-option v-if="isRightTypeSelectView('BOOLEAN')" value="BOOLEAN">布尔
@@ -327,7 +328,9 @@ export default {
             // 传入条件组信息，条件信息 绑定关系
             conditionGroupId: this.selectCondition.currentConditionGroup.id,
             orderNo: orderNo,
-            addConditionRequest: this.selectCondition.from
+            addConditionRequest: this.selectCondition.from,
+            dataId: this.dataId,
+            dataType: this.dataType,
           }).then(res => {
             if (res.data.data) {
               // 当前条件组内插入一条数据
