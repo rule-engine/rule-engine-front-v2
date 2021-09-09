@@ -369,7 +369,7 @@
     </page-layout>
 
 
-    <ConditionModal ref="modal" :dataId="ruleSet.id" :dataType="dataType"></ConditionModal>
+    <ConditionModal ref="modal" :dataId="ruleSet.id" :dataType="dataType" :viewSelectGR="true"></ConditionModal>
 
     <footer-tool-bar>
       <a-button type="primary" @click="nextStep()" :loading="footer.nextStepLoading">预览发布</a-button>
