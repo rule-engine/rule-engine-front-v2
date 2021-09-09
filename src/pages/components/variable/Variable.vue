@@ -435,13 +435,14 @@ export default {
       v.value = moment(date).format('YYYY-MM-DD HH:mm:ss');
     },
     createVariable() {
-      this.add.visible = true;
-      // 重置表单数据
+      // 重置表单数据 修复bug
+      this.add.form = setDefaultValue(this.add.form);
+      this.add.form.function.paramValues = [];
       let $ref = this.$refs['addVariableForm'];
       if ($ref) {
         $ref.resetFields();
       }
-      this.add.form.function.paramValues = [];
+      this.add.visible = true;
     },
     functionParamValueTypeChange(valueType, pv) {
       // 如果是变量或者元素
@@ -541,8 +542,6 @@ export default {
       });
     },
     handleAddCancel() {
-      // 重置表单数据
-      this.add.form = setDefaultValue(this.add.form);
       this.add.visible = false
     },
     onPageChange(pagination, filters, sorter, {currentDataSource}) {
@@ -564,6 +563,8 @@ export default {
       this.loadVariableList()
     },
     editVariable(id) {
+      // 重置表单数据
+      this.add.form = setDefaultValue(this.add.form);
       let _this = this
       get({id: id}).then(res => {
         if (res.data.code === 200) {
