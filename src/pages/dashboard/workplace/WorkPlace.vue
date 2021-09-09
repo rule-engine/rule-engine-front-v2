@@ -21,10 +21,23 @@
                 <a-card :bordered="false" :body-style="{padding: 0}">
                   <a-card-meta :description="item.description?item.description:'暂无任何描述'">
                     <div slot="title" class="card-title">
-                      <a-avatar size="small" v-if="item.dataType===0"
-                                src="https://gw.alipayobjects.com/zos/rmsportal/zOsKZmFRdUtvpqCImOVY.png"/>
-                      <a-avatar size="small" v-if="item.dataType===1"
-                                src="https://gw.alipayobjects.com/zos/rmsportal/kZzEzemZyKLKFsojXItE.png"/>
+                      <a-avatar
+                          v-if="item.dataType===0"
+                          shape="square"
+                          size="small"
+                          :style="{ backgroundColor: '#f56a00', verticalAlign: 'middle' }"
+                      >
+                        G
+                      </a-avatar>
+                      <a-avatar
+                          v-if="item.dataType===1"
+                          shape="square"
+                          size="small"
+                          :style="{ backgroundColor: '#7265e6', verticalAlign: 'middle' }"
+                      >
+                        R
+                      </a-avatar>
+                      &nbsp;
                       <span>{{ item.name }}({{ item.code }})</span>
                     </div>
                   </a-card-meta>
