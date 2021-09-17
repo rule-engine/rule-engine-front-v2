@@ -27,34 +27,17 @@
           </a-button>
         </a-form-model-item>
       </a-form>
-
-      <a-divider dashed/>
-      <a-space class="operator">
-        <a-button @click="createVariable" type="primary">新建</a-button>
-        <a-button>批量操作</a-button>
-        <a-dropdown>
-          <a-menu slot="overlay">
-            <a-menu-item key="delete">删除</a-menu-item>
-            <a-menu-item key="audit">审批</a-menu-item>
-          </a-menu>
-          <a-button>
-            更多操作
-            <a-icon type="down"/>
-          </a-button>
-        </a-dropdown>
-      </a-space>
     </a-card>
 
     <a-card>
+      <a-button @click="createVariable" type="primary">新建</a-button>
       <standard-table
           :scroll="{ x: 1000 }"
           :loading="loading"
           rowKey="id"
-          style="clear: both"
           :columns="columns"
           :dataSource="dataSource"
           @change="onPageChange"
-          :selectedRows.sync="selectedRows"
           :pagination="{showSizeChanger: true, showQuickJumper: true,
           pageSize: this.query.page.pageSize,
           total: this.query.page.total}"
@@ -350,12 +333,12 @@ export default {
         },
       },
       loading: true,
-      selectedRows: [],
       columns: [
         {
           title: '编号',
           dataIndex: 'id'
-          , width: 80
+          , width: 80,
+          sorter: true
         },
         {
           title: '名称',
@@ -374,8 +357,9 @@ export default {
         },
         {
           title: '创建时间',
-          dataIndex: 'createTime'
-          , width: 180
+          dataIndex: 'createTime',
+          width: 180,
+          sorter: true
         },
         {
           title: '操作', fixed: 'right',

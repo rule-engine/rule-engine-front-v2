@@ -19,31 +19,15 @@
           </a-button>
         </a-form-item>
       </a-form>
-      <a-divider dashed v-if="isAdmin"/>
-      <a-space class="operator" v-if="isAdmin">
-        <a-button  @click="addNew" type="primary">添加</a-button>
-        <a-button>批量操作</a-button>
-        <a-dropdown>
-          <a-menu @click="handleMenuClick" slot="overlay">
-            <a-menu-item key="delete">删除</a-menu-item>
-            <a-menu-item key="audit">审批</a-menu-item>
-          </a-menu>
-          <a-button>
-            更多操作
-            <a-icon type="down"/>
-          </a-button>
-        </a-dropdown>
-      </a-space>
     </a-card>
     <a-card>
+      <a-button @click="addNew" v-if="isAdmin" type="primary">添加</a-button>
       <standard-table
-          :scroll="{ x: 1200 }"
+          :scroll="{ x: 1000 }"
           rowKey="id"
           :loading="loading"
-          style="clear: both"
           :columns="columns"
           :dataSource="dataSource"
-          :selectedRows.sync="selectedRows"
           @clear="onClear"
           @change="onChange"
           @selectedRowChange="onSelectChange"
@@ -190,6 +174,12 @@ import {mapGetters} from "vuex";
 
 const columns = [
   {
+    title: '编号',
+    dataIndex: 'id'
+    , width: 80,
+    sorter: true
+  },
+  {
     title: '用户',
     scopedSlots: {customRender: 'user'}
   },
@@ -199,7 +189,7 @@ const columns = [
   },
   {
     title: '性别',
-    dataIndex: 'sex',
+    dataIndex: 'sex', width: 80,
     sorter: true,
   },
   {
@@ -233,7 +223,6 @@ export default {
       showAddUserModel: false,
       confirmLoading: false,
       columns: columns,
-      selectedRows: [],
       dataSource: [],
       form: this.$form.createForm(this),
       userAddForm: {
@@ -444,7 +433,6 @@ export default {
     },
     deleteRecord(key) {
       this.dataSource = this.dataSource.filter(item => item.key !== key)
-      //this.selectedRows = this.selectedRows.filter(item => item.key !== key)
     },
   }
 }

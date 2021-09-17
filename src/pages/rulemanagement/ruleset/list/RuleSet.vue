@@ -28,31 +28,15 @@
           </a-button>
         </a-form-item>
       </a-form>
-      <a-divider dashed/>
-      <a-space class="operator">
-        <a-button @click="addNew" type="primary">新建</a-button>
-        <a-button>批量操作</a-button>
-        <a-dropdown>
-          <a-menu @click="handleMenuClick" slot="overlay">
-            <a-menu-item key="delete">删除</a-menu-item>
-            <a-menu-item key="audit">审批</a-menu-item>
-          </a-menu>
-          <a-button>
-            更多操作
-            <a-icon type="down"/>
-          </a-button>
-        </a-dropdown>
-      </a-space>
     </a-card>
 
     <a-card>
+      <a-button @click="addNew" type="primary">新建</a-button>
       <standard-table
           :scroll="{ x: 1200 }"
           rowKey="id"
-          style="clear: both"
           :columns="columns"
           :dataSource="dataSource"
-          :selectedRows.sync="selectedRows"
           :loading="loading"
           @clear="onClear"
           @change="onChange"
@@ -149,7 +133,6 @@
           :columns="historyVersion.columns"
           :loading="historyVersion.loading"
           :dataSource="historyVersion.dataSource"
-          :selectedRows.sync="historyVersion.selectedRows"
       >
         <div slot="user" slot-scope="{text, record}">
           <a-avatar size="small" icon="user" :src="record.avatar"/>
@@ -197,7 +180,6 @@
           :columns="download.columns"
           :loading="download.loading"
           :dataSource="download.dataSource"
-          :selectedRows.sync="download.selectedRows"
       >
         <div slot="versionStatus" class="data-status" slot-scope="{record}">
           <a-tag v-if="record.status===2" style="cursor: pointer;padding: 0 6px" color="blue">
@@ -249,7 +231,6 @@
           :columns="authority.columns"
           :loading="authority.loading"
           :dataSource="authority.dataSource"
-          :selectedRows.sync="authority.selectedRows"
       >
         <div slot="user" slot-scope="{text, record}">
           <a-avatar size="small" icon="user" :src="record.avatar"/>
@@ -372,6 +353,12 @@ export default {
       },
       columns: [
         {
+          title: '编号',
+          dataIndex: 'id'
+          , width: 80,
+          sorter: true
+        },
+        {
           title: '名称',
           dataIndex: 'name'
         },
@@ -397,12 +384,10 @@ export default {
           scopedSlots: {customRender: 'action'}
         }
       ],
-      selectedRows: [],
       authority: {
         visible: false,
         confirmLoading: false,
         loading: false,
-        selectedRows: [],
         query: {
           orders: [
             {
@@ -444,7 +429,6 @@ export default {
       download: {
         visible: false,
         confirmLoading: false,
-        selectedRows: [],
         loading: false,
         dataSource: [],
         query: {
@@ -462,13 +446,11 @@ export default {
             title: '名称',
             dataIndex: 'name'
           },
-          // {
-          //     title: '编码',
-          //     dataIndex: 'code',
-          // },
           {
             title: '版本状态',
-            scopedSlots: {customRender: 'versionStatus'}
+            scopedSlots: {customRender: 'versionStatus'},
+            width: 110,
+            sorter: true
           },
           {
             title: '创建时间',
@@ -484,7 +466,6 @@ export default {
       historyVersion: {
         visible: false,
         confirmLoading: false,
-        selectedRows: [],
         loading: false,
         dataSource: [],
         query: {
@@ -503,8 +484,8 @@ export default {
             dataIndex: 'name'
           },
           {
-            title: '规则集版本',
-            dataIndex: 'version',
+            title: '版本',
+            dataIndex: 'version', width: 110,
             sorter: true,
           },
           {
@@ -711,7 +692,6 @@ export default {
     },
     deleteRecord(key) {
       this.dataSource = this.dataSource.filter(item => item.key !== key)
-      //this.selectedRows = this.selectedRows.filter(item => item.key !== key)
     },
     edit(record) {
       this.$openPage({

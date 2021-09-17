@@ -31,33 +31,17 @@
           </a-button>
         </a-form-model-item>
       </a-form>
-
-      <a-divider dashed/>
-      <a-space class="operator">
-        <a-button @click="add.visible=true" type="primary">新建</a-button>
-        <a-button>批量操作</a-button>
-        <a-dropdown>
-          <a-menu slot="overlay">
-            <a-menu-item key="delete">删除</a-menu-item>
-            <a-menu-item key="audit">审批</a-menu-item>
-          </a-menu>
-          <a-button>
-            更多操作
-            <a-icon type="down"/>
-          </a-button>
-        </a-dropdown>
-      </a-space>
     </a-card>
 
     <a-card>
+      <a-button @click="add.visible=true" type="primary">新建</a-button>
       <standard-table
-          :scroll="{ x: 1200 }"
+          :scroll="{ x: 900 }"
           :loading="loading"
           rowKey="id"
           style="clear: both"
           :columns="columns"
           :dataSource="dataSource"
-          :selectedRows.sync="selectedRows"
           @change="onPageChange"
           :pagination="{showSizeChanger: true, showQuickJumper: true,
           pageSize: this.query.page.pageSize,
@@ -91,7 +75,6 @@
     <a-modal
         title="新建参数"
         :visible="add.visible"
-        :zIndex="1000"
         :confirm-loading="add.confirmLoading"
         :width="700"
         @ok="handleAddOk('addInputParameter')"
@@ -124,7 +107,6 @@
     <a-modal
         title="编辑参数"
         :visible="update.visible"
-        :zIndex="1000"
         :confirm-loading="update.confirmLoading"
         :width="700"
         @ok="handleUpdateOk('updateInputParameter')"
@@ -212,28 +194,31 @@ export default {
         valueType: {trigger: ['change', 'blur'], required: true, message: "请选择参数值类型"}
       },
       loading: true,
-      selectedRows: [],
       columns: [
         {
           title: '编号',
-          dataIndex: 'id'
+          dataIndex: 'id',
+          width: 80,
+          sorter: true
         },
         {
           title: '名称',
-          dataIndex: 'name'
+          dataIndex: 'name', width: 180
         },
         {
           title: '编码',
-          dataIndex: 'code',
+          dataIndex: 'code', width: 180
         },
         {
           title: '值类型',
           dataIndex: 'valueType',
           scopedSlots: {customRender: 'valueType'},
+          width: 80
         },
         {
           title: '创建时间',
           dataIndex: 'createTime',
+          sorter: true,
         },
         {
           title: '操作', fixed: 'right',

@@ -12,43 +12,44 @@
     </template>
     <template>
       <a-row style="margin: 0 -12px">
-        <a-col style="padding: 0 12px" :xl="16" :lg="24" :md="24" :sm="24" :xs="24">
-          <a-card class="project-list" :loading="loading" style="margin-bottom: 24px;" :bordered="false"
-                  :title="$t('progress')" :body-style="{padding: 0}">
-            <!--            <a slot="extra">{{ $t('all') }}</a>-->
-            <div>
-              <a-card-grid :key="i" v-for="(item, i) in projects">
-                <a-card :bordered="false" :body-style="{padding: 0}">
-                  <a-card-meta :description="item.description?item.description:'暂无任何描述'">
-                    <div slot="title" class="card-title">
-                      <a-avatar
-                          v-if="item.dataType===0"
-                          shape="square"
-                          size="small"
-                          :style="{ backgroundColor: '#f56a00', verticalAlign: 'middle' }"
-                      >
-                        G
-                      </a-avatar>
-                      <a-avatar
-                          v-if="item.dataType===1"
-                          shape="square"
-                          size="small"
-                          :style="{ backgroundColor: '#7265e6', verticalAlign: 'middle' }"
-                      >
-                        R
-                      </a-avatar>
-                      &nbsp;
-                      <span>{{ item.name }}({{ item.code }})</span>
-                    </div>
-                  </a-card-meta>
-                  <div class="project-item">
-                    <a class="group" href="/#/">{{ item.createUsername }}</a>
-                    <span class="datetime">{{ showtime(item.updateTime) }}</span>
-                  </div>
-                </a-card>
-              </a-card-grid>
-            </div>
-          </a-card>
+        <!--        <a-col style="padding: 0 12px" :xl="16" :lg="24" :md="24" :sm="24" :xs="24">-->
+        <a-col>
+<!--          <a-card class="project-list" :loading="loading" style="margin-bottom: 24px;" :bordered="false"-->
+<!--                  :title="$t('progress')" :body-style="{padding: 0}">-->
+<!--            &lt;!&ndash;            <a slot="extra">{{ $t('all') }}</a>&ndash;&gt;-->
+<!--            <div>-->
+<!--              <a-card-grid :key="i" v-for="(item, i) in projects">-->
+<!--                <a-card :bordered="false" :body-style="{padding: 0}">-->
+<!--                  <a-card-meta :description="item.description?item.description:'暂无任何描述'">-->
+<!--                    <div slot="title" class="card-title">-->
+<!--                      <a-avatar-->
+<!--                          v-if="item.dataType===0"-->
+<!--                          shape="square"-->
+<!--                          size="small"-->
+<!--                          :style="{ backgroundColor: '#f56a00', verticalAlign: 'middle' }"-->
+<!--                      >-->
+<!--                        G-->
+<!--                      </a-avatar>-->
+<!--                      <a-avatar-->
+<!--                          v-if="item.dataType===1"-->
+<!--                          shape="square"-->
+<!--                          size="small"-->
+<!--                          :style="{ backgroundColor: '#7265e6', verticalAlign: 'middle' }"-->
+<!--                      >-->
+<!--                        R-->
+<!--                      </a-avatar>-->
+<!--                      &nbsp;-->
+<!--                      <span>{{ item.name }}({{ item.code }})</span>-->
+<!--                    </div>-->
+<!--                  </a-card-meta>-->
+<!--                  <div class="project-item">-->
+<!--                    <a class="group" href="/#/">{{ item.createUsername }}</a>-->
+<!--                    <span class="datetime">{{ showtime(item.updateTime) }}</span>-->
+<!--                  </div>-->
+<!--                </a-card>-->
+<!--              </a-card-grid>-->
+<!--            </div>-->
+<!--          </a-card>-->
 
           <a-card :loading="loading" :title="$t('dynamic')" :bordered="false">
             <a slot="extra"> 查看更多 </a>
@@ -64,7 +65,7 @@
           </a-card>
 
         </a-col>
-        <a-col style="padding: 0 12px" :xl="8" :lg="24" :md="24" :sm="24" :xs="24">
+        <a-col style="padding: 0 12px" :xl="8" :lg="24" :md="24" :sm="24" :xs="24" v-if="false">
           <!--          <a-card :title="$t('access')" style="margin-bottom: 24px" :bordered="false" :body-style="{padding: 0}">-->
           <!--            <div class="item-group">-->
           <!--              <a>操作一</a>-->
@@ -77,12 +78,12 @@
           <!--            </div>-->
           <!--          </a-card>-->
 
-          <a-card :loading="loading" title="创作数量排名" style="margin-bottom: 24px" :bordered="false"
-                  :body-style="{padding: 0}">
-            <div style="min-height: 400px;">
-              <radar/>
-            </div>
-          </a-card>
+<!--          <a-card :loading="loading" title="创作数量排名" style="margin-bottom: 24px" :bordered="false"-->
+<!--                  :body-style="{padding: 0}">-->
+<!--            <div style="min-height: 400px;">-->
+<!--              <radar/>-->
+<!--            </div>-->
+<!--          </a-card>-->
 
           <!--          <a-card :loading="loading" :title="$t('team')" :bordered="false">-->
           <!--            <div class="members">-->
@@ -105,17 +106,17 @@
 <script>
 import PageLayout from '@/layouts/PageLayout'
 import HeadInfo from '@/components/tool/HeadInfo'
-import Radar from '@/pages/dashboard/workplace/Radar'
+//import Radar from '@/pages/dashboard/workplace/Radar'
 import {mapState} from 'vuex'
 import {request, METHOD} from '@/utils/request'
 import {showtime} from '@/utils/dateUtil'
-import {projectInProgress, headInfo} from "@/services/workplace";
+import {headInfo} from "@/services/workplace";
 import {operationRecordList} from "@/services/operationRecord";
 
 
 export default {
   name: 'WorkPlace',
-  components: {Radar, HeadInfo, PageLayout},
+  components: {HeadInfo, PageLayout},
   i18n: require('./i18n'),
   data() {
     return {
@@ -164,18 +165,19 @@ export default {
       }
     })
     //团队
-    request('/work/team', METHOD.GET).then(res => {
-      this.teams = res.data
-      //console.log(res.data)
-    })
+    // request('/work/team', METHOD.GET).then(res => {
+    //   this.teams = res.data
+    //   //console.log(res.data)
+    // })
     headInfo().then(res => {
       this.headInfo = res.data.data;
-    })
-    //进行中的项目
-    projectInProgress().then(res => {
-      this.projects = res.data.data
       this.loading = false
     })
+    //进行中的项目
+    // projectInProgress().then(res => {
+    //   this.projects = res.data.data
+    //   this.loading = false
+    // })
   }
 }
 </script>

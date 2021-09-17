@@ -19,32 +19,16 @@
           </a-button>
         </a-form-model-item>
       </a-form-model>
-      <a-divider dashed/>
-      <a-space class="operator">
-        <a-button @click="showAdd" type="primary">新建{{this.isAdmin}}</a-button>
-        <a-button>批量操作</a-button>
-        <a-dropdown>
-          <a-menu @click="handleMenuClick" slot="overlay">
-            <a-menu-item key="audit">发布</a-menu-item>
-            <a-menu-item key="notInService">暂停使用</a-menu-item>
-            <a-menu-item key="delete">删除</a-menu-item>
-          </a-menu>
-          <a-button>
-            更多操作
-            <a-icon type="down"/>
-          </a-button>
-        </a-dropdown>
-      </a-space>
     </a-card>
 
     <a-card>
+      <a-button @click="showAdd" v-if="isAdmin" type="primary">新建</a-button>
       <standard-table
           :scroll="{ x: 1200 }"
           rowKey="id"
           style="clear: both"
           :columns="columns"
           :dataSource="dataSource"
-          :selectedRows.sync="selectedRows"
           @clear="onClear"
           @change="onChange"
           :loading="loading"
@@ -188,7 +172,6 @@
               :columns="member.columns"
               :loading="member.loading"
               :dataSource="member.dataSource"
-              :selectedRows.sync="member.selectedRows"
               :pagination="{showSizeChanger: true, showQuickJumper: true,
               pageSize: this.member.query.page.pageSize,
               total: this.member.query.page.total}"
@@ -224,7 +207,6 @@
               :loading="member.loading"
               :columns="member.columns"
               :dataSource="member.dataSource"
-              :selectedRows.sync="member.selectedRows"
           >
             <div slot="user" slot-scope="{text, record}">
               <a-avatar size="small" icon="user" :src="record.avatar"/>
@@ -369,6 +351,12 @@ import {mapGetters} from "vuex";
 
 const columns = [
   {
+    title: '编号',
+    dataIndex: 'id'
+    , width: 80,
+    sorter: true
+  },
+  {
     title: '名称',
     dataIndex: 'name',
   },
@@ -476,11 +464,9 @@ export default {
             scopedSlots: {customRender: 'action'}
           }
         ],
-        selectedRows: [],
         dataSource: []
       },
       columns: columns,
-      selectedRows: [],
       dataSource: [],
       query: {
         orders: [
@@ -554,7 +540,7 @@ export default {
   created() {
     this.loadWorkspaceList()
   }, computed: {
-    ...mapGetters('workspace', ['isAdmin'])
+    ...mapGetters('user', ['isAdmin'])
   }, mounted() {
   },
   methods: {
@@ -757,7 +743,6 @@ export default {
     },
     deleteRecord(key) {
       this.dataSource = this.dataSource.filter(item => item.key !== key)
-      //this.selectedRows = this.selectedRows.filter(item => item.key !== key)
     },
     showEdit(record) {
       this.loading = true

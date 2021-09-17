@@ -26,33 +26,16 @@
           </a-button>
         </a-form-item>
       </a-form>
-
-      <a-divider dashed/>
-      <a-space class="operator">
-        <a-button @click="addFunctionForm" type="primary">新建</a-button>
-        <a-button>批量操作</a-button>
-        <a-dropdown>
-          <a-menu slot="overlay">
-            <a-menu-item key="delete">删除</a-menu-item>
-            <a-menu-item key="audit">审批</a-menu-item>
-          </a-menu>
-          <a-button>
-            更多操作
-            <a-icon type="down"/>
-          </a-button>
-        </a-dropdown>
-      </a-space>
     </a-card>
 
     <a-card>
+      <a-button @click="addFunctionForm" type="primary">新建</a-button>
       <standard-table
-          :scroll="{ x: 1200 }"
+          :scroll="{ x: 1000 }"
           rowKey="id"
-          style="clear: both"
           :columns="tableData"
           :dataSource="dataSource"
           @change="onChange"
-          :selectedRows.sync="selectedRows"
           :pagination="{showSizeChanger: true, showQuickJumper: true,
           pageSize: this.query.page.pageSize,
           total: this.query.page.total}"
@@ -190,24 +173,33 @@ import {getValueTypeName} from "@/utils/value-type";
 
 const columns = [
   {
+    title: '编号',
+    dataIndex: 'id'
+    , width: 80,
+    sorter: true
+  },
+  {
     title: '名称',
     dataIndex: 'name'
+    , width: 220
   },
   {
     title: '执行器',
-    dataIndex: 'executor',
+    dataIndex: 'executor', width: 220
   },
   {
     title: '返回值类型',
-    scopedSlots: {customRender: 'valueType'},
+    scopedSlots: {customRender: 'valueType'}, width: 80
+
   },
   {
     title: '创建时间',
     dataIndex: 'createTime',
+    width: 180,
     sorter: true
   },
   {
-    title: '操作',fixed: 'right',
+    title: '操作', fixed: 'right',
     scopedSlots: {customRender: 'action'}
   }
 ];
@@ -241,7 +233,6 @@ export default {
         }
       },
       tableData: columns,
-      selectedRows: [],
       dataSource: [],
       query: {
         orders: [

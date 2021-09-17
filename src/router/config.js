@@ -52,16 +52,16 @@ const options = {
                             },
                             component: () => import('@/pages/dashboard/workplace'),
                         },
-                        {
-                            path: 'analysis',
-                            name: '监控',
-                            meta: {
-                                page: {
-                                    closable: true
-                                }
-                            },
-                            component: () => import('@/pages/dashboard/analysis'),
-                        }
+                        // {
+                        //     path: 'analysis',
+                        //     name: '监控',
+                        //     meta: {
+                        //         page: {
+                        //             closable: true
+                        //         }
+                        //     },
+                        //     component: () => import('@/pages/dashboard/analysis'),
+                        // }
                     ]
                 },
                 {
@@ -195,7 +195,7 @@ const options = {
                     path: 'document',
                     meta: {
                         icon: 'file-word',
-                        link: 'https://iczer.gitee.io/vue-antd-admin-docs/'
+                        link: 'http://ruleengine.cn/doc'
                     }
                 }
             ]
