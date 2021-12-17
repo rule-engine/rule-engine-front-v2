@@ -51,14 +51,15 @@
         </div>
 
         <div slot="versionStatus" class="data-status" slot-scope="{record}">
-          <a-tag v-if="record.publishVersion!==null" style="cursor: pointer;padding: 0 6px" color="blue">
+          <a-tag v-if="record.publishVersion!==null" style="cursor: pointer;padding: 0 6px" color="blue"
+                 @click="show(record)">
             线上({{ record.publishVersion }})
           </a-tag>
-          <a-tag v-if="record.status===0" color="pink"
+          <a-tag v-if="record.status===0" color="pink" @click="edit(record)"
                  style="cursor: pointer;padding: 0 6px">
             开发<!--开发中没有版本-->
           </a-tag>
-          <a-tag v-else-if="record.status===1" color="orange"
+          <a-tag v-else-if="record.status===1" color="orange" @click="show(record)"
                  style="cursor: pointer;padding: 0 6px">
             测试({{ record.currentVersion }})
           </a-tag>
@@ -693,11 +694,21 @@ export default {
     deleteRecord(key) {
       this.dataSource = this.dataSource.filter(item => item.key !== key)
     },
-    edit(record) {
+    show(record) {
       this.$openPage({
         path: '/ruleSetRouter/' + record.id,
-        query: {pageIndex: 2}
+        query: {pageIndex: 3}
       }, `规则集(${record.name})`);
+    },
+    edit(record) {
+      if (record.status === 1 || record.status === 2) {
+        this.show(record);
+      } else {
+        this.$openPage({
+          path: '/ruleSetRouter/' + record.id,
+          query: {pageIndex: 2}
+        }, `规则集(${record.name})`);
+      }
     },
     downloadRuleSet(record) {
       this.download.query.query.id = record.id;

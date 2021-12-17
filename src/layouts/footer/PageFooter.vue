@@ -8,6 +8,9 @@
     <div class="copyright">
       Copyright<a-icon type="copyright" />{{copyright}}
     </div>
+    <a class="copyright" href="http://beian.miit.gov.cn">
+      京ICP备2020034246号-1
+    </a>
   </div>
 </template>
 
