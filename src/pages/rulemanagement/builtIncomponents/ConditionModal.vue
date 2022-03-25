@@ -500,7 +500,8 @@ export default {
       }
       // 当前条件组
       this.selectCondition.currentConditionGroup = cg;
-      this.selectCondition.from = cgc.condition;
+      // bug修复
+      this.selectCondition.from =  JSON.parse(JSON.stringify(cgc.condition))
       // 加载运算符
       this.selectCondition.operators = this.getSymbolByValueType(cgc.condition.config.leftValue.valueType)
       this.selectCondition.visible = true;
