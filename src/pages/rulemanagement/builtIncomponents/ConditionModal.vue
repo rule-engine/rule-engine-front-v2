@@ -513,7 +513,7 @@ export default {
       }
       this.selectCondition.currentConditionGroup = cg;
       // 还原配置
-      this.selectCondition.from = setDefaultValue(this.selectCondition.from);
+      this.selectCondition.from = setDefaultValue(JSON.parse(JSON.stringify(this.selectCondition.from)));
       this.selectCondition.visible = true;
     }
   }

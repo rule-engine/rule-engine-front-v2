@@ -9,11 +9,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "predeploy": "yarn build",
-    "deploy": "gh-pages -d engine -b pages -r https://gitee.com/iczer/vue-antd-admin.git",
-    "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs",
-    "docs:deploy": "vuepress build docs && gh-pages -d docs/.vuepress/dist -b master -r https://gitee.com/iczer/vue-antd-admin-docs.git"
+    "deploy": "rm -rf engine;vue-cli-service build;mv dist engine;scp -r engine root@ruleengine.cn:/usr/local/nginx/html"
   },
   "dependencies": {
     "@antv/data-set": "^0.11.4",
