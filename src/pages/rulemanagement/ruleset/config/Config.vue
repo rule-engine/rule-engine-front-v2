@@ -602,7 +602,7 @@ export default {
       if (rs.action.type == null) {
         return;
       }
-      if (!rs.action.value) {
+      if (rs.action.value !== 0 && !rs.action.value) {
         return;
       }
       if (!rs.action.valueType) {
@@ -621,7 +621,7 @@ export default {
       if (this.ruleSet.defaultRule.action.type == null) {
         return;
       }
-      if (!this.ruleSet.defaultRule.action.value) {
+      if (this.ruleSet.defaultRule.action.value !== 0 && !this.ruleSet.defaultRule.action.value) {
         return;
       }
       if (!this.ruleSet.defaultRule.action.valueType) {

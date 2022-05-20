@@ -531,7 +531,7 @@ export default {
       if (this.generalRule.action.type == null) {
         return;
       }
-      if (!this.generalRule.action.value) {
+      if (this.generalRule.action.value !== 0 && !this.generalRule.action.value) {
         return;
       }
       if (!this.generalRule.action.valueType) {
@@ -550,7 +550,7 @@ export default {
       if (this.generalRule.defaultAction.type == null) {
         return;
       }
-      if (!this.generalRule.defaultAction.value) {
+      if (!this.generalRule.defaultAction.value !== 0 && !this.generalRule.defaultAction.value) {
         return;
       }
       if (!this.generalRule.defaultAction.valueType) {
