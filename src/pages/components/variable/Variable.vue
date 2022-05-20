@@ -467,7 +467,7 @@ export default {
           , pv.type)
     },
     functionParamSearchOptionClick(d, pv) {
-      this.add.form.function.name = d.name;
+      //this.add.form.function.name = d.name;
       pv.value = d.id;
       pv.valueType = d.valueType;
       pv.valueName = d.name;
