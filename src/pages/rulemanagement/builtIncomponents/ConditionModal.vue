@@ -353,6 +353,7 @@ export default {
     },
     addConditionCancel() {
       this.selectCondition.visible = false;
+      this.selectCondition.from = setDefaultValue(JSON.parse(JSON.stringify(this.selectCondition.from)));
     },
     /**
      * 条件左值类型修改
@@ -501,7 +502,7 @@ export default {
       // 当前条件组
       this.selectCondition.currentConditionGroup = cg;
       // bug修复
-      this.selectCondition.from =  JSON.parse(JSON.stringify(cgc.condition))
+      this.selectCondition.from = JSON.parse(JSON.stringify(cgc.condition))
       // 加载运算符
       this.selectCondition.operators = this.getSymbolByValueType(cgc.condition.config.leftValue.valueType)
       this.selectCondition.visible = true;
@@ -513,7 +514,28 @@ export default {
       }
       this.selectCondition.currentConditionGroup = cg;
       // 还原配置
-      this.selectCondition.from = setDefaultValue(JSON.parse(JSON.stringify(this.selectCondition.from)));
+      this.selectCondition.from = {
+        id: undefined,
+        name: null,
+        description: null,
+        config: {
+          leftValue: {
+            type: undefined,
+            valueType: undefined,
+            value: undefined,
+            valueName: undefined,
+            variableValue: undefined,
+          },
+          symbol: undefined,
+          rightValue: {
+            type: undefined,
+            valueType: undefined,
+            value: undefined,
+            valueName: undefined,
+            variableValue: undefined,
+          }
+        }
+      };
       this.selectCondition.visible = true;
     }
   }
