@@ -462,7 +462,7 @@ export default {
     functionParamSearch(value, pv) {
       selectSearch({
             name: value,
-            valueType: [this.add.form.valueType]
+            valueType: [pv.valueType]
           }, data => (pv.searchSelect.data = data)
           , pv.type)
     },
